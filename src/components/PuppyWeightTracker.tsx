@@ -1,3 +1,4 @@
+
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -544,7 +545,7 @@ export default function PuppyWeightTracker() {
           </TabsContent>
           
           <TabsContent value="food">
-            <FoodCalculator currentWeight={currentWeight} />
+            <FoodCalculator currentWeight={currentWeight} user={user} />
           </TabsContent>
         </Tabs>
       </div>

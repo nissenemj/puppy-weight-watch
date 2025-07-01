@@ -9,6 +9,129 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      dogs: {
+        Row: {
+          activity_level: string | null
+          age_years: number | null
+          breed: string | null
+          created_at: string
+          health_conditions: string[] | null
+          id: string
+          name: string
+          user_id: string
+          weight_kg: number | null
+        }
+        Insert: {
+          activity_level?: string | null
+          age_years?: number | null
+          breed?: string | null
+          created_at?: string
+          health_conditions?: string[] | null
+          id?: string
+          name: string
+          user_id: string
+          weight_kg?: number | null
+        }
+        Update: {
+          activity_level?: string | null
+          age_years?: number | null
+          breed?: string | null
+          created_at?: string
+          health_conditions?: string[] | null
+          id?: string
+          name?: string
+          user_id?: string
+          weight_kg?: number | null
+        }
+        Relationships: []
+      }
+      feeding_plans: {
+        Row: {
+          created_at: string
+          daily_amount_grams: number
+          dog_id: string
+          id: string
+          meals_per_day: number
+          notes: string | null
+          recipe_id: string
+        }
+        Insert: {
+          created_at?: string
+          daily_amount_grams: number
+          dog_id: string
+          id?: string
+          meals_per_day?: number
+          notes?: string | null
+          recipe_id: string
+        }
+        Update: {
+          created_at?: string
+          daily_amount_grams?: number
+          dog_id?: string
+          id?: string
+          meals_per_day?: number
+          notes?: string | null
+          recipe_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "feeding_plans_dog_id_fkey"
+            columns: ["dog_id"]
+            isOneToOne: false
+            referencedRelation: "dogs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "feeding_plans_recipe_id_fkey"
+            columns: ["recipe_id"]
+            isOneToOne: false
+            referencedRelation: "food_recipes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      food_recipes: {
+        Row: {
+          brand: string | null
+          calories_per_100g: number | null
+          carb_percentage: number | null
+          created_at: string
+          fat_percentage: number | null
+          feeding_instructions: Json | null
+          id: string
+          image_url: string | null
+          name: string
+          protein_percentage: number | null
+          source: string | null
+        }
+        Insert: {
+          brand?: string | null
+          calories_per_100g?: number | null
+          carb_percentage?: number | null
+          created_at?: string
+          fat_percentage?: number | null
+          feeding_instructions?: Json | null
+          id?: string
+          image_url?: string | null
+          name: string
+          protein_percentage?: number | null
+          source?: string | null
+        }
+        Update: {
+          brand?: string | null
+          calories_per_100g?: number | null
+          carb_percentage?: number | null
+          created_at?: string
+          fat_percentage?: number | null
+          feeding_instructions?: Json | null
+          id?: string
+          image_url?: string | null
+          name?: string
+          protein_percentage?: number | null
+          source?: string | null
+        }
+        Relationships: []
+      }
       weight_entries: {
         Row: {
           created_at: string | null
