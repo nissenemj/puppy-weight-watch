@@ -10,6 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { toast } from 'sonner'
 import WeightChart from './WeightChart'
+import FoodCalculator from './FoodCalculator'
 
 interface WeightEntry {
   id: string
@@ -354,6 +355,7 @@ export default function PuppyWeightTracker() {
   }
 
   const stats = getStats()
+  const currentWeight = weightData.length > 0 ? weightData[weightData.length - 1].weight : 0
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-4">
@@ -386,151 +388,165 @@ export default function PuppyWeightTracker() {
           </CardHeader>
         </Card>
 
-        {/* Input Form */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Lisää uusi painomittaus</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex gap-4 flex-wrap items-end">
-              <div className="flex-1 min-w-40">
-                <Label htmlFor="date">Päivämäärä</Label>
-                <Input
-                  id="date"
-                  type="date"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                  required
-                />
-              </div>
+        {/* Main Content Tabs */}
+        <Tabs defaultValue="weight" className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="weight">Painonseuranta</TabsTrigger>
+            <TabsTrigger value="food">Ruokamäärälaskuri</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="weight" className="space-y-6">
+            {/* Input Form */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Lisää uusi painomittaus</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex gap-4 flex-wrap items-end">
+                  <div className="flex-1 min-w-40">
+                    <Label htmlFor="date">Päivämäärä</Label>
+                    <Input
+                      id="date"
+                      type="date"
+                      value={date}
+                      onChange={(e) => setDate(e.target.value)}
+                      required
+                    />
+                  </div>
 
-              <div className="flex-1 min-w-40">
-                <Label htmlFor="weight">Paino (kg)</Label>
-                <Input
-                  id="weight"
-                  type="number"
-                  step="0.1"
-                  min="0"
-                  value={weight}
-                  onChange={(e) => setWeight(e.target.value)}
-                  onKeyPress={(e) => handleKeyPress(e, addWeightEntry)}
-                  placeholder="esim. 2.5"
-                  required
-                />
-              </div>
+                  <div className="flex-1 min-w-40">
+                    <Label htmlFor="weight">Paino (kg)</Label>
+                    <Input
+                      id="weight"
+                      type="number"
+                      step="0.1"
+                      min="0"
+                      value={weight}
+                      onChange={(e) => setWeight(e.target.value)}
+                      onKeyPress={(e) => handleKeyPress(e, addWeightEntry)}
+                      placeholder="esim. 2.5"
+                      required
+                    />
+                  </div>
 
-              <Button
-                onClick={addWeightEntry}
-                disabled={isSubmitting}
-                className="bg-blue-500 hover:bg-blue-600"
-              >
-                {isSubmitting ? 'Tallennetaan...' : 'Lisää mittaus'}
-              </Button>
+                  <Button
+                    onClick={addWeightEntry}
+                    disabled={isSubmitting}
+                    className="bg-blue-500 hover:bg-blue-600"
+                  >
+                    {isSubmitting ? 'Tallennetaan...' : 'Lisää mittaus'}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <Card>
+                <CardContent className="pt-6 text-center">
+                  <div className="text-3xl font-bold text-blue-600 mb-2">
+                    {stats.current}
+                  </div>
+                  <div className="text-sm text-gray-600">Nykyinen paino (kg)</div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardContent className="pt-6 text-center">
+                  <div className="text-3xl font-bold text-green-600 mb-2">
+                    {stats.growth}
+                  </div>
+                  <div className="text-sm text-gray-600">Kasvu yhteensä (kg)</div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardContent className="pt-6 text-center">
+                  <div className="text-3xl font-bold text-purple-600 mb-2">
+                    {stats.avgWeekly}
+                  </div>
+                  <div className="text-sm text-gray-600">Keskikasvu/viikko (g)</div>
+                </CardContent>
+              </Card>
             </div>
-          </CardContent>
-        </Card>
 
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card>
-            <CardContent className="pt-6 text-center">
-              <div className="text-3xl font-bold text-blue-600 mb-2">
-                {stats.current}
-              </div>
-              <div className="text-sm text-gray-600">Nykyinen paino (kg)</div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="pt-6 text-center">
-              <div className="text-3xl font-bold text-green-600 mb-2">
-                {stats.growth}
-              </div>
-              <div className="text-sm text-gray-600">Kasvu yhteensä (kg)</div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="pt-6 text-center">
-              <div className="text-3xl font-bold text-purple-600 mb-2">
-                {stats.avgWeekly}
-              </div>
-              <div className="text-sm text-gray-600">Keskikasvu/viikko (g)</div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Weight Chart */}
-        {weightData.length > 1 && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Painon kehitys ja ennuste</CardTitle>
-              <CardDescription>
-                Sininen viiva: mitattu paino • Vihreä katkoviiva: keskikasvukäyrä • Oranssi katkoviiva: ennuste
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <WeightChart weightData={weightData} />
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Weight List */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Painomittaukset</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {weightData.length > 0 ? (
-              <div className="space-y-3">
-                {weightData.map((entry, index) => {
-                  const prevWeight = index > 0 ? weightData[index - 1].weight : entry.weight
-                  const change = entry.weight - prevWeight
-                  const changeText = index > 0 
-                    ? change > 0 
-                      ? `(+${change.toFixed(1)} kg)`
-                      : `(${change.toFixed(1)} kg)`
-                    : ''
-
-                  return (
-                    <div key={entry.id} className="flex justify-between items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                      <div className="flex items-center space-x-4">
-                        <span className="font-medium text-gray-700">
-                          {new Date(entry.date).toLocaleDateString('fi-FI')}
-                        </span>
-                        <span className="text-xl font-bold text-blue-600">
-                          {entry.weight} kg
-                        </span>
-                        {changeText && (
-                          <span className={`text-sm font-medium ${change > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                            {changeText}
-                          </span>
-                        )}
-                      </div>
-                      <Button
-                        onClick={() => deleteEntry(entry.id)}
-                        variant="destructive"
-                        size="sm"
-                      >
-                        Poista
-                      </Button>
-                    </div>
-                  )
-                })}
-              </div>
-            ) : (
-              <div className="text-center py-12">
-                <div className="text-6xl mb-4">🐕</div>
-                <p className="text-gray-500 text-lg">
-                  Ei vielä painomittauksia
-                </p>
-                <p className="text-gray-400">
-                  Lisää ensimmäinen mittaus yllä olevalla lomakkeella!
-                </p>
-              </div>
+            {/* Weight Chart */}
+            {weightData.length > 1 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Painon kehitys ja ennuste</CardTitle>
+                  <CardDescription>
+                    Sininen viiva: mitattu paino • Vihreä katkoviiva: keskikasvukäyrä • Oranssi katkoviiva: ennuste
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <WeightChart weightData={weightData} />
+                </CardContent>
+              </Card>
             )}
-          </CardContent>
-        </Card>
+
+            {/* Weight List */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Painomittaukset</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {weightData.length > 0 ? (
+                  <div className="space-y-3">
+                    {weightData.map((entry, index) => {
+                      const prevWeight = index > 0 ? weightData[index - 1].weight : entry.weight
+                      const change = entry.weight - prevWeight
+                      const changeText = index > 0 
+                        ? change > 0 
+                          ? `(+${change.toFixed(1)} kg)`
+                          : `(${change.toFixed(1)} kg)`
+                        : ''
+
+                      return (
+                        <div key={entry.id} className="flex justify-between items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                          <div className="flex items-center space-x-4">
+                            <span className="font-medium text-gray-700">
+                              {new Date(entry.date).toLocaleDateString('fi-FI')}
+                            </span>
+                            <span className="text-xl font-bold text-blue-600">
+                              {entry.weight} kg
+                            </span>
+                            {changeText && (
+                              <span className={`text-sm font-medium ${change > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                                {changeText}
+                              </span>
+                            )}
+                          </div>
+                          <Button
+                            onClick={() => deleteEntry(entry.id)}
+                            variant="destructive"
+                            size="sm"
+                          >
+                            Poista
+                          </Button>
+                        </div>
+                      )
+                    })}
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <div className="text-6xl mb-4">🐕</div>
+                    <p className="text-gray-500 text-lg">
+                      Ei vielä painomittauksia
+                    </p>
+                    <p className="text-gray-400">
+                      Lisää ensimmäinen mittaus yllä olevalla lomakkeella!
+                    </p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="food">
+            <FoodCalculator currentWeight={currentWeight} />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   )
