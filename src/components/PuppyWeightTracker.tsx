@@ -1,4 +1,3 @@
-
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -10,6 +9,7 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { toast } from 'sonner'
+import WeightChart from './WeightChart'
 
 interface WeightEntry {
   id: string
@@ -460,10 +460,25 @@ export default function PuppyWeightTracker() {
           </Card>
         </div>
 
-        {/* Weight Chart/List */}
+        {/* Weight Chart */}
+        {weightData.length > 1 && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Painon kehitys ja ennuste</CardTitle>
+              <CardDescription>
+                Sininen viiva: mitattu paino • Vihreä katkoviiva: keskikasvukäyrä • Oranssi katkoviiva: ennuste
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <WeightChart weightData={weightData} />
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Weight List */}
         <Card>
           <CardHeader>
-            <CardTitle>Painon kehitys</CardTitle>
+            <CardTitle>Painomittaukset</CardTitle>
           </CardHeader>
           <CardContent>
             {weightData.length > 0 ? (
