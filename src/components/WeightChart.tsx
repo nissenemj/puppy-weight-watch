@@ -25,8 +25,24 @@ interface ChartDataPoint {
 }
 
 export default function WeightChart({ weightData }: WeightChartProps) {
+  console.log('WeightChart received data:', weightData)
+  
   if (weightData.length === 0) {
-    return null
+    console.log('No weight data available')
+    return (
+      <div className="w-full h-80 flex items-center justify-center text-gray-500">
+        Ei painotietoja käytettävissä
+      </div>
+    )
+  }
+
+  if (weightData.length === 1) {
+    console.log('Only one data point, showing simple view')
+    return (
+      <div className="w-full h-80 flex items-center justify-center text-gray-500">
+        Tarvitaan vähintään 2 mittausta kaavion näyttämiseen
+      </div>
+    )
   }
 
   const generatePrediction = (data: WeightEntry[]): ChartDataPoint[] => {
@@ -40,6 +56,8 @@ export default function WeightChart({ weightData }: WeightChartProps) {
     const totalWeeks = (lastDate.getTime() - firstDate.getTime()) / (1000 * 60 * 60 * 24 * 7)
     const totalGrowth = lastEntry.weight - firstEntry.weight
     const weeklyGrowth = totalWeeks > 0 ? totalGrowth / totalWeeks : 0
+
+    console.log('Weekly growth calculated:', weeklyGrowth)
 
     // Generate chart data points
     const chartData: ChartDataPoint[] = []
@@ -70,7 +88,9 @@ export default function WeightChart({ weightData }: WeightChartProps) {
       })
     }
 
-    return chartData.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    const sortedData = chartData.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    console.log('Generated chart data:', sortedData)
+    return sortedData
   }
 
   const chartData = generatePrediction(weightData)
@@ -96,6 +116,8 @@ export default function WeightChart({ weightData }: WeightChartProps) {
     }
     return null
   }
+
+  console.log('Rendering chart with data points:', chartData.length)
 
   return (
     <div className="w-full h-80">
