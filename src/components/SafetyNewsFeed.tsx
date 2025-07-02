@@ -18,56 +18,58 @@ export default function SafetyNewsFeed() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const fetchSafetyNews = async () => {
+  // Static example news for demonstration
+  const exampleNews: NewsItem[] = [
+    {
+      title: "Evira varoittaa: Tietyt koiranruokamerkit vedetty myynnistä",
+      description: "Ruokavirasto on vetänyt myynnistä useita koiranruokamerkkejä mahdollisten terveysriskien vuoksi. Kyse on erityisesti kuivaruoista, joissa on havaittu poikkeavia salmonella-pitoisuuksia.",
+      url: "#",
+      publishedAt: "2024-12-15T10:00:00Z",
+      source: "Yle Uutiset"
+    },
+    {
+      title: "Huomio koiranomistajat: Kiinalaiset herkkupalat aiheuttavat munuaisongelmia",
+      description: "Eläinlääkärit varoittavat tietyistä kiinalaisista kuivalihaherkkujen käytöstä, koska ne on yhdistetty vakaviin munuaissairauksiin koirilla.",
+      url: "#",
+      publishedAt: "2024-12-10T14:30:00Z",
+      source: "MTV Uutiset"
+    },
+    {
+      title: "Raakaruokatuotteiden salmonellariski: Näin suojaat lemmikkisi",
+      description: "Tuore tutkimus osoittaa, että raakaruokatuotteissa voi esiintyä salmonellaa. Asiantuntijat antavat ohjeet turvalliseen käsittelyyn ja varastointiin.",
+      url: "#",
+      publishedAt: "2024-12-05T09:15:00Z",
+      source: "Helsingin Sanomat"
+    },
+    {
+      title: "Allergiaruokien takaisinveto: Tarkista onko koirasi ruoka listalla",
+      description: "Allergikoirille tarkoitetuissa ruoissa on havaittu merkkiaineiden pilaantumista. Lista takaisinvedettävistä tuotteista julkaistu viranomaisten toimesta.",
+      url: "#",
+      publishedAt: "2024-11-28T16:45:00Z",
+      source: "Suomen Eläinlääkärilehti"
+    },
+    {
+      title: "Varoitus: Viheralruoan mukana levinneet myrkytystapaukset",
+      description: "Useat koirat ovat sairastuneet viheralruoan käytön jälkeen. Tutkijat epäilevät myrkyllisten kasvien sekoittumista tuotantoprosessissa.",
+      url: "#",
+      publishedAt: "2024-11-20T11:20:00Z",
+      source: "Koira-lehti"
+    }
+  ]
+
+  const loadNews = () => {
     setLoading(true)
     setError(null)
     
-    try {
-      // Käytetään News API:a hakemaan koiranruokaan liittyviä turvallisuusuutisia
-      const keywords = 'koiranruoka OR lemmikkiruoka OR "pet food" OR "dog food" AND (turvallisuus OR varoitus OR veto OR takaisinveto OR "food recall" OR safety)'
-      const response = await fetch(
-        `https://newsapi.org/v2/everything?q=${encodeURIComponent(keywords)}&language=fi&sortBy=publishedAt&pageSize=10`,
-        {
-          headers: {
-            'X-API-Key': 'YOUR_NEWS_API_KEY' // Tämä pitää korvata oikealla API-avaimella
-          }
-        }
-      )
-      
-      if (!response.ok) {
-        throw new Error('Uutisten haku epäonnistui')
-      }
-      
-      const data = await response.json()
-      setNews(data.articles?.slice(0, 5) || [])
-    } catch (err) {
-      console.error('Error fetching news:', err)
-      setError('Uutisten lataus epäonnistui. Yritä myöhemmin uudelleen.')
-      
-      // Näytetään esimerkkiuutisia demonstraatiota varten
-      setNews([
-        {
-          title: "SMAAK koiranruoka vedetty myynnistä terveysriskien vuoksi",
-          description: "Musti ja Mirri on vetänyt myynnistä SMAAK Herkkä kala viljaton -koiranruokaa terveysongelmien vuoksi.",
-          url: "#",
-          publishedAt: "2023-11-15T10:00:00Z",
-          source: "Yle Uutiset"
-        },
-        {
-          title: "Eviran varoitus: Kiinalainen koiranruoka sisältää vaarallisia aineita",
-          description: "Ruokavirasto varoittaa tiettyjen kiinalaisten koiranruokien käytöstä mahdollisten terveysriskien vuoksi.",
-          url: "#",
-          publishedAt: "2023-10-22T14:30:00Z",
-          source: "MTV Uutiset"
-        }
-      ])
-    } finally {
+    // Simulate loading delay
+    setTimeout(() => {
+      setNews(exampleNews)
       setLoading(false)
-    }
+    }, 1000)
   }
 
   useEffect(() => {
-    fetchSafetyNews()
+    loadNews()
   }, [])
 
   const formatDate = (dateString: string) => {
@@ -99,7 +101,7 @@ export default function SafetyNewsFeed() {
             <Button 
               variant="outline" 
               size="sm" 
-              onClick={fetchSafetyNews}
+              onClick={loadNews}
               className="mt-2"
             >
               Yritä uudelleen
@@ -130,17 +132,10 @@ export default function SafetyNewsFeed() {
                     {formatDate(item.publishedAt)}
                   </div>
                   
-                  {item.url !== "#" && (
-                    <a 
-                      href={item.url} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1 text-xs text-red-700 hover:text-red-900"
-                    >
-                      Lue lisää
-                      <ExternalLink className="h-3 w-3" />
-                    </a>
-                  )}
+                  <div className="flex items-center gap-1 text-xs text-red-600">
+                    <ExternalLink className="h-3 w-3" />
+                    Esimerkkiuutinen
+                  </div>
                 </div>
               </div>
             ))}
@@ -148,7 +143,7 @@ export default function SafetyNewsFeed() {
             <div className="bg-red-100 p-3 rounded-lg border border-red-300 mt-4">
               <p className="text-xs text-red-800">
                 <strong>Huomio:</strong> Seuraa aina virallisia tiedotuskanavia ja ota yhteyttä eläinlääkäriin, 
-                jos epäilet lemmikkisi syöneen vaarallista ruokaa.
+                jos epäilet lemmikkisi syöneen vaarallista ruokaa. Nämä ovat esimerkkiuutisia havainnollistamaan järjestelmän toimintaa.
               </p>
             </div>
           </div>
