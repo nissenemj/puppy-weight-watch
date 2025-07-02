@@ -9,9 +9,9 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { AlertTriangle, Info, Scale } from 'lucide-react'
+import { AlertTriangle, Info, Scale, Dog } from 'lucide-react'
 
-// --- DATAN MÄÄRITTELY ---
+// --- TYYPPIEN MÄÄRITTELY ---
 
 interface PuppyFoodData {
   id: string
@@ -20,19 +20,31 @@ interface PuppyFoodData {
   type: 'kuiva' | 'märkä' | 'raaka'
   nutritionType: 'täysravinto' | 'täydennysravinto'
   dosageBase: 'odotettu_aikuispaino_ja_ikä' | 'nykyinen_paino' | 'prosentti_nykyisestä_painosta' | 'kokoluokka' | 'ei_tietoa'
-  // Taulukkotietoja varten
   adultWeight?: number
-  ageMonths?: string // Esim. "1-3", "9+"
+  ageMonths?: string
   dailyAmount?: number
-  // Kaavoja varten
-  formula?: string // Esim. "complex" MUSH:lle
-  // Vaihteluvälejä varten
+  formula?: string
   minAmount?: number
   maxAmount?: number
   notes?: string
 }
 
-// Alkuperäinen, täydellinen data, josta laskuri hakee tiedot
+interface FeedingResult {
+  amount: number | null
+  minAmount?: number | null
+  maxAmount?: number | null
+  warning?: string
+  mealInfo?: {
+    meals: string
+    description: string
+  } | null
+  nutritionType?: string
+  type?: string
+  notes?: string
+}
+
+// --- DATAN MÄÄRITTELY ---
+
 const puppyFoodDatabase: PuppyFoodData[] = [
   // Brit Care Puppy Lamb & Rice - tarkat yhdistelmät
   { id: 'BC_PUPPY_LAMB_5_1-3', name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice', brand: 'Brit', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 5, ageMonths: '1-3', dailyAmount: 50, notes: 'Sopii tiineille ja imettäville' },
@@ -53,7 +65,7 @@ const puppyFoodDatabase: PuppyFoodData[] = [
   { id: 'BC_PUPPY_LAMB_20_6-12', name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice', brand: 'Brit', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 20, ageMonths: '6-12', dailyAmount: 210 },
   { id: 'BC_PUPPY_LAMB_25_1-3', name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice', brand: 'Brit', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 25, ageMonths: '1-3', dailyAmount: 150, notes: '>25kg koirille Junior Large Breed' },
   
-  // Hau-Hau Champion - tarkat yhdistelmät
+  // Hau-Hau Champion
   { id: 'HHC_PUPPY_5_1-2', name: 'Hau-Hau Champion Pentu & Emo', brand: 'Hau-Hau Champion', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 5, ageMonths: '1-2', dailyAmount: 70, notes: 'Sopii myös emolle' },
   { id: 'HHC_PUPPY_5_3-4', name: 'Hau-Hau Champion Pentu & Emo', brand: 'Hau-Hau Champion', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 5, ageMonths: '3-4', dailyAmount: 90 },
   { id: 'HHC_PUPPY_5_5-6', name: 'Hau-Hau Champion Pentu & Emo', brand: 'Hau-Hau Champion', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 5, ageMonths: '5-6', dailyAmount: 90 },
@@ -68,10 +80,10 @@ const puppyFoodDatabase: PuppyFoodData[] = [
   { id: 'HHC_PUPPY_20_3-4', name: 'Hau-Hau Champion Pentu & Emo', brand: 'Hau-Hau Champion', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 20, ageMonths: '3-4', dailyAmount: 200 },
   { id: 'HHC_PUPPY_20_5-6', name: 'Hau-Hau Champion Pentu & Emo', brand: 'Hau-Hau Champion', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 20, ageMonths: '5-6', dailyAmount: 230 },
   
-  // MUSH Raakaruoat - ikäryhmittäin
+  // MUSH Raakaruoat
   { id: 'MUSH_PUPPY', name: 'MUSH Vaisto Puppy (nauta-poro-lohi)', brand: 'MUSH', type: 'raaka', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', formula: 'complex' },
   
-  // SMAAK - painoryhmittäin
+  // SMAAK
   { id: 'SMAAK_PUPPY', name: 'SMAAK Raaka täysravinto', brand: 'SMAAK', type: 'raaka', nutritionType: 'täysravinto', dosageBase: 'nykyinen_paino' },
   
   // Muut ruoat
@@ -82,17 +94,14 @@ const puppyFoodDatabase: PuppyFoodData[] = [
 
 // --- APUFUNKTIOT ---
 
-// Luodaan pudotusvalikkoa varten uniikki lista ruoista (yksi per nimi)
 const uniqueFoodProducts = puppyFoodDatabase.reduce<PuppyFoodData[]>((acc, food) => {
   if (!acc.some(item => item.name === food.name)) {
-    // Otetaan ensimmäinen variantti edustamaan koko tuotetta listassa
     const representativeFood = puppyFoodDatabase.find(f => f.name === food.name)!
     acc.push(representativeFood)
   }
   return acc
 }, [])
 
-// Ryhmitellään uniikit ruoat merkin mukaan pudotusvalikkoa varten
 const foodsByBrand = uniqueFoodProducts.reduce<Record<string, PuppyFoodData[]>>((acc, food) => {
   if (!acc[food.brand]) {
     acc[food.brand] = []
@@ -101,7 +110,6 @@ const foodsByBrand = uniqueFoodProducts.reduce<Record<string, PuppyFoodData[]>>(
   return acc
 }, {})
 
-// Haetaan ruokintakerrat iän mukaan
 const getMealsPerDay = (ageInMonths: number) => {
   if (ageInMonths <= 2) return { meals: '4-5', description: 'Jaa päiväannos 4-5 osaan.' }
   if (ageInMonths <= 4) return { meals: '3-4', description: 'Jaa päiväannos 3-4 osaan.' }
@@ -116,19 +124,20 @@ export default function PuppyFeedingCalculator() {
   const [expectedWeight, setExpectedWeight] = useState<string>('')
   const [currentWeight, setCurrentWeight] = useState<string>('')
   const [ageMonths, setAgeMonths] = useState<string>('')
-  const [result, setResult] = useState<any>(null)
+  const [result, setResult] = useState<FeedingResult | null>(null)
+  const [isCalculating, setIsCalculating] = useState(false)
 
   const selectedFoodTemplate = uniqueFoodProducts.find(food => food.name === selectedFoodName)
 
   const getInstructionsForFood = (food: PuppyFoodData) => {
     switch (food.dosageBase) {
       case 'odotettu_aikuispaino_ja_ikä':
-        return `Tämä ruoka annostellaan odotetun aikuispainon ja pennun iän perusteella. Syötä molemmat tiedot alla.`
+        return `Tämä ruoka annostellaan odotetun aikuispainon ja pennun iän perusteella.`
       case 'nykyinen_paino':
       case 'prosentti_nykyisestä_painosta':
-        return `Tämä ruoka annostellaan pennun nykyisen painon perusteella. Syötä pennun tämänhetkinen paino.`
+        return `Tämä ruoka annostellaan pennun nykyisen painon perusteella.`
       case 'kokoluokka':
-        return `Tämä ruoka annostellaan koiran kokoluokan (odotettu aikuispaino) perusteella. Syötä odotettu aikuispaino.`
+        return `Tämä ruoka annostellaan koiran kokoluokan (odotettu aikuispaino) perusteella.`
       case 'ei_tietoa':
         return `Tarkkaa annosteluohjetta ei valitettavasti ole saatavilla digitaalisessa muodossa. Tarkista annostus aina tuotepakkauksesta.`
       default:
@@ -136,121 +145,134 @@ export default function PuppyFeedingCalculator() {
     }
   }
 
-  const calculateFeeding = () => {
+  const calculateFeeding = async () => {
     if (!selectedFoodTemplate) return
 
-    let calculatedAmount: number | null = null
-    let minAmount: number | null = null
-    let maxAmount: number | null = null
-    let warning = ''
-    let mealInfo = null
-    let notes = selectedFoodTemplate.notes || ''
+    setIsCalculating(true)
+    
+    try {
+      let calculatedAmount: number | null = null
+      let minAmount: number | null = null
+      let maxAmount: number | null = null
+      let warning = ''
+      let mealInfo = null
+      let notes = selectedFoodTemplate.notes || ''
 
-    const ageNum = parseFloat(ageMonths)
-    if (ageMonths && !isNaN(ageNum)) {
-        mealInfo = getMealsPerDay(ageNum)
-    }
+      const ageNum = parseFloat(ageMonths)
+      if (ageMonths && !isNaN(ageNum)) {
+          mealInfo = getMealsPerDay(ageNum)
+      }
 
-    switch (selectedFoodTemplate.dosageBase) {
-      case 'odotettu_aikuispaino_ja_ikä':
-        const weightNum = parseFloat(expectedWeight)
-        if (isNaN(weightNum) || isNaN(ageNum)) {
-            setResult({ amount: null, warning: 'Syötä kelvolliset arvot painolle ja iälle.' })
-            return
-        }
-
-        // MUSH-kaavalaskenta
-        if (selectedFoodTemplate.formula === 'complex') {
-            let percentage = 0
-            if (ageNum <= 2) percentage = 0.10 // 10%
-            else if (ageNum <= 4) percentage = 0.075 // 7.5%
-            else if (ageNum <= 6) percentage = 0.05 // 5%
-            else if (ageNum <= 9) percentage = 0.03 // 3%
-            else percentage = 0.025 // 2.5%
-            calculatedAmount = Math.round(weightNum * 1000 * percentage)
-        } else {
-        // Taulukkolaskenta (Brit Care, Hau-Hau) - NYT TOIMII LASKURINA!
-          const foodVariants = puppyFoodDatabase.filter(f => f.name === selectedFoodTemplate.name)
-          const availableWeights = [...new Set(foodVariants.map(f => f.adultWeight!))].sort((a, b) => a - b)
-          
-          const closestWeight = availableWeights.reduce((prev, curr) => 
-            (Math.abs(curr - weightNum) < Math.abs(prev - weightNum) ? curr : prev)
-          )
-
-          const matchingFood = foodVariants.find(food => {
-            if (food.adultWeight !== closestWeight) return false
-            const ageRange = food.ageMonths!.split('-')
-            const minAge = parseFloat(ageRange[0])
-            const maxAge = ageRange.length > 1 ? parseFloat(ageRange[1]) : Infinity
-            return ageNum >= minAge && ageNum <= maxAge
-          })
-
-          if (matchingFood) {
-            calculatedAmount = matchingFood.dailyAmount!
-            if (closestWeight !== weightNum) {
-              warning = `Annostus laskettu lähimmälle painoluokalle (${closestWeight} kg).`
-            }
-            if(matchingFood.notes) notes = matchingFood.notes
-          } else {
-            warning = 'Annosta ei löytynyt annetuilla arvoilla. Tarkista, sopiiko ruoka pennun iälle tai painoluokalle.'
+      switch (selectedFoodTemplate.dosageBase) {
+        case 'odotettu_aikuispaino_ja_ikä':
+          const weightNum = parseFloat(expectedWeight)
+          if (isNaN(weightNum) || isNaN(ageNum)) {
+              setResult({ amount: null, warning: 'Syötä kelvolliset arvot painolle ja iälle.' })
+              return
           }
-        }
-        break
 
-      case 'nykyinen_paino':
-        const currentWeightNum = parseFloat(currentWeight)
-         if (isNaN(currentWeightNum)) {
-            setResult({ amount: null, warning: 'Syötä kelvollinen nykyinen paino.' })
-            return
-        }
-        // SMAAK-logiikka (esimerkki, vaatisi tarkan taulukon)
-        if (currentWeightNum <= 5) { minAmount = 75; maxAmount = 150; }
-        else if (currentWeightNum <= 10) { minAmount = 150; maxAmount = 300; }
-        else if (currentWeightNum <= 15) { minAmount = 225; maxAmount = 450; }
-        else if (currentWeightNum <= 20) { minAmount = 300; maxAmount = 600; }
-        else if (currentWeightNum <= 25) { minAmount = 375; maxAmount = 750; }
-        else { warning = 'Paino ylittää esimerkkitaulukon. Tarkista annostus pakkauksesta.'; }
-        break
+          // MUSH-kaavalaskenta
+          if (selectedFoodTemplate.formula === 'complex') {
+              let percentage = 0
+              if (ageNum <= 2) percentage = 0.10 // 10%
+              else if (ageNum <= 4) percentage = 0.075 // 7.5%
+              else if (ageNum <= 6) percentage = 0.05 // 5%
+              else if (ageNum <= 9) percentage = 0.03 // 3%
+              else percentage = 0.025 // 2.5%
+              calculatedAmount = Math.round(weightNum * 1000 * percentage)
+          } else {
+          // Taulukkolaskenta (Brit Care, Hau-Hau) - KRIITTINEN KORJAUS
+            const foodVariants = puppyFoodDatabase.filter(f => f.name === selectedFoodTemplate.name)
+            const availableWeights = [...new Set(foodVariants.map(f => f.adultWeight!))].sort((a, b) => a - b)
+            
+            const closestWeight = availableWeights.reduce((prev, curr) => 
+              (Math.abs(curr - weightNum) < Math.abs(prev - weightNum) ? curr : prev)
+            )
 
-      case 'prosentti_nykyisestä_painosta':
-        const currentWeightForPercent = parseFloat(currentWeight)
-         if (isNaN(currentWeightForPercent)) {
-            setResult({ amount: null, warning: 'Syötä kelvollinen nykyinen paino.' })
-            return
-        }
-        minAmount = Math.round(currentWeightForPercent * 1000 * 0.05) // 5%
-        maxAmount = Math.round(currentWeightForPercent * 1000 * 0.10) // 10%
-        calculatedAmount = Math.round((minAmount + maxAmount) / 2) // Näytetään keskiarvo
-        break
+            const matchingFood = foodVariants.find(food => {
+              if (food.adultWeight !== closestWeight) return false
+              const ageRange = food.ageMonths!.split('-')
+              const minAge = parseFloat(ageRange[0])
+              const maxAge = ageRange.length > 1 ? parseFloat(ageRange[1]) : Infinity
+              return ageNum >= minAge && ageNum <= maxAge
+            })
 
-      case 'kokoluokka':
-         const adultWeightForSize = parseFloat(expectedWeight)
-         if (isNaN(adultWeightForSize)) {
-            setResult({ amount: null, warning: 'Syötä kelvollinen odotettu aikuispaino.' })
-            return
-        }
-        if (adultWeightForSize <= 10) { minAmount = 200; maxAmount = 400; }
-        else if (adultWeightForSize <= 25) { minAmount = 400; maxAmount = 800; }
-        else if (adultWeightForSize <= 50) { minAmount = 800; maxAmount = 1200; }
-        else { warning = 'Paino ylittää esimerkkitaulukon. Tarkista annostus pakkauksesta.'; }
-        
-        if(selectedFoodTemplate.nutritionType === 'täydennysravinto') {
-            minAmount = minAmount ? minAmount / 2 : null;
-            maxAmount = maxAmount ? maxAmount / 2 : null;
-        }
-        break
+            if (matchingFood) {
+              // TÄMÄ PUUTTUI - KRIITTINEN KORJAUS!
+              calculatedAmount = matchingFood.dailyAmount!
+              if (closestWeight !== weightNum) {
+                warning = `Annostus laskettu lähimmälle painoluokalle (${closestWeight} kg).`
+              }
+              if(matchingFood.notes) notes = matchingFood.notes
+            } else {
+              warning = 'Annosta ei löytynyt annetuilla arvoilla. Tarkista, sopiiko ruoka pennun iälle tai painoluokalle.'
+            }
+          }
+          break
+
+        case 'nykyinen_paino':
+          const currentWeightNum = parseFloat(currentWeight)
+           if (isNaN(currentWeightNum)) {
+              setResult({ amount: null, warning: 'Syötä kelvollinen nykyinen paino.' })
+              return
+          }
+          // SMAAK-logiikka (esimerkki, vaatisi tarkan taulukon)
+          if (currentWeightNum <= 5) { minAmount = 75; maxAmount = 150; }
+          else if (currentWeightNum <= 10) { minAmount = 150; maxAmount = 300; }
+          else if (currentWeightNum <= 15) { minAmount = 225; maxAmount = 450; }
+          else if (currentWeightNum <= 20) { minAmount = 300; maxAmount = 600; }
+          else if (currentWeightNum <= 25) { minAmount = 375; maxAmount = 750; }
+          else { warning = 'Paino ylittää esimerkkitaulukon. Tarkista annostus pakkauksesta.'; }
+          break
+
+        case 'prosentti_nykyisestä_painosta':
+          const currentWeightForPercent = parseFloat(currentWeight)
+           if (isNaN(currentWeightForPercent)) {
+              setResult({ amount: null, warning: 'Syötä kelvollinen nykyinen paino.' })
+              return
+          }
+          minAmount = Math.round(currentWeightForPercent * 1000 * 0.05) // 5%
+          maxAmount = Math.round(currentWeightForPercent * 1000 * 0.10) // 10%
+          calculatedAmount = Math.round((minAmount + maxAmount) / 2) // Näytetään keskiarvo
+          break
+
+        case 'kokoluokka':
+           const adultWeightForSize = parseFloat(expectedWeight)
+           if (isNaN(adultWeightForSize)) {
+              setResult({ amount: null, warning: 'Syötä kelvollinen odotettu aikuispaivo.' })
+              return
+          }
+          if (adultWeightForSize <= 10) { minAmount = 200; maxAmount = 400; }
+          else if (adultWeightForSize <= 25) { minAmount = 400; maxAmount = 800; }
+          else if (adultWeightForSize <= 50) { minAmount = 800; maxAmount = 1200; }
+          else { warning = 'Paino ylittää esimerkkitaulukon. Tarkista annostus pakkauksesta.'; }
+          
+          if(selectedFoodTemplate.nutritionType === 'täydennysravinto') {
+              minAmount = minAmount ? Math.round(minAmount / 2) : null;
+              maxAmount = maxAmount ? Math.round(maxAmount / 2) : null;
+          }
+          break
+      }
+
+      setResult({
+        amount: calculatedAmount,
+        minAmount,
+        maxAmount,
+        warning,
+        mealInfo,
+        nutritionType: selectedFoodTemplate.nutritionType,
+        type: selectedFoodTemplate.type,
+        notes
+      })
+    } catch (error) {
+      console.error('Calculation error:', error)
+      setResult({ 
+        amount: null, 
+        warning: 'Laskennassa tapahtui virhe. Yritä uudelleen.' 
+      })
+    } finally {
+      setIsCalculating(false)
     }
-
-    setResult({
-      amount: calculatedAmount,
-      minAmount,
-      maxAmount,
-      warning,
-      mealInfo,
-      nutritionType: selectedFoodTemplate.nutritionType,
-      type: selectedFoodTemplate.type,
-      notes
-    })
   }
 
   const getInputFields = () => {
@@ -265,19 +287,42 @@ export default function PuppyFeedingCalculator() {
         {showExpectedWeight && (
           <div className="space-y-2">
             <Label htmlFor="expected-weight">Odotettu aikuispaino (kg)</Label>
-            <Input id="expected-weight" type="number" step="0.1" value={expectedWeight} onChange={(e) => setExpectedWeight(e.target.value)} placeholder="esim. 15" />
+            <Input 
+              id="expected-weight" 
+              type="number" 
+              step="0.1" 
+              value={expectedWeight} 
+              onChange={(e) => setExpectedWeight(e.target.value)} 
+              placeholder="esim. 15"
+              aria-describedby="expected-weight-help"
+            />
           </div>
         )}
         {showCurrentWeight && (
           <div className="space-y-2">
             <Label htmlFor="current-weight">Pennun nykyinen paino (kg)</Label>
-            <Input id="current-weight" type="number" step="0.1" value={currentWeight} onChange={(e) => setCurrentWeight(e.target.value)} placeholder="esim. 8.5" />
+            <Input 
+              id="current-weight" 
+              type="number" 
+              step="0.1" 
+              value={currentWeight} 
+              onChange={(e) => setCurrentWeight(e.target.value)} 
+              placeholder="esim. 8.5"
+              aria-describedby="current-weight-help"
+            />
           </div>
         )}
         {showAge && (
           <div className="space-y-2">
             <Label htmlFor="age-months">Pennun ikä (kuukausia)</Label>
-            <Input id="age-months" type="number" value={ageMonths} onChange={(e) => setAgeMonths(e.target.value)} placeholder="esim. 4" />
+            <Input 
+              id="age-months" 
+              type="number" 
+              value={ageMonths} 
+              onChange={(e) => setAgeMonths(e.target.value)} 
+              placeholder="esim. 4"
+              aria-describedby="age-help"
+            />
           </div>
         )}
       </div>
@@ -288,7 +333,10 @@ export default function PuppyFeedingCalculator() {
     <div className="space-y-6 p-4">
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">🐕 Penturuokintaopas</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <Dog className="h-5 w-5" /> 
+            Penturuokintaopas
+          </CardTitle>
           <CardDescription>Laske viitteellinen päiväannos pennullesi Suomessa myytäville ruoille.</CardDescription>
         </CardHeader>
         <CardContent>
@@ -304,7 +352,9 @@ export default function PuppyFeedingCalculator() {
                 <div className="space-y-2">
                   <Label>1. Valitse penturuoka</Label>
                   <Select value={selectedFoodName} onValueChange={setSelectedFoodName}>
-                    <SelectTrigger><SelectValue placeholder="Valitse ruokatuote" /></SelectTrigger>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Valitse ruokatuote" />
+                    </SelectTrigger>
                     <SelectContent>
                       {Object.entries(foodsByBrand).map(([brand, foods]) => (
                         <SelectGroup key={brand}>
@@ -338,14 +388,21 @@ export default function PuppyFeedingCalculator() {
                         {getInputFields()}
                     </div>
 
-                    <Button onClick={calculateFeeding} className="w-full" disabled={selectedFoodTemplate.dosageBase === 'ei_tietoa'}>
-                      <Scale className="mr-2 h-4 w-4" /> Laske ruokamäärä
+                    <Button 
+                      onClick={calculateFeeding} 
+                      className="w-full" 
+                      disabled={selectedFoodTemplate.dosageBase === 'ei_tietoa' || isCalculating}
+                      aria-label="Laske pennun päivittäinen ruokamäärä"
+                      aria-describedby={result ? "feeding-result" : undefined}
+                    >
+                      <Scale className="mr-2 h-4 w-4" /> 
+                      {isCalculating ? 'Lasketaan...' : 'Laske ruokamäärä'}
                     </Button>
                   </>
                 )}
 
                 {result && (
-                  <div className="space-y-4 pt-4 border-t">
+                  <div className="space-y-4 pt-4 border-t" id="feeding-result">
                     <h3 className="font-bold text-xl">Laskennan tulokset:</h3>
                     
                     {result.nutritionType === 'täydennysravinto' && (
@@ -364,7 +421,7 @@ export default function PuppyFeedingCalculator() {
                       </Alert>
                     )}
                     
-                    {result.type === 'raaka' && (result.amount > 1000 || (result.maxAmount && result.maxAmount > 1000)) && (
+                    {result.type === 'raaka' && (result.amount && result.amount > 1000 || (result.maxAmount && result.maxAmount > 1000)) && (
                        <Alert>
                         <Info className="h-4 w-4" />
                         <AlertTitle>Tietoa raakaruoan annoskoosta</AlertTitle>
@@ -417,7 +474,10 @@ export default function PuppyFeedingCalculator() {
 
                     <Alert>
                       <Info className="h-4 w-4" />
-                      <AlertDescription>Tämä on viitteellinen annostus. Tarkkaile aina pentusi kuntoluokkaa ja sopeuta annosta tarvittaessa. Varmista, että raikasta vettä on aina saatavilla.</AlertDescription>
+                      <AlertDescription>
+                        Tämä on viitteellinen annostus. Tarkkaile aina pentusi kuntoluokkaa ja sopeuta annosta tarvittaessa. 
+                        Varmista, että raikasta vettä on aina saatavilla.
+                      </AlertDescription>
                     </Alert>
                   </div>
                 )}
