@@ -35,6 +35,8 @@ interface AdvancedFoodCalculatorProps {
 export default function AdvancedFoodCalculator({ user }: AdvancedFoodCalculatorProps) {
   const [selectedDog, setSelectedDog] = useState<Dog>()
   const [recommendation, setRecommendation] = useState<FoodRecommendation | null>(null)
+  const [customCalories, setCustomCalories] = useState<string>('')
+  const [useCustomCalories, setUseCustomCalories] = useState<boolean>(false)
 
   const calculateAdvancedRecommendation = () => {
     if (!selectedDog || !selectedDog.weight_kg) {
@@ -73,8 +75,22 @@ export default function AdvancedFoodCalculator({ user }: AdvancedFoodCalculatorP
 
     const dailyCalories = Math.round(rer * activityMultiplier)
     
-    // Käytetään keskimääräistä kalorimäärää kuivaruoalle (350 kcal/100g)
-    const dailyAmount = Math.round((dailyCalories / 350) * 100)
+    // PARANNELTU: Käyttäjä voi syöttää tarkan kalorimäärän
+    let caloriesPerGram = 3.5 // Oletus: 350 kcal/100g
+    let method = 'Edistynyt laskenta (keskimääräinen kalorimäärä)'
+    
+    if (useCustomCalories && customCalories) {
+      const customCaloriesNum = parseFloat(customCalories)
+      if (!isNaN(customCaloriesNum) && customCaloriesNum > 0) {
+        caloriesPerGram = customCaloriesNum / 100
+        method = 'Edistynyt laskenta (tarkka kalorimäärä)'
+      } else {
+        toast.error('Syötä kelvollinen kalorimäärä')
+        return
+      }
+    }
+    
+    const dailyAmount = Math.round(dailyCalories / caloriesPerGram)
 
     // Aterioiden määrä
     let mealsPerDay = 2
@@ -91,7 +107,7 @@ export default function AdvancedFoodCalculator({ user }: AdvancedFoodCalculatorP
       mealsPerDay,
       amountPerMeal: Math.round(dailyAmount / mealsPerDay),
       dailyCalories,
-      method: 'Edistynyt laskenta'
+      method
     }
 
     setRecommendation(newRecommendation)
@@ -120,6 +136,52 @@ export default function AdvancedFoodCalculator({ user }: AdvancedFoodCalculatorP
         </div>
 
         <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Ruoan kalorimäärä</CardTitle>
+              <CardDescription>
+                Anna ruoan tarkka kalorimäärä pakkauksesta tarkempaa laskentaa varten
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="use-custom-calories"
+                  checked={useCustomCalories}
+                  onChange={(e) => setUseCustomCalories(e.target.checked)}
+                  className="rounded"
+                />
+                <Label htmlFor="use-custom-calories">
+                  Syötä ruoan tarkka kalorimäärä
+                </Label>
+              </div>
+              
+              {useCustomCalories && (
+                <div className="space-y-2">
+                  <Label htmlFor="custom-calories">Kalorit per 100g</Label>
+                  <Input
+                    id="custom-calories"
+                    type="number"
+                    step="1"
+                    value={customCalories}
+                    onChange={(e) => setCustomCalories(e.target.value)}
+                    placeholder="esim. 375"
+                  />
+                  <p className="text-sm text-gray-600">
+                    Löydät tämän tiedon ruokapakkauksen ravintosisältötaulukosta
+                  </p>
+                </div>
+              )}
+              
+              {!useCustomCalories && (
+                <p className="text-sm text-gray-600">
+                  Käytetään keskimääräistä arvoa 350 kcal/100g kuivaruoalle
+                </p>
+              )}
+            </CardContent>
+          </Card>
+
           <Card>
             <CardHeader>
               <CardTitle>Laskenta</CardTitle>
@@ -177,6 +239,11 @@ export default function AdvancedFoodCalculator({ user }: AdvancedFoodCalculatorP
                     {selectedDog && selectedDog.health_conditions && selectedDog.health_conditions.length > 0 && (
                       <p className="mt-2 text-orange-600">
                         <strong>Huomio:</strong> Koiralla on terveysongelmia. Ota yhteyttä eläinlääkäriin ruokinnan suunnittelussa.
+                      </p>
+                    )}
+                    {useCustomCalories && customCalories && (
+                      <p className="mt-2 text-green-600">
+                        <strong>Tarkka laskenta:</strong> Käytetty ruoan kalorimäärä {customCalories} kcal/100g.
                       </p>
                     )}
                   </div>
