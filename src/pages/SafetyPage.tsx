@@ -1,8 +1,9 @@
+
 import React from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
-import { ArrowLeft, Shield, FileText } from 'lucide-react'
+import { ArrowLeft, Shield, FileText, AlertTriangle } from 'lucide-react'
 import InfoNavigation from '@/components/InfoNavigation'
 import SafetyNewsFeed from '@/components/SafetyNewsFeed'
 
