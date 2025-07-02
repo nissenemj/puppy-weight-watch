@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client"
 
 export interface DogFood {
@@ -43,7 +42,13 @@ export class DogFoodService {
       throw new Error(error.message)
     }
     
-    return data || []
+    // Type assertion to handle the Supabase response
+    return (data || []).map(item => ({
+      ...item,
+      food_type: item.food_type as DogFood['food_type'],
+      nutrition_type: item.nutrition_type as DogFood['nutrition_type'],
+      dosage_method: item.dosage_method as DogFood['dosage_method']
+    }))
   }
 
   static async insertDogFoodWithGuidelines(dogFood: Omit<DogFood, 'id' | 'created_at'>, guidelines: Omit<FeedingGuideline, 'id' | 'dog_food_id' | 'created_at'>[]): Promise<DogFood> {
@@ -84,7 +89,13 @@ export class DogFoodService {
       }
     }
 
-    return foodData
+    // Type assertion for the return value
+    return {
+      ...foodData,
+      food_type: foodData.food_type as DogFood['food_type'],
+      nutrition_type: foodData.nutrition_type as DogFood['nutrition_type'],
+      dosage_method: foodData.dosage_method as DogFood['dosage_method']
+    }
   }
 
   static async initializeDatabase(): Promise<void> {

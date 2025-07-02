@@ -1,351 +1,317 @@
 
 import React, { useState, useEffect } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Badge } from '@/components/ui/badge'
-import { Calculator, AlertTriangle, Info } from 'lucide-react'
-import { DogFoodService, type DogFood } from '@/services/dogFoodService'
+import { Select, SelectContent, SelectTrigger, SelectValue, SelectItem } from '@/components/ui/select'
 import { toast } from 'sonner'
+import { DogFoodService, DogFood } from '@/services/dogFoodService'
+import { User } from '@supabase/supabase-js'
 
-interface CalculationResult {
-  dailyAmount: number
-  mealsPerDay: number
-  amountPerMeal: number
-  foodName: string
-  method: string
-  warnings?: string[]
+interface AdvancedFoodCalculatorProps {
+  user: User
 }
 
-export default function AdvancedFoodCalculator() {
+export default function AdvancedFoodCalculator({ user }: AdvancedFoodCalculatorProps) {
   const [dogFoods, setDogFoods] = useState<DogFood[]>([])
   const [selectedFood, setSelectedFood] = useState<DogFood | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [initializing, setInitializing] = useState(false)
+  
+  // Form inputs
   const [currentWeight, setCurrentWeight] = useState('')
   const [adultWeight, setAdultWeight] = useState('')
   const [ageMonths, setAgeMonths] = useState('')
   const [sizeCategory, setSizeCategory] = useState('')
-  const [result, setResult] = useState<CalculationResult | null>(null)
-  const [loading, setLoading] = useState(true)
+  
+  // Results
+  const [recommendation, setRecommendation] = useState<{
+    dailyAmount: number
+    method: string
+  } | null>(null)
 
   useEffect(() => {
-    const loadFoods = async () => {
-      try {
-        const foods = await DogFoodService.getAllDogFoods()
-        setDogFoods(foods.filter(food => food.dosage_method !== 'Ei_Tietoa'))
-      } catch (error) {
-        console.error('Error loading foods:', error)
-        toast.error('Ruokatietojen lataaminen epäonnistui')
-      } finally {
-        setLoading(false)
-      }
-    }
-    loadFoods()
+    loadDogFoods()
   }, [])
 
+  const loadDogFoods = async () => {
+    setLoading(true)
+    try {
+      const foods = await DogFoodService.getAllDogFoods()
+      setDogFoods(foods)
+    } catch (error) {
+      console.error('Error loading dog foods:', error)
+      toast.error('Virhe koiranruokien lataamisessa')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const initializeDatabase = async () => {
+    setInitializing(true)
+    try {
+      await DogFoodService.initializeDatabase()
+      toast.success('Tietokanta alustettu onnistuneesti!')
+      await loadDogFoods()
+    } catch (error) {
+      console.error('Error initializing database:', error)
+      toast.error('Virhe tietokannan alustamisessa')
+    } finally {
+      setInitializing(false)
+    }
+  }
+
   const calculateFeeding = () => {
-    if (!selectedFood || !selectedFood.feeding_guidelines) {
-      toast.error('Valitse ensin ruoka')
+    if (!selectedFood) {
+      toast.error('Valitse ensin koiranruoka')
       return
     }
 
     const guidelines = selectedFood.feeding_guidelines
-    let dailyAmount = 0
-    const warnings: string[] = []
+    if (!guidelines || guidelines.length === 0) {
+      toast.error('Tälle ruoalle ei ole saatavilla annostelutietoja')
+      return
+    }
+
+    let result: number | null = null
+    const method = selectedFood.dosage_method
 
     try {
-      switch (selectedFood.dosage_method) {
-        case 'Odotettu_Aikuispaino_Ja_Ikä':
-          if (!adultWeight || !ageMonths) {
-            toast.error('Syötä sekä odotettu aikuispaino että ikä')
-            return
-          }
-          
-          const weightNum = parseFloat(adultWeight)
-          const matchingGuideline = guidelines.find(g => 
-            g.adult_weight_kg === weightNum && g.age_months === ageMonths
-          )
-          
-          if (matchingGuideline) {
-            dailyAmount = matchingGuideline.daily_amount_min || 0
-          } else {
-            // Try to find closest match
-            const closestWeight = guidelines.find(g => g.adult_weight_kg && g.adult_weight_kg >= weightNum)
-            if (closestWeight) {
-              const ageMatch = guidelines.find(g => 
-                g.adult_weight_kg === closestWeight.adult_weight_kg && g.age_months === ageMonths
-              )
-              if (ageMatch) {
-                dailyAmount = ageMatch.daily_amount_min || 0
-                warnings.push(`Käytetty lähintä saatavilla olevaa painoluokkaa: ${closestWeight.adult_weight_kg}kg`)
-              }
-            }
-          }
-          break
+      if (method === 'Odotettu_Aikuispaino_Ja_Ikä') {
+        const weight = parseFloat(adultWeight)
+        const age = ageMonths
+        
+        if (!weight || !age) {
+          toast.error('Syötä sekä odotettu aikuispaino että ikä')
+          return
+        }
 
-        case 'Nykyinen_Paino':
-          if (!currentWeight) {
-            toast.error('Syötä pennun nykyinen paino')
-            return
-          }
-          
-          const currentWeightNum = parseFloat(currentWeight)
-          const weightGuideline = guidelines.find(g => g.current_weight_kg === currentWeightNum)
-          
-          if (weightGuideline) {
-            if (weightGuideline.daily_amount_min === weightGuideline.daily_amount_max) {
-              dailyAmount = weightGuideline.daily_amount_min || 0
-            } else {
-              dailyAmount = Math.round(((weightGuideline.daily_amount_min || 0) + (weightGuideline.daily_amount_max || 0)) / 2)
-              warnings.push(`Annostelualue: ${weightGuideline.daily_amount_min}-${weightGuideline.daily_amount_max}g. Sopeutettu keskiarvoon.`)
-            }
-          }
-          break
+        const guideline = guidelines.find(g => 
+          g.adult_weight_kg === weight && g.age_months === age
+        )
+        
+        if (guideline) {
+          result = guideline.daily_amount_min || 0
+        }
+      } else if (method === 'Nykyinen_Paino') {
+        const weight = parseFloat(currentWeight)
+        
+        if (!weight) {
+          toast.error('Syötä pennun nykyinen paino')
+          return
+        }
 
-        case 'Prosentti_Nykyisestä_Painosta':
-          if (!currentWeight) {
-            toast.error('Syötä pennun nykyinen paino')
-            return
-          }
-          
-          const weightForPercent = parseFloat(currentWeight)
-          const percentGuideline = guidelines.find(g => g.calculation_formula?.includes('0.05'))
-          
-          if (percentGuideline) {
-            dailyAmount = Math.round(weightForPercent * 1000 * 0.075) // 7.5% keskiarvo 5-10%
-            warnings.push('Laskettu 7.5% painosta (suositus 5-10%). Seuraa koiran kuntoluokkaa ja säädä tarvittaessa.')
-          }
-          break
+        const guideline = guidelines.find(g => 
+          g.current_weight_kg === weight
+        )
+        
+        if (guideline) {
+          result = guideline.daily_amount_min || 0
+        }
+      } else if (method === 'Kokoluokka') {
+        if (!sizeCategory) {
+          toast.error('Valitse kokoluokka')
+          return
+        }
 
-        case 'Kokoluokka':
-          if (!sizeCategory) {
-            toast.error('Valitse koiran kokoluokka')
-            return
-          }
-          
-          const sizeGuideline = guidelines.find(g => g.size_category === sizeCategory)
-          
-          if (sizeGuideline) {
-            if (sizeGuideline.daily_amount_min === sizeGuideline.daily_amount_max) {
-              dailyAmount = sizeGuideline.daily_amount_min || 0
-            } else {
-              dailyAmount = Math.round(((sizeGuideline.daily_amount_min || 0) + (sizeGuideline.daily_amount_max || 0)) / 2)
-              warnings.push(`Annostelualue: ${sizeGuideline.daily_amount_min}-${sizeGuideline.daily_amount_max}g. Käytetty keskiarvoa.`)
-            }
-          }
-          break
+        const guideline = guidelines.find(g => 
+          g.size_category === sizeCategory
+        )
+        
+        if (guideline) {
+          result = guideline.daily_amount_min || 0
+        }
+      } else if (method === 'Prosentti_Nykyisestä_Painosta') {
+        const weight = parseFloat(currentWeight)
+        
+        if (!weight) {
+          toast.error('Syötä pennun nykyinen paino')
+          return
+        }
+
+        const guideline = guidelines[0]
+        if (guideline && guideline.calculation_formula) {
+          // Yksinkertainen 5-10% laskenta
+          result = Math.round(weight * 1000 * 0.075) // 7.5% keskiarvo
+        }
       }
 
-      if (dailyAmount > 0) {
-        const mealsPerDay = dailyAmount > 200 ? 3 : 2 // Suuremmat annokset jaetaan useampaan ateriaan
-        
-        setResult({
-          dailyAmount,
-          mealsPerDay,
-          amountPerMeal: Math.round(dailyAmount / mealsPerDay),
-          foodName: selectedFood.name,
-          method: selectedFood.dosage_method,
-          warnings
+      if (result) {
+        setRecommendation({
+          dailyAmount: result,
+          method: selectedFood.name
         })
+        toast.success(`Suositeltu päivittäinen annos: ${result}g`)
       } else {
-        toast.error('Annosmäärää ei voitu laskea annetuilla tiedoilla')
+        toast.error('Annosta ei voitu laskea annetuilla arvoilla')
       }
     } catch (error) {
-      console.error('Calculation error:', error)
-      toast.error('Laskennassa tapahtui virhe')
+      console.error('Error calculating feeding:', error)
+      toast.error('Virhe annoksen laskennassa')
     }
   }
 
-  const resetForm = () => {
-    setSelectedFood(null)
-    setCurrentWeight('')
-    setAdultWeight('')
-    setAgeMonths('')
-    setSizeCategory('')
-    setResult(null)
-  }
+  const renderInputs = () => {
+    if (!selectedFood) return null
 
-  if (loading) {
-    return (
-      <Card>
-        <CardContent className="text-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p>Ladataan ruokatietoja...</p>
-        </CardContent>
-      </Card>
-    )
+    const method = selectedFood.dosage_method
+
+    switch (method) {
+      case 'Odotettu_Aikuispaino_Ja_Ikä':
+        return (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="adult-weight">Odotettu aikuispaino (kg)</Label>
+              <Input
+                id="adult-weight"
+                type="number"
+                value={adultWeight}
+                onChange={(e) => setAdultWeight(e.target.value)}
+                placeholder="esim. 20"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="age-months">Ikä kuukausina</Label>
+              <Input
+                id="age-months"
+                type="text"
+                value={ageMonths}
+                onChange={(e) => setAgeMonths(e.target.value)}
+                placeholder="esim. 3-4"
+              />
+            </div>
+          </div>
+        )
+
+      case 'Nykyinen_Paino':
+      case 'Prosentti_Nykyisestä_Painosta':
+        return (
+          <div className="space-y-2">
+            <Label htmlFor="current-weight">Pennun nykyinen paino (kg)</Label>
+            <Input
+              id="current-weight"
+              type="number"
+              value={currentWeight}
+              onChange={(e) => setCurrentWeight(e.target.value)}
+              placeholder="esim. 5.5"
+            />
+          </div>
+        )
+
+      case 'Kokoluokka':
+        return (
+          <div className="space-y-2">
+            <Label>Kokoluokka</Label>
+            <Select value={sizeCategory} onValueChange={setSizeCategory}>
+              <SelectTrigger>
+                <SelectValue placeholder="Valitse kokoluokka" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Pieni (1-10 kg)">Pieni (1-10 kg)</SelectItem>
+                <SelectItem value="Keski (10-25 kg)">Keski (10-25 kg)</SelectItem>
+                <SelectItem value="Suuri (25-50 kg)">Suuri (25-50 kg)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        )
+
+      case 'Ei_Tietoa':
+        return (
+          <div className="p-4 bg-yellow-50 rounded-lg">
+            <p className="text-yellow-800">
+              Tälle ruoalle ei ole saatavilla digitaalisia annostelutietoja. 
+              Tarkista annostus tuotepakkauksesta.
+            </p>
+          </div>
+        )
+
+      default:
+        return null
+    }
   }
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Calculator className="h-5 w-5" />
-          Tarkka Ruokamäärälaskuri
-        </CardTitle>
+        <CardTitle>Edistynyt ruokamäärälaskuri</CardTitle>
+        <CardDescription>
+          Valitse koiranruoka ja laske tarkat annokset valmistajan ohjeiden mukaan
+        </CardDescription>
       </CardHeader>
-      
       <CardContent className="space-y-6">
-        {/* Ruoan valinta */}
-        <div>
-          <Label htmlFor="food-select">Valitse ruoka</Label>
-          <Select onValueChange={(value) => {
-            const food = dogFoods.find(f => f.id === value)
-            setSelectedFood(food || null)
-            setResult(null)
-          }}>
-            <SelectTrigger id="food-select">
-              <SelectValue placeholder="Valitse penturuoka..." />
-            </SelectTrigger>
-            <SelectContent>
-              {dogFoods.map((food) => (
-                <SelectItem key={food.id} value={food.id}>
-                  <div className="flex items-center gap-2">
-                    <span>{food.name}</span>
-                    <Badge variant="outline" className="text-xs">
-                      {food.manufacturer}
-                    </Badge>
-                  </div>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        {selectedFood && (
-          <div className="p-4 bg-blue-50 rounded-lg">
-            <div className="flex items-center gap-2 mb-2">
-              <Info className="h-4 w-4 text-blue-600" />
-              <span className="font-medium text-blue-900">Valittu ruoka</span>
-            </div>
-            <p className="text-sm text-blue-800 mb-2">
-              <strong>{selectedFood.name}</strong> ({selectedFood.manufacturer})
-            </p>
-            <div className="flex gap-2">
-              <Badge className="bg-blue-100 text-blue-800">
-                {selectedFood.nutrition_type}
-              </Badge>
-              <Badge variant="outline">
-                {selectedFood.food_type}
-              </Badge>
-            </div>
-            {selectedFood.notes && (
-              <p className="text-xs text-blue-700 mt-2">{selectedFood.notes}</p>
-            )}
-          </div>
-        )}
-
-        {/* Syöttökentät annostelumenetelmän mukaan */}
-        {selectedFood && (
-          <div className="space-y-4">
-            {selectedFood.dosage_method === 'Odotettu_Aikuispaino_Ja_Ikä' && (
-              <>
-                <div>
-                  <Label htmlFor="adult-weight">Odotettu aikuispaino (kg)</Label>
-                  <Input
-                    id="adult-weight"
-                    type="number"
-                    value={adultWeight}
-                    onChange={(e) => setAdultWeight(e.target.value)}
-                    placeholder="esim. 15"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="age">Pennun ikä</Label>
-                  <Select onValueChange={setAgeMonths}>
-                    <SelectTrigger id="age">
-                      <SelectValue placeholder="Valitse ikäluokka" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {[...new Set(selectedFood.feeding_guidelines?.map(g => g.age_months).filter(Boolean))].map(age => (
-                        <SelectItem key={age} value={age!}>{age}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </>
-            )}
-
-            {(selectedFood.dosage_method === 'Nykyinen_Paino' || selectedFood.dosage_method === 'Prosentti_Nykyisestä_Painosta') && (
-              <div>
-                <Label htmlFor="current-weight">Pennun nykyinen paino (kg)</Label>
-                <Input
-                  id="current-weight"
-                  type="number"
-                  step="0.1"
-                  value={currentWeight}
-                  onChange={(e) => setCurrentWeight(e.target.value)}
-                  placeholder="esim. 8.5"
-                />
-              </div>
-            )}
-
-            {selectedFood.dosage_method === 'Kokoluokka' && (
-              <div>
-                <Label htmlFor="size">Koiran kokoluokka</Label>
-                <Select onValueChange={setSizeCategory}>
-                  <SelectTrigger id="size">
-                    <SelectValue placeholder="Valitse kokoluokka" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {[...new Set(selectedFood.feeding_guidelines?.map(g => g.size_category).filter(Boolean))].map(size => (
-                      <SelectItem key={size} value={size!}>{size}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Laskenta-painike */}
-        {selectedFood && (
-          <div className="flex gap-2">
-            <Button onClick={calculateFeeding} className="flex-1">
-              Laske ruokamäärä
-            </Button>
-            <Button variant="outline" onClick={resetForm}>
-              Tyhjennä
+        {dogFoods.length === 0 && !loading && (
+          <div className="text-center space-y-4">
+            <p className="text-gray-600">Tietokanta on tyhjä. Alusta se ensin.</p>
+            <Button 
+              onClick={initializeDatabase} 
+              disabled={initializing}
+            >
+              {initializing ? 'Alustetaan...' : 'Alusta tietokanta'}
             </Button>
           </div>
         )}
 
-        {/* Tulos */}
-        {result && (
-          <div className="p-4 bg-green-50 rounded-lg">
-            <h3 className="font-semibold text-green-900 mb-3">Ruokintasuositus</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-green-800">{result.dailyAmount}g</div>
-                <div className="text-sm text-green-600">päivässä</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-green-800">{result.mealsPerDay}</div>
-                <div className="text-sm text-green-600">ateriaa</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-green-800">{result.amountPerMeal}g</div>
-                <div className="text-sm text-green-600">per ateria</div>
-              </div>
+        {dogFoods.length > 0 && (
+          <>
+            <div className="space-y-2">
+              <Label>Valitse koiranruoka</Label>
+              <Select 
+                value={selectedFood?.id || ''} 
+                onValueChange={(value) => {
+                  const food = dogFoods.find(f => f.id === value)
+                  setSelectedFood(food || null)
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Valitse ruoka" />
+                </SelectTrigger>
+                <SelectContent>
+                  {dogFoods.map((food) => (
+                    <SelectItem key={food.id} value={food.id}>
+                      {food.manufacturer} - {food.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
-            
-            {result.warnings && result.warnings.length > 0 && (
-              <div className="space-y-2">
-                {result.warnings.map((warning, index) => (
-                  <div key={index} className="flex items-start gap-2 p-2 bg-yellow-50 rounded">
-                    <AlertTriangle className="h-4 w-4 text-yellow-600 mt-0.5 flex-shrink-0" />
-                    <p className="text-sm text-yellow-800">{warning}</p>
-                  </div>
-                ))}
+
+            {selectedFood && (
+              <div className="p-4 bg-blue-50 rounded-lg">
+                <h4 className="font-semibold mb-2">{selectedFood.name}</h4>
+                <p><strong>Valmistaja:</strong> {selectedFood.manufacturer}</p>
+                <p><strong>Tyyppi:</strong> {selectedFood.food_type}</p>
+                <p><strong>Ravinto:</strong> {selectedFood.nutrition_type}</p>
+                <p><strong>Annostelutapa:</strong> {selectedFood.dosage_method.replace(/_/g, ' ')}</p>
+                {selectedFood.notes && (
+                  <p><strong>Huomautuksia:</strong> {selectedFood.notes}</p>
+                )}
               </div>
             )}
-            
-            <div className="mt-4 text-xs text-green-700">
-              <p>Suositus perustuu tuotteeseen: <strong>{result.foodName}</strong></p>
-              <p>Seuraa pentusi kuntoluokkaa ja säädä annosta tarvittaessa. Varmista raikaan veden saatavuus.</p>
-            </div>
-          </div>
+
+            {renderInputs()}
+
+            {selectedFood && selectedFood.dosage_method !== 'Ei_Tietoa' && (
+              <Button onClick={calculateFeeding} className="w-full">
+                Laske annos
+              </Button>
+            )}
+
+            {recommendation && (
+              <div className="p-4 bg-green-50 rounded-lg">
+                <h4 className="font-bold text-green-800 mb-2">Suositus:</h4>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-green-600 mb-2">
+                    {recommendation.dailyAmount}g
+                  </div>
+                  <p className="text-sm text-gray-600">päivässä yhteensä</p>
+                  <p className="text-xs mt-2 text-gray-500">
+                    Perustuu tuotteen: {recommendation.method}
+                  </p>
+                </div>
+              </div>
+            )}
+          </>
         )}
       </CardContent>
     </Card>
