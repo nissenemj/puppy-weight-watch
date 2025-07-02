@@ -398,7 +398,7 @@ export default function PuppyWeightTracker() {
           </TabsContent>
 
           <TabsContent value="growth-chart">
-            <WeightChart entries={entries} />
+            <WeightChart weightData={entries} />
           </TabsContent>
 
           <TabsContent value="food-calculator">

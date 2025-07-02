@@ -90,19 +90,19 @@ const puppyFoodData: PuppyFoodData[] = [
 
 // Ruokintakertojen jaottelu iän mukaan
 const getMealsPerDay = (ageMonths: number) => {
-  if (ageMonths < 2) return { meals: 4-5, interval: '3-4 tuntia', description: 'Jaa päiväannos 4-5 osaan' }
-  if (ageMonths < 3) return { meals: 4, interval: '4 tuntia', description: 'Jaa päiväannos 4 osaan' }
-  if (ageMonths < 4) return { meals: 3-4, interval: '4-6 tuntia', description: 'Jaa päiväannos 3-4 osaan' }
-  if (ageMonths < 6) return { meals: 3, interval: '6-8 tuntia', description: 'Jaa päiväannos 3 osaan' }
-  if (ageMonths < 12) return { meals: 2-3, interval: '8-12 tuntia', description: 'Jaa päiväannos 2-3 osaan' }
-  return { meals: 2, interval: '12 tuntia', description: 'Jaa päiväannos 2 osaan' }
+  if (ageMonths < 2) return { meals: '4-5', interval: '3-4 tuntia', description: 'Jaa päiväannos 4-5 osaan' }
+  if (ageMonths < 3) return { meals: '4', interval: '4 tuntia', description: 'Jaa päiväannos 4 osaan' }
+  if (ageMonths < 4) return { meals: '3-4', interval: '4-6 tuntia', description: 'Jaa päiväannos 3-4 osaan' }
+  if (ageMonths < 6) return { meals: '3', interval: '6-8 tuntia', description: 'Jaa päiväannos 3 osaan' }
+  if (ageMonths < 12) return { meals: '2-3', interval: '8-12 tuntia', description: 'Jaa päiväannos 2-3 osaan' }
+  return { meals: '2', interval: '12 tuntia', description: 'Jaa päiväannos 2 osaan' }
 }
 
 export default function PuppyFeeding() {
   const [selectedFood, setSelectedFood] = useState<string>('')
   const [expectedWeight, setExpectedWeight] = useState<string>('')
   const [currentWeight, setCurrentWeight] = useState<string>('')
-  const [ageMonths, setAgeMonths] = useState<string>''
+  const [ageMonths, setAgeMonths] = useState<string>('')
   const [sizeCategory, setSizeCategory] = useState<string>('')
   const [result, setResult] = useState<any>(null)
 
