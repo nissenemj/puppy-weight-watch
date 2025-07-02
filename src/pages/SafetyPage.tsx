@@ -1,25 +1,26 @@
-
 import React from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
-import { ArrowLeft, AlertTriangle, Shield, FileText } from 'lucide-react'
+import { ArrowLeft, Shield, FileText } from 'lucide-react'
+import InfoNavigation from '@/components/InfoNavigation'
+import SafetyNewsFeed from '@/components/SafetyNewsFeed'
 
 export default function SafetyPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
+      <InfoNavigation />
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="flex items-center gap-4 mb-8">
-          <Link to="/info">
-            <Button variant="ghost" size="sm">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Takaisin
-            </Button>
-          </Link>
+        <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">
             Turvallisuus ja suositukset
           </h1>
+        </div>
+
+        {/* News Feed */}
+        <div className="mb-8">
+          <SafetyNewsFeed />
         </div>
 
         {/* Veterinary Advice */}

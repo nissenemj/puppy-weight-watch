@@ -2,7 +2,7 @@
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-import { Home, BookOpen, TrendingUp, Database, AlertTriangle } from 'lucide-react'
+import { Home, BookOpen, Database, AlertTriangle } from 'lucide-react'
 
 export default function InfoNavigation() {
   const location = useLocation()
@@ -10,7 +10,6 @@ export default function InfoNavigation() {
   const navItems = [
     { path: '/info', label: 'Etusivu', icon: Home },
     { path: '/info/food-types', label: 'Ruokatyypit', icon: BookOpen },
-    { path: '/info/market-analysis', label: 'Markkinat', icon: TrendingUp },
     { path: '/info/feeding-data', label: 'Annostelutiedot', icon: Database },
     { path: '/info/safety', label: 'Turvallisuus', icon: AlertTriangle },
   ]

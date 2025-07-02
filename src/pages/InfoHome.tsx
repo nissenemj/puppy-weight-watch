@@ -3,11 +3,13 @@ import React from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
-import { BookOpen, TrendingUp, Database, AlertTriangle } from 'lucide-react'
+import { BookOpen, Database, AlertTriangle } from 'lucide-react'
+import InfoNavigation from '@/components/InfoNavigation'
 
 export default function InfoHome() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
+      <InfoNavigation />
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="text-center mb-12">
@@ -41,7 +43,7 @@ export default function InfoHome() {
         </Card>
 
         {/* Navigation Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           <Link to="/info/food-types">
             <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer bg-white/80 backdrop-blur-sm">
               <CardHeader>
@@ -51,20 +53,6 @@ export default function InfoHome() {
                 </CardTitle>
                 <CardDescription>
                   Kuiva-, märkä- ja raakaruokien analyysi
-                </CardDescription>
-              </CardHeader>
-            </Card>
-          </Link>
-
-          <Link to="/info/market-analysis">
-            <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer bg-white/80 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-lg">
-                  <TrendingUp className="h-5 w-5" />
-                  Markkina-analyysi
-                </CardTitle>
-                <CardDescription>
-                  Suomen koiranruokamarkkinoiden rakenne
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -92,7 +80,7 @@ export default function InfoHome() {
                   Turvallisuus
                 </CardTitle>
                 <CardDescription>
-                  Tuoteturvallisuus ja laatuongelmat
+                  Tuoteturvallisuus ja ajankohtaiset uutiset
                 </CardDescription>
               </CardHeader>
             </Card>
