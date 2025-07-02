@@ -3,10 +3,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { AlertTriangle, Calculator, Weight, Utensils, PawPrint } from 'lucide-react';
+import Navigation from '@/components/Navigation';
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 
 const PuppyGuide = () => {
   return (
-    <div className="container mx-auto py-8 space-y-8">
+    <div className="min-h-screen bg-background">
+      <Navigation />
+      <div className="container mx-auto py-8 space-y-8">
       {/* Hero Section */}
       <div className="text-center space-y-4">
         <h1 className="text-4xl font-heading font-bold text-primary">
@@ -549,6 +554,25 @@ const PuppyGuide = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Navigation to Calculator */}
+      <Card className="bg-gradient-to-r from-primary/10 to-accent/10">
+        <CardContent className="py-8">
+          <div className="text-center space-y-4">
+            <h3 className="text-xl font-semibold">Haluatko laskea pennun ruokamäärän?</h3>
+            <p className="text-muted-foreground">
+              Käytä interaktiivista laskuria sopivan ruokamäärän määrittämiseen
+            </p>
+            <Link to="/calculator">
+              <Button size="lg" className="gap-2">
+                <Calculator className="h-5 w-5" />
+                Siirry laskuriin
+              </Button>
+            </Link>
+          </div>
+        </CardContent>
+      </Card>
+      </div>
     </div>
   );
 };

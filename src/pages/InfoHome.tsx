@@ -4,12 +4,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
 import { BookOpen, Database, AlertTriangle } from 'lucide-react'
-import InfoNavigation from '@/components/InfoNavigation'
+import Navigation from '@/components/Navigation'
 
 export default function InfoHome() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
-      <InfoNavigation />
+      <Navigation />
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="text-center mb-12">

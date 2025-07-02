@@ -1,16 +1,16 @@
-
+import React from 'react'
 import Navigation from '@/components/Navigation'
-import PuppyWeightTracker from '@/components/PuppyWeightTracker'
+import EnhancedPuppyCalculator from '@/components/EnhancedPuppyCalculator'
 
-const Index = () => {
+const Calculator = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
       <div className="container mx-auto px-4 py-8">
-        <PuppyWeightTracker />
+        <EnhancedPuppyCalculator />
       </div>
     </div>
   )
 }
 
-export default Index
+export default Calculator
