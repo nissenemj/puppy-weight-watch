@@ -2,14 +2,7 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { format, addWeeks, parseISO } from 'date-fns'
 import { fi } from 'date-fns/locale'
-
-interface WeightEntry {
-  id: string
-  user_id: string
-  date: string
-  weight: number
-  created_at: string
-}
+import type { WeightEntry } from '@/services/weightService'
 
 interface WeightChartProps {
   weightData: WeightEntry[]

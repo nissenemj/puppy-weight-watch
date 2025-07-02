@@ -126,10 +126,7 @@ export default function PuppyWeightTracker() {
             
             <TabsContent value="growth-chart" className="space-y-6">
               <WeightChart 
-                weightData={weightEntries.map(entry => ({
-                  date: entry.date,
-                  weight: entry.weight
-                }))} 
+                weightData={weightEntries} 
               />
             </TabsContent>
             
