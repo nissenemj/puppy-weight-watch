@@ -6,7 +6,6 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import DogProfile from './DogProfile'
-import FoodRecipeSearch from './FoodRecipeSearch'
 import { supabase } from '@/integrations/supabase/client'
 import { User } from '@supabase/supabase-js'
 import { toast } from 'sonner'
@@ -19,17 +18,6 @@ interface Dog {
   age_years?: number
   activity_level?: string
   health_conditions?: string[]
-}
-
-interface FoodRecipe {
-  id: string
-  name: string
-  brand?: string
-  calories_per_100g?: number
-  protein_percentage?: number
-  fat_percentage?: number
-  carb_percentage?: number
-  source?: string
 }
 
 interface FoodRecommendation {
@@ -46,9 +34,7 @@ interface AdvancedFoodCalculatorProps {
 
 export default function AdvancedFoodCalculator({ user }: AdvancedFoodCalculatorProps) {
   const [selectedDog, setSelectedDog] = useState<Dog>()
-  const [selectedRecipe, setSelectedRecipe] = useState<FoodRecipe>()
   const [recommendation, setRecommendation] = useState<FoodRecommendation | null>(null)
-  const [isSaving, setIsSaving] = useState(false)
 
   const calculateAdvancedRecommendation = () => {
     if (!selectedDog || !selectedDog.weight_kg) {
@@ -87,18 +73,8 @@ export default function AdvancedFoodCalculator({ user }: AdvancedFoodCalculatorP
 
     const dailyCalories = Math.round(rer * activityMultiplier)
     
-    // Lasketaan ruokamäärä kalorien perusteella
-    let dailyAmount = 0
-    let method = 'Peruslaskenta'
-
-    if (selectedRecipe && selectedRecipe.calories_per_100g) {
-      // Käytetään valitun ruoan kalorimäärää
-      dailyAmount = Math.round((dailyCalories / selectedRecipe.calories_per_100g) * 100)
-      method = 'Ruokaohje-pohjainen'
-    } else {
-      // Käytetään keskimääräistä kalorimäärää kuivaruoalle (350 kcal/100g)
-      dailyAmount = Math.round((dailyCalories / 350) * 100)
-    }
+    // Käytetään keskimääräistä kalorimäärää kuivaruoalle (350 kcal/100g)
+    const dailyAmount = Math.round((dailyCalories / 350) * 100)
 
     // Aterioiden määrä
     let mealsPerDay = 2
@@ -115,41 +91,10 @@ export default function AdvancedFoodCalculator({ user }: AdvancedFoodCalculatorP
       mealsPerDay,
       amountPerMeal: Math.round(dailyAmount / mealsPerDay),
       dailyCalories,
-      method
+      method: 'Edistynyt laskenta'
     }
 
     setRecommendation(newRecommendation)
-  }
-
-  const saveFeedingPlan = async () => {
-    if (!selectedDog || !selectedRecipe || !recommendation) {
-      toast.error('Valitse koira ja ruokaohje ennen tallentamista')
-      return
-    }
-
-    setIsSaving(true)
-    try {
-      const feedingPlan = {
-        dog_id: selectedDog.id,
-        recipe_id: selectedRecipe.id,
-        daily_amount_grams: recommendation.dailyAmount,
-        meals_per_day: recommendation.mealsPerDay,
-        notes: `Laskettu ${recommendation.method} -menetelmällä. Päivittäinen kalorintarve: ${recommendation.dailyCalories} kcal.`
-      }
-
-      const { error } = await supabase
-        .from('feeding_plans')
-        .insert([feedingPlan])
-
-      if (error) throw error
-
-      toast.success('Ruokintasuunnitelma tallennettu!')
-    } catch (error) {
-      console.error('Error saving feeding plan:', error)
-      toast.error('Virhe tallentamisessa')
-    } finally {
-      setIsSaving(false)
-    }
   }
 
   return (
@@ -160,7 +105,7 @@ export default function AdvancedFoodCalculator({ user }: AdvancedFoodCalculatorP
             🧮 Edistynyt ruokamäärälaskuri
           </CardTitle>
           <CardDescription>
-            Tarkan ruokamäärän laskeminen koiran tietojen ja ruokaohjeen perusteella
+            Tarkan ruokamäärän laskeminen koiran tietojen perusteella
           </CardDescription>
         </CardHeader>
       </Card>
@@ -171,11 +116,6 @@ export default function AdvancedFoodCalculator({ user }: AdvancedFoodCalculatorP
             user={user}
             onDogSelect={setSelectedDog}
             selectedDog={selectedDog}
-          />
-          
-          <FoodRecipeSearch 
-            onRecipeSelect={setSelectedRecipe}
-            selectedRecipe={selectedRecipe}
           />
         </div>
 
@@ -230,16 +170,6 @@ export default function AdvancedFoodCalculator({ user }: AdvancedFoodCalculatorP
                       </div>
                     </div>
                   </div>
-
-                  {selectedRecipe && (
-                    <Button 
-                      onClick={saveFeedingPlan}
-                      disabled={isSaving}
-                      className="w-full"
-                    >
-                      {isSaving ? 'Tallennetaan...' : 'Tallenna ruokintasuunnitelma'}
-                    </Button>
-                  )}
 
                   <div className="text-sm text-gray-600 p-3 bg-gray-50 rounded-lg">
                     <p><strong>Huom:</strong> Tämä on arvio perustuen koiran painoon, ikään ja aktiivisuuteen. 
