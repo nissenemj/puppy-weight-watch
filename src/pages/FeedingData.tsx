@@ -1,344 +1,342 @@
 
-import React, { useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import React, { useState, useEffect } from 'react'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Link } from 'react-router-dom'
-import { ArrowLeft, Database, Search, Filter } from 'lucide-react'
-
-const feedingData = [
-  {
-    id: 'BC_PUPPY_DRY_LAMB',
-    name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice',
-    manufacturer: 'Brit',
-    type: 'Kuiva',
-    nutritionType: 'Täysravinto',
-    dosageBase: 'Odotettu_Aikuispaino_Ja_Ikä',
-    notes: 'Sopii myös tiineille ja imettäville nartuille',
-    entries: [
-      { adultWeight: 5, ageMonths: '1-3', dailyAmount: 50 },
-      { adultWeight: 5, ageMonths: '3-4', dailyAmount: 75 },
-      { adultWeight: 5, ageMonths: '4-6', dailyAmount: 75 },
-      { adultWeight: 5, ageMonths: '6-12', dailyAmount: 70 },
-      { adultWeight: 10, ageMonths: '1-3', dailyAmount: 85 },
-      { adultWeight: 10, ageMonths: '3-4', dailyAmount: 120 },
-      { adultWeight: 10, ageMonths: '4-6', dailyAmount: 130 },
-      { adultWeight: 10, ageMonths: '6-12', dailyAmount: 120 },
-    ]
-  },
-  {
-    id: 'HHC_PUPPY_DRY',
-    name: 'Hau-Hau Champion Pentu & Emo',
-    manufacturer: 'Hau-Hau Champion',
-    type: 'Kuiva',
-    nutritionType: 'Täysravinto',
-    dosageBase: 'Odotettu_Aikuispaino_Ja_Ikä',
-    notes: 'Sopii myös emolle',
-    entries: [
-      { adultWeight: 5, ageMonths: '1-2', dailyAmount: 70 },
-      { adultWeight: 5, ageMonths: '3-4', dailyAmount: 90 },
-      { adultWeight: 5, ageMonths: '5-6', dailyAmount: 90 },
-      { adultWeight: 5, ageMonths: '7-12', dailyAmount: 80 },
-      { adultWeight: 10, ageMonths: '1-2', dailyAmount: 100 },
-      { adultWeight: 10, ageMonths: '3-4', dailyAmount: 140 },
-      { adultWeight: 10, ageMonths: '5-6', dailyAmount: 140 },
-    ]
-  },
-  {
-    id: 'MUSH_PUPPY_RAW',
-    name: 'MUSH Vaisto Puppy',
-    manufacturer: 'MUSH',
-    type: 'Raaka',
-    nutritionType: 'Täysravinto',
-    dosageBase: 'Odotettu_Aikuispaino_Ja_Ikä',
-    notes: 'Kaava: Aikuispaino × kerroin',
-    entries: [
-      { adultWeight: 'Kaikki', ageMonths: '1-2', dailyAmount: 'Aikuispaino × 100g' },
-      { adultWeight: 'Kaikki', ageMonths: '2-4', dailyAmount: 'Aikuispaino × 75g' },
-      { adultWeight: 'Kaikki', ageMonths: '4-6', dailyAmount: 'Aikuispaino × 50g' },
-      { adultWeight: 'Kaikki', ageMonths: '6-9', dailyAmount: 'Aikuispaino × 30g' },
-      { adultWeight: 'Kaikki', ageMonths: '9+', dailyAmount: 'Aikuispaino × 25g' },
-    ]
-  },
-  {
-    id: 'SMAAK_PUPPY_RAW',
-    name: 'SMAAK Raaka täysravinto',
-    manufacturer: 'SMAAK',
-    type: 'Raaka',
-    nutritionType: 'Täysravinto',
-    dosageBase: 'Nykyinen_Paino',
-    notes: 'Annos on laaja vaihteluväli',
-    entries: [
-      { currentWeight: 5, dailyAmount: '75-150g' },
-      { currentWeight: 10, dailyAmount: '150-300g' },
-      { currentWeight: 15, dailyAmount: '225-450g' },
-      { currentWeight: 20, dailyAmount: '300-600g' },
-      { currentWeight: 25, dailyAmount: '375-750g' },
-    ]
-  },
-  {
-    id: 'BP_WET_BEEF',
-    name: 'Brit Premium by Nature Beef with Tripe',
-    manufacturer: 'Brit',
-    type: 'Märkä',
-    nutritionType: 'Täysravinto/Täydennysravinto',
-    dosageBase: 'Kokoluokka',
-    notes: 'Eri annokset täys- ja täydennysravintona',
-    entries: [
-      { sizeCategory: 'Pieni (1-10 kg)', fullNutrition: '200-400g', supplementary: '100-200g' },
-      { sizeCategory: 'Keski (10-25 kg)', fullNutrition: '400-800g', supplementary: '200-400g' },
-      { sizeCategory: 'Suuri (25-50 kg)', fullNutrition: '800-1200g', supplementary: '400-600g' },
-    ]
-  }
-]
+import { Badge } from '@/components/ui/badge'
+import { Search, Filter, Database, AlertCircle } from 'lucide-react'
+import InfoNavigation from '@/components/InfoNavigation'
+import { DogFoodService, type DogFood } from '@/services/dogFoodService'
+import { toast } from 'sonner'
 
 export default function FeedingData() {
+  const [dogFoods, setDogFoods] = useState<DogFood[]>([])
+  const [filteredFoods, setFilteredFoods] = useState<DogFood[]>([])
   const [searchTerm, setSearchTerm] = useState('')
-  const [filterType, setFilterType] = useState('all')
-  const [filterManufacturer, setFilterManufacturer] = useState('all')
+  const [selectedManufacturer, setSelectedManufacturer] = useState('all')
+  const [selectedFoodType, setSelectedFoodType] = useState('all')
+  const [loading, setLoading] = useState(true)
+  const [initializing, setInitializing] = useState(false)
 
-  const filteredData = feedingData.filter(item => {
-    const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesType = filterType === 'all' || item.type.toLowerCase() === filterType.toLowerCase()
-    const matchesManufacturer = filterManufacturer === 'all' || item.manufacturer.toLowerCase() === filterManufacturer.toLowerCase()
-    return matchesSearch && matchesType && matchesManufacturer
-  })
+  const loadDogFoods = async () => {
+    try {
+      setLoading(true)
+      const foods = await DogFoodService.getAllDogFoods()
+      setDogFoods(foods)
+      setFilteredFoods(foods)
+    } catch (error) {
+      console.error('Error loading dog foods:', error)
+      toast.error('Tietojen lataaminen epäonnistui')
+    } finally {
+      setLoading(false)
+    }
+  }
 
-  const manufacturers = [...new Set(feedingData.map(item => item.manufacturer))]
+  const initializeDatabase = async () => {
+    try {
+      setInitializing(true)
+      await DogFoodService.initializeDatabase()
+      toast.success('Tietokanta alustettu onnistuneesti!')
+      await loadDogFoods()
+    } catch (error) {
+      console.error('Error initializing database:', error)
+      toast.error('Tietokannan alustus epäonnistui')
+    } finally {
+      setInitializing(false)
+    }
+  }
+
+  useEffect(() => {
+    loadDogFoods()
+  }, [])
+
+  useEffect(() => {
+    let filtered = dogFoods
+
+    if (searchTerm) {
+      filtered = filtered.filter(food => 
+        food.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        food.manufacturer.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    }
+
+    if (selectedManufacturer !== 'all') {
+      filtered = filtered.filter(food => food.manufacturer === selectedManufacturer)
+    }
+
+    if (selectedFoodType !== 'all') {
+      filtered = filtered.filter(food => food.food_type === selectedFoodType)
+    }
+
+    setFilteredFoods(filtered)
+  }, [searchTerm, selectedManufacturer, selectedFoodType, dogFoods])
+
+  const manufacturers = [...new Set(dogFoods.map(food => food.manufacturer))].sort()
+  const foodTypes = ['Kuiva', 'Märkä', 'Raaka']
+
+  const getDosageMethodDescription = (method: string): string => {
+    switch (method) {
+      case 'Odotettu_Aikuispaino_Ja_Ikä':
+        return 'Odotettu aikuispaino + ikä'
+      case 'Nykyinen_Paino':
+        return 'Nykyinen paino'
+      case 'Prosentti_Nykyisestä_Painosta':
+        return 'Prosentti nykyisestä painosta'
+      case 'Kokoluokka':
+        return 'Kokoluokka'
+      case 'Ei_Tietoa':
+        return 'Ei tietoa'
+      default:
+        return method
+    }
+  }
+
+  const getNutritionTypeBadgeColor = (type: string): string => {
+    switch (type) {
+      case 'Täysravinto':
+        return 'bg-green-100 text-green-800'
+      case 'Täydennysravinto':
+        return 'bg-yellow-100 text-yellow-800'
+      case 'Täysravinto/Täydennysravinto':
+        return 'bg-blue-100 text-blue-800'
+      default:
+        return 'bg-gray-100 text-gray-800'
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
+        <InfoNavigation />
+        <div className="container mx-auto px-4 py-8">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+            <p className="mt-2 text-gray-600">Ladataan annostelutietoja...</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
+      <InfoNavigation />
+      
       <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="flex items-center gap-4 mb-8">
-          <Link to="/info">
-            <Button variant="ghost" size="sm">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Takaisin
-            </Button>
-          </Link>
-          <h1 className="text-3xl font-bold text-gray-900">
-            Yksityiskohtaiset annostelutiedot
+        <div className="mb-8">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            📊 Annostelutiedot
           </h1>
+          <p className="text-xl text-gray-600 max-w-4xl">
+            Yksityiskohtaiset annosteluohjeet Suomessa myytävistä penturuoista. 
+            Tiedot kerätty valmistajien ohjeista ja strukturoitu ohjelmistokäyttöön.
+          </p>
         </div>
 
-        {/* Introduction */}
-        <Card className="mb-8 bg-white/80 backdrop-blur-sm">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Database className="h-6 w-6" />
-              Annosteluohjeiden monimuotoisuus
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              Yksi suurimmista haasteista luotaessa yleiskäyttöistä koiranpennun ruokintalaskuria on valmistajien 
-              annosteluohjeiden täydellinen epäyhtenäisyys. Annosteluohjeet voidaan ryhmitellä neljään päämetodiin:
-            </p>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
-              <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
-                <h3 className="font-semibold text-blue-800 text-sm">Metodi 1</h3>
-                <p className="text-xs text-blue-700">Odotettu aikuispaino ja ikä</p>
-              </div>
-              <div className="bg-green-50 p-3 rounded-lg border border-green-200">
-                <h3 className="font-semibold text-green-800 text-sm">Metodi 2</h3>
-                <p className="text-xs text-green-700">Nykyinen paino</p>
-              </div>
-              <div className="bg-orange-50 p-3 rounded-lg border border-orange-200">
-                <h3 className="font-semibold text-orange-800 text-sm">Metodi 3</h3>
-                <p className="text-xs text-orange-700">Prosentti nykyisestä painosta</p>
-              </div>
-              <div className="bg-purple-50 p-3 rounded-lg border border-purple-200">
-                <h3 className="font-semibold text-purple-800 text-sm">Metodi 4</h3>
-                <p className="text-xs text-purple-700">Koiran kokoluokka</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {dogFoods.length === 0 && (
+          <Card className="mb-8 bg-yellow-50 border-yellow-200">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-yellow-800">
+                <Database className="h-5 w-5" />
+                Tietokanta tyhjä
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-yellow-700 mb-4">
+                Tietokantaan ei ole vielä tallennettu koiranruokatietoja. 
+                Klikkaa alla olevaa painiketta alustamaan tietokanta tutkimusraportin tiedoilla.
+              </p>
+              <Button 
+                onClick={initializeDatabase} 
+                disabled={initializing}
+                className="bg-yellow-600 hover:bg-yellow-700"
+              >
+                {initializing ? 'Alustetaan...' : 'Alusta tietokanta'}
+              </Button>
+            </CardContent>
+          </Card>
+        )}
 
-        {/* Filters */}
+        {/* Hakutyökalut */}
         <Card className="mb-8 bg-white/80 backdrop-blur-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Filter className="h-5 w-5" />
-              Suodata tietoja
+              <Search className="h-5 w-5" />
+              Haku ja suodattimet
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Hae tuotteita</label>
-                <div className="relative">
-                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
-                  <Input
-                    placeholder="Etsi tuotteen nimellä..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-8"
-                  />
-                </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">Hae tuotetta</label>
+                <Input
+                  placeholder="Tuotteen nimi tai valmistaja..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
               </div>
               
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Ruokatyyppi</label>
-                <Select value={filterType} onValueChange={setFilterType}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Valitse tyyppi" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Kaikki</SelectItem>
-                    <SelectItem value="kuiva">Kuivaruoka</SelectItem>
-                    <SelectItem value="märkä">Märkäruoka</SelectItem>
-                    <SelectItem value="raaka">Raakaruoka</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Valmistaja</label>
-                <Select value={filterManufacturer} onValueChange={setFilterManufacturer}>
+              <div>
+                <label className="block text-sm font-medium mb-2">Valmistaja</label>
+                <Select value={selectedManufacturer} onValueChange={setSelectedManufacturer}>
                   <SelectTrigger>
                     <SelectValue placeholder="Valitse valmistaja" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">Kaikki</SelectItem>
+                    <SelectItem value="all">Kaikki valmistajat</SelectItem>
                     {manufacturers.map(manufacturer => (
-                      <SelectItem key={manufacturer} value={manufacturer.toLowerCase()}>
+                      <SelectItem key={manufacturer} value={manufacturer}>
                         {manufacturer}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2">Ruokatyyppi</label>
+                <Select value={selectedFoodType} onValueChange={setSelectedFoodType}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Valitse ruokatyyppi" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Kaikki tyypit</SelectItem>
+                    {foodTypes.map(type => (
+                      <SelectItem key={type} value={type}>
+                        {type}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            
+            <div className="mt-4 text-sm text-gray-600">
+              Näytetään {filteredFoods.length} / {dogFoods.length} tuotetta
             </div>
           </CardContent>
         </Card>
 
-        {/* Data Display */}
-        <div className="space-y-8">
-          {filteredData.map((product) => (
-            <Card key={product.id} className="bg-white/80 backdrop-blur-sm">
+        {/* Tuotteet */}
+        <div className="grid gap-6">
+          {filteredFoods.map((food) => (
+            <Card key={food.id} className="bg-white/80 backdrop-blur-sm">
               <CardHeader>
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div className="flex justify-between items-start">
                   <div>
-                    <CardTitle className="text-xl">{product.name}</CardTitle>
-                    <div className="flex flex-wrap gap-2 mt-2">
-                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                        {product.manufacturer}
-                      </span>
-                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                        {product.type}
-                      </span>
-                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                        {product.nutritionType}
-                      </span>
-                    </div>
+                    <CardTitle className="text-lg">{food.name}</CardTitle>
+                    <CardDescription className="text-base">
+                      {food.manufacturer} • {food.food_type}
+                    </CardDescription>
+                  </div>
+                  <div className="flex gap-2">
+                    <Badge className={getNutritionTypeBadgeColor(food.nutrition_type)}>
+                      {food.nutrition_type}
+                    </Badge>
+                    <Badge variant="outline">
+                      {getDosageMethodDescription(food.dosage_method)}
+                    </Badge>
                   </div>
                 </div>
-                {product.notes && (
-                  <p className="text-sm text-gray-600 mt-2">{product.notes}</p>
-                )}
               </CardHeader>
+              
               <CardContent>
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        {product.dosageBase === 'Odotettu_Aikuispaino_Ja_Ikä' && (
-                          <>
-                            <TableHead>Odotettu aikuispaino (kg)</TableHead>
-                            <TableHead>Pennun ikä (kk)</TableHead>
-                            <TableHead>Päivittäinen annos (g)</TableHead>
-                          </>
-                        )}
-                        {product.dosageBase === 'Nykyinen_Paino' && (
-                          <>
-                            <TableHead>Nykyinen paino (kg)</TableHead>
-                            <TableHead>Päivittäinen annos (g)</TableHead>
-                          </>
-                        )}
-                        {product.dosageBase === 'Kokoluokka' && (
-                          <>
-                            <TableHead>Kokoluokka</TableHead>
-                            <TableHead>Täysravintona (g)</TableHead>
-                            <TableHead>Täydennysravintona (g)</TableHead>
-                          </>
-                        )}
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {product.entries.map((entry, index) => (
-                        <TableRow key={index}>
-                          {product.dosageBase === 'Odotettu_Aikuispaino_Ja_Ikä' && (
-                            <>
-                              <TableCell>{entry.adultWeight}</TableCell>
-                              <TableCell>{entry.ageMonths}</TableCell>
-                              <TableCell>{entry.dailyAmount}</TableCell>
-                            </>
-                          )}
-                          {product.dosageBase === 'Nykyinen_Paino' && (
-                            <>
-                              <TableCell>{entry.currentWeight}</TableCell>
-                              <TableCell>{entry.dailyAmount}</TableCell>
-                            </>
-                          )}
-                          {product.dosageBase === 'Kokoluokka' && (
-                            <>
-                              <TableCell>{entry.sizeCategory}</TableCell>
-                              <TableCell>{entry.fullNutrition}</TableCell>
-                              <TableCell>{entry.supplementary}</TableCell>
-                            </>
-                          )}
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
+                {food.notes && (
+                  <div className="mb-4 p-3 bg-blue-50 rounded-lg">
+                    <p className="text-sm text-blue-800">{food.notes}</p>
+                  </div>
+                )}
+                
+                {food.feeding_guidelines && food.feeding_guidelines.length > 0 ? (
+                  <div>
+                    <h4 className="font-semibold mb-3">Annosteluohjeet:</h4>
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="border-b">
+                            {food.dosage_method === 'Odotettu_Aikuispaino_Ja_Ikä' && (
+                              <>
+                                <th className="text-left p-2">Aikuispaino (kg)</th>
+                                <th className="text-left p-2">Ikä (kk)</th>
+                              </>
+                            )}
+                            {food.dosage_method === 'Nykyinen_Paino' && (
+                              <th className="text-left p-2">Nykypaino (kg)</th>
+                            )}
+                            {food.dosage_method === 'Kokoluokka' && (
+                              <th className="text-left p-2">Kokoluokka</th>
+                            )}
+                            <th className="text-left p-2">Päiväannos (g)</th>
+                            {food.feeding_guidelines.some(g => g.calculation_formula) && (
+                              <th className="text-left p-2">Laskentakaava</th>
+                            )}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {food.feeding_guidelines.map((guideline, index) => (
+                            <tr key={index} className="border-b">
+                              {food.dosage_method === 'Odotettu_Aikuispaino_Ja_Ikä' && (
+                                <>
+                                  <td className="p-2">{guideline.adult_weight_kg}</td>
+                                  <td className="p-2">{guideline.age_months}</td>
+                                </>
+                              )}
+                              {food.dosage_method === 'Nykyinen_Paino' && (
+                                <td className="p-2">{guideline.current_weight_kg}</td>
+                              )}
+                              {food.dosage_method === 'Kokoluokka' && (
+                                <td className="p-2">{guideline.size_category}</td>
+                              )}
+                              <td className="p-2">
+                                {guideline.daily_amount_min === guideline.daily_amount_max 
+                                  ? guideline.daily_amount_min 
+                                  : `${guideline.daily_amount_min}-${guideline.daily_amount_max}`}
+                              </td>
+                              {guideline.calculation_formula && (
+                                <td className="p-2 text-xs font-mono">
+                                  {guideline.calculation_formula}
+                                </td>
+                              )}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                ) : food.dosage_method === 'Ei_Tietoa' ? (
+                  <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
+                    <AlertCircle className="h-4 w-4 text-gray-500" />
+                    <p className="text-sm text-gray-600">
+                      Annostelutaulukkoa ei ole saatavilla digitaalisessa muodossa. 
+                      Tarkista annostus tuotepakkauksesta.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="p-3 bg-yellow-50 rounded-lg">
+                    <p className="text-sm text-yellow-800">
+                      Annosteluohjeita ei ole vielä tallennettu tietokantaan.
+                    </p>
+                  </div>
+                )}
               </CardContent>
             </Card>
           ))}
         </div>
 
-        {/* No Results */}
-        {filteredData.length === 0 && (
+        {filteredFoods.length === 0 && dogFoods.length > 0 && (
           <Card className="bg-white/80 backdrop-blur-sm">
             <CardContent className="text-center py-8">
-              <p className="text-gray-500">Ei tuloksia hakuehdoillasi. Kokeile muuttaa hakuehtoja.</p>
+              <Filter className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Ei tuloksia
+              </h3>
+              <p className="text-gray-600">
+                Muokkaa hakuehtoja löytääksesi tuotteita
+              </p>
             </CardContent>
           </Card>
         )}
-
-        {/* Missing Data Notice */}
-        <Card className="mt-8 bg-yellow-50 border-yellow-200">
-          <CardHeader>
-            <CardTitle className="text-yellow-800">Huomautus puuttuvista tiedoista</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-yellow-700 text-sm">
-              Useiden suosittujen merkkien (Royal Canin, Acana, Purenatural) osalta tarkkoja ja 
-              käyttökelpoisia annostelutaulukoita ei ollut saatavilla tutkituista lähteistä. 
-              Nämä aukot on dokumentoitu selkeästi.
-            </p>
-          </CardContent>
-        </Card>
-
-        {/* Navigation */}
-        <div className="flex justify-between mt-8">
-          <Link to="/info/market-analysis">
-            <Button variant="outline">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Edellinen: Markkina-analyysi
-            </Button>
-          </Link>
-          <Link to="/info/safety">
-            <Button>
-              Seuraava: Turvallisuus
-            </Button>
-          </Link>
-        </div>
       </div>
     </div>
   )

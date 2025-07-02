@@ -9,6 +9,42 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      dog_foods: {
+        Row: {
+          created_at: string
+          dosage_method: string
+          food_type: string
+          id: string
+          manufacturer: string
+          name: string
+          notes: string | null
+          nutrition_type: string
+          product_code: string
+        }
+        Insert: {
+          created_at?: string
+          dosage_method: string
+          food_type: string
+          id?: string
+          manufacturer: string
+          name: string
+          notes?: string | null
+          nutrition_type: string
+          product_code: string
+        }
+        Update: {
+          created_at?: string
+          dosage_method?: string
+          food_type?: string
+          id?: string
+          manufacturer?: string
+          name?: string
+          notes?: string | null
+          nutrition_type?: string
+          product_code?: string
+        }
+        Relationships: []
+      }
       dogs: {
         Row: {
           activity_level: string | null
@@ -44,6 +80,53 @@ export type Database = {
           weight_kg?: number | null
         }
         Relationships: []
+      }
+      feeding_guidelines: {
+        Row: {
+          adult_weight_kg: number | null
+          age_months: string | null
+          calculation_formula: string | null
+          created_at: string
+          current_weight_kg: number | null
+          daily_amount_max: number | null
+          daily_amount_min: number | null
+          dog_food_id: string
+          id: string
+          size_category: string | null
+        }
+        Insert: {
+          adult_weight_kg?: number | null
+          age_months?: string | null
+          calculation_formula?: string | null
+          created_at?: string
+          current_weight_kg?: number | null
+          daily_amount_max?: number | null
+          daily_amount_min?: number | null
+          dog_food_id: string
+          id?: string
+          size_category?: string | null
+        }
+        Update: {
+          adult_weight_kg?: number | null
+          age_months?: string | null
+          calculation_formula?: string | null
+          created_at?: string
+          current_weight_kg?: number | null
+          daily_amount_max?: number | null
+          daily_amount_min?: number | null
+          dog_food_id?: string
+          id?: string
+          size_category?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "feeding_guidelines_dog_food_id_fkey"
+            columns: ["dog_food_id"]
+            isOneToOne: false
+            referencedRelation: "dog_foods"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       feeding_plans: {
         Row: {
