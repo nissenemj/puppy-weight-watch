@@ -237,27 +237,29 @@ const PuppyGuide = () => {
       </Card>
 
       {/* Jatko-osiot placeholder */}
-      <Card>
-        <CardContent className="pt-6">
-          <div className="text-center space-y-4">
-            <h3 className="text-xl font-semibold">Seuraavaksi:</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="p-4 border rounded-lg">
-                <h4 className="font-semibold mb-2">Osa 2: Annosteluohjeet</h4>
-                <p className="text-sm text-muted-foreground">Yksityiskohtaiset taulukot merkeittäin</p>
-              </div>
-              <div className="p-4 border rounded-lg">
-                <h4 className="font-semibold mb-2">Osa 3: Ravitsemustiede</h4>
-                <p className="text-sm text-muted-foreground">Ca:P-suhde, kuntoluokitus ja energiantarpeet</p>
-              </div>
-              <div className="p-4 border rounded-lg">
-                <h4 className="font-semibold mb-2">Osa 4: Haasteet</h4>
-                <p className="text-sm text-muted-foreground">Nirsoilu, ripuli ja hätätilanteet</p>
+      <section id="annosteluohjeet">
+        <Card>
+          <CardContent className="pt-6">
+            <div className="text-center space-y-4">
+              <h3 className="text-xl font-semibold">Seuraavaksi:</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="p-4 border rounded-lg">
+                  <h4 className="font-semibold mb-2">Osa 2: Annosteluohjeet</h4>
+                  <p className="text-sm text-muted-foreground">Yksityiskohtaiset taulukot merkeittäin</p>
+                </div>
+                <div id="ravitsemustiede" className="p-4 border rounded-lg">
+                  <h4 className="font-semibold mb-2">Osa 3: Ravitsemustiede</h4>
+                  <p className="text-sm text-muted-foreground">Ca:P-suhde, kuntoluokitus ja energiantarpeet</p>
+                </div>
+                <div id="haasteet" className="p-4 border rounded-lg">
+                  <h4 className="font-semibold mb-2">Osa 4: Haasteet</h4>
+                  <p className="text-sm text-muted-foreground">Nirsoilu, ripuli ja hätätilanteet</p>
+                </div>
               </div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </section>
     </div>
   );
 };
