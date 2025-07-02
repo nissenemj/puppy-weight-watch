@@ -85,6 +85,20 @@ export default function InfoHome() {
               </CardHeader>
             </Card>
           </Link>
+
+          <Link to="/info/puppy-guide" className="md:col-span-2 lg:col-span-1">
+            <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer bg-accent/10 backdrop-blur-sm border-accent/20">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-lg text-accent">
+                  <BookOpen className="h-5 w-5" />
+                  Pennun Ruokintaopas
+                </CardTitle>
+                <CardDescription>
+                  Kattava opas pennun ruokintaan ja ravitsemukseen
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          </Link>
         </div>
 
         {/* Key Insights */}
