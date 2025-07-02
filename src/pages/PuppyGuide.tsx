@@ -2,32 +2,11 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { AlertTriangle, Calculator, Weight, Utensils, PawPrint, ArrowLeft, Home } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
-import InfoNavigation from '@/components/InfoNavigation';
+import { AlertTriangle, Calculator, Weight, Utensils, PawPrint } from 'lucide-react';
 
 const PuppyGuide = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
-      <InfoNavigation />
-      <div className="container mx-auto py-8 space-y-8">
-      {/* Navigation */}
-      <div className="flex flex-wrap items-center gap-4 mb-6">
-        <Link to="/info">
-          <Button variant="outline" size="sm" className="flex items-center gap-2">
-            <ArrowLeft className="h-4 w-4" />
-            Takaisin info-osioon
-          </Button>
-        </Link>
-        <Link to="/">
-          <Button variant="default" size="sm" className="flex items-center gap-2">
-            <Calculator className="h-4 w-4" />
-            Siirry painolaskuriin
-          </Button>
-        </Link>
-      </div>
-
+    <div className="container mx-auto py-8 space-y-8">
       {/* Hero Section */}
       <div className="text-center space-y-4">
         <h1 className="text-4xl font-heading font-bold text-primary">
@@ -570,26 +549,6 @@ const PuppyGuide = () => {
           </div>
         </CardContent>
       </Card>
-
-      {/* Call to Action - Laskuri */}
-      <Card className="border-primary/50 bg-primary/5">
-        <CardContent className="pt-6">
-          <div className="text-center space-y-4">
-            <h3 className="text-xl font-semibold">Nyt kun tiedät perusteet...</h3>
-            <p className="text-muted-foreground">
-              Siirry käyttämään interaktiivista painolaskuriamme seurataksesi pentusi kehitystä ja 
-              saadaksesi henkilökohtaisia ruokintasuosituksia.
-            </p>
-            <Link to="/">
-              <Button size="lg" className="flex items-center gap-2">
-                <Calculator className="h-5 w-5" />
-                Avaa painolaskuri
-              </Button>
-            </Link>
-          </div>
-        </CardContent>
-      </Card>
-      </div>
     </div>
   );
 };
