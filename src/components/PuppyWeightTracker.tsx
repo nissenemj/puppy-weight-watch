@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
 import { LogOut, User } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { supabase } from '@/integrations/supabase/client'
 import { User as SupabaseUser } from '@supabase/supabase-js'
 import { toast } from 'sonner'
@@ -80,6 +81,11 @@ export default function PuppyWeightTracker() {
               <h1 className="text-xl font-bold text-gray-900">Puppy Weight Watch</h1>
             </div>
             <div className="flex items-center gap-4">
+              <Link to="/info">
+                <Button variant="outline" size="sm">
+                  📚 Penturuoka-opas
+                </Button>
+              </Link>
               <div className="flex items-center gap-2 text-sm text-gray-600">
                 <User className="h-4 w-4" />
                 {user.email}
