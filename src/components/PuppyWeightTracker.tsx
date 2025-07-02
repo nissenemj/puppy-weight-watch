@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -17,9 +16,10 @@ import { Scale, TrendingUp, Calculator, Utensils, LogIn, UserPlus } from 'lucide
 
 interface WeightEntry {
   id: string
+  user_id: string
   date: string
   weight: number
-  created_at?: string
+  created_at: string
 }
 
 export default function PuppyWeightTracker() {
