@@ -99,6 +99,20 @@ export default function InfoHome() {
               </CardHeader>
             </Card>
           </Link>
+
+          <Link to="/info/feeding-methods">
+            <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer bg-white/80 backdrop-blur-sm">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <BookOpen className="h-5 w-5" />
+                  Ruokintamenetelmät
+                </CardTitle>
+                <CardDescription>
+                  Vertaileva selvitys eri ruokintatavoista
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          </Link>
         </div>
 
         {/* Key Insights */}
