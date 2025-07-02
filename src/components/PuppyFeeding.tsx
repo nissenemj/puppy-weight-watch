@@ -26,66 +26,86 @@ interface PuppyFoodData {
   notes?: string
   minAmount?: number
   maxAmount?: number
+  displayName?: string
 }
 
-// Kattava penturuokadata
+// Tarkka penturuokadata alkuperäisen taulukon mukaan
 const puppyFoodData: PuppyFoodData[] = [
-  // Brit Care Puppy Lamb & Rice
-  { id: 'BC_PUPPY_LAMB_5_1-3', name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice', brand: 'Brit', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 5, ageMonths: '1-3', dailyAmount: 50, notes: 'Sopii tiineille ja imettäville' },
-  { id: 'BC_PUPPY_LAMB_5_3-4', name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice', brand: 'Brit', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 5, ageMonths: '3-4', dailyAmount: 75 },
-  { id: 'BC_PUPPY_LAMB_5_4-6', name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice', brand: 'Brit', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 5, ageMonths: '4-6', dailyAmount: 75 },
-  { id: 'BC_PUPPY_LAMB_5_6-12', name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice', brand: 'Brit', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 5, ageMonths: '6-12', dailyAmount: 70 },
-  { id: 'BC_PUPPY_LAMB_10_1-3', name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice', brand: 'Brit', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 10, ageMonths: '1-3', dailyAmount: 85 },
-  { id: 'BC_PUPPY_LAMB_10_3-4', name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice', brand: 'Brit', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 10, ageMonths: '3-4', dailyAmount: 120 },
-  { id: 'BC_PUPPY_LAMB_10_4-6', name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice', brand: 'Brit', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 10, ageMonths: '4-6', dailyAmount: 130 },
-  { id: 'BC_PUPPY_LAMB_10_6-12', name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice', brand: 'Brit', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 10, ageMonths: '6-12', dailyAmount: 120 },
-  { id: 'BC_PUPPY_LAMB_15_1-3', name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice', brand: 'Brit', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 15, ageMonths: '1-3', dailyAmount: 115 },
-  { id: 'BC_PUPPY_LAMB_15_3-4', name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice', brand: 'Brit', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 15, ageMonths: '3-4', dailyAmount: 160 },
-  { id: 'BC_PUPPY_LAMB_15_4-6', name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice', brand: 'Brit', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 15, ageMonths: '4-6', dailyAmount: 175 },
-  { id: 'BC_PUPPY_LAMB_15_6-12', name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice', brand: 'Brit', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 15, ageMonths: '6-12', dailyAmount: 170 },
-  { id: 'BC_PUPPY_LAMB_20_1-3', name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice', brand: 'Brit', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 20, ageMonths: '1-3', dailyAmount: 140 },
-  { id: 'BC_PUPPY_LAMB_20_3-4', name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice', brand: 'Brit', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 20, ageMonths: '3-4', dailyAmount: 180 },
-  { id: 'BC_PUPPY_LAMB_20_4-6', name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice', brand: 'Brit', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 20, ageMonths: '4-6', dailyAmount: 220 },
-  { id: 'BC_PUPPY_LAMB_20_6-12', name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice', brand: 'Brit', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 20, ageMonths: '6-12', dailyAmount: 210 },
-  { id: 'BC_PUPPY_LAMB_25_1-3', name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice', brand: 'Brit', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 25, ageMonths: '1-3', dailyAmount: 150, notes: '>25kg koirille Junior Large Breed' },
+  // Brit Care Puppy Lamb & Rice - tarkat yhdistelmät
+  { id: 'BC_PUPPY_LAMB_5_1-3', name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice', displayName: 'Brit Care Puppy (5kg, 1-3kk)', brand: 'Brit', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 5, ageMonths: '1-3', dailyAmount: 50, notes: 'Sopii tiineille ja imettäville' },
+  { id: 'BC_PUPPY_LAMB_5_3-4', name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice', displayName: 'Brit Care Puppy (5kg, 3-4kk)', brand: 'Brit', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 5, ageMonths: '3-4', dailyAmount: 75 },
+  { id: 'BC_PUPPY_LAMB_5_4-6', name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice', displayName: 'Brit Care Puppy (5kg, 4-6kk)', brand: 'Brit', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 5, ageMonths: '4-6', dailyAmount: 75 },
+  { id: 'BC_PUPPY_LAMB_5_6-12', name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice', displayName: 'Brit Care Puppy (5kg, 6-12kk)', brand: 'Brit', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 5, ageMonths: '6-12', dailyAmount: 70 },
+  { id: 'BC_PUPPY_LAMB_10_1-3', name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice', displayName: 'Brit Care Puppy (10kg, 1-3kk)', brand: 'Brit', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 10, ageMonths: '1-3', dailyAmount: 85 },
+  { id: 'BC_PUPPY_LAMB_10_3-4', name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice', displayName: 'Brit Care Puppy (10kg, 3-4kk)', brand: 'Brit', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 10, ageMonths: '3-4', dailyAmount: 120 },
+  { id: 'BC_PUPPY_LAMB_10_4-6', name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice', displayName: 'Brit Care Puppy (10kg, 4-6kk)', brand: 'Brit', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 10, ageMonths: '4-6', dailyAmount: 130 },
+  { id: 'BC_PUPPY_LAMB_10_6-12', name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice', displayName: 'Brit Care Puppy (10kg, 6-12kk)', brand: 'Brit', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 10, ageMonths: '6-12', dailyAmount: 120 },
+  { id: 'BC_PUPPY_LAMB_15_1-3', name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice', displayName: 'Brit Care Puppy (15kg, 1-3kk)', brand: 'Brit', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 15, ageMonths: '1-3', dailyAmount: 115 },
+  { id: 'BC_PUPPY_LAMB_15_3-4', name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice', displayName: 'Brit Care Puppy (15kg, 3-4kk)', brand: 'Brit', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 15, ageMonths: '3-4', dailyAmount: 160 },
+  { id: 'BC_PUPPY_LAMB_15_4-6', name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice', displayName: 'Brit Care Puppy (15kg, 4-6kk)', brand: 'Brit', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 15, ageMonths: '4-6', dailyAmount: 175 },
+  { id: 'BC_PUPPY_LAMB_15_6-12', name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice', displayName: 'Brit Care Puppy (15kg, 6-12kk)', brand: 'Brit', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 15, ageMonths: '6-12', dailyAmount: 170 },
+  { id: 'BC_PUPPY_LAMB_20_1-3', name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice', displayName: 'Brit Care Puppy (20kg, 1-3kk)', brand: 'Brit', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 20, ageMonths: '1-3', dailyAmount: 140 },
+  { id: 'BC_PUPPY_LAMB_20_3-4', name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice', displayName: 'Brit Care Puppy (20kg, 3-4kk)', brand: 'Brit', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 20, ageMonths: '3-4', dailyAmount: 180 },
+  { id: 'BC_PUPPY_LAMB_20_4-6', name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice', displayName: 'Brit Care Puppy (20kg, 4-6kk)', brand: 'Brit', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 20, ageMonths: '4-6', dailyAmount: 220 },
+  { id: 'BC_PUPPY_LAMB_20_6-12', name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice', displayName: 'Brit Care Puppy (20kg, 6-12kk)', brand: 'Brit', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 20, ageMonths: '6-12', dailyAmount: 210 },
+  { id: 'BC_PUPPY_LAMB_25_1-3', name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice', displayName: 'Brit Care Puppy (25kg, 1-3kk)', brand: 'Brit', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 25, ageMonths: '1-3', dailyAmount: 150, notes: '>25kg koirille Junior Large Breed' },
   
-  // Hau-Hau Champion
-  { id: 'HHC_PUPPY_5_1-2', name: 'Hau-Hau Champion Pentu & Emo', brand: 'Hau-Hau Champion', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 5, ageMonths: '1-2', dailyAmount: 70, notes: 'Sopii myös emolle' },
-  { id: 'HHC_PUPPY_5_3-4', name: 'Hau-Hau Champion Pentu & Emo', brand: 'Hau-Hau Champion', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 5, ageMonths: '3-4', dailyAmount: 90 },
-  { id: 'HHC_PUPPY_5_5-6', name: 'Hau-Hau Champion Pentu & Emo', brand: 'Hau-Hau Champion', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 5, ageMonths: '5-6', dailyAmount: 90 },
-  { id: 'HHC_PUPPY_5_7-12', name: 'Hau-Hau Champion Pentu & Emo', brand: 'Hau-Hau Champion', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 5, ageMonths: '7-12', dailyAmount: 80 },
-  { id: 'HHC_PUPPY_10_1-2', name: 'Hau-Hau Champion Pentu & Emo', brand: 'Hau-Hau Champion', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 10, ageMonths: '1-2', dailyAmount: 100 },
-  { id: 'HHC_PUPPY_10_3-4', name: 'Hau-Hau Champion Pentu & Emo', brand: 'Hau-Hau Champion', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 10, ageMonths: '3-4', dailyAmount: 140 },
-  { id: 'HHC_PUPPY_10_5-6', name: 'Hau-Hau Champion Pentu & Emo', brand: 'Hau-Hau Champion', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 10, ageMonths: '5-6', dailyAmount: 140 },
-  { id: 'HHC_PUPPY_15_1-2', name: 'Hau-Hau Champion Pentu & Emo', brand: 'Hau-Hau Champion', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 15, ageMonths: '1-2', dailyAmount: 130 },
-  { id: 'HHC_PUPPY_15_3-4', name: 'Hau-Hau Champion Pentu & Emo', brand: 'Hau-Hau Champion', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 15, ageMonths: '3-4', dailyAmount: 170 },
-  { id: 'HHC_PUPPY_15_5-6', name: 'Hau-Hau Champion Pentu & Emo', brand: 'Hau-Hau Champion', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 15, ageMonths: '5-6', dailyAmount: 190 },
-  { id: 'HHC_PUPPY_20_1-2', name: 'Hau-Hau Champion Pentu & Emo', brand: 'Hau-Hau Champion', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 20, ageMonths: '1-2', dailyAmount: 160 },
-  { id: 'HHC_PUPPY_20_3-4', name: 'Hau-Hau Champion Pentu & Emo', brand: 'Hau-Hau Champion', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 20, ageMonths: '3-4', dailyAmount: 200 },
-  { id: 'HHC_PUPPY_20_5-6', name: 'Hau-Hau Champion Pentu & Emo', brand: 'Hau-Hau Champion', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 20, ageMonths: '5-6', dailyAmount: 230 },
+  // Hau-Hau Champion - tarkat yhdistelmät
+  { id: 'HHC_PUPPY_5_1-2', name: 'Hau-Hau Champion Pentu & Emo', displayName: 'Hau-Hau Champion (5kg, 1-2kk)', brand: 'Hau-Hau Champion', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 5, ageMonths: '1-2', dailyAmount: 70, notes: 'Sopii myös emolle' },
+  { id: 'HHC_PUPPY_5_3-4', name: 'Hau-Hau Champion Pentu & Emo', displayName: 'Hau-Hau Champion (5kg, 3-4kk)', brand: 'Hau-Hau Champion', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 5, ageMonths: '3-4', dailyAmount: 90 },
+  { id: 'HHC_PUPPY_5_5-6', name: 'Hau-Hau Champion Pentu & Emo', displayName: 'Hau-Hau Champion (5kg, 5-6kk)', brand: 'Hau-Hau Champion', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 5, ageMonths: '5-6', dailyAmount: 90 },
+  { id: 'HHC_PUPPY_5_7-12', name: 'Hau-Hau Champion Pentu & Emo', displayName: 'Hau-Hau Champion (5kg, 7-12kk)', brand: 'Hau-Hau Champion', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 5, ageMonths: '7-12', dailyAmount: 80 },
+  { id: 'HHC_PUPPY_10_1-2', name: 'Hau-Hau Champion Pentu & Emo', displayName: 'Hau-Hau Champion (10kg, 1-2kk)', brand: 'Hau-Hau Champion', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 10, ageMonths: '1-2', dailyAmount: 100 },
+  { id: 'HHC_PUPPY_10_3-4', name: 'Hau-Hau Champion Pentu & Emo', displayName: 'Hau-Hau Champion (10kg, 3-4kk)', brand: 'Hau-Hau Champion', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 10, ageMonths: '3-4', dailyAmount: 140 },
+  { id: 'HHC_PUPPY_10_5-6', name: 'Hau-Hau Champion Pentu & Emo', displayName: 'Hau-Hau Champion (10kg, 5-6kk)', brand: 'Hau-Hau Champion', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 10, ageMonths: '5-6', dailyAmount: 140 },
+  { id: 'HHC_PUPPY_15_1-2', name: 'Hau-Hau Champion Pentu & Emo', displayName: 'Hau-Hau Champion (15kg, 1-2kk)', brand: 'Hau-Hau Champion', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 15, ageMonths: '1-2', dailyAmount: 130 },
+  { id: 'HHC_PUPPY_15_3-4', name: 'Hau-Hau Champion Pentu & Emo', displayName: 'Hau-Hau Champion (15kg, 3-4kk)', brand: 'Hau-Hau Champion', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 15, ageMonths: '3-4', dailyAmount: 170 },
+  { id: 'HHC_PUPPY_15_5-6', name: 'Hau-Hau Champion Pentu & Emo', displayName: 'Hau-Hau Champion (15kg, 5-6kk)', brand: 'Hau-Hau Champion', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 15, ageMonths: '5-6', dailyAmount: 190 },
+  { id: 'HHC_PUPPY_20_1-2', name: 'Hau-Hau Champion Pentu & Emo', displayName: 'Hau-Hau Champion (20kg, 1-2kk)', brand: 'Hau-Hau Champion', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 20, ageMonths: '1-2', dailyAmount: 160 },
+  { id: 'HHC_PUPPY_20_3-4', name: 'Hau-Hau Champion Pentu & Emo', displayName: 'Hau-Hau Champion (20kg, 3-4kk)', brand: 'Hau-Hau Champion', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 20, ageMonths: '3-4', dailyAmount: 200 },
+  { id: 'HHC_PUPPY_20_5-6', name: 'Hau-Hau Champion Pentu & Emo', displayName: 'Hau-Hau Champion (20kg, 5-6kk)', brand: 'Hau-Hau Champion', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', adultWeight: 20, ageMonths: '5-6', dailyAmount: 230 },
   
-  // MUSH Raaka
-  { id: 'MUSH_PUPPY_T1_1-2', name: 'MUSH Vaisto Puppy (nauta-poro-lohi)', brand: 'MUSH', type: 'raaka', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', ageMonths: '1-2', formula: 'Aikuispaino_kg × 100' },
-  { id: 'MUSH_PUPPY_T1_2-4', name: 'MUSH Vaisto Puppy (nauta-poro-lohi)', brand: 'MUSH', type: 'raaka', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', ageMonths: '2-4', formula: 'Aikuispaino_kg × 75' },
-  { id: 'MUSH_PUPPY_T1_4-6', name: 'MUSH Vaisto Puppy (nauta-poro-lohi)', brand: 'MUSH', type: 'raaka', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', ageMonths: '4-6', formula: 'Aikuispaino_kg × 50' },
-  { id: 'MUSH_PUPPY_T1_6-9', name: 'MUSH Vaisto Puppy (nauta-poro-lohi)', brand: 'MUSH', type: 'raaka', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', ageMonths: '6-9', formula: 'Aikuispaino_kg × 30' },
-  { id: 'MUSH_PUPPY_T1_9+', name: 'MUSH Vaisto Puppy (nauta-poro-lohi)', brand: 'MUSH', type: 'raaka', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', ageMonths: '9+', formula: 'Aikuispaino_kg × 25' },
-  { id: 'MUSH_PUPPY_T2', name: 'MUSH Vaisto Puppy (yleisohje)', brand: 'MUSH', type: 'raaka', nutritionType: 'täysravinto', dosageBase: 'prosentti_nykyisestä_painosta', formula: 'Nykyinen_paino_kg × 1000 × (0.05-0.10)', notes: '5-10% pennun nykyisestä painosta' },
+  // ESSENTIAL - tarkat yhdistelmät
+  { id: 'ESSENTIAL_BEGIN_SMALL', name: 'ESSENTIAL The Beginning', displayName: 'ESSENTIAL The Beginning (Pienille roduille)', brand: 'Essential', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', notes: 'Viljaton, ankka+kana, alle 15kg roduille. Annostus: 10.5-42.5 g/kg/päivä' },
   
-  // SMAAK
-  { id: 'SMAAK_PUPPY_5', name: 'SMAAK Raaka täysravinto', brand: 'SMAAK', type: 'raaka', nutritionType: 'täysravinto', dosageBase: 'nykyinen_paino', minAmount: 75, maxAmount: 150 },
-  { id: 'SMAAK_PUPPY_10', name: 'SMAAK Raaka täysravinto', brand: 'SMAAK', type: 'raaka', nutritionType: 'täysravinto', dosageBase: 'nykyinen_paino', minAmount: 150, maxAmount: 300 },
-  { id: 'SMAAK_PUPPY_15', name: 'SMAAK Raaka täysravinto', brand: 'SMAAK', type: 'raaka', nutritionType: 'täysravinto', dosageBase: 'nykyinen_paino', minAmount: 225, maxAmount: 450 },
-  { id: 'SMAAK_PUPPY_20', name: 'SMAAK Raaka täysravinto', brand: 'SMAAK', type: 'raaka', nutritionType: 'täysravinto', dosageBase: 'nykyinen_paino', minAmount: 300, maxAmount: 600 },
-  { id: 'SMAAK_PUPPY_25', name: 'SMAAK Raaka täysravinto', brand: 'SMAAK', type: 'raaka', nutritionType: 'täysravinto', dosageBase: 'nykyinen_paino', minAmount: 375, maxAmount: 750 },
+  // Royal Canin
+  { id: 'RC_MINI_PUPPY', name: 'Royal Canin Mini Puppy', displayName: 'Royal Canin Mini Puppy (kuiva)', brand: 'Royal Canin', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'ei_tietoa' },
+  { id: 'RC_MINI_PUPPY_WET', name: 'Royal Canin Mini Puppy (märkäruoka)', displayName: 'Royal Canin Mini Puppy (märkä)', brand: 'Royal Canin', type: 'märkä', nutritionType: 'täysravinto', dosageBase: 'ei_tietoa' },
   
-  // Brit Premium märkäruoka
-  { id: 'BP_WET_BEEF_FULL_SMALL', name: 'Brit Premium by Nature Beef with Tripe', brand: 'Brit', type: 'märkä', nutritionType: 'täysravinto', dosageBase: 'kokoluokka', minAmount: 200, maxAmount: 400, notes: 'Pieni (1-10kg)' },
-  { id: 'BP_WET_BEEF_FULL_MEDIUM', name: 'Brit Premium by Nature Beef with Tripe', brand: 'Brit', type: 'märkä', nutritionType: 'täysravinto', dosageBase: 'kokoluokka', minAmount: 400, maxAmount: 800, notes: 'Keski (10-25kg)' },
-  { id: 'BP_WET_BEEF_FULL_LARGE', name: 'Brit Premium by Nature Beef with Tripe', brand: 'Brit', type: 'märkä', nutritionType: 'täysravinto', dosageBase: 'kokoluokka', minAmount: 800, maxAmount: 1200, notes: 'Suuri (25-50kg)' },
-  { id: 'BP_WET_BEEF_COMP_SMALL', name: 'Brit Premium by Nature Beef with Tripe', brand: 'Brit', type: 'märkä', nutritionType: 'täydennysravinto', dosageBase: 'kokoluokka', minAmount: 100, maxAmount: 200, notes: 'Pieni (1-10kg) - 50% täydennysravintona' },
-  { id: 'BP_WET_BEEF_COMP_MEDIUM', name: 'Brit Premium by Nature Beef with Tripe', brand: 'Brit', type: 'märkä', nutritionType: 'täydennysravinto', dosageBase: 'kokoluokka', minAmount: 200, maxAmount: 400, notes: 'Keski (10-25kg) - 50% täydennysravintona' },
-  { id: 'BP_WET_BEEF_COMP_LARGE', name: 'Brit Premium by Nature Beef with Tripe', brand: 'Brit', type: 'märkä', nutritionType: 'täydennysravinto', dosageBase: 'kokoluokka', minAmount: 400, maxAmount: 600, notes: 'Suuri (25-50kg) - 50% täydennysravintona' }
+  // Acana
+  { id: 'ACANA_PUPPY', name: 'Acana Puppy & Junior', displayName: 'Acana Puppy & Junior', brand: 'Acana', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'ei_tietoa' },
+  
+  // Purenatural
+  { id: 'PN_PUPPY', name: 'Purenatural Puppy', displayName: 'Purenatural Puppy', brand: 'Purenatural', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'ei_tietoa' },
+  
+  // Jahti&Vahti
+  { id: 'JV_PUPPY', name: 'Jahti&Vahti Pentu', displayName: 'Jahti&Vahti Pentu', brand: 'Jahti&Vahti', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'nykyinen_paino', notes: '29% proteiinia, 17% rasvaa. Annostus: 8.0-33.3 g/kg/päivä' },
+  
+  // Farm Food
+  { id: 'FF_HE_PUPPY', name: 'Farm Food HE', displayName: 'Farm Food HE', brand: 'Farm Food', type: 'kuiva', nutritionType: 'täysravinto', dosageBase: 'nykyinen_paino', notes: 'Tarkat laskukaavat. Annostus: 22.0-42.0 g/kg/päivä' },
+  
+  // MUSH Raakaruoat - ikäryhmittäin
+  { id: 'MUSH_PUPPY_1-2', name: 'MUSH Vaisto Puppy (nauta-poro-lohi)', displayName: 'MUSH Vaisto Puppy (1-2kk ikä)', brand: 'MUSH', type: 'raaka', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', ageMonths: '1-2', formula: 'Aikuispaino_kg × 100' },
+  { id: 'MUSH_PUPPY_2-4', name: 'MUSH Vaisto Puppy (nauta-poro-lohi)', displayName: 'MUSH Vaisto Puppy (2-4kk ikä)', brand: 'MUSH', type: 'raaka', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', ageMonths: '2-4', formula: 'Aikuispaino_kg × 75' },
+  { id: 'MUSH_PUPPY_4-6', name: 'MUSH Vaisto Puppy (nauta-poro-lohi)', displayName: 'MUSH Vaisto Puppy (4-6kk ikä)', brand: 'MUSH', type: 'raaka', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', ageMonths: '4-6', formula: 'Aikuispaino_kg × 50' },
+  { id: 'MUSH_PUPPY_6-9', name: 'MUSH Vaisto Puppy (nauta-poro-lohi)', displayName: 'MUSH Vaisto Puppy (6-9kk ikä)', brand: 'MUSH', type: 'raaka', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', ageMonths: '6-9', formula: 'Aikuispaino_kg × 30' },
+  { id: 'MUSH_PUPPY_9+', name: 'MUSH Vaisto Puppy (nauta-poro-lohi)', displayName: 'MUSH Vaisto Puppy (9+ kk ikä)', brand: 'MUSH', type: 'raaka', nutritionType: 'täysravinto', dosageBase: 'odotettu_aikuispaino_ja_ikä', ageMonths: '9+', formula: 'Aikuispaino_kg × 25' },
+  { id: 'MUSH_PUPPY_GENERAL', name: 'MUSH Vaisto Puppy (yleisohje)', displayName: 'MUSH Vaisto Puppy (yleisohje %)', brand: 'MUSH', type: 'raaka', nutritionType: 'täysravinto', dosageBase: 'prosentti_nykyisestä_painosta', formula: 'Nykyinen_paino_kg × 1000 × (0.05-0.10)', notes: '5-10% pennun nykyisestä painosta' },
+  
+  // SMAAK - painoryhmittäin
+  { id: 'SMAAK_PUPPY_5', name: 'SMAAK Raaka täysravinto', displayName: 'SMAAK Raaka (5kg paino)', brand: 'SMAAK', type: 'raaka', nutritionType: 'täysravinto', dosageBase: 'nykyinen_paino', minAmount: 75, maxAmount: 150 },
+  { id: 'SMAAK_PUPPY_10', name: 'SMAAK Raaka täysravinto', displayName: 'SMAAK Raaka (10kg paino)', brand: 'SMAAK', type: 'raaka', nutritionType: 'täysravinto', dosageBase: 'nykyinen_paino', minAmount: 150, maxAmount: 300 },
+  { id: 'SMAAK_PUPPY_15', name: 'SMAAK Raaka täysravinto', displayName: 'SMAAK Raaka (15kg paino)', brand: 'SMAAK', type: 'raaka', nutritionType: 'täysravinto', dosageBase: 'nykyinen_paino', minAmount: 225, maxAmount: 450 },
+  { id: 'SMAAK_PUPPY_20', name: 'SMAAK Raaka täysravinto', displayName: 'SMAAK Raaka (20kg paino)', brand: 'SMAAK', type: 'raaka', nutritionType: 'täysravinto', dosageBase: 'nykyinen_paino', minAmount: 300, maxAmount: 600 },
+  { id: 'SMAAK_PUPPY_25', name: 'SMAAK Raaka täysravinto', displayName: 'SMAAK Raaka (25kg paino)', brand: 'SMAAK', type: 'raaka', nutritionType: 'täysravinto', dosageBase: 'nykyinen_paino', minAmount: 375, maxAmount: 750 },
+  
+  // Brit Premium märkäruoat - kokoluokittain
+  { id: 'BP_WET_BEEF_FULL_SMALL', name: 'Brit Premium by Nature Beef with Tripe', displayName: 'Brit Premium Märkä (Pieni, täysravinto)', brand: 'Brit', type: 'märkä', nutritionType: 'täysravinto', dosageBase: 'kokoluokka', minAmount: 200, maxAmount: 400, notes: 'Pieni (1-10kg)' },
+  { id: 'BP_WET_BEEF_FULL_MEDIUM', name: 'Brit Premium by Nature Beef with Tripe', displayName: 'Brit Premium Märkä (Keski, täysravinto)', brand: 'Brit', type: 'märkä', nutritionType: 'täysravinto', dosageBase: 'kokoluokka', minAmount: 400, maxAmount: 800, notes: 'Keski (10-25kg)' },
+  { id: 'BP_WET_BEEF_FULL_LARGE', name: 'Brit Premium by Nature Beef with Tripe', displayName: 'Brit Premium Märkä (Suuri, täysravinto)', brand: 'Brit', type: 'märkä', nutritionType: 'täysravinto', dosageBase: 'kokoluokka', minAmount: 800, maxAmount: 1200, notes: 'Suuri (25-50kg)' },
+  { id: 'BP_WET_BEEF_COMP_SMALL', name: 'Brit Premium by Nature Beef with Tripe', displayName: 'Brit Premium Märkä (Pieni, täydennysravinto)', brand: 'Brit', type: 'märkä', nutritionType: 'täydennysravinto', dosageBase: 'kokoluokka', minAmount: 100, maxAmount: 200, notes: 'Pieni (1-10kg) - 50% täydennysravintona' },
+  { id: 'BP_WET_BEEF_COMP_MEDIUM', name: 'Brit Premium by Nature Beef with Tripe', displayName: 'Brit Premium Märkä (Keski, täydennysravinto)', brand: 'Brit', type: 'märkä', nutritionType: 'täydennysravinto', dosageBase: 'kokoluokka', minAmount: 200, maxAmount: 400, notes: 'Keski (10-25kg) - 50% täydennysravintona' },
+  { id: 'BP_WET_BEEF_COMP_LARGE', name: 'Brit Premium by Nature Beef with Tripe', displayName: 'Brit Premium Märkä (Suuri, täydennysravinto)', brand: 'Brit', type: 'märkä', nutritionType: 'täydennysravinto', dosageBase: 'kokoluokka', minAmount: 400, maxAmount: 600, notes: 'Suuri (25-50kg) - 50% täydennysravintona' }
 ]
 
 // Ruokintakertojen jaottelu iän mukaan
@@ -107,6 +127,23 @@ export default function PuppyFeeding() {
   const [result, setResult] = useState<any>(null)
 
   const selectedFoodData = puppyFoodData.find(food => food.id === selectedFood)
+
+  const getInstructionsForFood = (food: PuppyFoodData) => {
+    switch (food.dosageBase) {
+      case 'odotettu_aikuispaino_ja_ikä':
+        return `📋 Tämä ruoka annosteltaan odotetun aikuispainon ja pennun iän perusteella. Syötä arvot alle.`
+      case 'nykyinen_paino':
+        return `📋 Tämä ruoka annosteltaan pennun nykyisen painon perusteella. Syötä paino alle.`
+      case 'prosentti_nykyisestä_painosta':
+        return `📋 Tämä ruoka annosteltaan prosenttiosuutena pennun nykyisestä painosta. Syötä paino alle.`
+      case 'kokoluokka':
+        return `📋 Tämä ruoka annosteltaan koiran kokoluokan perusteella. Valitse kokoluokka alle.`
+      case 'ei_tietoa':
+        return `⚠️ Tarkkaa annosteluohjetta ei ole saatavilla tälle ruoalle. Tarkista annostus tuotepakkauksesta.`
+      default:
+        return ''
+    }
+  }
 
   const calculateFeeding = () => {
     if (!selectedFoodData) return
@@ -247,6 +284,30 @@ export default function PuppyFeeding() {
     return acc
   }, {} as Record<string, PuppyFoodData[]>)
 
+  // Uniikkien tuotteiden lista Ruokamerkit-välilehdelle
+  const uniqueProducts = puppyFoodData.reduce((acc, food) => {
+    const key = `${food.brand}-${food.name}`
+    if (!acc[key]) {
+      acc[key] = {
+        brand: food.brand,
+        name: food.name,
+        type: food.type,
+        nutritionType: food.nutritionType,
+        dosageBase: food.dosageBase,
+        notes: food.notes || '',
+        variants: []
+      }
+    }
+    acc[key].variants.push({
+      displayName: food.displayName || `${food.adultWeight}kg, ${food.ageMonths}`,
+      dailyAmount: food.dailyAmount,
+      minAmount: food.minAmount,
+      maxAmount: food.maxAmount,
+      formula: food.formula
+    })
+    return acc
+  }, {} as Record<string, any>)
+
   return (
     <div className="space-y-6">
       <Card>
@@ -277,11 +338,11 @@ export default function PuppyFeeding() {
                     <SelectContent>
                       {Object.entries(foodsByBrand).map(([brand, foods]) => (
                         <div key={brand}>
-                          <div className="px-2 py-1 text-sm font-semibold text-gray-600">{brand}</div>
+                          <div className="px-2 py-1 text-sm font-semibold text-gray-600 bg-gray-50">{brand}</div>
                           {foods.map(food => (
                             <SelectItem key={food.id} value={food.id}>
-                              {food.name} ({food.type})
-                              {food.nutritionType === 'täydennysravinto' && ' - Täydennysravinto'}
+                              {food.displayName || food.name}
+                              {food.nutritionType === 'täydennysravinto' && ' ⚠️'}
                             </SelectItem>
                           ))}
                         </div>
@@ -292,21 +353,29 @@ export default function PuppyFeeding() {
 
                 {selectedFoodData && (
                   <>
-                    <div className="p-4 bg-blue-50 rounded-lg">
+                    <div className="p-4 bg-blue-50 rounded-lg space-y-3">
                       <h3 className="font-semibold mb-2">{selectedFoodData.name}</h3>
-                      <div className="grid grid-cols-2 gap-2 text-sm">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm">
                         <span>Valmistaja: <Badge variant="secondary">{selectedFoodData.brand}</Badge></span>
                         <span>Tyyppi: <Badge variant="outline">{selectedFoodData.type}</Badge></span>
                         <span>Ravinto: <Badge variant={selectedFoodData.nutritionType === 'täydennysravinto' ? 'destructive' : 'default'}>{selectedFoodData.nutritionType}</Badge></span>
                       </div>
+                      
+                      <Alert>
+                        <Info className="h-4 w-4" />
+                        <AlertDescription>
+                          {getInstructionsForFood(selectedFoodData)}
+                        </AlertDescription>
+                      </Alert>
+                      
                       {selectedFoodData.notes && (
-                        <p className="text-sm text-gray-600 mt-2">{selectedFoodData.notes}</p>
+                        <p className="text-sm text-gray-600 bg-white p-2 rounded">{selectedFoodData.notes}</p>
                       )}
                     </div>
 
                     {getInputFields()}
 
-                    <Button onClick={calculateFeeding} className="w-full">
+                    <Button onClick={calculateFeeding} className="w-full" disabled={selectedFoodData.dosageBase === 'ei_tietoa'}>
                       <Scale className="mr-2 h-4 w-4" />
                       Laske ruokamäärä
                     </Button>
@@ -358,7 +427,7 @@ export default function PuppyFeeding() {
                           {result.mealInfo && (
                             <div className="bg-white p-3 rounded-lg">
                               <div className="text-2xl font-bold text-blue-600">
-                                {typeof result.mealInfo.meals === 'number' ? result.mealInfo.meals : result.mealInfo.meals}
+                                {result.mealInfo.meals}
                               </div>
                               <div className="text-sm text-gray-600">Ateriaa päivässä</div>
                               <div className="text-xs text-gray-500 mt-1">{result.mealInfo.interval}</div>
@@ -388,24 +457,49 @@ export default function PuppyFeeding() {
             </TabsContent>
             
             <TabsContent value="brands" className="space-y-4">
-              <div className="grid gap-4">
+              <div className="grid gap-6">
                 {Object.entries(foodsByBrand).map(([brand, foods]) => (
                   <Card key={brand}>
                     <CardHeader>
-                      <CardTitle className="text-lg">{brand}</CardTitle>
+                      <CardTitle className="text-lg flex items-center gap-2">
+                        {brand}
+                        <Badge variant="outline">{foods.length} tuotetta</Badge>
+                      </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="space-y-2">
-                        {Array.from(new Set(foods.map(f => f.name))).map(name => {
-                          const food = foods.find(f => f.name === name)!
+                      <div className="space-y-4">
+                        {Array.from(new Set(foods.map(f => f.name))).map(productName => {
+                          const productVariants = foods.filter(f => f.name === productName)
+                          const mainProduct = productVariants[0]
+                          
                           return (
-                            <div key={name} className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                              <span className="font-medium">{name}</span>
-                              <div className="flex gap-2">
-                                <Badge variant="outline">{food.type}</Badge>
-                                <Badge variant={food.nutritionType === 'täydennysravinto' ? 'destructive' : 'default'}>
-                                  {food.nutritionType}
-                                </Badge>
+                            <div key={productName} className="border rounded-lg p-4">
+                              <div className="flex items-center justify-between mb-3">
+                                <h4 className="font-semibold">{productName}</h4>
+                                <div className="flex gap-2">
+                                  <Badge variant="outline">{mainProduct.type}</Badge>
+                                  <Badge variant={mainProduct.nutritionType === 'täydennysravinto' ? 'destructive' : 'default'}>
+                                    {mainProduct.nutritionType}
+                                  </Badge>
+                                </div>
+                              </div>
+                              
+                              {mainProduct.notes && (
+                                <p className="text-sm text-gray-600 mb-3 bg-gray-50 p-2 rounded">{mainProduct.notes}</p>
+                              )}
+                              
+                              <div className="space-y-2">
+                                <p className="text-sm font-medium">Saatavilla olevat vaihtoehdot:</p>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                                  {productVariants.map(variant => (
+                                    <div key={variant.id} className="text-xs bg-gray-50 p-2 rounded">
+                                      <div className="font-medium">{variant.displayName}</div>
+                                      {variant.dailyAmount && <div>📦 {variant.dailyAmount}g/päivä</div>}
+                                      {variant.minAmount && variant.maxAmount && <div>📦 {variant.minAmount}-{variant.maxAmount}g/päivä</div>}
+                                      {variant.formula && <div>📋 {variant.formula}</div>}
+                                    </div>
+                                  ))}
+                                </div>
                               </div>
                             </div>
                           )
