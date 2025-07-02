@@ -9,7 +9,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { AlertTriangle, Info, Clock, Scale } from 'lucide-react'
+import { AlertTriangle, Info, Scale } from 'lucide-react'
 
 // --- DATAN MÄÄRITTELY ---
 
@@ -25,7 +25,7 @@ interface PuppyFoodData {
   ageMonths?: string // Esim. "1-3", "9+"
   dailyAmount?: number
   // Kaavoja varten
-  formula?: string // Esim. "Aikuispaino_kg * 100"
+  formula?: string // Esim. "complex" MUSH:lle
   // Vaihteluvälejä varten
   minAmount?: number
   maxAmount?: number
@@ -123,12 +123,12 @@ export default function PuppyFeedingCalculator() {
   const getInstructionsForFood = (food: PuppyFoodData) => {
     switch (food.dosageBase) {
       case 'odotettu_aikuispaino_ja_ikä':
-        return `Tämä ruoka annostellaan odotetun aikuispainon ja pennun iän perusteella.`
+        return `Tämä ruoka annostellaan odotetun aikuispainon ja pennun iän perusteella. Syötä molemmat tiedot alla.`
       case 'nykyinen_paino':
       case 'prosentti_nykyisestä_painosta':
-        return `Tämä ruoka annostellaan pennun nykyisen painon perusteella.`
+        return `Tämä ruoka annostellaan pennun nykyisen painon perusteella. Syötä pennun tämänhetkinen paino.`
       case 'kokoluokka':
-        return `Tämä ruoka annostellaan koiran kokoluokan (odotettu aikuispaino) perusteella.`
+        return `Tämä ruoka annostellaan koiran kokoluokan (odotettu aikuispaino) perusteella. Syötä odotettu aikuispaino.`
       case 'ei_tietoa':
         return `Tarkkaa annosteluohjetta ei valitettavasti ole saatavilla digitaalisessa muodossa. Tarkista annostus aina tuotepakkauksesta.`
       default:
@@ -169,7 +169,7 @@ export default function PuppyFeedingCalculator() {
             else percentage = 0.025 // 2.5%
             calculatedAmount = Math.round(weightNum * 1000 * percentage)
         } else {
-        // Taulukkolaskenta (Brit Care, Hau-Hau)
+        // Taulukkolaskenta (Brit Care, Hau-Hau) - NYT TOIMII LASKURINA!
           const foodVariants = puppyFoodDatabase.filter(f => f.name === selectedFoodTemplate.name)
           const availableWeights = [...new Set(foodVariants.map(f => f.adultWeight!))].sort((a, b) => a - b)
           
@@ -293,9 +293,10 @@ export default function PuppyFeedingCalculator() {
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="calculator" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="calculator">Ruokamäärälaskuri</TabsTrigger>
               <TabsTrigger value="feeding-schedule">Ruokinta-aikataulu</TabsTrigger>
+              <TabsTrigger value="brands">Ruokamerkit</TabsTrigger>
             </TabsList>
             
             <TabsContent value="calculator" className="space-y-6 pt-4">
@@ -367,7 +368,19 @@ export default function PuppyFeedingCalculator() {
                        <Alert>
                         <Info className="h-4 w-4" />
                         <AlertTitle>Tietoa raakaruoan annoskoosta</AlertTitle>
-                        <AlertDescription>Raakaruoan annosmäärä voi vaikuttaa suurelta, koska se sisältää paljon kosteutta (n. 70%). Kuivaruoka on tiiviimpää energiaa.</AlertDescription>
+                        <AlertDescription>
+                          Raakaruoan annosmäärä voi vaikuttaa suurelta, koska se sisältää paljon kosteutta (n. 70%). 
+                          Kuivaruoka on paljon tiiviimpää energiaa. Esimerkiksi 2000g raakaruokaa vastaa energiasisällöltään 
+                          noin 400-500g kuivaruokaa. Tämä on valmistajan suosituksen mukainen ja ravitsemuksellisesti oikea määrä.
+                        </AlertDescription>
+                      </Alert>
+                    )}
+
+                    {result.notes && (
+                      <Alert>
+                        <Info className="h-4 w-4" />
+                        <AlertTitle>Lisätietoja</AlertTitle>
+                        <AlertDescription>{result.notes}</AlertDescription>
                       </Alert>
                     )}
 
@@ -432,6 +445,49 @@ export default function PuppyFeedingCalculator() {
                       <TableRow><TableCell>Yli 6 kk</TableCell><TableCell>2</TableCell></TableRow>
                     </TableBody>
                   </Table>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="brands" className="space-y-4 pt-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Saatavilla olevat ruokamerkit</CardTitle>
+                  <CardDescription>Täydellinen listaus kaikista tuoteista ja niiden varianteista.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {Object.entries(foodsByBrand).map(([brand, foods]) => (
+                    <div key={brand} className="mb-6">
+                      <h3 className="font-bold text-lg mb-3">{brand}</h3>
+                      <div className="space-y-2">
+                        {foods.map(food => {
+                          const variants = puppyFoodDatabase.filter(f => f.name === food.name)
+                          return (
+                            <div key={food.name} className="border rounded-lg p-3">
+                              <div className="flex items-center gap-2 mb-2">
+                                <span className="font-medium">{food.name}</span>
+                                <Badge variant="outline">{food.type}</Badge>
+                                <Badge variant={food.nutritionType === 'täydennysravinto' ? 'destructive' : 'default'}>
+                                  {food.nutritionType}
+                                </Badge>
+                              </div>
+                              {variants.length > 1 && (
+                                <div className="text-sm text-gray-600 mt-2">
+                                  <span className="font-medium">Saatavilla painoluokille: </span>
+                                  {[...new Set(variants.map(v => v.adultWeight))].sort((a, b) => (a || 0) - (b || 0)).map(w => w + 'kg').join(', ')}
+                                </div>
+                              )}
+                              {food.notes && (
+                                <div className="text-sm text-blue-600 mt-1">
+                                  <span className="font-medium">Huom: </span>{food.notes}
+                                </div>
+                              )}
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  ))}
                 </CardContent>
               </Card>
             </TabsContent>
