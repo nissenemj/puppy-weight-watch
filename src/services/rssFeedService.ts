@@ -137,17 +137,35 @@ function getSimulatedFeedData(sourceName: string): NewsItem[] {
       source: sourceName,
       priority: 'medium' as const,
       category: 'tutkimus' as const
+    },
+    {
+      title: "Ruokavirasto muistuttaa: Suklaasieni vaarallinen koirille",
+      description: "Ruokavirasto varoittaa koiranomistajia suklaasienen vaaroista. Sieni sisältää ksylitolia, joka on erittäin myrkyllistä koirille ja voi aiheuttaa henkeä uhkaavan verensokerin laskun.",
+      url: "https://www.ruokavirasto.fi/tietoa-meista/asiointi/ajankohtaista/2024/suklaasieni-vaarallinen-koirille/",
+      publishedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+      source: sourceName,
+      priority: 'critical' as const,
+      category: 'varoitus' as const
+    },
+    {
+      title: "Koiran liikunta ja ruokinta: asiantuntijan vinkit",
+      description: "Eläinlääkäri Anna Virtanen antaa vinkkejä koiran liikunnan ja ruokinnan tasapainottamiseen. Erityisesti nuorilla koirilla liikunta ja ravitsemus kulkevat käsi kädessä.",
+      url: "https://yle.fi/a/74-20105432",
+      publishedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+      source: sourceName,
+      priority: 'medium' as const,
+      category: 'tiedote' as const
     }
   ];
 
   // Return different data based on source to simulate real feeds
   if (sourceName === 'Yle Terveys') {
-    return baseData.slice(0, 1); // Return warning items
+    return [baseData[0], baseData[2]]; // Return warning items
   } else if (sourceName === 'Yle Tiede') {
-    return baseData.slice(1, 2); // Return research items
+    return [baseData[1], baseData[3]]; // Return research items
   }
   
-  return baseData;
+  return baseData.slice(0, 2);
 }
 
 // Fetch all feeds and combine results
