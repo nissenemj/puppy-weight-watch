@@ -3,13 +3,17 @@ import React, { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
-import { Search, Filter, Database, AlertCircle } from 'lucide-react'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Label } from '@/components/ui/label'
+import { Search, Filter, Database, AlertCircle, Plus, Edit, Save, X, Trash2 } from 'lucide-react'
 import InfoNavigation from '@/components/InfoNavigation'
 import DosageImagesSection from '@/components/DosageImagesSection'
 import GeneralDosageSection from '@/components/GeneralDosageSection'
 import { DogFoodService, type DogFood } from '@/services/dogFoodService'
+import { supabase } from '@/integrations/supabase/client'
 import { toast } from 'sonner'
 
 export default function FeedingData() {
@@ -20,6 +24,17 @@ export default function FeedingData() {
   const [selectedFoodType, setSelectedFoodType] = useState('all')
   const [loading, setLoading] = useState(true)
   const [initializing, setInitializing] = useState(false)
+  const [editingFood, setEditingFood] = useState<DogFood | null>(null)
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
+  const [newFood, setNewFood] = useState({
+    name: '',
+    manufacturer: '',
+    product_code: '',
+    food_type: 'Kuiva',
+    nutrition_type: 'Täysravinto',
+    dosage_method: 'Nykyinen_Paino',
+    notes: ''
+  })
 
   const loadDogFoods = async () => {
     try {
@@ -104,6 +119,88 @@ export default function FeedingData() {
         return 'bg-blue-100 text-blue-800'
       default:
         return 'bg-gray-100 text-gray-800'
+    }
+  }
+
+  const createFood = async () => {
+    try {
+      if (!newFood.name || !newFood.manufacturer) {
+        toast.error('Anna vähintään tuotteen nimi ja valmistaja')
+        return
+      }
+
+      const { error } = await supabase
+        .from('dog_foods')
+        .insert({
+          name: newFood.name,
+          manufacturer: newFood.manufacturer,
+          product_code: newFood.product_code,
+          food_type: newFood.food_type,
+          nutrition_type: newFood.nutrition_type,
+          dosage_method: newFood.dosage_method,
+          notes: newFood.notes || null
+        })
+
+      if (error) throw error
+
+      toast.success('Koiranruoka lisätty onnistuneesti!')
+      setNewFood({
+        name: '',
+        manufacturer: '',
+        product_code: '',
+        food_type: 'Kuiva',
+        nutrition_type: 'Täysravinto',
+        dosage_method: 'Nykyinen_Paino',
+        notes: ''
+      })
+      setIsCreateDialogOpen(false)
+      loadDogFoods()
+    } catch (error) {
+      console.error('Error creating food:', error)
+      toast.error('Koiranruoan lisääminen epäonnistui')
+    }
+  }
+
+  const updateFood = async (food: DogFood) => {
+    try {
+      const { error } = await supabase
+        .from('dog_foods')
+        .update({
+          name: food.name,
+          manufacturer: food.manufacturer,
+          product_code: food.product_code,
+          food_type: food.food_type,
+          nutrition_type: food.nutrition_type,
+          dosage_method: food.dosage_method,
+          notes: food.notes
+        })
+        .eq('id', food.id)
+
+      if (error) throw error
+
+      toast.success('Koiranruoka päivitetty onnistuneesti!')
+      setEditingFood(null)
+      loadDogFoods()
+    } catch (error) {
+      console.error('Error updating food:', error)
+      toast.error('Koiranruoan päivittäminen epäonnistui')
+    }
+  }
+
+  const deleteFood = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('dog_foods')
+        .delete()
+        .eq('id', id)
+
+      if (error) throw error
+
+      toast.success('Koiranruoka poistettu onnistuneesti!')
+      loadDogFoods()
+    } catch (error) {
+      console.error('Error deleting food:', error)
+      toast.error('Koiranruoan poistaminen epäonnistui')
     }
   }
 
@@ -227,25 +324,238 @@ export default function FeedingData() {
         <GeneralDosageSection />
 
         {/* Tuotteet */}
+        <Card className="mb-8 bg-white/80 backdrop-blur-sm">
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              <span>Koiranruokatiedot</span>
+              <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Lisää uusi tuote
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle>Lisää uusi koiranruoka</DialogTitle>
+                  </DialogHeader>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="name">Tuotteen nimi *</Label>
+                      <Input
+                        id="name"
+                        value={newFood.name}
+                        onChange={(e) => setNewFood(prev => ({ ...prev, name: e.target.value }))}
+                        placeholder="esim. Puppy Medium"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="manufacturer">Valmistaja *</Label>
+                      <Input
+                        id="manufacturer"
+                        value={newFood.manufacturer}
+                        onChange={(e) => setNewFood(prev => ({ ...prev, manufacturer: e.target.value }))}
+                        placeholder="esim. Royal Canin"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="product_code">Tuotekoodi</Label>
+                      <Input
+                        id="product_code"
+                        value={newFood.product_code}
+                        onChange={(e) => setNewFood(prev => ({ ...prev, product_code: e.target.value }))}
+                        placeholder="esim. RC123"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="food_type">Ruokatyyppi</Label>
+                      <Select value={newFood.food_type} onValueChange={(value) => setNewFood(prev => ({ ...prev, food_type: value }))}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Kuiva">Kuiva</SelectItem>
+                          <SelectItem value="Märkä">Märkä</SelectItem>
+                          <SelectItem value="Raaka">Raaka</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label htmlFor="nutrition_type">Ravitsemustyyppi</Label>
+                      <Select value={newFood.nutrition_type} onValueChange={(value) => setNewFood(prev => ({ ...prev, nutrition_type: value }))}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Täysravinto">Täysravinto</SelectItem>
+                          <SelectItem value="Täydennysravinto">Täydennysravinto</SelectItem>
+                          <SelectItem value="Täysravinto/Täydennysravinto">Täysravinto/Täydennysravinto</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label htmlFor="dosage_method">Annostelumenetelmä</Label>
+                      <Select value={newFood.dosage_method} onValueChange={(value) => setNewFood(prev => ({ ...prev, dosage_method: value }))}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Odotettu_Aikuispaino_Ja_Ikä">Odotettu aikuispaino + ikä</SelectItem>
+                          <SelectItem value="Nykyinen_Paino">Nykyinen paino</SelectItem>
+                          <SelectItem value="Prosentti_Nykyisestä_Painosta">Prosentti nykyisestä painosta</SelectItem>
+                          <SelectItem value="Kokoluokka">Kokoluokka</SelectItem>
+                          <SelectItem value="Ei_Tietoa">Ei tietoa</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="col-span-2">
+                      <Label htmlFor="notes">Huomiot</Label>
+                      <Textarea
+                        id="notes"
+                        value={newFood.notes}
+                        onChange={(e) => setNewFood(prev => ({ ...prev, notes: e.target.value }))}
+                        placeholder="Lisätietoja tuotteesta..."
+                      />
+                    </div>
+                  </div>
+                  <div className="flex justify-end gap-2 mt-4">
+                    <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
+                      Peruuta
+                    </Button>
+                    <Button onClick={createFood}>
+                      Tallenna tuote
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </CardTitle>
+          </CardHeader>
+        </Card>
+
         <div className="grid gap-6">
           {filteredFoods.map((food) => (
             <Card key={food.id} className="bg-white/80 backdrop-blur-sm">
               <CardHeader>
                 <div className="flex justify-between items-start">
-                  <div>
-                    <CardTitle className="text-lg">{food.name}</CardTitle>
-                    <CardDescription className="text-base">
-                      {food.manufacturer} • {food.food_type}
-                    </CardDescription>
+                  <div className="flex-1">
+                    {editingFood?.id === food.id ? (
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <Label>Tuotteen nimi</Label>
+                            <Input
+                              value={editingFood.name}
+                              onChange={(e) => setEditingFood(prev => prev ? { ...prev, name: e.target.value } : null)}
+                            />
+                          </div>
+                          <div>
+                            <Label>Valmistaja</Label>
+                            <Input
+                              value={editingFood.manufacturer}
+                              onChange={(e) => setEditingFood(prev => prev ? { ...prev, manufacturer: e.target.value } : null)}
+                            />
+                          </div>
+                          <div>
+                            <Label>Tuotekoodi</Label>
+                            <Input
+                              value={editingFood.product_code}
+                              onChange={(e) => setEditingFood(prev => prev ? { ...prev, product_code: e.target.value } : null)}
+                            />
+                          </div>
+                          <div>
+                            <Label>Ruokatyyppi</Label>
+                            <Select value={editingFood.food_type} onValueChange={(value: "Kuiva" | "Märkä" | "Raaka") => setEditingFood(prev => prev ? { ...prev, food_type: value } : null)}>
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="Kuiva">Kuiva</SelectItem>
+                                <SelectItem value="Märkä">Märkä</SelectItem>
+                                <SelectItem value="Raaka">Raaka</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div>
+                            <Label>Ravitsemustyyppi</Label>
+                            <Select value={editingFood.nutrition_type} onValueChange={(value: "Täysravinto" | "Täydennysravinto" | "Täysravinto/Täydennysravinto") => setEditingFood(prev => prev ? { ...prev, nutrition_type: value } : null)}>
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="Täysravinto">Täysravinto</SelectItem>
+                                <SelectItem value="Täydennysravinto">Täydennysravinto</SelectItem>
+                                <SelectItem value="Täysravinto/Täydennysravinto">Täysravinto/Täydennysravinto</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div>
+                            <Label>Annostelumenetelmä</Label>
+                            <Select value={editingFood.dosage_method} onValueChange={(value: "Nykyinen_Paino" | "Odotettu_Aikuispaino_Ja_Ikä" | "Prosentti_Nykyisestä_Painosta" | "Kokoluokka" | "Ei_Tietoa") => setEditingFood(prev => prev ? { ...prev, dosage_method: value } : null)}>
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="Odotettu_Aikuispaino_Ja_Ikä">Odotettu aikuispaino + ikä</SelectItem>
+                                <SelectItem value="Nykyinen_Paino">Nykyinen paino</SelectItem>
+                                <SelectItem value="Prosentti_Nykyisestä_Painosta">Prosentti nykyisestä painosta</SelectItem>
+                                <SelectItem value="Kokoluokka">Kokoluokka</SelectItem>
+                                <SelectItem value="Ei_Tietoa">Ei tietoa</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="col-span-2">
+                            <Label>Huomiot</Label>
+                            <Textarea
+                              value={editingFood.notes || ''}
+                              onChange={(e) => setEditingFood(prev => prev ? { ...prev, notes: e.target.value } : null)}
+                            />
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button size="sm" onClick={() => updateFood(editingFood)}>
+                            <Save className="h-4 w-4 mr-1" />
+                            Tallenna
+                          </Button>
+                          <Button size="sm" variant="outline" onClick={() => setEditingFood(null)}>
+                            <X className="h-4 w-4 mr-1" />
+                            Peruuta
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <CardTitle className="text-lg">{food.name}</CardTitle>
+                        <CardDescription className="text-base">
+                          {food.manufacturer} • {food.food_type}
+                        </CardDescription>
+                      </>
+                    )}
                   </div>
-                  <div className="flex gap-2">
-                    <Badge className={getNutritionTypeBadgeColor(food.nutrition_type)}>
-                      {food.nutrition_type}
-                    </Badge>
-                    <Badge variant="outline">
-                      {getDosageMethodDescription(food.dosage_method)}
-                    </Badge>
-                  </div>
+                  {editingFood?.id !== food.id && (
+                    <div className="flex gap-2">
+                      <Badge className={getNutritionTypeBadgeColor(food.nutrition_type)}>
+                        {food.nutrition_type}
+                      </Badge>
+                      <Badge variant="outline">
+                        {getDosageMethodDescription(food.dosage_method)}
+                      </Badge>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setEditingFood(food)}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => deleteFood(food.id)}
+                        className="text-destructive hover:text-destructive"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </CardHeader>
               
