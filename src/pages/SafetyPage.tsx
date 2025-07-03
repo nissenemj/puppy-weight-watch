@@ -63,43 +63,6 @@ export default function SafetyPage() {
         </Card>
 
 
-        {/* Key Safety Points */}
-        <Card className="mb-8 bg-red-50 border-red-200">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-red-800">
-              <AlertTriangle className="h-6 w-6" />
-              Tärkeät turvallisuussuositukset
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="bg-red-100 p-4 rounded-lg border border-red-300">
-                <h3 className="font-semibold text-red-800 mb-2">Vastuuvapauslausekkeet</h3>
-                <p className="text-sm text-red-700">
-                  "Tämä annostus on viitteellinen. Tarkkaile pentusi kuntoluokkaa ja yleisvointia, 
-                  ja sopeuta annosta tarvittaessa. Varmista aina, että raikasta vettä on saatavilla."
-                </p>
-              </div>
-              
-              <div className="bg-red-100 p-4 rounded-lg border border-red-300">
-                <h3 className="font-semibold text-red-800 mb-2">Sekaruokinnan varoitukset</h3>
-                <p className="text-sm text-red-700">
-                  "Jos korvaat osan tästä täysravinnosta toisella tuotteella, varmista, että myös toinen 
-                  tuote on ravitsemuksellisesti täydellistä täysravintoa, jotta pentusi saa kaikki 
-                  tarvitsemansa ravintoaineet."
-                </p>
-              </div>
-              
-              <div className="bg-red-100 p-4 rounded-lg border border-red-300">
-                <h3 className="font-semibold text-red-800 mb-2">Ammattiavun suosittaminen</h3>
-                <p className="text-sm text-red-700">
-                  Vastuullinen sovellus ohjaa käyttäjää tarvittaessa matalan kynnyksen periaatteella 
-                  ammattiavun piiriin ja asettaa koiranpennun terveyden ja hyvinvoinnin aina etusijalle.
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
 
         {/* Nutritional Considerations */}
         <Card className="mb-8 bg-white/80 backdrop-blur-sm">
