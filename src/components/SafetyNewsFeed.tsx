@@ -56,7 +56,7 @@ export default function SafetyNewsFeed() {
           <div className="flex items-center gap-2">
             {lastUpdated && (
               <span className="text-xs text-red-600">
-                Päivitetty: {lastUpdated.toLocaleTimeString('fi-FI')}
+                RSS-syötteet haettu: {lastUpdated.toLocaleDateString('fi-FI')} {lastUpdated.toLocaleTimeString('fi-FI')}
               </span>
             )}
             <Button
