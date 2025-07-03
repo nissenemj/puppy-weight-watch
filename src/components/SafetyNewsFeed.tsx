@@ -2,74 +2,39 @@
 import React, { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { AlertTriangle, Clock, ExternalLink } from 'lucide-react'
+import { AlertTriangle, Clock, ExternalLink, RefreshCw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-
-interface NewsItem {
-  title: string
-  description: string
-  url: string
-  publishedAt: string
-  source: string
-}
+import { fetchAllFeeds, getPriorityColor, getCategoryBadgeText, type NewsItem } from '@/services/rssFeedService'
 
 export default function SafetyNewsFeed() {
   const [news, setNews] = useState<NewsItem[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
 
-  // Static example news for demonstration
-  const exampleNews: NewsItem[] = [
-    {
-      title: "Evira varoittaa: Tietyt koiranruokamerkit vedetty myynnistä",
-      description: "Ruokavirasto on vetänyt myynnistä useita koiranruokamerkkejä mahdollisten terveysriskien vuoksi. Kyse on erityisesti kuivaruoista, joissa on havaittu poikkeavia salmonella-pitoisuuksia.",
-      url: "#",
-      publishedAt: "2024-12-15T10:00:00Z",
-      source: "Yle Uutiset"
-    },
-    {
-      title: "Huomio koiranomistajat: Kiinalaiset herkkupalat aiheuttavat munuaisongelmia",
-      description: "Eläinlääkärit varoittavat tietyistä kiinalaisista kuivalihaherkkujen käytöstä, koska ne on yhdistetty vakaviin munuaissairauksiin koirilla.",
-      url: "#",
-      publishedAt: "2024-12-10T14:30:00Z",
-      source: "MTV Uutiset"
-    },
-    {
-      title: "Raakaruokatuotteiden salmonellariski: Näin suojaat lemmikkisi",
-      description: "Tuore tutkimus osoittaa, että raakaruokatuotteissa voi esiintyä salmonellaa. Asiantuntijat antavat ohjeet turvalliseen käsittelyyn ja varastointiin.",
-      url: "#",
-      publishedAt: "2024-12-05T09:15:00Z",
-      source: "Helsingin Sanomat"
-    },
-    {
-      title: "Allergiaruokien takaisinveto: Tarkista onko koirasi ruoka listalla",
-      description: "Allergikoirille tarkoitetuissa ruoissa on havaittu merkkiaineiden pilaantumista. Lista takaisinvedettävistä tuotteista julkaistu viranomaisten toimesta.",
-      url: "#",
-      publishedAt: "2024-11-28T16:45:00Z",
-      source: "Suomen Eläinlääkärilehti"
-    },
-    {
-      title: "Varoitus: Viheralruoan mukana levinneet myrkytystapaukset",
-      description: "Useat koirat ovat sairastuneet viheralruoan käytön jälkeen. Tutkijat epäilevät myrkyllisten kasvien sekoittumista tuotantoprosessissa.",
-      url: "#",
-      publishedAt: "2024-11-20T11:20:00Z",
-      source: "Koira-lehti"
-    }
-  ]
-
-  const loadNews = () => {
+  const loadNews = async () => {
     setLoading(true)
     setError(null)
     
-    // Simulate loading delay
-    setTimeout(() => {
-      setNews(exampleNews)
+    try {
+      const articles = await fetchAllFeeds()
+      setNews(articles)
+      setLastUpdated(new Date())
+    } catch (err) {
+      setError('Uutisten lataaminen epäonnistui. Tarkista internetyhteytesi.')
+      console.error('Error loading news:', err)
+    } finally {
       setLoading(false)
-    }, 1000)
+    }
   }
 
   useEffect(() => {
     loadNews()
+    
+    // Set up automatic refresh every 15 minutes for critical feeds
+    const interval = setInterval(loadNews, 15 * 60 * 1000)
+    
+    return () => clearInterval(interval)
   }, [])
 
   const formatDate = (dateString: string) => {
@@ -83,9 +48,27 @@ export default function SafetyNewsFeed() {
   return (
     <Card className="bg-red-50 border-red-200">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-red-800">
-          <AlertTriangle className="h-6 w-6" />
-          Ajankohtaiset turvallisuusuutiset
+        <CardTitle className="flex items-center justify-between text-red-800">
+          <div className="flex items-center gap-2">
+            <AlertTriangle className="h-6 w-6" />
+            Ajankohtaiset turvallisuusuutiset
+          </div>
+          <div className="flex items-center gap-2">
+            {lastUpdated && (
+              <span className="text-xs text-red-600">
+                Päivitetty: {lastUpdated.toLocaleTimeString('fi-FI')}
+              </span>
+            )}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={loadNews}
+              disabled={loading}
+              className="text-red-700 hover:text-red-800"
+            >
+              <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+            </Button>
+          </div>
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -112,38 +95,46 @@ export default function SafetyNewsFeed() {
         {news.length > 0 && (
           <div className="space-y-4">
             {news.map((item, index) => (
-              <div key={index} className="bg-white p-4 rounded-lg border border-red-200">
+              <div key={index} className={`p-4 rounded-lg border ${getPriorityColor(item.priority)}`}>
                 <div className="flex justify-between items-start mb-2">
-                  <h3 className="font-semibold text-red-900 text-sm leading-tight">
+                  <h3 className="font-semibold text-sm leading-tight flex-1">
                     {item.title}
                   </h3>
-                  <Badge variant="secondary" className="ml-2 text-xs">
-                    {item.source}
-                  </Badge>
+                  <div className="flex items-center gap-2 ml-2">
+                    <Badge variant="outline" className="text-xs">
+                      {getCategoryBadgeText(item.category)}
+                    </Badge>
+                    <Badge variant="secondary" className="text-xs">
+                      {item.source}
+                    </Badge>
+                  </div>
                 </div>
                 
-                <p className="text-red-700 text-sm mb-3 leading-relaxed">
+                <p className="text-sm mb-3 leading-relaxed">
                   {item.description}
                 </p>
                 
                 <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-1 text-xs text-red-600">
+                  <div className="flex items-center gap-1 text-xs opacity-75">
                     <Clock className="h-3 w-3" />
                     {formatDate(item.publishedAt)}
                   </div>
                   
-                  <div className="flex items-center gap-1 text-xs text-red-600">
-                    <ExternalLink className="h-3 w-3" />
-                    Esimerkkiuutinen
-                  </div>
+                  {item.priority === 'critical' && (
+                    <div className="flex items-center gap-1 text-xs font-medium">
+                      <AlertTriangle className="h-3 w-3" />
+                      Kriittinen varoitus
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
             
-            <div className="bg-red-100 p-3 rounded-lg border border-red-300 mt-4">
-              <p className="text-xs text-red-800">
-                <strong>Huomio:</strong> Seuraa aina virallisia tiedotuskanavia ja ota yhteyttä eläinlääkäriin, 
-                jos epäilet lemmikkisi syöneen vaarallista ruokaa. Nämä ovat esimerkkiuutisia havainnollistamaan järjestelmän toimintaa.
+            <div className="bg-amber-50 border border-amber-200 p-3 rounded-lg mt-4">
+              <p className="text-xs text-amber-800">
+                <strong>Huomio:</strong> Tämä järjestelmä hakee uutisia useista luotettavista lähteistä. 
+                Seuraa aina virallisia tiedotuskanavia ja ota yhteyttä eläinlääkäriin kiireellisissä tilanteissa. 
+                RSS-syötteiden käyttö tapahtuu lähteiden käyttöehtojen mukaisesti.
               </p>
             </div>
           </div>
