@@ -289,6 +289,80 @@ export type Database = {
         }
         Relationships: []
       }
+      general_dosage_guidelines: {
+        Row: {
+          created_at: string
+          description: string | null
+          food_brand: string | null
+          food_name: string | null
+          id: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          food_brand?: string | null
+          food_name?: string | null
+          id?: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          food_brand?: string | null
+          food_name?: string | null
+          id?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      general_dosage_table_rows: {
+        Row: {
+          age_range: string | null
+          created_at: string
+          daily_amount: string | null
+          guideline_id: string
+          id: string
+          notes: string | null
+          row_order: number
+          weight_range: string | null
+        }
+        Insert: {
+          age_range?: string | null
+          created_at?: string
+          daily_amount?: string | null
+          guideline_id: string
+          id?: string
+          notes?: string | null
+          row_order?: number
+          weight_range?: string | null
+        }
+        Update: {
+          age_range?: string | null
+          created_at?: string
+          daily_amount?: string | null
+          guideline_id?: string
+          id?: string
+          notes?: string | null
+          row_order?: number
+          weight_range?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "general_dosage_table_rows_guideline_id_fkey"
+            columns: ["guideline_id"]
+            isOneToOne: false
+            referencedRelation: "general_dosage_guidelines"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       weight_entries: {
         Row: {
           created_at: string | null

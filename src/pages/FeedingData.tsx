@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { Search, Filter, Database, AlertCircle } from 'lucide-react'
 import InfoNavigation from '@/components/InfoNavigation'
 import DosageImagesSection from '@/components/DosageImagesSection'
+import GeneralDosageSection from '@/components/GeneralDosageSection'
 import { DogFoodService, type DogFood } from '@/services/dogFoodService'
 import { toast } from 'sonner'
 
@@ -221,6 +222,9 @@ export default function FeedingData() {
 
         {/* Annostelukuvat */}
         <DosageImagesSection />
+
+        {/* Yleiset annostelutaulut */}
+        <GeneralDosageSection />
 
         {/* Tuotteet */}
         <div className="grid gap-6">
