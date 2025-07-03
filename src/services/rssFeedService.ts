@@ -75,17 +75,33 @@ const DOG_KEYWORDS = [
 // RSS Feed parsing function
 export async function fetchRSSFeed(url: string, sourceName: string): Promise<NewsItem[]> {
   try {
-    // Note: In production, this would need a CORS proxy or backend service
-    // For demo purposes, we'll simulate the RSS feed functionality
+    // Use CORS proxy for RSS feed access
+    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+    const response = await fetch(proxyUrl);
     
-    // This would be the actual implementation with a CORS proxy:
-    // const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
-    // const response = await fetch(proxyUrl);
-    // const data = await response.json();
-    // const xmlText = data.contents;
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
     
-    // For now, return simulated data based on the source
-    return getSimulatedFeedData(sourceName);
+    const data = await response.json();
+    const xmlText = data.contents;
+    
+    // Parse XML
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+    
+    const items = xmlDoc.querySelectorAll('item');
+    const articles: NewsItem[] = Array.from(items).map(item => ({
+      title: item.querySelector('title')?.textContent || '',
+      description: item.querySelector('description')?.textContent || '',
+      url: item.querySelector('link')?.textContent || '',
+      publishedAt: item.querySelector('pubDate')?.textContent || new Date().toISOString(),
+      source: sourceName,
+      priority: 'low' as const,
+      category: 'yleinen' as const
+    }));
+    
+    return articles;
     
   } catch (error) {
     console.error(`RSS-syötteen haku epäonnistui (${sourceName}):`, error);
@@ -129,56 +145,6 @@ export function categorizeArticles(articles: NewsItem[]): NewsItem[] {
   });
 }
 
-// Simulated data for demonstration (until CORS proxy is implemented)
-function getSimulatedFeedData(sourceName: string): NewsItem[] {
-  const baseData = [
-    {
-      title: "Evira varoittaa: Tietyt koiranruokamerkit vedetty myynnistä",
-      description: "Ruokavirasto on vetänyt myynnistä useita koiranruokamerkkejä mahdollisten terveysriskien vuoksi. Kyse on erityisesti kuivaruoista, joissa on havaittu poikkeavia salmonella-pitoisuuksia.",
-      url: "https://yle.fi/a/74-20106543",
-      publishedAt: new Date().toISOString(),
-      source: sourceName,
-      priority: 'critical' as const,
-      category: 'varoitus' as const
-    },
-    {
-      title: "Uusi tutkimus: Pentujen ravitsemus vaikuttaa aikuisiän terveyteen",
-      description: "Helsingin yliopiston tuore tutkimus osoittaa, että pennun ensimmäisten kuukausien ravitsemus vaikuttaa merkittävästi koiran aikuisiän terveyteen ja elinikään.",
-      url: "https://yle.fi/a/74-20106789",
-      publishedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
-      source: sourceName,
-      priority: 'medium' as const,
-      category: 'tutkimus' as const
-    },
-    {
-      title: "Ruokavirasto muistuttaa: Suklaasieni vaarallinen koirille",
-      description: "Ruokavirasto varoittaa koiranomistajia suklaasienen vaaroista. Sieni sisältää ksylitolia, joka on erittäin myrkyllistä koirille ja voi aiheuttaa henkeä uhkaavan verensokerin laskun.",
-      url: "https://www.ruokavirasto.fi/tietoa-meista/asiointi/ajankohtaista/2024/suklaasieni-vaarallinen-koirille/",
-      publishedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-      source: sourceName,
-      priority: 'critical' as const,
-      category: 'varoitus' as const
-    },
-    {
-      title: "Koiran liikunta ja ruokinta: asiantuntijan vinkit",
-      description: "Eläinlääkäri Anna Virtanen antaa vinkkejä koiran liikunnan ja ruokinnan tasapainottamiseen. Erityisesti nuorilla koirilla liikunta ja ravitsemus kulkevat käsi kädessä.",
-      url: "https://yle.fi/a/74-20105432",
-      publishedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
-      source: sourceName,
-      priority: 'medium' as const,
-      category: 'tiedote' as const
-    }
-  ];
-
-  // Return different data based on source to simulate real feeds
-  if (sourceName === 'Yle Terveys') {
-    return [baseData[0], baseData[2]]; // Return warning items
-  } else if (sourceName === 'Yle Tiede') {
-    return [baseData[1], baseData[3]]; // Return research items
-  }
-  
-  return baseData.slice(0, 2);
-}
 
 // Fetch all feeds and combine results
 export async function fetchAllFeeds(): Promise<NewsItem[]> {
