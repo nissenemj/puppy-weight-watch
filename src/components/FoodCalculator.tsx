@@ -197,26 +197,12 @@ export default function FoodCalculator({ currentWeight = 0, user }: FoodCalculat
         />
       )}
 
-      <Tabs defaultValue="advanced" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="advanced">Edistynyt laskuri</TabsTrigger>
+      <Tabs defaultValue="puppy" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="puppy">Penturuokinta</TabsTrigger>
           <TabsTrigger value="basic">Peruslaskuri</TabsTrigger>
         </TabsList>
         
-        <TabsContent value="advanced" className="space-y-6">
-          {user ? (
-            <AdvancedFoodCalculator user={user} />
-          ) : (
-            <Card>
-              <CardContent className="pt-6">
-                <p className="text-center text-gray-500">
-                  Kirjaudu sisään käyttääksesi edistynyttä ruokamäärälaskuria
-                </p>
-              </CardContent>
-            </Card>
-          )}
-        </TabsContent>
         
         <TabsContent value="puppy" className="space-y-6">
           <PuppyFeedingCalculator />
