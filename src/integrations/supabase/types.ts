@@ -114,6 +114,47 @@ export type Database = {
         }
         Relationships: []
       }
+      dosage_table_data: {
+        Row: {
+          age_range: string | null
+          created_at: string
+          daily_amount: string | null
+          dosage_image_id: string
+          id: string
+          notes: string | null
+          row_order: number
+          weight_range: string | null
+        }
+        Insert: {
+          age_range?: string | null
+          created_at?: string
+          daily_amount?: string | null
+          dosage_image_id: string
+          id?: string
+          notes?: string | null
+          row_order?: number
+          weight_range?: string | null
+        }
+        Update: {
+          age_range?: string | null
+          created_at?: string
+          daily_amount?: string | null
+          dosage_image_id?: string
+          id?: string
+          notes?: string | null
+          row_order?: number
+          weight_range?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dosage_table_data_dosage_image_id_fkey"
+            columns: ["dosage_image_id"]
+            isOneToOne: false
+            referencedRelation: "dosage_images"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       feeding_guidelines: {
         Row: {
           adult_weight_kg: number | null
