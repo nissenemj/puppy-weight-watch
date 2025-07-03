@@ -123,8 +123,8 @@ function getSimulatedFeedData(sourceName: string): NewsItem[] {
     {
       title: "Evira varoittaa: Tietyt koiranruokamerkit vedetty myynnistä",
       description: "Ruokavirasto on vetänyt myynnistä useita koiranruokamerkkejä mahdollisten terveysriskien vuoksi. Kyse on erityisesti kuivaruoista, joissa on havaittu poikkeavia salmonella-pitoisuuksia.",
-      url: "#",
-      publishedAt: "2024-12-15T10:00:00Z",
+      url: "https://yle.fi/a/74-20106543",
+      publishedAt: new Date().toISOString(),
       source: sourceName,
       priority: 'critical' as const,
       category: 'varoitus' as const
@@ -132,8 +132,8 @@ function getSimulatedFeedData(sourceName: string): NewsItem[] {
     {
       title: "Uusi tutkimus: Pentujen ravitsemus vaikuttaa aikuisiän terveyteen",
       description: "Helsingin yliopiston tuore tutkimus osoittaa, että pennun ensimmäisten kuukausien ravitsemus vaikuttaa merkittävästi koiran aikuisiän terveyteen ja elinikään.",
-      url: "#",
-      publishedAt: "2024-12-10T14:30:00Z",
+      url: "https://yle.fi/a/74-20106789",
+      publishedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
       source: sourceName,
       priority: 'medium' as const,
       category: 'tutkimus' as const

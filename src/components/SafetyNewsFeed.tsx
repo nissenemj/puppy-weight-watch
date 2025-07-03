@@ -120,12 +120,26 @@ export default function SafetyNewsFeed() {
                     {formatDate(item.publishedAt)}
                   </div>
                   
-                  {item.priority === 'critical' && (
-                    <div className="flex items-center gap-1 text-xs font-medium">
-                      <AlertTriangle className="h-3 w-3" />
-                      Kriittinen varoitus
-                    </div>
-                  )}
+                  <div className="flex items-center gap-2">
+                    {item.priority === 'critical' && (
+                      <div className="flex items-center gap-1 text-xs font-medium">
+                        <AlertTriangle className="h-3 w-3" />
+                        Kriittinen varoitus
+                      </div>
+                    )}
+                    
+                    {item.url && item.url !== '#' && (
+                      <a 
+                        href={item.url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 hover:underline"
+                      >
+                        <ExternalLink className="h-3 w-3" />
+                        Lue lisää
+                      </a>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}
