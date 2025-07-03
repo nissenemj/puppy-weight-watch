@@ -81,6 +81,39 @@ export type Database = {
         }
         Relationships: []
       }
+      dosage_images: {
+        Row: {
+          created_at: string
+          description: string | null
+          food_brand: string | null
+          id: string
+          image_path: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          food_brand?: string | null
+          id?: string
+          image_path: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          food_brand?: string | null
+          id?: string
+          image_path?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       feeding_guidelines: {
         Row: {
           adult_weight_kg: number | null

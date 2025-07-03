@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge'
 import { Search, Filter, Database, AlertCircle } from 'lucide-react'
 import InfoNavigation from '@/components/InfoNavigation'
+import DosageImagesSection from '@/components/DosageImagesSection'
 import { DogFoodService, type DogFood } from '@/services/dogFoodService'
 import { toast } from 'sonner'
 
@@ -217,6 +218,9 @@ export default function FeedingData() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Annostelukuvat */}
+        <DosageImagesSection />
 
         {/* Tuotteet */}
         <div className="grid gap-6">
