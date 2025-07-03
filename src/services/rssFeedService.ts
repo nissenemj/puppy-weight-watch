@@ -30,9 +30,15 @@ export const PRIMARY_FEEDS: RSSFeed[] = [
     updateInterval: 15
   },
   {
-    url: 'https://yle.fi/rss/t/18-35354/fi', // Yle Luonto
-    name: 'Yle Luonto',
-    priority: 2,
+    url: 'https://yle.fi/rss/uutiset/paauutiset', // Yle Pääuutiset
+    name: 'Yle Pääuutiset',
+    priority: 1,
+    updateInterval: 15
+  },
+  {
+    url: 'https://www.iltalehti.fi/rss/uutiset.xml', // Iltalehti
+    name: 'Iltalehti Uutiset',
+    priority: 1,
     updateInterval: 30
   }
 ];
@@ -40,14 +46,20 @@ export const PRIMARY_FEEDS: RSSFeed[] = [
 // Secondary feeds (general monitoring)
 export const SECONDARY_FEEDS: RSSFeed[] = [
   {
-    url: 'https://yle.fi/rss/uutiset/paauutiset',
-    name: 'Yle Pääuutiset',
-    priority: 3,
+    url: 'https://yle.fi/rss/t/18-35354/fi', // Yle Luonto
+    name: 'Yle Luonto',
+    priority: 2,
     updateInterval: 30
   },
   {
-    url: 'https://www.iltalehti.fi/rss/uutiset.xml',
-    name: 'Iltalehti Uutiset',
+    url: 'https://yle.fi/rss/t/18-34837/fi', // Yle Kotimaa
+    name: 'Yle Kotimaa',
+    priority: 2,
+    updateInterval: 120
+  },
+  {
+    url: 'https://yle.fi/rss/uutiset/tuoreimmat', // Yle Tuoreimmat
+    name: 'Yle Tuoreimmat',
     priority: 3,
     updateInterval: 120
   }
@@ -57,7 +69,7 @@ export const SECONDARY_FEEDS: RSSFeed[] = [
 const DOG_KEYWORDS = [
   'koira', 'koiranruoka', 'lemmikki', 'eläinlääkäri',
   'ruokamyrkytys', 'ruokavirasto', 'eläinten terveys',
-  'pentu', 'koiran ravitsemus', 'eläinrehu', 'koiranruoka'
+  'pentu', 'koiran ravitsemus', 'eläinrehu', 'varoitus'
 ];
 
 // RSS Feed parsing function
