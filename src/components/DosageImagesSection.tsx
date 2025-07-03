@@ -55,11 +55,10 @@ export default function DosageImagesSection() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return
 
-      // Fetch images and their table data
+      // Fetch images - admin sees all, regular users see only their own
       const { data: images, error: imagesError } = await supabase
         .from('dosage_images')
         .select('*')
-        .eq('user_id', user.id)
         .order('created_at', { ascending: false })
 
       if (imagesError) throw imagesError
