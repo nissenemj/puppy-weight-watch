@@ -62,52 +62,6 @@ export default function SafetyPage() {
           </CardContent>
         </Card>
 
-        {/* Software Development Recommendations */}
-        <Card className="mb-8 bg-white/80 backdrop-blur-sm">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <FileText className="h-6 w-6" />
-              Suositukset ohjelmiston kehitykseen
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                  <h3 className="font-semibold text-blue-800 mb-2">1. Dynaaminen käyttöliittymä</h3>
-                  <p className="text-sm text-blue-700">
-                    Sovelluksen ytimessä tulee olla logiikka, joka mukautuu tietokantataulukon 
-                    Annosteluperuste-sarakkeen arvoon. Automaattisesti pyytää vain tarvittavat syötteet.
-                  </p>
-                </div>
-                
-                <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                  <h3 className="font-semibold text-green-800 mb-2">2. Datan puutteiden käsittely</h3>
-                  <p className="text-sm text-green-700">
-                    Sovelluksen tulee käsitellä puuttuvat tiedot elegantisti näyttämällä selkeä viesti 
-                    tarkistaa annostus tuotepakkauksesta.
-                  </p>
-                </div>
-                
-                <div className="bg-orange-50 p-4 rounded-lg border border-orange-200">
-                  <h3 className="font-semibold text-orange-800 mb-2">3. Vaihteluvälien hallinta</h3>
-                  <p className="text-sm text-orange-700">
-                    Laajat vaihteluvälit tulee käsitellä apuvälineillä, kuten liukusäätimillä 
-                    (rauhallinen – normaali – aktiivinen pentu).
-                  </p>
-                </div>
-                
-                <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
-                  <h3 className="font-semibold text-purple-800 mb-2">4. Varoitukset ja vastuuvapauslausekkeet</h3>
-                  <p className="text-sm text-purple-700">
-                    Jokaisen laskentatuloksen yhteydessä tulee muistuttaa, että annostus on viitteellinen 
-                    ja käyttäjän tulee tarkkailla pennun vointia.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
 
         {/* Key Safety Points */}
         <Card className="mb-8 bg-red-50 border-red-200">
