@@ -112,13 +112,13 @@ const Navigation = () => {
   )
 
   return (
-    <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <nav className="fixed top-0 left-0 right-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 items-center">
         <div className="mr-4 hidden md:flex">
           <Link to="/" className="mr-6 flex items-center space-x-2">
             <Dog className="h-6 w-6" />
             <span className="hidden font-bold sm:inline-block">
-              Koirasovellus
+              Pentulaskuri
             </span>
           </Link>
           
@@ -165,7 +165,7 @@ const Navigation = () => {
                 onClick={() => setIsOpen(false)}
               >
                 <Dog className="h-6 w-6" />
-                <span className="font-bold">Koirasovellus</span>
+                <span className="font-bold">Pentulaskuri</span>
               </Link>
               <div className="my-4 h-[calc(100vh-8rem)] pb-10 pl-6">
                 <div className="flex flex-col space-y-3">
@@ -180,7 +180,7 @@ const Navigation = () => {
           <div className="w-full flex-1 md:w-auto md:flex-none">
             <Link to="/" className="flex items-center space-x-2 md:hidden">
               <Dog className="h-6 w-6" />
-              <span className="font-bold">Koirasovellus</span>
+              <span className="font-bold">Pentulaskuri</span>
             </Link>
           </div>
         </div>

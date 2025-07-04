@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 
 const PuppyGuide = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pt-14">
       <Navigation />
       <div className="container mx-auto py-8 space-y-8">
       {/* Hero Section */}
