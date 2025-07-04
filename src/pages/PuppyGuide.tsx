@@ -37,11 +37,6 @@ const PuppyGuide = () => {
               <h3 className="font-semibold">Ruokintamuodot</h3>
               <p className="text-sm text-muted-foreground">Kuiva-, märkä- ja raakaruoka</p>
             </a>
-            <a href="#annosteluohjeet" className="p-3 rounded-lg border hover:bg-accent/10 transition-colors">
-              <Weight className="h-5 w-5 text-primary mb-2" />
-              <h3 className="font-semibold">Annosteluohjeet</h3>
-              <p className="text-sm text-muted-foreground">Merkkikohtaiset taulukot</p>
-            </a>
             <a href="#ravitsemustiede" className="p-3 rounded-lg border hover:bg-accent/10 transition-colors">
               <PawPrint className="h-5 w-5 text-primary mb-2" />
               <h3 className="font-semibold">Ravitsemustiede</h3>
@@ -222,98 +217,6 @@ const PuppyGuide = () => {
         </Card>
       </section>
 
-      {/* Osa 2: Annosteluohjeet */}
-      <section id="annosteluohjeet">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-2xl">Osa 2: Yksityiskohtaiset Annosteluohjeet Merkeittäin</CardTitle>
-            <p className="text-muted-foreground">Tarkka annostelu pennun iän ja koon mukaan</p>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            
-            <div className="bg-accent/10 p-4 rounded-lg border border-accent/20">
-              <h4 className="font-semibold text-accent mb-2">Tärkeä muistutus</h4>
-              <p className="text-sm">
-                Nämä taulukot ovat suuntaa-antavia. Pennun todellinen tarve voi vaihdella. 
-                Seuraa aina pennun kuntoluokkaa ja säädä annoskokoa tarvittaessa.
-              </p>
-            </div>
-
-            {/* MUSH Vaisto */}
-            <div>
-              <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
-                <Badge variant="secondary">2.1</Badge>
-                MUSH Vaisto® Puppy (Raakaruoka)
-              </h3>
-              
-              <p className="text-sm mb-4">
-                Pennulle annetaan päivässä raakaruokaa noin 5–10% sen nykyisestä painosta. 
-                Päiväannos jaetaan 2–4 ateriaan.
-              </p>
-
-              <div className="overflow-x-auto">
-                <table className="w-full border-collapse border border-border">
-                  <thead>
-                    <tr className="bg-muted/50">
-                      <th className="border border-border p-2 text-left">Arvioitu aikuispaino (kg)</th>
-                      <th className="border border-border p-2">1-2 kk (g/päivä)</th>
-                      <th className="border border-border p-2">2-4 kk (g/päivä)</th>
-                      <th className="border border-border p-2">4-6 kk (g/päivä)</th>
-                      <th className="border border-border p-2">6-9 kk (g/päivä)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr><td className="border border-border p-2">5</td><td className="border border-border p-2">500</td><td className="border border-border p-2">375</td><td className="border border-border p-2">250</td><td className="border border-border p-2">150</td></tr>
-                    <tr><td className="border border-border p-2">10</td><td className="border border-border p-2">1000</td><td className="border border-border p-2">750</td><td className="border border-border p-2">500</td><td className="border border-border p-2">300</td></tr>
-                    <tr><td className="border border-border p-2">25</td><td className="border border-border p-2">2000</td><td className="border border-border p-2">1500</td><td className="border border-border p-2">1000</td><td className="border border-border p-2">600</td></tr>
-                    <tr><td className="border border-border p-2">40</td><td className="border border-border p-2">3000</td><td className="border border-border p-2">2250</td><td className="border border-border p-2">1500</td><td className="border border-border p-2">900</td></tr>
-                    <tr><td className="border border-border p-2">60</td><td className="border border-border p-2">6000</td><td className="border border-border p-2">4500</td><td className="border border-border p-2">3000</td><td className="border border-border p-2">1800</td></tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            <Separator />
-
-            {/* Hau-Hau Champion */}
-            <div>
-              <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
-                <Badge variant="secondary">2.2</Badge>
-                Hau-Hau Champion Pentu & Emo (Kuivaruoka)
-              </h3>
-
-              <div className="overflow-x-auto">
-                <table className="w-full border-collapse border border-border">
-                  <thead>
-                    <tr className="bg-muted/50">
-                      <th className="border border-border p-2 text-left">Arvioitu aikuispaino (kg)</th>
-                      <th className="border border-border p-2">1-2 kk (g/päivä)</th>
-                      <th className="border border-border p-2">3-4 kk (g/päivä)</th>
-                      <th className="border border-border p-2">5-6 kk (g/päivä)</th>
-                      <th className="border border-border p-2">7-12 kk (g/päivä)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr><td className="border border-border p-2">5</td><td className="border border-border p-2">70</td><td className="border border-border p-2">90</td><td className="border border-border p-2">90</td><td className="border border-border p-2">80</td></tr>
-                    <tr><td className="border border-border p-2">10</td><td className="border border-border p-2">100</td><td className="border border-border p-2">140</td><td className="border border-border p-2">140</td><td className="border border-border p-2">130</td></tr>
-                    <tr><td className="border border-border p-2">20</td><td className="border border-border p-2">160</td><td className="border border-border p-2">200</td><td className="border border-border p-2">230</td><td className="border border-border p-2">200</td></tr>
-                    <tr><td className="border border-border p-2">30</td><td className="border border-border p-2">180</td><td className="border border-border p-2">260</td><td className="border border-border p-2">300</td><td className="border border-border p-2">260</td></tr>
-                    <tr><td className="border border-border p-2">50</td><td className="border border-border p-2">220</td><td className="border border-border p-2">290</td><td className="border border-border p-2">400</td><td className="border border-border p-2">330</td></tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            <div className="bg-muted/30 p-4 rounded-lg">
-              <h4 className="font-semibold mb-2">Puuttuvat annosteluohjeet verkossa</h4>
-              <p className="text-sm">
-                Suurten merkkien (Acana, Royal Canin, SMAAK) annosteluohjeet löytyvät <strong>aina tuotepakkauksesta</strong>. 
-                Tämä on luotettavin tapa varmistaa oikea annostus, sillä valmistajat päivittävät ohjeita säännöllisesti.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      </section>
 
       {/* Osa 3: Ravitsemustiede */}
       <section id="ravitsemustiede">
