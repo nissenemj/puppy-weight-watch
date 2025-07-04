@@ -1,14 +1,12 @@
 
 import Navigation from '@/components/Navigation'
-import PuppyWeightTracker from '@/components/PuppyWeightTracker'
+import ModernPuppyWeightTracker from '@/components/ModernPuppyWeightTracker'
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-background pt-14">
       <Navigation />
-      <div className="container mx-auto px-4 py-8">
-        <PuppyWeightTracker />
-      </div>
+      <ModernPuppyWeightTracker />
     </div>
   )
 }
