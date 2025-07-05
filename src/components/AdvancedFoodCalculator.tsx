@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -7,65 +7,32 @@ import { Select, SelectContent, SelectTrigger, SelectValue, SelectItem } from '@
 import { Badge } from '@/components/ui/badge'
 import { Calculator, Dog, Scale } from 'lucide-react'
 import { User } from '@supabase/supabase-js'
+import { supabase } from '@/integrations/supabase/client'
+import { toast } from 'sonner'
 
-// Annostelutaulukko
-const DOSAGE_TABLE = [
-  { mealsPerDay: 4, gramsPerMeal: 18, dailyAmount: 73, energyKcal: 284, weightCategory: '1-2 kg', ageCategory: '2-3 kk', weightRange: [1, 2] },
-  { mealsPerDay: 4, gramsPerMeal: 16, dailyAmount: 64, energyKcal: 250, weightCategory: '1-2 kg', ageCategory: '3-4 kk', weightRange: [1, 2] },
-  { mealsPerDay: 3, gramsPerMeal: 19, dailyAmount: 58, energyKcal: 226, weightCategory: '1-2 kg', ageCategory: '4-6 kk', weightRange: [1, 2] },
-  { mealsPerDay: 3, gramsPerMeal: 17, dailyAmount: 52, energyKcal: 203, weightCategory: '1-2 kg', ageCategory: '6-9 kk', weightRange: [1, 2] },
-  { mealsPerDay: 2, gramsPerMeal: 21, dailyAmount: 43, energyKcal: 168, weightCategory: '1-2 kg', ageCategory: '9-12 kk', weightRange: [1, 2] },
-  { mealsPerDay: 2, gramsPerMeal: 17, dailyAmount: 35, energyKcal: 136, weightCategory: '1-2 kg', ageCategory: '12+ kk', weightRange: [1, 2] },
+// Database types
+interface DogFood {
+  id: string
+  name: string
+  manufacturer: string
+  food_type: string
+  nutrition_type: string
+  dosage_method: string
+  product_code: string
+  notes?: string
+}
 
-  { mealsPerDay: 4, gramsPerMeal: 27, dailyAmount: 109, energyKcal: 425, weightCategory: '2-5 kg', ageCategory: '2-3 kk', weightRange: [2, 5] },
-  { mealsPerDay: 4, gramsPerMeal: 24, dailyAmount: 95, energyKcal: 371, weightCategory: '2-5 kg', ageCategory: '3-4 kk', weightRange: [2, 5] },
-  { mealsPerDay: 3, gramsPerMeal: 29, dailyAmount: 86, energyKcal: 335, weightCategory: '2-5 kg', ageCategory: '4-6 kk', weightRange: [2, 5] },
-  { mealsPerDay: 3, gramsPerMeal: 26, dailyAmount: 77, energyKcal: 300, weightCategory: '2-5 kg', ageCategory: '6-9 kk', weightRange: [2, 5] },
-  { mealsPerDay: 2, gramsPerMeal: 32, dailyAmount: 64, energyKcal: 250, weightCategory: '2-5 kg', ageCategory: '9-12 kk', weightRange: [2, 5] },
-  { mealsPerDay: 2, gramsPerMeal: 26, dailyAmount: 51, energyKcal: 199, weightCategory: '2-5 kg', ageCategory: '12+ kk', weightRange: [2, 5] },
-
-  { mealsPerDay: 4, gramsPerMeal: 41, dailyAmount: 164, energyKcal: 640, weightCategory: '5-10 kg', ageCategory: '2-3 kk', weightRange: [5, 10] },
-  { mealsPerDay: 4, gramsPerMeal: 36, dailyAmount: 144, energyKcal: 562, weightCategory: '5-10 kg', ageCategory: '3-4 kk', weightRange: [5, 10] },
-  { mealsPerDay: 3, gramsPerMeal: 43, dailyAmount: 130, energyKcal: 507, weightCategory: '5-10 kg', ageCategory: '4-6 kk', weightRange: [5, 10] },
-  { mealsPerDay: 3, gramsPerMeal: 39, dailyAmount: 117, energyKcal: 456, weightCategory: '5-10 kg', ageCategory: '6-9 kk', weightRange: [5, 10] },
-  { mealsPerDay: 2, gramsPerMeal: 49, dailyAmount: 97, energyKcal: 378, weightCategory: '5-10 kg', ageCategory: '9-12 kk', weightRange: [5, 10] },
-  { mealsPerDay: 2, gramsPerMeal: 39, dailyAmount: 78, energyKcal: 304, weightCategory: '5-10 kg', ageCategory: '12+ kk', weightRange: [5, 10] },
-
-  { mealsPerDay: 4, gramsPerMeal: 61, dailyAmount: 246, energyKcal: 960, weightCategory: '10-15 kg', ageCategory: '2-3 kk', weightRange: [10, 15] },
-  { mealsPerDay: 4, gramsPerMeal: 54, dailyAmount: 217, energyKcal: 847, weightCategory: '10-15 kg', ageCategory: '3-4 kk', weightRange: [10, 15] },
-  { mealsPerDay: 3, gramsPerMeal: 65, dailyAmount: 195, energyKcal: 761, weightCategory: '10-15 kg', ageCategory: '4-6 kk', weightRange: [10, 15] },
-  { mealsPerDay: 3, gramsPerMeal: 58, dailyAmount: 175, energyKcal: 683, weightCategory: '10-15 kg', ageCategory: '6-9 kk', weightRange: [10, 15] },
-  { mealsPerDay: 2, gramsPerMeal: 73, dailyAmount: 146, energyKcal: 570, weightCategory: '10-15 kg', ageCategory: '9-12 kk', weightRange: [10, 15] },
-  { mealsPerDay: 2, gramsPerMeal: 58, dailyAmount: 117, energyKcal: 456, weightCategory: '10-15 kg', ageCategory: '12+ kk', weightRange: [10, 15] },
-
-  { mealsPerDay: 4, gramsPerMeal: 93, dailyAmount: 371, energyKcal: 1447, weightCategory: '15-25 kg', ageCategory: '2-3 kk', weightRange: [15, 25] },
-  { mealsPerDay: 4, gramsPerMeal: 82, dailyAmount: 327, energyKcal: 1275, weightCategory: '15-25 kg', ageCategory: '3-4 kk', weightRange: [15, 25] },
-  { mealsPerDay: 3, gramsPerMeal: 98, dailyAmount: 294, energyKcal: 1147, weightCategory: '15-25 kg', ageCategory: '4-6 kk', weightRange: [15, 25] },
-  { mealsPerDay: 3, gramsPerMeal: 88, dailyAmount: 265, energyKcal: 1034, weightCategory: '15-25 kg', ageCategory: '6-9 kk', weightRange: [15, 25] },
-  { mealsPerDay: 2, gramsPerMeal: 110, dailyAmount: 220, energyKcal: 858, weightCategory: '15-25 kg', ageCategory: '9-12 kk', weightRange: [15, 25] },
-  { mealsPerDay: 2, gramsPerMeal: 88, dailyAmount: 176, energyKcal: 686, weightCategory: '15-25 kg', ageCategory: '12+ kk', weightRange: [15, 25] },
-
-  { mealsPerDay: 4, gramsPerMeal: 144, dailyAmount: 575, energyKcal: 2243, weightCategory: '25-35 kg', ageCategory: '2-3 kk', weightRange: [25, 35] },
-  { mealsPerDay: 4, gramsPerMeal: 127, dailyAmount: 506, energyKcal: 1974, weightCategory: '25-35 kg', ageCategory: '3-4 kk', weightRange: [25, 35] },
-  { mealsPerDay: 3, gramsPerMeal: 153, dailyAmount: 460, energyKcal: 1795, weightCategory: '25-35 kg', ageCategory: '4-6 kk', weightRange: [25, 35] },
-  { mealsPerDay: 3, gramsPerMeal: 138, dailyAmount: 414, energyKcal: 1615, weightCategory: '25-35 kg', ageCategory: '6-9 kk', weightRange: [25, 35] },
-  { mealsPerDay: 2, gramsPerMeal: 173, dailyAmount: 345, energyKcal: 1346, weightCategory: '25-35 kg', ageCategory: '9-12 kk', weightRange: [25, 35] },
-  { mealsPerDay: 2, gramsPerMeal: 138, dailyAmount: 276, energyKcal: 1077, weightCategory: '25-35 kg', ageCategory: '12+ kk', weightRange: [25, 35] },
-
-  { mealsPerDay: 4, gramsPerMeal: 178, dailyAmount: 714, energyKcal: 2783, weightCategory: '35-45 kg', ageCategory: '2-3 kk', weightRange: [35, 45] },
-  { mealsPerDay: 4, gramsPerMeal: 157, dailyAmount: 628, energyKcal: 2449, weightCategory: '35-45 kg', ageCategory: '3-4 kk', weightRange: [35, 45] },
-  { mealsPerDay: 3, gramsPerMeal: 190, dailyAmount: 571, energyKcal: 2227, weightCategory: '35-45 kg', ageCategory: '4-6 kk', weightRange: [35, 45] },
-  { mealsPerDay: 3, gramsPerMeal: 171, dailyAmount: 514, energyKcal: 2004, weightCategory: '35-45 kg', ageCategory: '6-9 kk', weightRange: [35, 45] },
-  { mealsPerDay: 2, gramsPerMeal: 214, dailyAmount: 428, energyKcal: 1670, weightCategory: '35-45 kg', ageCategory: '9-12 kk', weightRange: [35, 45] },
-  { mealsPerDay: 2, gramsPerMeal: 171, dailyAmount: 343, energyKcal: 1336, weightCategory: '35-45 kg', ageCategory: '12+ kk', weightRange: [35, 45] },
-
-  { mealsPerDay: 4, gramsPerMeal: 219, dailyAmount: 875, energyKcal: 3413, weightCategory: '45-60 kg', ageCategory: '2-3 kk', weightRange: [45, 60] },
-  { mealsPerDay: 4, gramsPerMeal: 193, dailyAmount: 770, energyKcal: 3004, weightCategory: '45-60 kg', ageCategory: '3-4 kk', weightRange: [45, 60] },
-  { mealsPerDay: 3, gramsPerMeal: 233, dailyAmount: 700, energyKcal: 2731, weightCategory: '45-60 kg', ageCategory: '4-6 kk', weightRange: [45, 60] },
-  { mealsPerDay: 3, gramsPerMeal: 210, dailyAmount: 630, energyKcal: 2457, weightCategory: '45-60 kg', ageCategory: '6-9 kk', weightRange: [45, 60] },
-  { mealsPerDay: 2, gramsPerMeal: 263, dailyAmount: 525, energyKcal: 2048, weightCategory: '45-60 kg', ageCategory: '9-12 kk', weightRange: [45, 60] },
-  { mealsPerDay: 2, gramsPerMeal: 210, dailyAmount: 420, energyKcal: 1638, weightCategory: '45-60 kg', ageCategory: '12+ kk', weightRange: [45, 60] },
-]
+interface FeedingGuideline {
+  id: string
+  dog_food_id: string
+  adult_weight_kg?: number
+  age_months?: string
+  current_weight_kg?: number
+  daily_amount_min?: number
+  daily_amount_max?: number
+  size_category?: string
+  calculation_formula?: string
+}
 
 const ACTIVITY_MULTIPLIERS = {
   'hyvin-matala': 0.9,
@@ -73,15 +40,6 @@ const ACTIVITY_MULTIPLIERS = {
   'aktiivinen': 1.1,
   'hyvin-aktiivinen': 1.2
 }
-
-const DOG_FOOD_BRANDS = [
-  { name: 'Royal Canin', energyPerKg: 4000 },
-  { name: 'Brit Care', energyPerKg: 4100 },
-  { name: 'Hau-Hau Champion', energyPerKg: 3800 },
-  { name: 'Eukanuba', energyPerKg: 4200 },
-  { name: 'Acana', energyPerKg: 4000 },
-  { name: 'Bozita', energyPerKg: 3900 },
-]
 
 interface AdvancedFoodCalculatorProps {
   user: User
@@ -93,16 +51,51 @@ export default function AdvancedFoodCalculator({ user, currentWeight: propCurren
   const [ageMonths, setAgeMonths] = useState('')
   const [expectedAdultWeight, setExpectedAdultWeight] = useState('')
   const [activityLevel, setActivityLevel] = useState('')
-  const [foodBrand, setFoodBrand] = useState('')
+  const [selectedFoodId, setSelectedFoodId] = useState('')
+  const [dogFoods, setDogFoods] = useState<DogFood[]>([])
+  const [feedingGuidelines, setFeedingGuidelines] = useState<FeedingGuideline[]>([])
+  const [loading, setLoading] = useState(true)
   const [result, setResult] = useState<{
     dailyAmount: number
     mealsPerDay: number
     gramsPerMeal: number
     energyKcal: number
-    usedRow: any
+    usedGuidelines: FeedingGuideline[]
+    selectedFood: DogFood | null
     activityMultiplier: number
-    foodMultiplier: number
   } | null>(null)
+
+  useEffect(() => {
+    loadDogFoodsAndGuidelines()
+  }, [])
+
+  const loadDogFoodsAndGuidelines = async () => {
+    setLoading(true)
+    try {
+      // Load dog foods
+      const { data: foodsData, error: foodsError } = await supabase
+        .from('dog_foods')
+        .select('*')
+        .order('manufacturer', { ascending: true })
+
+      if (foodsError) throw foodsError
+
+      // Load feeding guidelines
+      const { data: guidelinesData, error: guidelinesError } = await supabase
+        .from('feeding_guidelines')
+        .select('*')
+
+      if (guidelinesError) throw guidelinesError
+
+      setDogFoods(foodsData || [])
+      setFeedingGuidelines(guidelinesData || [])
+    } catch (error) {
+      console.error('Error loading food data:', error)
+      toast.error('Virhe ruokien lataamisessa')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const getAgeCategory = (months: number): string => {
     if (months >= 2 && months < 3) return '2-3 kk'
@@ -128,35 +121,106 @@ export default function AdvancedFoodCalculator({ user, currentWeight: propCurren
   const calculateFeeding = () => {
     const weight = parseFloat(currentWeight)
     const months = parseFloat(ageMonths)
+    const adultWeight = parseFloat(expectedAdultWeight)
     
-    if (!weight || !months) return
+    if (!weight || !months || !selectedFoodId) {
+      toast.error('Täytä kaikki pakolliset kentät')
+      return
+    }
 
-    const weightCat = getWeightCategory(weight)
-    const ageCat = getAgeCategory(months)
-    
-    const tableRow = DOSAGE_TABLE.find(row => 
-      row.weightCategory === weightCat && row.ageCategory === ageCat
-    )
-    
-    if (!tableRow) return
+    const selectedFood = dogFoods.find(f => f.id === selectedFoodId)
+    if (!selectedFood) return
 
+    const foodGuidelines = feedingGuidelines.filter(g => g.dog_food_id === selectedFoodId)
     const activityMult = ACTIVITY_MULTIPLIERS[activityLevel as keyof typeof ACTIVITY_MULTIPLIERS] || 1.0
-    const selectedBrand = DOG_FOOD_BRANDS.find(brand => brand.name === foodBrand)
-    const foodMult = selectedBrand ? selectedBrand.energyPerKg / 3900 : 1.0 // 3900 kcal/kg as standard
 
-    const adjustedDailyAmount = Math.round(tableRow.dailyAmount * activityMult * foodMult)
-    const adjustedGramsPerMeal = Math.round(adjustedDailyAmount / tableRow.mealsPerDay)
-    const adjustedEnergy = Math.round(tableRow.energyKcal * activityMult * foodMult)
+    let dailyAmount = 0
+    let usedGuidelines: FeedingGuideline[] = []
+
+    // Different calculation methods based on food's dosage method
+    switch (selectedFood.dosage_method) {
+      case 'Odotettu_Aikuispaino_Ja_Ikä':
+        if (!adultWeight) {
+          toast.error('Syötä odotettu aikuispaino')
+          return
+        }
+        const ageCategory = getAgeCategory(months)
+        const matchingGuidelines = foodGuidelines.filter(g => 
+          g.adult_weight_kg === adultWeight && g.age_months === ageCategory
+        )
+        if (matchingGuidelines.length > 0) {
+          const guideline = matchingGuidelines[0]
+          dailyAmount = guideline.daily_amount_min || 0
+          usedGuidelines = matchingGuidelines
+        }
+        break
+
+      case 'Nykyinen_Paino':
+        const weightGuidelines = foodGuidelines.filter(g => 
+          g.current_weight_kg === weight
+        )
+        if (weightGuidelines.length > 0) {
+          const guideline = weightGuidelines[0]
+          dailyAmount = guideline.daily_amount_min || 0
+          usedGuidelines = weightGuidelines
+        }
+        break
+
+      case 'Kokoluokka':
+        const sizeCategory = getSizeCategory(adultWeight || weight)
+        const sizeGuidelines = foodGuidelines.filter(g => 
+          g.size_category === sizeCategory
+        )
+        if (sizeGuidelines.length > 0) {
+          const guideline = sizeGuidelines[0]
+          dailyAmount = guideline.daily_amount_min || 0
+          usedGuidelines = sizeGuidelines
+        }
+        break
+
+      case 'Prosentti_Nykyisestä_Painosta':
+        // 5-10% of current weight (use 7.5% as average)
+        dailyAmount = Math.round(weight * 1000 * 0.075)
+        usedGuidelines = foodGuidelines
+        break
+
+      default:
+        toast.error('Tälle ruoalle ei ole saatavilla laskentamenetelmää')
+        return
+    }
+
+    if (dailyAmount === 0) {
+      toast.error('Annosta ei voitu laskea annetuilla arvoilla')
+      return
+    }
+
+    // Apply activity multiplier
+    const adjustedDailyAmount = Math.round(dailyAmount * activityMult)
+    
+    // Calculate meals per day based on age
+    let mealsPerDay = 2
+    if (months < 6) mealsPerDay = 4
+    else if (months < 9) mealsPerDay = 3
+    else mealsPerDay = 2
+
+    const gramsPerMeal = Math.round(adjustedDailyAmount / mealsPerDay)
+    const energyKcal = Math.round(adjustedDailyAmount * 3.75) // Average 375 kcal/100g
 
     setResult({
       dailyAmount: adjustedDailyAmount,
-      mealsPerDay: tableRow.mealsPerDay,
-      gramsPerMeal: adjustedGramsPerMeal,
-      energyKcal: adjustedEnergy,
-      usedRow: tableRow,
-      activityMultiplier: activityMult,
-      foodMultiplier: foodMult
+      mealsPerDay,
+      gramsPerMeal,
+      energyKcal,
+      usedGuidelines,
+      selectedFood,
+      activityMultiplier: activityMult
     })
+  }
+
+  const getSizeCategory = (weight: number): string => {
+    if (weight <= 10) return 'Pieni (1-10 kg)'
+    if (weight <= 25) return 'Keski (10-25 kg)'
+    return 'Suuri (25-50 kg)'
   }
 
   return (
@@ -228,17 +292,21 @@ export default function AdvancedFoodCalculator({ user, currentWeight: propCurren
           </div>
           
           <div className="space-y-2">
-            <Label className="text-white">Ruokamerkki (valinnainen)</Label>
-            <Select value={foodBrand} onValueChange={setFoodBrand}>
+            <Label className="text-white">Valitse koiranruoka</Label>
+            <Select value={selectedFoodId} onValueChange={setSelectedFoodId}>
               <SelectTrigger className="bg-white/20 border-white/30 text-white">
-                <SelectValue placeholder="Valitse ruokamerkki energiasisällön säätöä varten" />
+                <SelectValue placeholder="Valitse ruoka" />
               </SelectTrigger>
               <SelectContent>
-                {DOG_FOOD_BRANDS.map(brand => (
-                  <SelectItem key={brand.name} value={brand.name}>
-                    {brand.name} ({brand.energyPerKg} kcal/kg)
-                  </SelectItem>
-                ))}
+                {loading ? (
+                  <SelectItem value="" disabled>Ladataan ruokia...</SelectItem>
+                ) : (
+                  dogFoods.map(food => (
+                    <SelectItem key={food.id} value={food.id}>
+                      {food.manufacturer} - {food.name}
+                    </SelectItem>
+                  ))
+                )}
               </SelectContent>
             </Select>
           </div>
@@ -299,68 +367,70 @@ export default function AdvancedFoodCalculator({ user, currentWeight: propCurren
             </Card>
           </div>
 
-          {/* Used Table Row */}
+          {/* Used Guidelines Display */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Scale className="h-5 w-5" />
-                Käytetty annostelutaulukko
+                Käytetyt annostelutiedot
               </CardTitle>
               <CardDescription>
-                Laskenta perustuu seuraavaan taulukkoon. Käytetty rivi on korostettu.
+                Laskenta perustuu seuraaviin tietoihin valitusta ruoasta.
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="text-left p-2">Painoluokka</th>
-                      <th className="text-left p-2">Ikä</th>
-                      <th className="text-left p-2">Ruokintakerrat</th>
-                      <th className="text-left p-2">g/kerta</th>
-                      <th className="text-left p-2">g/päivä</th>
-                      <th className="text-left p-2">kcal/päivä</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {DOSAGE_TABLE
-                      .filter(row => 
-                        row.weightCategory === result.usedRow.weightCategory
-                      )
-                      .map((row, index) => (
-                        <tr 
-                          key={index} 
-                          className={`border-b ${
-                            row.weightCategory === result.usedRow.weightCategory && 
-                            row.ageCategory === result.usedRow.ageCategory
-                              ? 'bg-blue-50 font-semibold' 
-                              : ''
-                          }`}
-                        >
-                          <td className="p-2">{row.weightCategory}</td>
-                          <td className="p-2">{row.ageCategory}</td>
-                          <td className="p-2">{row.mealsPerDay}</td>
-                          <td className="p-2">{row.gramsPerMeal}</td>
-                          <td className="p-2">{row.dailyAmount}</td>
-                          <td className="p-2">{row.energyKcal}</td>
+              {result.selectedFood && (
+                <div className="mb-4 p-4 bg-blue-50 rounded-lg">
+                  <h4 className="font-semibold mb-2">Valittu ruoka:</h4>
+                  <p><strong>Ruoka:</strong> {result.selectedFood.manufacturer} - {result.selectedFood.name}</p>
+                  <p><strong>Tyyppi:</strong> {result.selectedFood.food_type} - {result.selectedFood.nutrition_type}</p>
+                  <p><strong>Annostelutapa:</strong> {result.selectedFood.dosage_method.replace(/_/g, ' ')}</p>
+                  {result.selectedFood.notes && (
+                    <p><strong>Huomautuksia:</strong> {result.selectedFood.notes}</p>
+                  )}
+                </div>
+              )}
+
+              {result.usedGuidelines.length > 0 && (
+                <div className="overflow-x-auto">
+                  <h4 className="font-semibold mb-2">Käytetyt annostelutiedot:</h4>
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b">
+                        <th className="text-left p-2">Aikuispaino</th>
+                        <th className="text-left p-2">Ikä</th>
+                        <th className="text-left p-2">Nykyinen paino</th>
+                        <th className="text-left p-2">Kokoluokka</th>
+                        <th className="text-left p-2">Min annos</th>
+                        <th className="text-left p-2">Max annos</th>
+                        <th className="text-left p-2">Kaava</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {result.usedGuidelines.map((guideline, index) => (
+                        <tr key={guideline.id} className="border-b bg-blue-50">
+                          <td className="p-2">{guideline.adult_weight_kg || '-'} kg</td>
+                          <td className="p-2">{guideline.age_months || '-'}</td>
+                          <td className="p-2">{guideline.current_weight_kg || '-'} kg</td>
+                          <td className="p-2">{guideline.size_category || '-'}</td>
+                          <td className="p-2">{guideline.daily_amount_min || '-'}g</td>
+                          <td className="p-2">{guideline.daily_amount_max || '-'}g</td>
+                          <td className="p-2">{guideline.calculation_formula || '-'}</td>
                         </tr>
                       ))}
-                  </tbody>
-                </table>
-              </div>
+                    </tbody>
+                  </table>
+                </div>
+              )}
               
-              <div className="mt-4 p-4 bg-blue-50 rounded-lg">
-                <h4 className="font-semibold mb-2">Käytetty rivi:</h4>
-                <p><strong>Painoluokka:</strong> {result.usedRow.weightCategory}</p>
-                <p><strong>Ikäryhmä:</strong> {result.usedRow.ageCategory}</p>
-                <p><strong>Perusannos:</strong> {result.usedRow.dailyAmount}g päivässä</p>
+              <div className="mt-4 p-4 bg-green-50 rounded-lg">
+                <h4 className="font-semibold mb-2">Lopputulos:</h4>
+                <p><strong>Perusannos:</strong> {Math.round(result.dailyAmount / result.activityMultiplier)}g päivässä</p>
                 {result.activityMultiplier !== 1.0 && (
-                  <p><strong>Aktiivisuussäätö:</strong> ×{result.activityMultiplier}</p>
+                  <p><strong>Aktiivisuussäätö:</strong> ×{result.activityMultiplier} = {result.dailyAmount}g</p>
                 )}
-                {result.foodMultiplier !== 1.0 && (
-                  <p><strong>Ruokamerkkisäätö:</strong> ×{result.foodMultiplier.toFixed(2)}</p>
-                )}
+                <p><strong>Ruokintakerrat:</strong> {result.mealsPerDay} kertaa päivässä</p>
+                <p><strong>Annos per kerta:</strong> {result.gramsPerMeal}g</p>
               </div>
             </CardContent>
           </Card>
