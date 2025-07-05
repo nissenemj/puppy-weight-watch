@@ -318,7 +318,7 @@ export default function ModernPuppyWeightTracker() {
         </div>
 
         <Tabs defaultValue="weight-tracking" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5 h-14 rounded-2xl bg-white/50 backdrop-blur-sm">
+          <TabsList className="grid w-full grid-cols-4 h-14 rounded-2xl bg-white/50 backdrop-blur-sm">
             <TabsTrigger 
               value="weight-tracking" 
               className="flex items-center gap-2 rounded-xl data-[state=active]:bg-gradient-cool data-[state=active]:text-white transition-all duration-200 hover:scale-105"
@@ -332,13 +332,6 @@ export default function ModernPuppyWeightTracker() {
             >
               <TrendingUp className="h-4 w-4" />
               <span className="hidden sm:inline">Kasvukäyrä</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="food-calculator" 
-              className="flex items-center gap-2 rounded-xl data-[state=active]:bg-gradient-primary data-[state=active]:text-white transition-all duration-200 hover:scale-105"
-            >
-              <Calculator className="h-4 w-4" />
-              <span className="hidden sm:inline">Ruokamäärät</span>
             </TabsTrigger>
             <TabsTrigger 
               value="puppy-feeding" 
@@ -478,11 +471,8 @@ export default function ModernPuppyWeightTracker() {
             <WeightChart weightData={entries} />
           </TabsContent>
 
-          <TabsContent value="food-calculator" className="animate-fade-in">
+          <TabsContent value="puppy-feeding" className="animate-fade-in space-y-6">
             <FoodCalculator currentWeight={getLatestWeight()} user={user} />
-          </TabsContent>
-
-          <TabsContent value="puppy-feeding" className="animate-fade-in">
             <PuppyFeeding />
           </TabsContent>
 
