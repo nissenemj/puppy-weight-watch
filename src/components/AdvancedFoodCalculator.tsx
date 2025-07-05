@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectTrigger, SelectValue, SelectItem } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
 import { Calculator, Dog, Scale } from 'lucide-react'
+import { User } from '@supabase/supabase-js'
 
 // Annostelutaulukko
 const DOSAGE_TABLE = [
@@ -83,10 +84,11 @@ const DOG_FOOD_BRANDS = [
 ]
 
 interface AdvancedFoodCalculatorProps {
+  user: User
   currentWeight?: number
 }
 
-export default function AdvancedFoodCalculator({ currentWeight: propCurrentWeight }: AdvancedFoodCalculatorProps) {
+export default function AdvancedFoodCalculator({ user, currentWeight: propCurrentWeight }: AdvancedFoodCalculatorProps) {
   const [currentWeight, setCurrentWeight] = useState(propCurrentWeight?.toString() || '')
   const [ageMonths, setAgeMonths] = useState('')
   const [expectedAdultWeight, setExpectedAdultWeight] = useState('')
