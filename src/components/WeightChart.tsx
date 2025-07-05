@@ -1,6 +1,6 @@
 
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
-import { format, addWeeks, parseISO } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 import { fi } from 'date-fns/locale'
 import type { WeightEntry } from '@/services/weightService'
 
@@ -13,8 +13,6 @@ interface ChartDataPoint {
   dateFormatted: string
   actualWeight?: number
   avgGrowthLine?: number
-  prediction?: number
-  isPrediction?: boolean
 }
 
 export default function WeightChart({ weightData }: WeightChartProps) {
@@ -38,7 +36,7 @@ export default function WeightChart({ weightData }: WeightChartProps) {
     )
   }
 
-  const generatePrediction = (data: WeightEntry[]): ChartDataPoint[] => {
+  const generateChartData = (data: WeightEntry[]): ChartDataPoint[] => {
     if (data.length < 2) return []
 
     // Calculate average weekly growth
@@ -52,10 +50,9 @@ export default function WeightChart({ weightData }: WeightChartProps) {
 
     console.log('Weekly growth calculated:', weeklyGrowth)
 
-    // Generate chart data points
+    // Generate chart data points for actual data only
     const chartData: ChartDataPoint[] = []
 
-    // Add actual data points
     data.forEach((entry) => {
       const date = parseISO(entry.date)
       chartData.push({
@@ -66,31 +63,15 @@ export default function WeightChart({ weightData }: WeightChartProps) {
       })
     })
 
-    // Add prediction for next 8 weeks
-    const currentWeight = lastEntry.weight
-    for (let i = 1; i <= 8; i++) {
-      const futureDate = addWeeks(lastDate, i)
-      const predictedWeight = currentWeight + (weeklyGrowth * i)
-      
-      chartData.push({
-        date: format(futureDate, 'yyyy-MM-dd'),
-        dateFormatted: format(futureDate, 'dd.MM', { locale: fi }),
-        prediction: predictedWeight > 0 ? predictedWeight : 0,
-        avgGrowthLine: firstEntry.weight + (weeklyGrowth * ((futureDate.getTime() - firstDate.getTime()) / (1000 * 60 * 60 * 24 * 7))),
-        isPrediction: true
-      })
-    }
-
     const sortedData = chartData.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
     console.log('Generated chart data:', sortedData)
     return sortedData
   }
 
-  const chartData = generatePrediction(weightData)
+  const chartData = generateChartData(weightData)
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
-      const data = payload[0].payload
       return (
         <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
           <p className="font-medium">{`${label}`}</p>
@@ -98,12 +79,8 @@ export default function WeightChart({ weightData }: WeightChartProps) {
             <p key={index} style={{ color: entry.color }} className="text-sm">
               {entry.dataKey === 'actualWeight' && `Mitattu paino: ${entry.value?.toFixed(1)} kg`}
               {entry.dataKey === 'avgGrowthLine' && `Keskikasvu: ${entry.value?.toFixed(1)} kg`}
-              {entry.dataKey === 'prediction' && `Ennuste: ${entry.value?.toFixed(1)} kg`}
             </p>
           ))}
-          {data.isPrediction && (
-            <p className="text-xs text-gray-500 mt-1">Ennuste perustuu keskimääräiseen kasvuun</p>
-          )}
         </div>
       )
     }
@@ -151,18 +128,6 @@ export default function WeightChart({ weightData }: WeightChartProps) {
             strokeDasharray="5 5"
             dot={false}
             name="Keskikasvukäyrä"
-          />
-          
-          {/* Prediction line */}
-          <Line
-            type="monotone"
-            dataKey="prediction"
-            stroke="#f59e0b"
-            strokeWidth={2}
-            strokeDasharray="8 4"
-            dot={{ fill: '#f59e0b', strokeWidth: 1, r: 3 }}
-            name="Ennuste"
-            connectNulls={false}
           />
         </LineChart>
       </ResponsiveContainer>
