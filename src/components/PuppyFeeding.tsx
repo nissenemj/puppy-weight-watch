@@ -576,8 +576,8 @@ export default function PuppyFeedingCalculator() {
                 </CardHeader>
                 <CardContent>
                   {Object.entries(foodsByBrand).map(([brand, foods]) => (
-                    <div key={brand} className="mb-6">
-                      <h3 className="font-bold text-lg mb-3">{brand}</h3>
+                    <div key={brand} className="mb-8 first:mt-0 mt-6">
+                      <h3 className="font-bold text-lg mb-4 pb-2 border-b border-gray-200">{brand}</h3>
                       <div className="space-y-2">
                         {foods.map(food => {
                           const variants = puppyFoodDatabase.filter(f => f.name === food.name)
