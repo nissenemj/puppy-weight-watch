@@ -13,6 +13,7 @@ import WeightChart from './WeightChart'
 import FoodCalculator from './FoodCalculator'
 import PuppyFeeding from './PuppyFeeding'
 import SafetyNewsFeed from './SafetyNewsFeed'
+import OnboardingWizard from './OnboardingWizard'
 import { Scale, TrendingUp, Calculator, Utensils, Bell, LogIn, UserPlus } from 'lucide-react'
 
 // Import the generated assets
@@ -36,6 +37,8 @@ export default function ModernPuppyWeightTracker() {
   const [password, setPassword] = useState('')
   const [isLogin, setIsLogin] = useState(true)
   const [loading, setLoading] = useState(false)
+  const [showOnboarding, setShowOnboarding] = useState(false)
+  const [checkingOnboarding, setCheckingOnboarding] = useState(false)
   const { toast } = useToast()
 
   useEffect(() => {
@@ -57,8 +60,46 @@ export default function ModernPuppyWeightTracker() {
   useEffect(() => {
     if (user) {
       fetchWeightEntries()
+      checkForOnboarding()
     }
   }, [user])
+
+  const checkForOnboarding = async () => {
+    if (!user) return
+    
+    setCheckingOnboarding(true)
+    try {
+      // Check if user has any dogs (indicating they've completed onboarding)
+      const { data: dogs, error } = await supabase
+        .from('dogs')
+        .select('id')
+        .eq('user_id', user.id)
+        .limit(1)
+
+      if (error) {
+        console.error('Error checking dogs:', error)
+        return
+      }
+
+      // If no dogs found, show onboarding
+      if (!dogs || dogs.length === 0) {
+        setShowOnboarding(true)
+      }
+    } catch (error) {
+      console.error('Error in checkForOnboarding:', error)
+    } finally {
+      setCheckingOnboarding(false)
+    }
+  }
+
+  const handleOnboardingComplete = () => {
+    setShowOnboarding(false)
+    fetchWeightEntries() // Refresh data after onboarding
+    toast({
+      title: "Tervetuloa!",
+      description: "Olet valmis käyttämään Pentulaskuria!",
+    })
+  }
 
   const fetchWeightEntries = async () => {
     if (!user) return
@@ -285,6 +326,23 @@ export default function ModernPuppyWeightTracker() {
           </Card>
         </div>
         <Toaster />
+      </div>
+    )
+  }
+
+  // Show onboarding for new users
+  if (showOnboarding && user) {
+    return <OnboardingWizard user={user} onComplete={handleOnboardingComplete} />
+  }
+
+  // Show loading state while checking for onboarding
+  if (checkingOnboarding) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-25 to-purple-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-gray-600">Ladataan...</p>
+        </div>
       </div>
     )
   }
