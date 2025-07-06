@@ -1,9 +1,39 @@
 import * as React from "react"
 import * as TabsPrimitive from "@radix-ui/react-tabs"
+import { useSwipeable } from "react-swipeable"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 import { cn } from "@/lib/utils"
 
-const Tabs = TabsPrimitive.Root
+// Enhanced Tabs with swipe support for mobile
+const Tabs = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Root> & {
+    onSwipe?: (direction: 'left' | 'right') => void
+  }
+>(({ className, onSwipe, children, ...props }, ref) => {
+  const isMobile = useIsMobile()
+  
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: () => isMobile && onSwipe?.('left'),
+    onSwipedRight: () => isMobile && onSwipe?.('right'),
+    trackMouse: false,
+    trackTouch: true,
+    delta: 50,
+  })
+
+  return (
+    <TabsPrimitive.Root
+      ref={ref}
+      className={className}
+      {...(isMobile ? swipeHandlers : {})}
+      {...props}
+    >
+      {children}
+    </TabsPrimitive.Root>
+  )
+})
+Tabs.displayName = "Tabs"
 
 const TabsList = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.List>,
@@ -12,7 +42,7 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      "inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground",
+      "inline-flex h-12 md:h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground",
       className
     )}
     {...props}
@@ -27,7 +57,7 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      "inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm",
+      "inline-flex items-center justify-center whitespace-nowrap rounded-sm px-4 md:px-3 py-2 md:py-1.5 text-base md:text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm min-h-[44px] md:min-h-auto",
       className
     )}
     {...props}

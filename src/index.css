@@ -137,6 +137,31 @@ All colors are HSL format as required.
 
   body {
     @apply bg-background text-foreground font-sans;
+    /* Improved mobile typography */
+    font-size: 16px; /* Prevent zoom on iOS */
+    line-height: 1.5;
+  }
+
+  /* Mobile-first responsive text sizes */
+  @media (max-width: 768px) {
+    body {
+      font-size: 16px;
+    }
+    
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.75rem; }
+    h3 { font-size: 1.5rem; }
+    h4 { font-size: 1.25rem; }
+    
+    /* Ensure minimum touch targets on mobile */
+    button, input, select, textarea {
+      min-height: 44px;
+    }
+    
+    /* Better spacing for mobile */
+    .mobile-spacing {
+      padding: 1rem;
+    }
   }
 
   /* Typography System */

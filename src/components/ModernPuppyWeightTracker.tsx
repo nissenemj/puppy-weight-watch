@@ -7,6 +7,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { Toaster } from '@/components/ui/toaster'
 import { useToast } from '@/hooks/use-toast'
+import { usePullToRefresh } from '@/hooks/usePullToRefresh'
+import { useIsMobile } from '@/hooks/use-mobile'
 import { supabase } from '@/integrations/supabase/client'
 import { User } from '@supabase/supabase-js'
 import WeightChart from './WeightChart'
@@ -14,7 +16,7 @@ import FoodCalculator from './FoodCalculator'
 import PuppyFeeding from './PuppyFeeding'
 import SafetyNewsFeed from './SafetyNewsFeed'
 import OnboardingWizard from './OnboardingWizard'
-import { Scale, TrendingUp, Calculator, Utensils, Bell, LogIn, UserPlus } from 'lucide-react'
+import { Scale, TrendingUp, Calculator, Utensils, Bell, LogIn, UserPlus, RefreshCw } from 'lucide-react'
 
 // Import the generated assets
 import appIcon from '@/assets/app-icon.png'
@@ -39,7 +41,23 @@ export default function ModernPuppyWeightTracker() {
   const [loading, setLoading] = useState(false)
   const [showOnboarding, setShowOnboarding] = useState(false)
   const [checkingOnboarding, setCheckingOnboarding] = useState(false)
+  const [activeTab, setActiveTab] = useState('weight-tracking')
   const { toast } = useToast()
+  const isMobile = useIsMobile()
+
+  // Pull to refresh hook
+  const { containerRef, isRefreshing, pullDistance, shouldShowIndicator } = usePullToRefresh({
+    onRefresh: async () => {
+      if (user) {
+        await fetchWeightEntries()
+        toast({
+          title: "Päivitetty!",
+          description: "Tiedot on päivitetty",
+        })
+      }
+    },
+    disabled: !user
+  })
 
   useEffect(() => {
     // Check if user is logged in
@@ -347,8 +365,44 @@ export default function ModernPuppyWeightTracker() {
     )
   }
 
+  const handleTabSwipe = (direction: 'left' | 'right') => {
+    const tabs = ['weight-tracking', 'growth-chart', 'puppy-feeding', 'news-feed']
+    const currentIndex = tabs.indexOf(activeTab)
+    
+    if (direction === 'left' && currentIndex < tabs.length - 1) {
+      setActiveTab(tabs[currentIndex + 1])
+    } else if (direction === 'right' && currentIndex > 0) {
+      setActiveTab(tabs[currentIndex - 1])
+    }
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-25 to-purple-50">
+    <div 
+      ref={containerRef}
+      className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-25 to-purple-50 relative"
+      style={{
+        transform: shouldShowIndicator ? `translateY(${Math.min(pullDistance * 0.5, 40)}px)` : 'none',
+        transition: shouldShowIndicator ? 'none' : 'transform 0.2s ease-out'
+      }}
+    >
+      {/* Pull to refresh indicator */}
+      {shouldShowIndicator && (
+        <div 
+          className="absolute top-0 left-0 right-0 flex items-center justify-center py-4 bg-white/80 backdrop-blur-sm z-50"
+          style={{
+            opacity: Math.min(pullDistance / 80, 1),
+            transform: `translateY(${-40 + Math.min(pullDistance * 0.5, 40)}px)`
+          }}
+        >
+          <RefreshCw 
+            className={`h-6 w-6 text-primary ${isRefreshing ? 'animate-spin' : ''}`}
+          />
+          <span className="ml-2 text-sm text-gray-600">
+            {isRefreshing ? 'Päivitetään...' : pullDistance > 80 ? 'Päästä päivittääksesi' : 'Vedä alas päivittääksesi'}
+          </span>
+        </div>
+      )}
+      
       <div className="container mx-auto p-4">
         {/* Modern Header */}
         <div className="flex justify-between items-center mb-8 animate-fade-in">
@@ -375,35 +429,35 @@ export default function ModernPuppyWeightTracker() {
           </div>
         </div>
 
-        <Tabs defaultValue="weight-tracking" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 h-14 rounded-2xl bg-white/50 backdrop-blur-sm">
+        <Tabs value={activeTab} onValueChange={setActiveTab} onSwipe={handleTabSwipe} className="space-y-6">
+          <TabsList className="grid w-full grid-cols-4 h-16 md:h-14 rounded-2xl bg-white/50 backdrop-blur-sm overflow-x-auto">
             <TabsTrigger 
               value="weight-tracking" 
-              className="flex items-center gap-2 rounded-xl data-[state=active]:bg-gradient-cool data-[state=active]:text-white transition-all duration-200 hover:scale-105"
+              className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 rounded-xl data-[state=active]:bg-gradient-cool data-[state=active]:text-white transition-all duration-200 hover:scale-105 px-2 sm:px-4"
             >
-              <Scale className="h-4 w-4" />
-              <span className="hidden sm:inline">Painonseuranta</span>
+              <Scale className="h-5 w-5 sm:h-4 sm:w-4" />
+              <span className="text-xs sm:text-sm">Paino</span>
             </TabsTrigger>
             <TabsTrigger 
               value="growth-chart" 
-              className="flex items-center gap-2 rounded-xl data-[state=active]:bg-gradient-purple data-[state=active]:text-white transition-all duration-200 hover:scale-105"
+              className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 rounded-xl data-[state=active]:bg-gradient-purple data-[state=active]:text-white transition-all duration-200 hover:scale-105 px-2 sm:px-4"
             >
-              <TrendingUp className="h-4 w-4" />
-              <span className="hidden sm:inline">Kasvukäyrä</span>
+              <TrendingUp className="h-5 w-5 sm:h-4 sm:w-4" />
+              <span className="text-xs sm:text-sm">Kasvu</span>
             </TabsTrigger>
             <TabsTrigger 
               value="puppy-feeding" 
-              className="flex items-center gap-2 rounded-xl data-[state=active]:bg-gradient-warm data-[state=active]:text-white transition-all duration-200 hover:scale-105"
+              className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 rounded-xl data-[state=active]:bg-gradient-warm data-[state=active]:text-white transition-all duration-200 hover:scale-105 px-2 sm:px-4"
             >
-              <Utensils className="h-4 w-4" />
-              <span className="hidden sm:inline">Penturuokinta</span>
+              <Utensils className="h-5 w-5 sm:h-4 sm:w-4" />
+              <span className="text-xs sm:text-sm">Ruokinta</span>
             </TabsTrigger>
             <TabsTrigger 
               value="news-feed" 
-              className="flex items-center gap-2 rounded-xl data-[state=active]:bg-gradient-purple data-[state=active]:text-white transition-all duration-200 hover:scale-105"
+              className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 rounded-xl data-[state=active]:bg-gradient-purple data-[state=active]:text-white transition-all duration-200 hover:scale-105 px-2 sm:px-4"
             >
-              <Bell className="h-4 w-4" />
-              <span className="hidden sm:inline">Uutiset</span>
+              <Bell className="h-5 w-5 sm:h-4 sm:w-4" />
+              <span className="text-xs sm:text-sm">Uutiset</span>
             </TabsTrigger>
           </TabsList>
 
