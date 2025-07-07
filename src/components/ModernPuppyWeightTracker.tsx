@@ -265,13 +265,13 @@ export default function ModernPuppyWeightTracker() {
         <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-warm rounded-full blur-3xl opacity-20 animate-bounce-gentle"></div>
         <div className="absolute bottom-20 right-10 w-40 h-40 bg-gradient-cool rounded-full blur-3xl opacity-20 animate-bounce-gentle" style={{ animationDelay: '1s' }}></div>
         
-        <div className="max-w-md mx-auto pt-20">
-          {/* Welcome illustration */}
-          <div className="text-center mb-8 animate-fade-in">
+        <div className="max-w-sm sm:max-w-md mx-auto pt-16 sm:pt-20 px-4">
+          {/* Welcome illustration - Mobile Responsive */}
+          <div className="text-center mb-6 sm:mb-8 animate-fade-in">
             <img 
               src={welcomeIllustration} 
               alt="Tervetuloa" 
-              className="w-64 h-48 mx-auto mb-4 object-contain"
+              className="w-48 h-36 sm:w-64 sm:h-48 mx-auto mb-4 object-contain max-w-full"
             />
           </div>
 
@@ -403,26 +403,26 @@ export default function ModernPuppyWeightTracker() {
         </div>
       )}
       
-      <div className="container mx-auto p-4">
-        {/* Modern Header */}
-        <div className="flex justify-between items-center mb-8 animate-fade-in">
-          <div className="flex items-center gap-4">
-            <img src={appIcon} alt="Pentulaskuri" className="w-16 h-16 rounded-3xl shadow-lg animate-bounce-gentle" />
+      <div className="container mx-auto p-3 sm:p-4 max-w-full overflow-x-hidden">
+        {/* Modern Header - Mobile Responsive */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-4 animate-fade-in">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <img src={appIcon} alt="Pentulaskuri" className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl sm:rounded-3xl shadow-lg animate-bounce-gentle" />
             <div>
-              <h1 className="text-4xl font-bold bg-gradient-warm bg-clip-text text-transparent">
+              <h1 className="text-2xl sm:text-4xl font-bold bg-gradient-warm bg-clip-text text-transparent">
                 Pentulaskuri
               </h1>
-              <p className="text-gray-600 text-lg">Seuraa pentusi kasvua ja ruokintaa</p>
+              <p className="text-gray-600 text-sm sm:text-lg">Seuraa pentusi kasvua ja ruokintaa</p>
             </div>
           </div>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-600 bg-white/50 px-3 py-2 rounded-lg backdrop-blur-sm">
+          <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto">
+            <span className="text-xs sm:text-sm text-gray-600 bg-white/50 px-2 sm:px-3 py-1 sm:py-2 rounded-lg backdrop-blur-sm flex-1 sm:flex-initial text-center sm:text-left">
               {user.email}
             </span>
             <Button 
               variant="outline" 
               onClick={handleSignOut}
-              className="rounded-xl hover:scale-105 transition-all duration-200"
+              className="rounded-xl hover:scale-105 transition-all duration-200 text-xs sm:text-sm px-3 sm:px-4"
             >
               Kirjaudu ulos
             </Button>
