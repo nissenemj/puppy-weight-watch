@@ -198,4 +198,46 @@ All colors are HSL format as required.
   img {
     @apply max-w-full h-auto;
   }
+
+  /* Responsive utilities for better mobile experience */
+  .aspect-square {
+    aspect-ratio: 1 / 1;
+  }
+
+  .aspect-video {
+    aspect-ratio: 16 / 9;
+  }
+
+  /* Better mobile touch targets */
+  @media (max-width: 768px) {
+    /* Ensure all clickable elements meet minimum 44px touch target */
+    .touch-target {
+      min-height: 44px;
+      min-width: 44px;
+    }
+
+    /* Improved mobile spacing */
+    .mobile-container {
+      padding-left: 1rem;
+      padding-right: 1rem;
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+
+    /* Responsive text that scales properly */
+    .responsive-text-xl {
+      font-size: 1.25rem; /* 20px */
+      line-height: 1.75rem; /* 28px */
+    }
+
+    .responsive-text-2xl {
+      font-size: 1.5rem; /* 24px */
+      line-height: 2rem; /* 32px */
+    }
+
+    .responsive-text-3xl {
+      font-size: 1.875rem; /* 30px */
+      line-height: 2.25rem; /* 36px */
+    }
+  }
 }

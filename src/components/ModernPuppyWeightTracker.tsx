@@ -315,7 +315,8 @@ export default function ModernPuppyWeightTracker() {
 
                 <Button 
                   type="submit" 
-                  className="w-full h-12 text-base rounded-xl bg-gradient-warm hover:opacity-90 transition-all duration-200 hover:scale-105 shadow-lg" 
+                  size="mobile"
+                  className="w-full rounded-xl bg-gradient-warm hover:opacity-90 transition-all duration-200 hover:scale-105 shadow-lg" 
                   disabled={loading}
                 >
                   {loading ? 'Odota...' : isLogin ? (
@@ -546,7 +547,8 @@ export default function ModernPuppyWeightTracker() {
                     <Button 
                       onClick={addWeightEntry} 
                       disabled={!currentWeight}
-                      className="h-12 px-6 rounded-xl bg-gradient-primary hover:opacity-90 transition-all duration-200 hover:scale-105 shadow-lg"
+                      size="mobile"
+                      className="rounded-xl bg-gradient-primary hover:opacity-90 transition-all duration-200 hover:scale-105 shadow-lg"
                     >
                       Lisää mittaus
                     </Button>
