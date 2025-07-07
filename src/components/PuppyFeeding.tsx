@@ -400,10 +400,19 @@ export default function PuppyFeedingCalculator() {
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="calculator" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="calculator">Ruokamäärälaskuri</TabsTrigger>
-              <TabsTrigger value="feeding-schedule">Ruokinta-aikataulu</TabsTrigger>
-              <TabsTrigger value="brands">Ruokamerkit</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-3 h-auto">
+              <TabsTrigger value="calculator" className="text-xs sm:text-sm p-2 sm:p-3">
+                <span className="hidden sm:inline">Ruokamäärälaskuri</span>
+                <span className="sm:hidden">Laskuri</span>
+              </TabsTrigger>
+              <TabsTrigger value="feeding-schedule" className="text-xs sm:text-sm p-2 sm:p-3">
+                <span className="hidden sm:inline">Ruokinta-aikataulu</span>
+                <span className="sm:hidden">Aikataulu</span>
+              </TabsTrigger>
+              <TabsTrigger value="brands" className="text-xs sm:text-sm p-2 sm:p-3">
+                <span className="hidden sm:inline">Ruokamerkit</span>
+                <span className="sm:hidden">Merkit</span>
+              </TabsTrigger>
             </TabsList>
             
             <TabsContent value="calculator" className="space-y-6 pt-4">
