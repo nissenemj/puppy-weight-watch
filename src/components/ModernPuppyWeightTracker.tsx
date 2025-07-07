@@ -15,7 +15,7 @@ import WeightChart from './WeightChart'
 import FoodCalculator from './FoodCalculator'
 import PuppyFeeding from './PuppyFeeding'
 import SafetyNewsFeed from './SafetyNewsFeed'
-import OnboardingWizard from './OnboardingWizard'
+import OnboardingWizard from '@/features/onboarding/components/OnboardingWizard'
 import { Scale, TrendingUp, Calculator, Utensils, Bell, LogIn, UserPlus, RefreshCw } from 'lucide-react'
 
 // Import the generated assets

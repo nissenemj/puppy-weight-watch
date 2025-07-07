@@ -41,7 +41,7 @@ export default function OnboardingWizard({ user, onComplete }: OnboardingWizardP
   const steps = [
     {
       title: "Tervetuloa Pentulaskuriin!",
-      subtitle: "Miksi seurata pennun kasvua?",
+      subtitle: "Luodaan yhdessä pennullesi paras mahdollinen alku elämälle.",
       icon: Heart
     },
     {
@@ -189,29 +189,29 @@ export default function OnboardingWizard({ user, onComplete }: OnboardingWizardP
               <div className="space-y-6 text-center">
                 <img 
                   src={heroIllustration} 
-                  alt="Pentulaskuri" 
+                  alt="Onnellinen pentu ja omistaja" 
                   className="w-48 h-36 sm:w-64 sm:h-48 mx-auto object-contain"
                 />
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl">
-                    <TrendingUp className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600 flex-shrink-0" />
-                    <div className="text-left">
-                      <h4 className="font-semibold text-gray-800 text-sm sm:text-base">Seuraa kasvua</h4>
-                      <p className="text-xs sm:text-sm text-gray-600">Pidä kirjaa pennun kehityksestä</p>
+                <div className="space-y-4 text-left">
+                  <div className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 bg-gradient-to-r from-green-50 to-green-100 rounded-xl">
+                    <TrendingUp className="h-5 w-5 sm:h-6 sm:w-6 text-green-600 flex-shrink-0" />
+                    <div>
+                      <h4 className="font-semibold text-gray-800 text-sm sm:text-base">Tieteeseen perustuva kasvu</h4>
+                      <p className="text-xs sm:text-sm text-gray-600">Seuraa ja varmista optimaalinen kehitys asiantuntijoiden opeilla.</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 bg-gradient-to-r from-green-50 to-green-100 rounded-xl">
-                    <Calculator className="h-5 w-5 sm:h-6 sm:w-6 text-green-600 flex-shrink-0" />
-                    <div className="text-left">
-                      <h4 className="font-semibold text-gray-800 text-sm sm:text-base">Laske ruokamäärät</h4>
-                      <p className="text-xs sm:text-sm text-gray-600">Optimaaliset ruoka-annokset painon mukaan</p>
+                  <div className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl">
+                    <Calculator className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600 flex-shrink-0" />
+                    <div>
+                      <h4 className="font-semibold text-gray-800 text-sm sm:text-base">Tarkat ruokamäärät</h4>
+                      <p className="text-xs sm:text-sm text-gray-600">Vältä yleisimmät ruokintavirheet tieteellisellä laskurillamme.</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 bg-gradient-to-r from-purple-50 to-purple-100 rounded-xl">
                     <Heart className="h-5 w-5 sm:h-6 sm:w-6 text-purple-600 flex-shrink-0" />
-                    <div className="text-left">
-                      <h4 className="font-semibold text-gray-800 text-sm sm:text-base">Terve kasvu</h4>
-                      <p className="text-xs sm:text-sm text-gray-600">Varmista pennun optimaalinen kehitys</p>
+                    <div>
+                      <h4 className="font-semibold text-gray-800 text-sm sm:text-base">Henkilökohtainen opas</h4>
+                      <p className="text-xs sm:text-sm text-gray-600">Saat juuri sinun pentusi tarpeisiin räätälöidyt suositukset.</p>
                     </div>
                   </div>
                 </div>
