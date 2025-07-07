@@ -220,10 +220,19 @@ export default function FoodCalculator({ currentWeight = 0, user }: FoodCalculat
             </CardHeader>
             <CardContent>
               <Tabs defaultValue="basic" className="w-full">
-                <TabsList className="grid w-full grid-cols-3">
-                  <TabsTrigger value="basic">RER-laskuri</TabsTrigger>
-                  <TabsTrigger value="manual">Käsin syöttö</TabsTrigger>
-                  <TabsTrigger value="image">Kuvantunnistus</TabsTrigger>
+                <TabsList className="grid w-full grid-cols-3 h-auto">
+                  <TabsTrigger value="basic" className="text-xs sm:text-sm p-2 sm:p-3">
+                    <span className="hidden sm:inline">RER-laskuri</span>
+                    <span className="sm:hidden">RER</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="manual" className="text-xs sm:text-sm p-2 sm:p-3">
+                    <span className="hidden sm:inline">Käsin syöttö</span>
+                    <span className="sm:hidden">Käsin</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="image" className="text-xs sm:text-sm p-2 sm:p-3">
+                    <span className="hidden sm:inline">Kuvantunnistus</span>
+                    <span className="sm:hidden">Kuva</span>
+                  </TabsTrigger>
                 </TabsList>
                 
                 <TabsContent value="basic" className="space-y-4">
