@@ -317,7 +317,7 @@ export default function EnhancedPuppyCalculator() {
       <div className="grid gap-4">
         {requiredInputs.includes('currentWeight') && (
           <div className="space-y-2">
-            <Label htmlFor="currentWeight">Pennun nykyinen paino (kg)</Label>
+            <Label htmlFor="currentWeight" className="text-sm sm:text-base">Pennun nykyinen paino (kg)</Label>
             <Input
               id="currentWeight"
               type="number"
@@ -325,13 +325,14 @@ export default function EnhancedPuppyCalculator() {
               value={currentWeight}
               onChange={(e) => setCurrentWeight(e.target.value)}
               placeholder="esim. 3.5"
+              className="min-h-[44px] text-sm sm:text-base"
             />
           </div>
         )}
         
         {requiredInputs.includes('adultWeight') && (
           <div className="space-y-2">
-            <Label htmlFor="adultWeight">Odotettu aikuispaino (kg)</Label>
+            <Label htmlFor="adultWeight" className="text-sm sm:text-base">Odotettu aikuispaino (kg)</Label>
             <Input
               id="adultWeight"
               type="number"
@@ -339,13 +340,14 @@ export default function EnhancedPuppyCalculator() {
               value={adultWeight}
               onChange={(e) => setAdultWeight(e.target.value)}
               placeholder="esim. 15"
+              className="min-h-[44px] text-sm sm:text-base"
             />
           </div>
         )}
         
         {requiredInputs.includes('ageMonths') && (
           <div className="space-y-2">
-            <Label htmlFor="ageMonths">Pennun ikä (kuukausia)</Label>
+            <Label htmlFor="ageMonths" className="text-sm sm:text-base">Pennun ikä (kuukausia)</Label>
             <Input
               id="ageMonths"
               type="number"
@@ -353,13 +355,14 @@ export default function EnhancedPuppyCalculator() {
               value={ageMonths}
               onChange={(e) => setAgeMonths(e.target.value)}
               placeholder="esim. 4"
+              className="min-h-[44px] text-sm sm:text-base"
             />
           </div>
         )}
         
         {requiredInputs.includes('activity') && (
           <div className="space-y-3">
-            <Label>Aktiivisuustaso</Label>
+            <Label className="text-sm sm:text-base">Aktiivisuustaso</Label>
             <div className="px-2">
               <Slider
                 value={activityLevel}
@@ -386,22 +389,22 @@ export default function EnhancedPuppyCalculator() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6 px-4 sm:px-6">
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Dog className="h-5 w-5" />
+        <CardHeader className="p-4 sm:p-6">
+          <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+            <Dog className="h-5 w-5 sm:h-6 sm:w-6" />
             Dynaaminen penturuokintlaskuri
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-sm sm:text-base">
             Valitse ruoka ja sovellus pyytää automaattisesti tarvittavat tiedot
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-4 sm:space-y-6 p-4 sm:p-6">
           <div className="space-y-2">
-            <Label htmlFor="foodSelect">Valitse ruoka</Label>
+            <Label htmlFor="foodSelect" className="text-sm sm:text-base">Valitse ruoka</Label>
             <Select onValueChange={handleFoodSelection}>
-              <SelectTrigger>
+              <SelectTrigger className="min-h-[44px]">
                 <SelectValue placeholder="Valitse ruokamerkki ja tuote" />
               </SelectTrigger>
               <SelectContent>
@@ -415,11 +418,13 @@ export default function EnhancedPuppyCalculator() {
                   <div key={manufacturer}>
                     <div className="px-2 py-1.5 text-sm font-semibold">{manufacturer}</div>
                     {foods.map((food) => (
-                      <SelectItem key={food.id} value={food.id}>
-                        {food.name}
-                        <Badge variant="secondary" className="ml-2 text-xs">
-                          {food.food_type}
-                        </Badge>
+                      <SelectItem key={food.id} value={food.id} className="min-h-[44px] flex items-center">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 w-full">
+                          <span className="text-sm sm:text-base">{food.name}</span>
+                          <Badge variant="secondary" className="text-xs self-start sm:self-center">
+                            {food.food_type}
+                          </Badge>
+                        </div>
                       </SelectItem>
                     ))}
                   </div>
@@ -432,8 +437,8 @@ export default function EnhancedPuppyCalculator() {
             <div className="space-y-4">
               <Alert>
                 <Info className="h-4 w-4" />
-                <AlertTitle>Annosteluperuste</AlertTitle>
-                <AlertDescription>
+                <AlertTitle className="text-sm sm:text-base">Annosteluperuste</AlertTitle>
+                <AlertDescription className="text-sm">
                   {getInstructionText(selectedFood.dosage_method)}
                 </AlertDescription>
               </Alert>
@@ -443,7 +448,7 @@ export default function EnhancedPuppyCalculator() {
               <Button 
                 onClick={calculateFeeding} 
                 disabled={loading || !selectedFood}
-                className="w-full"
+                className="w-full min-h-[44px] text-sm sm:text-base"
               >
                 {loading ? 'Lasketaan...' : 'Laske ruokamäärä'}
               </Button>
@@ -454,35 +459,35 @@ export default function EnhancedPuppyCalculator() {
 
       {result && (
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Scale className="h-5 w-5" />
+          <CardHeader className="p-4 sm:p-6">
+            <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+              <Scale className="h-5 w-5 sm:h-6 sm:w-6" />
               Laskentatulos
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 p-4 sm:p-6">
             {result.amount ? (
               <div className="grid gap-4">
-                <div className="text-center p-6 bg-primary/5 rounded-lg">
-                  <div className="text-3xl font-bold text-primary">
+                <div className="text-center p-4 sm:p-6 bg-primary/5 rounded-lg">
+                  <div className="text-2xl sm:text-3xl font-bold text-primary">
                     {result.minAmount && result.maxAmount 
                       ? `${result.minAmount}-${result.maxAmount}g`
                       : `${result.amount}g`
                     }
                   </div>
-                  <p className="text-muted-foreground">päivittäinen ruokamäärä</p>
+                  <p className="text-muted-foreground text-sm sm:text-base">päivittäinen ruokamäärä</p>
                 </div>
 
                 {result.activityAdjustment && (
                   <Alert>
                     <Activity className="h-4 w-4" />
-                    <AlertDescription>{result.activityAdjustment}</AlertDescription>
+                    <AlertDescription className="text-sm">{result.activityAdjustment}</AlertDescription>
                   </Alert>
                 )}
 
                 {result.mealSchedule && (
-                  <div className="p-4 bg-blue-50 rounded-lg">
-                    <p className="font-medium mb-2">Ruokintaohje:</p>
+                  <div className="p-3 sm:p-4 bg-blue-50 rounded-lg">
+                    <p className="font-medium mb-2 text-sm sm:text-base">Ruokintaohje:</p>
                     <p className="text-sm">{result.mealSchedule}</p>
                   </div>
                 )}
@@ -490,7 +495,7 @@ export default function EnhancedPuppyCalculator() {
             ) : (
               <Alert variant="destructive">
                 <AlertTriangle className="h-4 w-4" />
-                <AlertDescription>{result.warning}</AlertDescription>
+                <AlertDescription className="text-sm">{result.warning}</AlertDescription>
               </Alert>
             )}
 
@@ -499,7 +504,7 @@ export default function EnhancedPuppyCalculator() {
               {result.disclaimers.map((disclaimer, index) => (
                 <Alert key={index} variant="default">
                   <Shield className="h-4 w-4" />
-                  <AlertDescription className="text-sm">
+                  <AlertDescription className="text-xs sm:text-sm">
                     {disclaimer}
                   </AlertDescription>
                 </Alert>
@@ -509,8 +514,8 @@ export default function EnhancedPuppyCalculator() {
             {/* Professional help recommendation */}
             <Alert>
               <Heart className="h-4 w-4" />
-              <AlertTitle>Muista</AlertTitle>
-              <AlertDescription>
+              <AlertTitle className="text-sm sm:text-base">Muista</AlertTitle>
+              <AlertDescription className="text-sm">
                 Pennun terveys ja hyvinvointi ovat aina etusijalla. Epävarmuuden vallitessa ota yhteyttä eläinlääkäriin.
               </AlertDescription>
             </Alert>
