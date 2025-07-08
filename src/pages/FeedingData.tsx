@@ -418,7 +418,7 @@ export default function FeedingData() {
                       />
                     </div>
                   </div>
-                  <div className="flex justify-end gap-2 mt-4">
+                  <div className="flex flex-col sm:flex-row justify-end gap-2 mt-4">
                     <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
                       Peruuta
                     </Button>
@@ -511,7 +511,7 @@ export default function FeedingData() {
                             />
                           </div>
                         </div>
-                        <div className="flex gap-2">
+                        <div className="flex flex-col sm:flex-row gap-2">
                           <Button size="sm" onClick={() => updateFood(editingFood)}>
                             <Save className="h-4 w-4 mr-1" />
                             Tallenna
@@ -532,7 +532,7 @@ export default function FeedingData() {
                     )}
                   </div>
                   {editingFood?.id !== food.id && (
-                    <div className="flex gap-2">
+                    <div className="flex flex-col sm:flex-row gap-2">
                       <Badge className={getNutritionTypeBadgeColor(food.nutrition_type)}>
                         {food.nutrition_type}
                       </Badge>

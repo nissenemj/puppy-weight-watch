@@ -346,7 +346,7 @@ export default function DosageImagesSection() {
                         <p className="text-sm text-muted-foreground mt-1">{image.description}</p>
                       )}
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex flex-col sm:flex-row gap-2">
                       <Button
                         variant="outline"
                         size="sm"
@@ -392,7 +392,7 @@ export default function DosageImagesSection() {
                         <div className="space-y-4">
                           <div className="flex justify-between items-center">
                             <h4 className="font-medium">Muokkaa annostelutaulukkoa</h4>
-                            <div className="flex gap-2">
+                            <div className="flex flex-col sm:flex-row gap-2">
                               <Button size="sm" onClick={() => addTableRow()}>
                                 <Plus className="h-4 w-4 mr-1" />
                                 Lisää rivi
