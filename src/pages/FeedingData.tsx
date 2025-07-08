@@ -219,10 +219,10 @@ export default function FeedingData() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 pt-14">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 pt-14 w-full overflow-x-hidden">
       <InfoNavigation />
       
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-full min-w-0">
         <div className="mb-8">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             📊 Annostelutiedot
@@ -266,20 +266,21 @@ export default function FeedingData() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              <div className="w-full min-w-0">
                 <label className="block text-sm font-medium mb-2">Hae tuotetta</label>
                 <Input
                   placeholder="Tuotteen nimi tai valmistaja..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full"
                 />
               </div>
               
-              <div>
+              <div className="w-full min-w-0">
                 <label className="block text-sm font-medium mb-2">Valmistaja</label>
                 <Select value={selectedManufacturer} onValueChange={setSelectedManufacturer}>
-                  <SelectTrigger>
+                  <SelectTrigger className="w-full">
                     <SelectValue placeholder="Valitse valmistaja" />
                   </SelectTrigger>
                   <SelectContent>
@@ -293,10 +294,10 @@ export default function FeedingData() {
                 </Select>
               </div>
               
-              <div>
+              <div className="w-full min-w-0">
                 <label className="block text-sm font-medium mb-2">Ruokatyyppi</label>
                 <Select value={selectedFoodType} onValueChange={setSelectedFoodType}>
-                  <SelectTrigger>
+                  <SelectTrigger className="w-full">
                     <SelectValue placeholder="Valitse ruokatyyppi" />
                   </SelectTrigger>
                   <SelectContent>
@@ -335,11 +336,11 @@ export default function FeedingData() {
                     Lisää uusi tuote
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto w-[95vw] sm:w-full">
+                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto w-[95vw] sm:w-full mx-2">
                   <DialogHeader>
                     <DialogTitle>Lisää uusi koiranruoka</DialogTitle>
                   </DialogHeader>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 min-w-0">
                     <div>
                       <Label htmlFor="name">Tuotteen nimi *</Label>
                       <Input
@@ -408,17 +409,18 @@ export default function FeedingData() {
                         </SelectContent>
                       </Select>
                     </div>
-                    <div className="col-span-2">
+                    <div className="lg:col-span-2">
                       <Label htmlFor="notes">Huomiot</Label>
                       <Textarea
                         id="notes"
                         value={newFood.notes}
                         onChange={(e) => setNewFood(prev => ({ ...prev, notes: e.target.value }))}
                         placeholder="Lisätietoja tuotteesta..."
+                        className="w-full"
                       />
                     </div>
                   </div>
-                  <div className="flex flex-col sm:flex-row justify-end gap-2 mt-4">
+                  <div className="flex flex-col sm:flex-row justify-end gap-2 mt-4 min-w-0">
                     <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
                       Peruuta
                     </Button>
@@ -440,7 +442,7 @@ export default function FeedingData() {
                   <div className="flex-1">
                     {editingFood?.id === food.id ? (
                       <div className="space-y-4">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 min-w-0">
                           <div>
                             <Label>Tuotteen nimi</Label>
                             <Input
@@ -503,11 +505,12 @@ export default function FeedingData() {
                               </SelectContent>
                             </Select>
                           </div>
-                          <div className="col-span-2">
+                          <div className="lg:col-span-2">
                             <Label>Huomiot</Label>
                             <Textarea
                               value={editingFood.notes || ''}
                               onChange={(e) => setEditingFood(prev => prev ? { ...prev, notes: e.target.value } : null)}
+                              className="w-full"
                             />
                           </div>
                         </div>
@@ -567,10 +570,10 @@ export default function FeedingData() {
                 )}
                 
                 {food.feeding_guidelines && food.feeding_guidelines.length > 0 ? (
-                  <div>
+                  <div className="min-w-0">
                     <h4 className="font-semibold mb-3">Annosteluohjeet:</h4>
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-sm">
+                    <div className="overflow-x-auto mobile-table-scroll w-full">
+                      <table className="w-full text-sm min-w-full">
                         <thead>
                           <tr className="border-b">
                             {food.dosage_method === 'Odotettu_Aikuispaino_Ja_Ikä' && (
