@@ -36,22 +36,22 @@ export default function FoodTypes() {
         <InfoCard
           title="Helsingin yliopiston DogRisk-tutkimuksen keskeiset löydökset"
           variant="cool"
-          icon={<Microscope className="h-6 w-6" />}
+          icon={<Microscope className="h-6 w-6" aria-hidden="true" />}
           className="mb-8"
         >
           <div className="space-y-4">
-            <p className="text-white/95 leading-relaxed">
+            <p className="text-card-foreground leading-relaxed">
               Dosentti Anna Hielm-Björkmanin johtama tutkimusryhmä on seurannut useiden tuhansien 
               suomalaisten koiranomistajien vastauksia ja osoittanut merkittäviä syy-yhteyksiä 
               ruokinnan ja aikuisiän terveyden välillä.
             </p>
             
-            <div className="bg-white/20 p-4 rounded-xl border border-white/30">
-              <h3 className="font-semibold text-white mb-2 flex items-center gap-2">
-                <TrendingUp className="h-5 w-5" />
+            <div className="bg-primary/10 p-4 rounded-xl border border-primary/20">
+              <h3 className="font-semibold text-primary mb-2 flex items-center gap-2">
+                <TrendingUp className="h-5 w-5" aria-hidden="true" />
                 Kriittinen 20% raja-arvo
               </h3>
-              <p className="text-sm text-white/90">
+              <p className="text-sm text-card-foreground">
                 <strong>Vähintään 20% raakaruoan osuus pennun ruokavaliossa</strong> vähentää 
                 allergia- ja atopiaoireita aikuisiässä merkittävästi. Tämä löydös osoittaa, 
                 että pienikin muutos pennun ruokavaliossa tuottaa elinikäisiä terveyshyötyjä.
@@ -122,30 +122,30 @@ export default function FoodTypes() {
           variant="cool"
           className="mb-8"
         >
-          <p className="text-white/95 mb-4 font-medium">
+          <p className="text-card-foreground mb-4 font-medium">
             Helsingin yliopiston tutkimukset osoittavat selvästi raakaruokinnan merkittäviä terveyshyötyjä 
             erityisesti pentujen kehityksessä ja aikuisiän terveyden ylläpitämisessä.
           </p>
           
           <div className="space-y-6">
             {/* Scientific Benefits */}
-            <div className="bg-white/20 p-4 rounded-xl border border-white/30">
-              <h3 className="font-semibold text-white mb-3 flex items-center gap-2">
-                <Heart className="h-5 w-5" />
+            <div className="bg-primary/10 p-4 rounded-xl border border-primary/20">
+              <h3 className="font-semibold text-primary mb-3 flex items-center gap-2">
+                <Heart className="h-5 w-5" aria-hidden="true" />
                 Tieteellisesti todistetut terveyshyödyt
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <h4 className="font-medium text-white mb-2">Allergiat ja atopia</h4>
-                  <ul className="space-y-1 text-sm text-white/90">
+                  <h4 className="font-medium text-card-foreground mb-2">Allergiat ja atopia</h4>
+                  <ul className="space-y-1 text-sm text-card-foreground">
                     <li>• 20% raakaruokaa vähentää allergiaoireita merkittävästi</li>
                     <li>• Raaka naudanmaha ja sisäelimet erityisen hyödyllisiä</li>
                     <li>• Elinikäiset terveyshyödyt pennun ruokavaliosta</li>
                   </ul>
                 </div>
                 <div>
-                  <h4 className="font-medium text-white mb-2">Suolistoterveys</h4>
-                  <ul className="space-y-1 text-sm text-white/90">
+                  <h4 className="font-medium text-card-foreground mb-2">Suolistoterveys</h4>
+                  <ul className="space-y-1 text-sm text-card-foreground">
                     <li>• Vähentää IBD-riskiä (tulehduksellinen suolistosairaus)</li>
                     <li>• Raa'at luut ja rustoluut suojaavia</li>
                     <li>• Marjat (mustikka, puolukka) tukevat suolistoa</li>
@@ -215,15 +215,15 @@ export default function FoodTypes() {
           className="mb-8"
         >
           <div className="space-y-4">
-            <p className="text-white/95 font-medium">
+            <p className="text-card-foreground font-medium">
               Helsingin yliopiston tutkimusten perusteella optimaalinen ruokinta yhdistää 
               eri ruokatyyppien parhaat puolet.
             </p>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-white/20 p-4 rounded-xl border border-white/30">
-                <h3 className="font-semibold text-white mb-2">Pennuille</h3>
-                <p className="text-sm text-white/90">
+              <div className="bg-primary/10 p-4 rounded-xl border border-primary/20">
+                <h3 className="font-semibold text-primary mb-2">Pennuille</h3>
+                <p className="text-sm text-card-foreground">
                   <strong>Vähintään 20% raakaruokaa</strong><br />
                   • Raaka naudanmaha<br />
                   • Sisäelimet<br />
@@ -232,9 +232,9 @@ export default function FoodTypes() {
                 </p>
               </div>
               
-              <div className="bg-white/20 p-4 rounded-xl border border-white/30">
-                <h3 className="font-semibold text-white mb-2">Aikuisille (70/30)</h3>
-                <p className="text-sm text-white/90">
+              <div className="bg-primary/10 p-4 rounded-xl border border-primary/20">
+                <h3 className="font-semibold text-primary mb-2">Aikuisille (70/30)</h3>
+                <p className="text-sm text-card-foreground">
                   <strong>70% täysravinto + 30% raakaruokaa</strong><br />
                   • Hyvä kompromissi<br />
                   • Käytännöllisyys säilyy<br />
@@ -242,9 +242,9 @@ export default function FoodTypes() {
                 </p>
               </div>
               
-              <div className="bg-white/20 p-4 rounded-xl border border-white/30">
-                <h3 className="font-semibold text-white mb-2">Työkoirille (50/50)</h3>
-                <p className="text-sm text-white/90">
+              <div className="bg-primary/10 p-4 rounded-xl border border-primary/20">
+                <h3 className="font-semibold text-primary mb-2">Työkoirille (50/50)</h3>
+                <p className="text-sm text-card-foreground">
                   <strong>50% raakaruokaa + 50% täysravinto</strong><br />
                   • Optimoitu suorituskyky<br />
                   • Parempi rasvanpoltto<br />

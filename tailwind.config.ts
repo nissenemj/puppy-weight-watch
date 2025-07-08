@@ -73,13 +73,24 @@ export default {
 				'gradient-blue': 'hsl(var(--gradient-blue))',
 				'gradient-cyan': 'hsl(var(--gradient-cyan))',
 				'gradient-purple': 'hsl(var(--gradient-purple))',
-				'gradient-rose': 'hsl(var(--gradient-rose))'
+				'gradient-rose': 'hsl(var(--gradient-rose))',
+				// Light accessible gradient colors
+				'gradient-light-orange': 'hsl(var(--gradient-light-orange))',
+				'gradient-light-pink': 'hsl(var(--gradient-light-pink))',
+				'gradient-light-blue': 'hsl(var(--gradient-light-blue))',
+				'gradient-light-cyan': 'hsl(var(--gradient-light-cyan))',
+				'gradient-light-purple': 'hsl(var(--gradient-light-purple))',
+				'gradient-light-rose': 'hsl(var(--gradient-light-rose))'
 			},
 			backgroundImage: {
 				'gradient-warm': 'linear-gradient(135deg, hsl(var(--gradient-orange)), hsl(var(--gradient-pink)))',
 				'gradient-cool': 'linear-gradient(135deg, hsl(var(--gradient-blue)), hsl(var(--gradient-cyan)))',
 				'gradient-purple': 'linear-gradient(135deg, hsl(var(--gradient-purple)), hsl(var(--gradient-rose)))',
 				'gradient-primary': 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)))',
+				// Light accessible gradients
+				'gradient-light-warm': 'linear-gradient(135deg, hsl(var(--gradient-light-orange)), hsl(var(--gradient-light-pink)))',
+				'gradient-light-cool': 'linear-gradient(135deg, hsl(var(--gradient-light-blue)), hsl(var(--gradient-light-cyan)))',
+				'gradient-light-purple': 'linear-gradient(135deg, hsl(var(--gradient-light-purple)), hsl(var(--gradient-light-rose)))',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

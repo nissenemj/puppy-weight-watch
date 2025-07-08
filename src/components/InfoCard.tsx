@@ -20,27 +20,22 @@ export default function InfoCard({
   icon
 }: InfoCardProps) {
   const variantClasses = {
-    default: 'bg-card/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl',
-    warm: 'bg-gradient-warm text-white border-0 shadow-xl rounded-2xl',
-    cool: 'bg-gradient-cool text-white border-0 shadow-xl rounded-2xl',
-    purple: 'bg-gradient-purple text-white border-0 shadow-xl rounded-2xl',
-    accent: 'bg-accent/10 backdrop-blur-sm border-accent/20 shadow-xl rounded-2xl'
+    default: 'bg-card/95 backdrop-blur-sm border-0 shadow-xl rounded-2xl',
+    warm: 'bg-gradient-light-warm text-card-foreground border-0 shadow-xl rounded-2xl',
+    cool: 'bg-gradient-light-cool text-card-foreground border-0 shadow-xl rounded-2xl',
+    purple: 'bg-gradient-light-purple text-card-foreground border-0 shadow-xl rounded-2xl',
+    accent: 'bg-accent/15 backdrop-blur-sm border-accent/30 shadow-xl rounded-2xl text-card-foreground'
   }
 
   return (
     <Card className={cn(variantClasses[variant], className, "animate-fade-in hover-scale")}>
       <CardHeader>
-        <CardTitle className={cn(
-          "text-xl flex items-center gap-2",
-          variant !== 'default' && variant !== 'accent' ? 'text-white' : ''
-        )}>
+        <CardTitle className="text-xl flex items-center gap-2 text-card-foreground">
           {icon}
           {title}
         </CardTitle>
         {description && (
-          <CardDescription className={cn(
-            variant !== 'default' && variant !== 'accent' ? 'text-white/90' : ''
-          )}>
+          <CardDescription className="text-muted-foreground">
             {description}
           </CardDescription>
         )}
