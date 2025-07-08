@@ -263,6 +263,161 @@ export type Database = {
           },
         ]
       }
+      food_allergens: {
+        Row: {
+          allergen_name: string
+          allergen_type: string
+          created_at: string | null
+          dog_food_id: string
+          id: string
+        }
+        Insert: {
+          allergen_name: string
+          allergen_type: string
+          created_at?: string | null
+          dog_food_id: string
+          id?: string
+        }
+        Update: {
+          allergen_name?: string
+          allergen_type?: string
+          created_at?: string | null
+          dog_food_id?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "food_allergens_dog_food_id_fkey"
+            columns: ["dog_food_id"]
+            isOneToOne: false
+            referencedRelation: "dog_foods"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      food_ingredients: {
+        Row: {
+          created_at: string | null
+          dog_food_id: string
+          id: string
+          ingredient_name: string
+          ingredient_type: string
+          order_index: number
+          percentage: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          dog_food_id: string
+          id?: string
+          ingredient_name: string
+          ingredient_type: string
+          order_index?: number
+          percentage?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          dog_food_id?: string
+          id?: string
+          ingredient_name?: string
+          ingredient_type?: string
+          order_index?: number
+          percentage?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "food_ingredients_dog_food_id_fkey"
+            columns: ["dog_food_id"]
+            isOneToOne: false
+            referencedRelation: "dog_foods"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      food_manufacturers: {
+        Row: {
+          country_of_origin: string | null
+          created_at: string | null
+          dog_food_id: string
+          feeding_guide_url: string | null
+          id: string
+          website_url: string | null
+        }
+        Insert: {
+          country_of_origin?: string | null
+          created_at?: string | null
+          dog_food_id: string
+          feeding_guide_url?: string | null
+          id?: string
+          website_url?: string | null
+        }
+        Update: {
+          country_of_origin?: string | null
+          created_at?: string | null
+          dog_food_id?: string
+          feeding_guide_url?: string | null
+          id?: string
+          website_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "food_manufacturers_dog_food_id_fkey"
+            columns: ["dog_food_id"]
+            isOneToOne: true
+            referencedRelation: "dog_foods"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      food_nutrition: {
+        Row: {
+          created_at: string | null
+          dog_food_id: string
+          fat_percentage: number | null
+          fiber_percentage: number | null
+          gluten_free: boolean | null
+          grain_free: boolean | null
+          id: string
+          moisture_percentage: number | null
+          protein_percentage: number | null
+          special_features: string[] | null
+          wheat_free: boolean | null
+        }
+        Insert: {
+          created_at?: string | null
+          dog_food_id: string
+          fat_percentage?: number | null
+          fiber_percentage?: number | null
+          gluten_free?: boolean | null
+          grain_free?: boolean | null
+          id?: string
+          moisture_percentage?: number | null
+          protein_percentage?: number | null
+          special_features?: string[] | null
+          wheat_free?: boolean | null
+        }
+        Update: {
+          created_at?: string | null
+          dog_food_id?: string
+          fat_percentage?: number | null
+          fiber_percentage?: number | null
+          gluten_free?: boolean | null
+          grain_free?: boolean | null
+          id?: string
+          moisture_percentage?: number | null
+          protein_percentage?: number | null
+          special_features?: string[] | null
+          wheat_free?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "food_nutrition_dog_food_id_fkey"
+            columns: ["dog_food_id"]
+            isOneToOne: true
+            referencedRelation: "dog_foods"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       food_recipes: {
         Row: {
           brand: string | null

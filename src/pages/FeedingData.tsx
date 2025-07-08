@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -12,6 +12,8 @@ import { Search, Filter, Database, AlertCircle, Plus, Edit, Save, X, Trash2 } fr
 import InfoNavigation from '@/components/InfoNavigation'
 import DosageImagesSection from '@/components/DosageImagesSection'
 import GeneralDosageSection from '@/components/GeneralDosageSection'
+import { FoodFilter, type FoodFilters } from '@/components/FoodFilter'
+import { FoodCard } from '@/components/FoodCard'
 import { DogFoodService, type DogFood } from '@/services/dogFoodService'
 import { supabase } from '@/integrations/supabase/client'
 import { toast } from 'sonner'
@@ -20,14 +22,22 @@ import heroImage from '@/assets/welcome-illustration.png'
 
 export default function FeedingData() {
   const [dogFoods, setDogFoods] = useState<DogFood[]>([])
-  const [filteredFoods, setFilteredFoods] = useState<DogFood[]>([])
-  const [searchTerm, setSearchTerm] = useState('')
-  const [selectedManufacturer, setSelectedManufacturer] = useState('all')
-  const [selectedFoodType, setSelectedFoodType] = useState('all')
   const [loading, setLoading] = useState(true)
   const [initializing, setInitializing] = useState(false)
   const [editingFood, setEditingFood] = useState<DogFood | null>(null)
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
+  const [showDetails, setShowDetails] = useState<string[]>([])
+  const [filters, setFilters] = useState<FoodFilters>({
+    searchTerm: '',
+    manufacturer: '',
+    foodType: '',
+    nutritionType: '',
+    dosageMethod: '',
+    grainFree: false,
+    wheatFree: false,
+    glutenFree: false,
+    proteinSource: ''
+  })
   const [newFood, setNewFood] = useState({
     name: '',
     manufacturer: '',
@@ -43,7 +53,6 @@ export default function FeedingData() {
       setLoading(true)
       const foods = await DogFoodService.getAllDogFoods()
       setDogFoods(foods)
-      setFilteredFoods(foods)
     } catch (error) {
       console.error('Error loading dog foods:', error)
       toast.error('Tietojen lataaminen epäonnistui')
@@ -70,29 +79,91 @@ export default function FeedingData() {
     loadDogFoods()
   }, [])
 
-  useEffect(() => {
+  // Get unique values for filter options
+  const manufacturers = useMemo(() => 
+    [...new Set(dogFoods.map(food => food.manufacturer))].sort(), 
+    [dogFoods]
+  )
+
+  const proteinSources = useMemo(() => {
+    const sources = new Set<string>()
+    dogFoods.forEach(food => {
+      food.ingredients?.forEach(ingredient => {
+        if (ingredient.ingredient_type === 'protein') {
+          sources.add(ingredient.ingredient_name)
+        }
+      })
+    })
+    return Array.from(sources).sort()
+  }, [dogFoods])
+
+  // Filter foods based on current filters
+  const filteredFoods = useMemo(() => {
     let filtered = dogFoods
 
-    if (searchTerm) {
+    // Text search
+    if (filters.searchTerm) {
+      const searchLower = filters.searchTerm.toLowerCase()
       filtered = filtered.filter(food => 
-        food.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        food.manufacturer.toLowerCase().includes(searchTerm.toLowerCase())
+        food.name.toLowerCase().includes(searchLower) ||
+        food.manufacturer.toLowerCase().includes(searchLower) ||
+        food.product_code.toLowerCase().includes(searchLower)
       )
     }
 
-    if (selectedManufacturer !== 'all') {
-      filtered = filtered.filter(food => food.manufacturer === selectedManufacturer)
+    // Manufacturer filter
+    if (filters.manufacturer) {
+      filtered = filtered.filter(food => food.manufacturer === filters.manufacturer)
     }
 
-    if (selectedFoodType !== 'all') {
-      filtered = filtered.filter(food => food.food_type === selectedFoodType)
+    // Food type filter
+    if (filters.foodType) {
+      filtered = filtered.filter(food => food.food_type === filters.foodType)
     }
 
-    setFilteredFoods(filtered)
-  }, [searchTerm, selectedManufacturer, selectedFoodType, dogFoods])
+    // Nutrition type filter
+    if (filters.nutritionType) {
+      filtered = filtered.filter(food => food.nutrition_type === filters.nutritionType)
+    }
 
-  const manufacturers = [...new Set(dogFoods.map(food => food.manufacturer))].sort()
-  const foodTypes = ['Kuiva', 'Märkä', 'Raaka']
+    // Dosage method filter
+    if (filters.dosageMethod) {
+      filtered = filtered.filter(food => food.dosage_method === filters.dosageMethod)
+    }
+
+    // Allergen filters
+    if (filters.grainFree) {
+      filtered = filtered.filter(food => food.nutrition?.grain_free === true)
+    }
+
+    if (filters.wheatFree) {
+      filtered = filtered.filter(food => food.nutrition?.wheat_free === true)
+    }
+
+    if (filters.glutenFree) {
+      filtered = filtered.filter(food => food.nutrition?.gluten_free === true)
+    }
+
+    // Protein source filter
+    if (filters.proteinSource) {
+      filtered = filtered.filter(food => 
+        food.ingredients?.some(ingredient => 
+          ingredient.ingredient_type === 'protein' && 
+          ingredient.ingredient_name === filters.proteinSource
+        )
+      )
+    }
+
+    return filtered
+  }, [dogFoods, filters])
+
+  const toggleDetails = (foodId: string) => {
+    setShowDetails(prev => 
+      prev.includes(foodId) 
+        ? prev.filter(id => id !== foodId)
+        : [...prev, foodId]
+    )
+  }
 
   const getDosageMethodDescription = (method: string): string => {
     switch (method) {
@@ -267,66 +338,17 @@ export default function FeedingData() {
           </Card>
         )}
 
-        {/* Hakutyökalut */}
-        <Card className="mb-8 bg-card/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-xl">
-              <Search className="h-5 w-5" />
-              Haku ja suodattimet
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-              <div className="w-full min-w-0">
-                <label className="block text-sm font-medium mb-2">Hae tuotetta</label>
-                <Input
-                  placeholder="Tuotteen nimi tai valmistaja..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full"
-                />
-              </div>
-              
-              <div className="w-full min-w-0">
-                <label className="block text-sm font-medium mb-2">Valmistaja</label>
-                <Select value={selectedManufacturer} onValueChange={setSelectedManufacturer}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Valitse valmistaja" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Kaikki valmistajat</SelectItem>
-                    {manufacturers.map(manufacturer => (
-                      <SelectItem key={manufacturer} value={manufacturer}>
-                        {manufacturer}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="w-full min-w-0">
-                <label className="block text-sm font-medium mb-2">Ruokatyyppi</label>
-                <Select value={selectedFoodType} onValueChange={setSelectedFoodType}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Valitse ruokatyyppi" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Kaikki tyypit</SelectItem>
-                    {foodTypes.map(type => (
-                      <SelectItem key={type} value={type}>
-                        {type}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            
-            <div className="mt-4 text-sm text-gray-600">
-              Näytetään {filteredFoods.length} / {dogFoods.length} tuotetta
-            </div>
-          </CardContent>
-        </Card>
+        {/* Enhanced Food Filter */}
+        <FoodFilter
+          filters={filters}
+          onFiltersChange={setFilters}
+          manufacturers={manufacturers}
+          proteinSources={proteinSources}
+        />
+
+        <div className="mb-6 text-sm text-muted-foreground text-center">
+          Näytetään {filteredFoods.length} / {dogFoods.length} tuotetta
+        </div>
 
         {/* Annostelukuvat */}
         <DosageImagesSection />
@@ -445,6 +467,41 @@ export default function FeedingData() {
         </Card>
 
         <div className="grid gap-6">
+          {filteredFoods.map((food) => (
+            <div key={food.id}>
+              <FoodCard
+                food={food}
+                showDetails={showDetails.includes(food.id)}
+              />
+              
+              <div className="flex justify-center mt-4 mb-6">
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={() => toggleDetails(food.id)}
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  {showDetails.includes(food.id) ? 'Piilota yksityiskohdat' : 'Näytä ainesosatiedot'}
+                </Button>
+              </div>
+            </div>
+          ))}
+
+          {filteredFoods.length === 0 && (
+            <Card className="text-center py-12">
+              <CardContent>
+                <div className="text-muted-foreground">
+                  <Database className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p className="text-lg mb-2">Ei tuloksia</p>
+                  <p>Muuta hakuehtoja nähdäksesi tuotteita.</p>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+
+        {/* Legacy food items (keeping existing structure for unenhanced foods) */}
+        <div style={{ display: 'none' }}>
           {filteredFoods.map((food) => (
             <Card key={food.id} className="bg-card/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
               <CardHeader>

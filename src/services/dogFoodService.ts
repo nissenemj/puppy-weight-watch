@@ -1,5 +1,46 @@
 import { supabase } from "@/integrations/supabase/client"
 
+export interface FoodIngredient {
+  id: string
+  dog_food_id: string
+  ingredient_type: 'primary' | 'protein' | 'carb' | 'fat' | 'additive'
+  ingredient_name: string
+  percentage?: number
+  order_index: number
+  created_at: string
+}
+
+export interface FoodAllergen {
+  id: string
+  dog_food_id: string
+  allergen_type: 'contains' | 'free_from'
+  allergen_name: string
+  created_at: string
+}
+
+export interface FoodNutrition {
+  id: string
+  dog_food_id: string
+  protein_percentage?: number
+  fat_percentage?: number
+  fiber_percentage?: number
+  moisture_percentage?: number
+  grain_free: boolean
+  wheat_free: boolean
+  gluten_free: boolean
+  special_features?: string[]
+  created_at: string
+}
+
+export interface FoodManufacturer {
+  id: string
+  dog_food_id: string
+  country_of_origin?: string
+  website_url?: string
+  feeding_guide_url?: string
+  created_at: string
+}
+
 export interface DogFood {
   id: string
   product_code: string
@@ -11,6 +52,10 @@ export interface DogFood {
   notes?: string
   created_at: string
   feeding_guidelines?: FeedingGuideline[]
+  ingredients?: FoodIngredient[]
+  allergens?: FoodAllergen[]
+  nutrition?: FoodNutrition
+  manufacturer_info?: FoodManufacturer
 }
 
 export interface FeedingGuideline {
@@ -32,7 +77,11 @@ export class DogFoodService {
       .from('dog_foods')
       .select(`
         *,
-        feeding_guidelines (*)
+        feeding_guidelines (*),
+        food_ingredients (*),
+        food_allergens (*),
+        food_nutrition (*),
+        food_manufacturers (*)
       `)
       .order('manufacturer', { ascending: true })
       .order('name', { ascending: true })
@@ -47,7 +96,17 @@ export class DogFoodService {
       ...item,
       food_type: item.food_type as DogFood['food_type'],
       nutrition_type: item.nutrition_type as DogFood['nutrition_type'],
-      dosage_method: item.dosage_method as DogFood['dosage_method']
+      dosage_method: item.dosage_method as DogFood['dosage_method'],
+      ingredients: (item.food_ingredients || []).map((ing: any) => ({
+        ...ing,
+        ingredient_type: ing.ingredient_type as FoodIngredient['ingredient_type']
+      })),
+      allergens: (item.food_allergens || []).map((all: any) => ({
+        ...all,
+        allergen_type: all.allergen_type as FoodAllergen['allergen_type']
+      })),
+      nutrition: item.food_nutrition ? item.food_nutrition[0] : undefined,
+      manufacturer_info: item.food_manufacturers ? item.food_manufacturers[0] : undefined
     }))
   }
 
@@ -112,8 +171,8 @@ export class DogFoodService {
 
     console.log('Initializing dog food database...')
 
-    // Insert Brit Care Hypoallergenic Puppy
-    await this.insertDogFoodWithGuidelines({
+    // Insert Brit Care Hypoallergenic Puppy with enhanced data
+    const britCareFood = await this.insertDogFoodWithGuidelines({
       product_code: 'BC_PUPPY_DRY_LAMB',
       name: 'Brit Care Dog Hypoallergenic Puppy Lamb & Rice',
       manufacturer: 'Brit',
@@ -141,8 +200,46 @@ export class DogFoodService {
       { adult_weight_kg: 25, age_months: '1-3', daily_amount_min: 150, daily_amount_max: 150 }
     ])
 
-    // Insert Hau-Hau Champion
-    await this.insertDogFoodWithGuidelines({
+    // Add enhanced data for Brit Care
+    await this.addEnhancedFoodData(britCareFood.id, {
+      ingredients: [
+        { ingredient_type: 'primary', ingredient_name: 'Kuivattu lammas', percentage: 46, order_index: 0 },
+        { ingredient_type: 'primary', ingredient_name: 'Riisi', percentage: 30, order_index: 1 },
+        { ingredient_type: 'primary', ingredient_name: 'Kananrasva', order_index: 2 },
+        { ingredient_type: 'primary', ingredient_name: 'Lohiöljy', percentage: 3, order_index: 3 },
+        { ingredient_type: 'protein', ingredient_name: 'Lammas', order_index: 0 },
+        { ingredient_type: 'protein', ingredient_name: 'Hydrolysoitu hiiva', order_index: 1 },
+        { ingredient_type: 'carb', ingredient_name: 'Riisi', order_index: 0 },
+        { ingredient_type: 'carb', ingredient_name: 'Hernejauho', order_index: 1 },
+        { ingredient_type: 'fat', ingredient_name: 'Kananrasva', order_index: 0 },
+        { ingredient_type: 'fat', ingredient_name: 'Lohiöljy', order_index: 1 },
+        { ingredient_type: 'additive', ingredient_name: 'Glukosamiini', order_index: 0 },
+        { ingredient_type: 'additive', ingredient_name: 'Kondroitiinisulfaatti', order_index: 1 }
+      ],
+      allergens: [
+        { allergen_type: 'free_from', allergen_name: 'Vehnä' },
+        { allergen_type: 'free_from', allergen_name: 'Soija' },
+        { allergen_type: 'free_from', allergen_name: 'Maissi' }
+      ],
+      nutrition: {
+        protein_percentage: 28,
+        fat_percentage: 15,
+        fiber_percentage: 2.5,
+        moisture_percentage: 10,
+        grain_free: false,
+        wheat_free: true,
+        gluten_free: true,
+        special_features: ['Hypoallergeeninen', 'Nivelten tuki', 'Probiootteja', 'Omega-3']
+      },
+      manufacturer_info: {
+        country_of_origin: 'Tšekki',
+        website_url: 'https://brit-petfood.com',
+        feeding_guide_url: 'https://brit-petfood.com/en/products/dogs/5001-brit-care-puppy-lamb-and-rice'
+      }
+    })
+
+    // Insert Hau-Hau Champion with enhanced data
+    const hauHauFood = await this.insertDogFoodWithGuidelines({
       product_code: 'HHC_PUPPY_DRY',
       name: 'Hau-Hau Champion Pentu & Emo',
       manufacturer: 'Hau-Hau Champion',
@@ -165,6 +262,40 @@ export class DogFoodService {
       { adult_weight_kg: 20, age_months: '3-4', daily_amount_min: 200, daily_amount_max: 200 },
       { adult_weight_kg: 20, age_months: '5-6', daily_amount_min: 230, daily_amount_max: 230 }
     ])
+
+    // Add enhanced data for Hau-Hau Champion
+    await this.addEnhancedFoodData(hauHauFood.id, {
+      ingredients: [
+        { ingredient_type: 'primary', ingredient_name: 'Siipikarjajauho', percentage: 45, order_index: 0 },
+        { ingredient_type: 'primary', ingredient_name: 'Riisi', percentage: 16, order_index: 1 },
+        { ingredient_type: 'primary', ingredient_name: 'Kaura', percentage: 13, order_index: 2 },
+        { ingredient_type: 'protein', ingredient_name: 'Kana', order_index: 0 },
+        { ingredient_type: 'protein', ingredient_name: 'Hydrolysoitu kananmaksa', order_index: 1 },
+        { ingredient_type: 'carb', ingredient_name: 'Riisi', order_index: 0 },
+        { ingredient_type: 'carb', ingredient_name: 'Kaura', order_index: 1 },
+        { ingredient_type: 'fat', ingredient_name: 'Kananrasva', order_index: 0 },
+        { ingredient_type: 'fat', ingredient_name: 'Camelinaöljy', order_index: 1 }
+      ],
+      allergens: [
+        { allergen_type: 'free_from', allergen_name: 'Vehnä' },
+        { allergen_type: 'free_from', allergen_name: 'Soija' }
+      ],
+      nutrition: {
+        protein_percentage: 32,
+        fat_percentage: 19,
+        fiber_percentage: 2.4,
+        moisture_percentage: 10,
+        grain_free: false,
+        wheat_free: true,
+        gluten_free: true,
+        special_features: ['100% kotimaista kanaa', 'Prebiootteja', 'Omega-rasvahappoja']
+      },
+      manufacturer_info: {
+        country_of_origin: 'Suomi',
+        website_url: 'https://hauhau.fi',
+        feeding_guide_url: 'https://www.s-kaupat.fi/tuote/hau-hau-champion-nokian-nappulatehtaan-kanaa-riisia-and-kauraa-taysravinto-pennuille-ja-emoille-12-kg/6430076899088'
+      }
+    })
 
     // Insert MUSH Vaisto Puppy
     await this.insertDogFoodWithGuidelines({
@@ -288,5 +419,72 @@ export class DogFoodService {
     }
 
     console.log('Dog food database initialized successfully!')
+  }
+
+  static async addEnhancedFoodData(foodId: string, data: {
+    ingredients?: Array<Omit<FoodIngredient, 'id' | 'dog_food_id' | 'created_at'>>,
+    allergens?: Array<Omit<FoodAllergen, 'id' | 'dog_food_id' | 'created_at'>>,
+    nutrition?: Omit<FoodNutrition, 'id' | 'dog_food_id' | 'created_at'>,
+    manufacturer_info?: Omit<FoodManufacturer, 'id' | 'dog_food_id' | 'created_at'>
+  }): Promise<void> {
+    // Insert ingredients
+    if (data.ingredients && data.ingredients.length > 0) {
+      const ingredientsWithFoodId = data.ingredients.map(ingredient => ({
+        ...ingredient,
+        dog_food_id: foodId
+      }))
+      
+      const { error: ingredientsError } = await supabase
+        .from('food_ingredients')
+        .insert(ingredientsWithFoodId)
+      
+      if (ingredientsError) {
+        console.error('Error inserting ingredients:', ingredientsError)
+      }
+    }
+
+    // Insert allergens
+    if (data.allergens && data.allergens.length > 0) {
+      const allergensWithFoodId = data.allergens.map(allergen => ({
+        ...allergen,
+        dog_food_id: foodId
+      }))
+      
+      const { error: allergensError } = await supabase
+        .from('food_allergens')
+        .insert(allergensWithFoodId)
+      
+      if (allergensError) {
+        console.error('Error inserting allergens:', allergensError)
+      }
+    }
+
+    // Insert nutrition
+    if (data.nutrition) {
+      const { error: nutritionError } = await supabase
+        .from('food_nutrition')
+        .insert({
+          ...data.nutrition,
+          dog_food_id: foodId
+        })
+      
+      if (nutritionError) {
+        console.error('Error inserting nutrition:', nutritionError)
+      }
+    }
+
+    // Insert manufacturer info
+    if (data.manufacturer_info) {
+      const { error: manufacturerError } = await supabase
+        .from('food_manufacturers')
+        .insert({
+          ...data.manufacturer_info,
+          dog_food_id: foodId
+        })
+      
+      if (manufacturerError) {
+        console.error('Error inserting manufacturer info:', manufacturerError)
+      }
+    }
   }
 }
