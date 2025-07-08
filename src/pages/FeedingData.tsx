@@ -219,15 +219,15 @@ export default function FeedingData() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 pt-14 w-full overflow-x-hidden">
+    <div className="min-h-screen bg-gradient-warm pt-14 w-full overflow-x-hidden">
       <InfoNavigation />
       
       <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-full min-w-0">
         <div className="mb-8">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
             📊 Annostelutiedot
           </h1>
-          <p className="text-xl text-gray-600 max-w-4xl">
+          <p className="text-xl text-muted-foreground max-w-4xl">
             Yksityiskohtaiset annosteluohjeet Suomessa myytävistä penturuoista. 
             Tiedot kerätty valmistajien ohjeista ja strukturoitu ohjelmistokäyttöön.
           </p>
@@ -258,9 +258,9 @@ export default function FeedingData() {
         )}
 
         {/* Hakutyökalut */}
-        <Card className="mb-8 bg-white/80 backdrop-blur-sm">
+        <Card className="mb-8 bg-card/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-xl">
               <Search className="h-5 w-5" />
               Haku ja suodattimet
             </CardTitle>
@@ -325,9 +325,9 @@ export default function FeedingData() {
         <GeneralDosageSection />
 
         {/* Tuotteet */}
-        <Card className="mb-8 bg-white/80 backdrop-blur-sm">
+        <Card className="mb-8 bg-card/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
           <CardHeader>
-            <CardTitle className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <CardTitle className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xl">
               <span>Koiranruokatiedot</span>
               <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
                 <DialogTrigger asChild>
@@ -436,7 +436,7 @@ export default function FeedingData() {
 
         <div className="grid gap-6">
           {filteredFoods.map((food) => (
-            <Card key={food.id} className="bg-white/80 backdrop-blur-sm">
+            <Card key={food.id} className="bg-card/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
               <CardHeader>
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
                   <div className="flex-1">

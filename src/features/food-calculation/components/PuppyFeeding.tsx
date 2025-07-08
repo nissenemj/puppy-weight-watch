@@ -10,17 +10,17 @@ export default function PuppyFeeding() {
       </CardHeader>
       <CardContent>
         <div className="grid gap-4">
-          <div className="p-4 bg-blue-50 rounded-xl">
-            <h4 className="font-semibold text-blue-800 mb-2">Ikä 6-12 viikkoa</h4>
-            <p className="text-sm text-blue-700">4 ateriaa päivässä, pehmeää ruokaa</p>
+          <div className="p-4 bg-gradient-cool rounded-xl">
+            <h4 className="font-semibold text-card-foreground mb-2">Ikä 6-12 viikkoa</h4>
+            <p className="text-sm text-muted-foreground">4 ateriaa päivässä, pehmeää ruokaa</p>
           </div>
-          <div className="p-4 bg-green-50 rounded-xl">
-            <h4 className="font-semibold text-green-800 mb-2">Ikä 3-6 kuukautta</h4>
-            <p className="text-sm text-green-700">3 ateriaa päivässä, siirtymä kuivaruokaan</p>
+          <div className="p-4 bg-gradient-warm rounded-xl">
+            <h4 className="font-semibold text-card-foreground mb-2">Ikä 3-6 kuukautta</h4>
+            <p className="text-sm text-muted-foreground">3 ateriaa päivässä, siirtymä kuivaruokaan</p>
           </div>
-          <div className="p-4 bg-purple-50 rounded-xl">
-            <h4 className="font-semibold text-purple-800 mb-2">Ikä 6+ kuukautta</h4>
-            <p className="text-sm text-purple-700">2 ateriaa päivässä, aikuisen ruokinta</p>
+          <div className="p-4 bg-gradient-purple rounded-xl">
+            <h4 className="font-semibold text-card-foreground mb-2">Ikä 6+ kuukautta</h4>
+            <p className="text-sm text-muted-foreground">2 ateriaa päivässä, aikuisen ruokinta</p>
           </div>
         </div>
       </CardContent>

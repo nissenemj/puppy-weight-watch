@@ -8,34 +8,34 @@ import Navigation from '@/components/Navigation'
 
 export default function InfoHome() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 pt-14">
+    <div className="min-h-screen bg-gradient-warm pt-14">
       <Navigation />
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4">
             🐕 Penturuoka-opas
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             Laaja katsaus Suomessa myytäviin koiranpentujen ruokiin ja niiden annosteluun ohjelmistokehityksen näkökulmasta
           </p>
         </div>
 
         {/* Introduction Card */}
-        <Card className="mb-8 bg-white/80 backdrop-blur-sm">
+        <Card className="mb-8 bg-card/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-xl">
               <BookOpen className="h-6 w-6" />
               Johdanto
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-gray-700 leading-relaxed">
+            <p className="text-card-foreground leading-relaxed">
               Koiranpennun elämän ensimmäiset kuukaudet muodostavat ravitsemuksellisesti kriittisen ajanjakson, 
               joka luo perustan sen koko aikuisiän terveydelle ja hyvinvoinnille. Tämän nopean kasvun vaiheen aikana 
               pennun energia- ja ravintoainetarpeet ovat poikkeuksellisen korkeat suhteessa sen kehonpainoon.
             </p>
-            <p className="text-gray-700 leading-relaxed mt-4">
+            <p className="text-card-foreground leading-relaxed mt-4">
               Tämän raportin tavoitteena on tarjota syvällinen ja dataan perustuva katsaus Suomen koiranpentujen 
               ruokamarkkinoihin erityisesti ohjelmistokehityksen näkökulmasta.
             </p>
@@ -45,7 +45,7 @@ export default function InfoHome() {
         {/* Navigation Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           <Link to="/info/food-types">
-            <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer bg-white/80 backdrop-blur-sm">
+            <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer bg-card/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg">
                   <BookOpen className="h-5 w-5" />
@@ -59,7 +59,7 @@ export default function InfoHome() {
           </Link>
 
           <Link to="/info/feeding-data">
-            <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer bg-white/80 backdrop-blur-sm">
+            <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer bg-card/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg">
                   <Database className="h-5 w-5" />
@@ -73,7 +73,7 @@ export default function InfoHome() {
           </Link>
 
           <Link to="/info/safety">
-            <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer bg-white/80 backdrop-blur-sm">
+            <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer bg-card/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg">
                   <AlertTriangle className="h-5 w-5" />
@@ -87,7 +87,7 @@ export default function InfoHome() {
           </Link>
 
           <Link to="/info/puppy-guide" className="md:col-span-2 lg:col-span-1">
-            <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer bg-accent/10 backdrop-blur-sm border-accent/20">
+            <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer bg-accent/10 backdrop-blur-sm border-0 shadow-xl rounded-2xl border-accent/20">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg text-accent">
                   <BookOpen className="h-5 w-5" />
@@ -102,29 +102,29 @@ export default function InfoHome() {
         </div>
 
         {/* Key Insights */}
-        <Card className="bg-white/80 backdrop-blur-sm">
+        <Card className="bg-card/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
           <CardHeader>
-            <CardTitle>Keskeiset havainnot</CardTitle>
+            <CardTitle className="text-xl">Keskeiset havainnot</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="text-center p-4 bg-blue-50 rounded-lg">
-                <h3 className="font-semibold text-blue-900 mb-2">Markkinoiden keskittyneisyys</h3>
-                <p className="text-sm text-blue-700">
+              <div className="text-center p-4 bg-gradient-cool rounded-xl">
+                <h3 className="font-semibold text-card-foreground mb-2">Markkinoiden keskittyneisyys</h3>
+                <p className="text-sm text-muted-foreground">
                   Musti Group hallitsee vahvasti Suomen lemmikkiruokamarkkinoita
                 </p>
               </div>
               
-              <div className="text-center p-4 bg-green-50 rounded-lg">
-                <h3 className="font-semibold text-green-900 mb-2">Annosteluohjeiden epästandardius</h3>
-                <p className="text-sm text-green-700">
+              <div className="text-center p-4 bg-gradient-warm rounded-xl">
+                <h3 className="font-semibold text-card-foreground mb-2">Annosteluohjeiden epästandardius</h3>
+                <p className="text-sm text-muted-foreground">
                   Valmistajien annosteluohjeet vaihtelevat merkittävästi
                 </p>
               </div>
               
-              <div className="text-center p-4 bg-orange-50 rounded-lg">
-                <h3 className="font-semibold text-orange-900 mb-2">Täys- ja täydennysravinto</h3>
-                <p className="text-sm text-orange-700">
+              <div className="text-center p-4 bg-gradient-purple rounded-xl">
+                <h3 className="font-semibold text-card-foreground mb-2">Täys- ja täydennysravinto</h3>
+                <p className="text-sm text-muted-foreground">
                   Kriittinen ero ravitsemuksellisesti täydellisten ruokien välillä
                 </p>
               </div>
@@ -134,15 +134,15 @@ export default function InfoHome() {
 
         {/* CTA Section */}
         <div className="text-center mt-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+          <h2 className="text-2xl font-bold text-foreground mb-4">
             Aloita tutkiminen
           </h2>
-          <p className="text-gray-600 mb-6">
+          <p className="text-muted-foreground mb-6">
             Tutki yksityiskohtaisia tietoja Suomen penturuokamarkkinoista
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link to="/info/food-types">
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
+              <Button size="lg">
                 Tutustu ruokatyyppeihin
               </Button>
             </Link>
