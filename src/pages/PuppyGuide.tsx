@@ -28,10 +28,10 @@ const PuppyGuide = () => {
           />
         </div>
         <h1 className="text-4xl md:text-6xl font-heading font-bold text-foreground">
-          🐕 Kattava Opas Pennun Ruokintaan
+          🐕 Kattava opas pennun ruokintaan
         </h1>
         <h2 className="text-2xl md:text-3xl font-semibold text-primary mb-4">
-          Selviydy, Menesty ja Kasvata Terve Aikuinen
+          Selviydy, menesty ja kasvata terve aikuinen
         </h2>
         <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
           Onneksi olkoon uudesta perheenjäsenestä! Ensimmäiset kuukaudet ovat ratkaisevan tärkeitä, 
@@ -50,17 +50,17 @@ const PuppyGuide = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <a href="#superpennun-rakennuspalikat" className="p-3 rounded-lg border hover:bg-accent/10 transition-colors">
               <PawPrint className="h-5 w-5 text-primary mb-2" />
-              <h3 className="font-semibold">Superpennun Rakennuspalikat</h3>
+              <h3 className="font-semibold">Superpennun rakennuspalikat</h3>
               <p className="text-sm text-muted-foreground">Proteiinit, rasvat ja ravinteiden tasapaino</p>
             </a>
             <a href="#ruokinta-koulutus" className="p-3 rounded-lg border hover:bg-accent/10 transition-colors">
               <Utensils className="h-5 w-5 text-primary mb-2" />
-              <h3 className="font-semibold">Ruokinta on Koulutusta</h3>
+              <h3 className="font-semibold">Ruokinta on koulutusta</h3>
               <p className="text-sm text-muted-foreground">Rutiinit, maltti ja virikkeistäminen</p>
             </a>
             <a href="#liikunta-leikki" className="p-3 rounded-lg border hover:bg-accent/10 transition-colors">
               <Weight className="h-5 w-5 text-primary mb-2" />
-              <h3 className="font-semibold">Liikunta ja Leikki</h3>
+              <h3 className="font-semibold">Liikunta ja leikki</h3>
               <p className="text-sm text-muted-foreground">Oikeanlaista liikuntaa pennulle</p>
             </a>
             <a href="#ongelmatilanteita" className="p-3 rounded-lg border hover:bg-accent/10 transition-colors">
@@ -70,19 +70,19 @@ const PuppyGuide = () => {
             </a>
             <a href="#erityistarpeet" className="p-3 rounded-lg border hover:bg-accent/10 transition-colors">
               <PawPrint className="h-5 w-5 text-primary mb-2" />
-              <h3 className="font-semibold">Erityistarpeet Roduittain</h3>
+              <h3 className="font-semibold">Erityistarpeet roduittain</h3>
               <p className="text-sm text-muted-foreground">Pienet vs. suuret rodut</p>
             </a>
             <a href="#turvallisuus" className="p-3 rounded-lg border hover:bg-accent/10 transition-colors">
               <AlertTriangle className="h-5 w-5 text-accent mb-2" />
-              <h3 className="font-semibold">Ruoan Turvallisuus</h3>
+              <h3 className="font-semibold">Ruoan turvallisuus</h3>
               <p className="text-sm text-muted-foreground">Kuluttajavastuu ja varovaisuus</p>
             </a>
           </div>
       </InfoCard>
 
       <InfoCard
-        title="Pennun Terveen Kasvun Perusta"
+        title="Pennun terveen kasvun perusta"
         className="mb-8"
       >
         <div className="prose max-w-none">
@@ -106,7 +106,7 @@ const PuppyGuide = () => {
       <section id="superpennun-rakennuspalikat">
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl">Osa 1: Superpennun Rakennuspalikat</CardTitle>
+            <CardTitle className="text-2xl">Osa 1: Superpennun rakennuspalikat</CardTitle>
             <p className="text-muted-foreground">Tarkempi katsaus pennun ravitsemuksen perustekijöihin</p>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -123,7 +123,7 @@ const PuppyGuide = () => {
             <div>
               <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
                 <Badge variant="secondary">1.1</Badge>
-                Proteiini: Elämän Perusta
+                Proteiini: elämän perusta
               </h3>
               
               <div className="space-y-3">
@@ -151,7 +151,7 @@ const PuppyGuide = () => {
             <div>
               <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
                 <Badge variant="secondary">1.2</Badge>
-                Rasvat: Energiaa ja Älynystyröitä
+                Rasvat: energiaa ja älynystyröitä
               </h3>
               
               <div className="space-y-3">
@@ -164,7 +164,7 @@ const PuppyGuide = () => {
                 </div>
                 
                 <div className="bg-primary/5 p-3 rounded">
-                  <h4 className="font-semibold text-primary text-sm mb-1">Aivojen Superruoka</h4>
+                  <h4 className="font-semibold text-primary text-sm mb-1">Aivojen superruoka</h4>
                   <p className="text-sm">
                     Omega-3-rasvahappoihin kuuluva DHA on todistetusti elintärkeä aivojen ja näön kehitykselle. 
                     Laadukkaissa penturuoissa on usein lisättynä esimerkiksi kalaöljyä DHA:n lähteeksi.
@@ -179,7 +179,7 @@ const PuppyGuide = () => {
             <div>
               <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
                 <Badge variant="secondary">1.3</Badge>
-                Hiilihydraatit & Kuidut: Virtaa ja Vatsan Hyvinvointia
+                Hiilihydraatit & kuidut: virtaa ja vatsan hyvinvointia
               </h3>
               
               <div className="space-y-3">
@@ -203,7 +203,7 @@ const PuppyGuide = () => {
             <div>
               <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
                 <Badge variant="secondary">1.4</Badge>
-                Vitamiinit & Kivennäisaineet: Tarkkaa Tasapainoa
+                Vitamiinit & kivennäisaineet: tarkkaa tasapainoa
               </h3>
               
               <div className="space-y-3">
@@ -234,7 +234,7 @@ const PuppyGuide = () => {
       <section id="ruokinta-koulutus">
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl">Osa 2: Ruokinta on Koulutusta ja Aivojumppaa</CardTitle>
+            <CardTitle className="text-2xl">Osa 2: Ruokinta on koulutusta ja aivojumppaa</CardTitle>
             <p className="text-muted-foreground">Ruokahetki on paljon muutakin kuin vain vatsan täyttämistä</p>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -243,7 +243,7 @@ const PuppyGuide = () => {
             <div>
               <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
                 <Badge variant="secondary">2.1</Badge>
-                Rutiinit Luovat Turvaa
+                Rutiinit luovat turvaa
               </h3>
               
               <div className="space-y-3">
@@ -260,7 +260,7 @@ const PuppyGuide = () => {
             <div>
               <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
                 <Badge variant="secondary">2.2</Badge>
-                Maltti on Valttia
+                Maltti on valttia
               </h3>
               
               <div className="space-y-3">
@@ -284,7 +284,7 @@ const PuppyGuide = () => {
             <div>
               <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
                 <Badge variant="secondary">2.3</Badge>
-                Ei Kerjäämiselle
+                Ei kerjäämiselle
               </h3>
               
               <div className="space-y-3">
@@ -308,7 +308,7 @@ const PuppyGuide = () => {
             <div>
               <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
                 <Badge variant="secondary">2.4</Badge>
-                Virikkeistäminen Ruoalla
+                Virikkeistäminen ruoalla
               </h3>
               
               <div className="space-y-3">
@@ -340,7 +340,7 @@ const PuppyGuide = () => {
       <section id="liikunta-leikki">
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl">Osa 3: Liikunta ja Leikki - Pennun Fysiikka ja Fysiologia</CardTitle>
+            <CardTitle className="text-2xl">Osa 3: Liikunta ja leikki - pennun fysiikka ja fysiologia</CardTitle>
             <p className="text-muted-foreground">Liikunta on elintärkeää pennun fyysiselle ja henkiselle kehitykselle</p>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -349,7 +349,7 @@ const PuppyGuide = () => {
             <div>
               <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
                 <Badge variant="secondary">3.1</Badge>
-                Vapauden Ilo
+                Vapauden ilo
               </h3>
               
               <div className="space-y-3">
@@ -366,7 +366,7 @@ const PuppyGuide = () => {
             <div>
               <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
                 <Badge variant="secondary">3.2</Badge>
-                Vältä Pakkotahtisuutta
+                Vältä pakkotahtisuutta
               </h3>
               
               <div className="space-y-3">
@@ -391,7 +391,7 @@ const PuppyGuide = () => {
             <div>
               <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
                 <Badge variant="secondary">3.3</Badge>
-                Alusta on Tärkeä
+                Alusta on tärkeä
               </h3>
               
               <div className="grid md:grid-cols-2 gap-4">
@@ -420,7 +420,7 @@ const PuppyGuide = () => {
             <div>
               <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
                 <Badge variant="secondary">3.4</Badge>
-                Varo Liukastumisia
+                Varo liukastumisia
               </h3>
               
               <div className="space-y-3">
@@ -456,7 +456,7 @@ const PuppyGuide = () => {
             <div>
               <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
                 <Badge variant="secondary">1.1</Badge>
-                Kuivaruoka (Täysravintonappulat)
+                Kuivaruoka (täysravintonappulat)
               </h3>
               
               <div className="grid md:grid-cols-2 gap-4 mb-4">
@@ -490,7 +490,7 @@ const PuppyGuide = () => {
             <div>
               <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
                 <Badge variant="secondary">1.2</Badge>
-                Märkäruoka (Säilykkeet ja Annospussit)
+                Märkäruoka (säilykkeet ja annospussit)
               </h3>
               
               <div className="grid md:grid-cols-2 gap-4 mb-4">
@@ -557,7 +557,7 @@ const PuppyGuide = () => {
             <div>
               <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
                 <Badge variant="secondary">1.4</Badge>
-                Sekaruokinta: Eri Ruokintatapojen Yhdistäminen
+                Sekaruokinta: eri ruokintatapojen yhdistäminen
               </h3>
               
               <p className="text-sm mb-4">
@@ -567,7 +567,7 @@ const PuppyGuide = () => {
 
               <Card className="bg-muted/30">
                 <CardHeader>
-                  <CardTitle className="text-lg">Sekaruokinnan Laskeminen</CardTitle>
+                  <CardTitle className="text-lg">Sekaruokinnan laskeminen</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <ol className="text-sm space-y-2">
@@ -592,7 +592,7 @@ const PuppyGuide = () => {
       <section id="ravitsemustiede">
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl">Osa 3: Pennun Ruokinnan Tiede</CardTitle>
+            <CardTitle className="text-2xl">Osa 3: Pennun ruokinnan tiede</CardTitle>
             <p className="text-muted-foreground">Ymmärrä mitä ja miksi syötät</p>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -601,12 +601,12 @@ const PuppyGuide = () => {
             <div>
               <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
                 <Badge variant="secondary">3.1</Badge>
-                Pennun Kriittiset Ravitsemustarpeet
+                Pennun kriittiset ravitsemustarpeet
               </h3>
               
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-3">
-                  <h4 className="font-semibold text-primary">Energia ja Proteiini</h4>
+                  <h4 className="font-semibold text-primary">Energia ja proteiini</h4>
                   <ul className="text-sm space-y-1">
                     <li>• Pennut tarvitsevat 2x enemmän kaloreita/kg kuin aikuiset</li>
                     <li>• Proteiini: vähintään 22-32% kuiva-aineesta</li>
@@ -615,7 +615,7 @@ const PuppyGuide = () => {
                 </div>
                 
                 <div className="bg-accent/10 p-4 rounded-lg border border-accent/20">
-                  <h4 className="font-semibold text-accent mb-2">Kalsium-Fosforisuhde (Ca:P)</h4>
+                  <h4 className="font-semibold text-accent mb-2">Kalsium-fosforisuhde (Ca:P)</h4>
                   <p className="text-sm">
                     <strong>Luuston kehityksen kulmakivi!</strong> Virheellinen suhde voi johtaa pysyviin 
                     kehityshäiriöihin. Oikea suhde: 1:1 - 2:1.
@@ -662,7 +662,7 @@ const PuppyGuide = () => {
             <div>
               <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
                 <Badge variant="secondary">3.3</Badge>
-                Herkkujen 10% Sääntö
+                Herkkujen 10% sääntö
               </h3>
               
               <div className="bg-primary/10 p-4 rounded-lg border-l-4 border-primary">
@@ -680,7 +680,7 @@ const PuppyGuide = () => {
       <section id="ongelmatilanteita">
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl">Osa 4: Ongelmia Ruokakupilla? Vianmääritys ja Ratkaisut</CardTitle>
+            <CardTitle className="text-2xl">Osa 4: Ongelmia ruokakupilla? Vianmääritys ja ratkaisut</CardTitle>
             <p className="text-muted-foreground">Joskus ruokinta ei suju kuin tanssi. Tässä yleisimmät haasteet ja ratkaisut niihin.</p>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -689,7 +689,7 @@ const PuppyGuide = () => {
             <div>
               <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
                 <Badge variant="secondary">4.1</Badge>
-                Apua, Pentu Ei Syö!
+                Apua, pentu ei syö!
               </h3>
               
               <div className="space-y-4">
@@ -747,7 +747,7 @@ const PuppyGuide = () => {
             <div>
               <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
                 <Badge variant="secondary">4.2</Badge>
-                Vatsa Kuralle – Yleisimmät Ruokintavirheet
+                Vatsa kuralle – yleisimmät ruokintavirheet
               </h3>
               
               <div className="space-y-4">
@@ -795,7 +795,7 @@ const PuppyGuide = () => {
       <section id="erityistarpeet">
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl">Osa 5: Erityistarpeet ja -ruokavaliot: Yksi Koko Ei Sovi Kaikille</CardTitle>
+            <CardTitle className="text-2xl">Osa 5: Erityistarpeet ja -ruokavaliot: yksi koko ei sovi kaikille</CardTitle>
             <p className="text-muted-foreground">Rotukohtaiset vaatimukset ja erityisruokavaliot</p>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -804,7 +804,7 @@ const PuppyGuide = () => {
             <div>
               <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
                 <Badge variant="secondary">5.1</Badge>
-                Rotukohtaiset Vaatimukset
+                Rotukohtaiset vaatimukset
               </h3>
               
               <div className="grid md:grid-cols-2 gap-6">
@@ -908,7 +908,7 @@ const PuppyGuide = () => {
       <section id="turvallisuus">
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl">Osa 6: Ruoan Turvallisuus: Ole Tietoinen ja Vaativa Kuluttaja</CardTitle>
+            <CardTitle className="text-2xl">Osa 6: Ruoan turvallisuus: ole tietoinen ja vaativa kuluttaja</CardTitle>
             <p className="text-muted-foreground">Vaikka koiranruoan valmistus Suomessa on pääosin laadukasta, takaisinvetoja tapahtuu</p>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -924,11 +924,11 @@ const PuppyGuide = () => {
             <div>
               <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
                 <Badge variant="secondary">6.1</Badge>
-                Valvonnan Haasteet
+                Valvonnan haasteet
               </h3>
               
               <p className="text-sm mb-4">
-                Ruokaviraston valvontaresurssit ovat rajalliset, mikä korostaa omistajan omaa vastuuta.
+                <a href="https://www.ruokavirasto.fi/" className="text-primary hover:underline" target="_blank" rel="noopener">Ruokaviraston</a> valvontaresurssit ovat rajalliset, mikä korostaa omistajan omaa vastuuta.
               </p>
               
               <div>
@@ -936,7 +936,7 @@ const PuppyGuide = () => {
                 <div className="grid md:grid-cols-3 gap-4">
                   <div className="p-4 border rounded-lg">
                     <h5 className="font-semibold text-sm mb-2">Seuraa tiedotteita</h5>
-                    <p className="text-sm">Pidä silmällä Ruokaviraston virallisia tiedotteita.</p>
+                    <p className="text-sm">Pidä silmällä <a href="https://www.ruokavirasto.fi/elaimet/rehut/" className="text-primary hover:underline" target="_blank" rel="noopener">Ruokaviraston</a> virallisia tiedotteita.</p>
                   </div>
                   <div className="p-4 border rounded-lg">
                     <h5 className="font-semibold text-sm mb-2">Valitse luotettavia merkkejä</h5>
@@ -944,7 +944,7 @@ const PuppyGuide = () => {
                   </div>
                   <div className="p-4 border rounded-lg">
                     <h5 className="font-semibold text-sm mb-2">Ilmoita ongelmista</h5>
-                    <p className="text-sm">Jos epäilet ruoan aiheuttavan koirallesi oireita, ole yhteydessä valmistajaan ja tee ilmoitus Ruokavirastolle.</p>
+                    <p className="text-sm">Jos epäilet ruoan aiheuttavan koirallesi oireita, ole yhteydessä valmistajaan ja tee ilmoitus <a href="https://www.ruokavirasto.fi/yritykset/elintarvikeala/valvonta/ilmoitukset-ja-palautteet/" className="text-primary hover:underline" target="_blank" rel="noopener">Ruokavirastolle</a>.</p>
                   </div>
                 </div>
               </div>
@@ -967,7 +967,7 @@ const PuppyGuide = () => {
       {/* Osa 5: Yhteenveto */}
       <Card className="border-primary/50 bg-primary/5">
         <CardHeader>
-          <CardTitle className="text-2xl">Osa 5: Asiantuntijan Suositukset</CardTitle>
+          <CardTitle className="text-2xl">Osa 5: Asiantuntijan suositukset</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -998,7 +998,7 @@ const PuppyGuide = () => {
             <div>
               <h4 className="font-semibold mb-2">Viralliset lähteet:</h4>
               <ul className="space-y-1">
-                <li>• <a href="https://www.ruokavirasto.fi/elaimet/rehut/" className="text-primary hover:underline" target="_blank" rel="noopener">Ruokavirasto - Rehut</a></li>
+                <li>• <a href="https://www.ruokavirasto.fi/elaimet/rehut/" className="text-primary hover:underline" target="_blank" rel="noopener">Ruokavirasto - rehut</a></li>
                 <li>• <a href="https://www.helsinki.fi/fi/tutkimusryhmat/koiratutkimus" className="text-primary hover:underline" target="_blank" rel="noopener">DogRisk-tutkimusryhmä</a></li>
                 <li>• <a href="https://www.balanceit.com" className="text-primary hover:underline" target="_blank" rel="noopener">BalanceIT.com</a></li>
               </ul>
@@ -1018,7 +1018,7 @@ const PuppyGuide = () => {
       <section id="usein-kysytyt-kysymykset">
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl">Usein Kysytyt Kysymykset</CardTitle>
+            <CardTitle className="text-2xl">Usein kysytyt kysymykset</CardTitle>
             <p className="text-muted-foreground">Kattava kokoelma yleisimpiä pennun ruokintaan liittyviä kysymyksiä</p>
           </CardHeader>
           <CardContent>
