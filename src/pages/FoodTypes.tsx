@@ -5,57 +5,68 @@ import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
 import { ArrowLeft, CheckCircle, AlertCircle, Info, Microscope, TrendingUp, Heart } from 'lucide-react'
 import InfoNavigation from '@/components/InfoNavigation'
+import InfoCard from '@/components/InfoCard'
+import InfoSection from '@/components/InfoSection'
+import InfoBadge from '@/components/InfoBadge'
+import BackToTopButton from '@/components/BackToTopButton'
+import heroImage from '@/assets/welcome-illustration.png'
 
 export default function FoodTypes() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 pt-14">
+    <div className="min-h-screen bg-gradient-warm pt-14 w-full overflow-x-hidden">
       <InfoNavigation />
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
-            Penturuokien tyypit ja tieteellinen analyysi
+      <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-full min-w-0">
+        {/* Hero Section */}
+        <div className="text-center mb-12">
+          <div className="flex justify-center mb-6">
+            <img 
+              src={heroImage} 
+              alt="Penturuoka-opas" 
+              className="w-32 h-32 sm:w-40 sm:h-40 object-contain"
+            />
+          </div>
+          <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4">
+            🥘 Penturuokien tyypit
           </h1>
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            Tieteellinen analyysi kuiva-, märkä- ja raakaruokien eroista ja hyödyistä
+          </p>
         </div>
 
-        {/* Scientific Overview */}
-        <Card className="mb-8 bg-gradient-to-r from-blue-50 to-green-50 border-blue-200">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-blue-800">
-              <Microscope className="h-6 w-6" />
-              Helsingin yliopiston DogRisk-tutkimuksen keskeiset löydökset
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <p className="text-blue-800 leading-relaxed">
-                Dosentti Anna Hielm-Björkmanin johtama tutkimusryhmä on seurannut useiden tuhansien 
-                suomalaisten koiranomistajien vastauksia ja osoittanut merkittäviä syy-yhteyksiä 
-                ruokinnan ja aikuisiän terveyden välillä.
+        <InfoCard
+          title="Helsingin yliopiston DogRisk-tutkimuksen keskeiset löydökset"
+          variant="cool"
+          icon={<Microscope className="h-6 w-6" />}
+          className="mb-8"
+        >
+          <div className="space-y-4">
+            <p className="text-white/95 leading-relaxed">
+              Dosentti Anna Hielm-Björkmanin johtama tutkimusryhmä on seurannut useiden tuhansien 
+              suomalaisten koiranomistajien vastauksia ja osoittanut merkittäviä syy-yhteyksiä 
+              ruokinnan ja aikuisiän terveyden välillä.
+            </p>
+            
+            <div className="bg-white/20 p-4 rounded-xl border border-white/30">
+              <h3 className="font-semibold text-white mb-2 flex items-center gap-2">
+                <TrendingUp className="h-5 w-5" />
+                Kriittinen 20% raja-arvo
+              </h3>
+              <p className="text-sm text-white/90">
+                <strong>Vähintään 20% raakaruoan osuus pennun ruokavaliossa</strong> vähentää 
+                allergia- ja atopiaoireita aikuisiässä merkittävästi. Tämä löydös osoittaa, 
+                että pienikin muutos pennun ruokavaliossa tuottaa elinikäisiä terveyshyötyjä.
               </p>
-              
-              <div className="bg-blue-100 p-4 rounded-lg border border-blue-300">
-                <h3 className="font-semibold text-blue-800 mb-2 flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5" />
-                  Kriittinen 20% raja-arvo
-                </h3>
-                <p className="text-sm text-blue-700">
-                  <strong>Vähintään 20% raakaruoan osuus pennun ruokavaliossa</strong> vähentää 
-                  allergia- ja atopiaoireita aikuisiässä merkittävästi. Tämä löydös osoittaa, 
-                  että pienikin muutos pennun ruokavaliossa tuottaa elinikäisiä terveyshyötyjä.
-                </p>
-              </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </InfoCard>
 
-        {/* Dry Food - Updated with Scientific Evidence */}
-        <Card className="mb-8 bg-white/80 backdrop-blur-sm">
-          <CardHeader>
-            <CardTitle className="text-xl">🥘 Kuivaruoat (Ekstrudoidut täysravinnot)</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-gray-700 mb-4">
+        <InfoCard
+          title="🥘 Kuivaruoat (Ekstrudoidut täysravinnot)"
+          description="Yleisin koiranruoan muoto Suomessa - käytännöllinen mutta ravitsemuksellisesti haasteellinen"
+          className="mb-8"
+        >
+          <div className="space-y-4">
+            <p className="text-card-foreground mb-4">
               Kuivaruoat ovat yleisin koiranruoan muoto Suomessa. Kuumennusprosessi tuhoaa entsyymejä, 
               vitamiineja ja aminohappoja, minkä vuoksi niihin lisätään keinotekoisia vitamiineja ja kivennäisaineita.
             </p>
@@ -103,8 +114,8 @@ export default function FoodTypes() {
                 </ul>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </InfoCard>
 
         {/* Raw Food - Comprehensive Scientific Update */}
         <Card className="mb-8 bg-gradient-to-r from-green-50 to-blue-50 border-green-200">
@@ -381,19 +392,21 @@ export default function FoodTypes() {
         </Card>
 
         {/* Navigation */}
-        <div className="flex justify-between">
+        <div className="flex flex-col sm:flex-row justify-between gap-4">
           <Link to="/info">
-            <Button variant="outline">
+            <Button variant="outline" className="w-full sm:w-auto">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Takaisin etusivulle
             </Button>
           </Link>
           <Link to="/info/feeding-data">
-            <Button>
+            <Button className="w-full sm:w-auto">
               Seuraava: Annostelutiedot
             </Button>
           </Link>
         </div>
+        
+        <BackToTopButton />
       </div>
     </div>
   )

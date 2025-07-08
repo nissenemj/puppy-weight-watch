@@ -4,19 +4,33 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
 import { ArrowLeft, Shield, FileText, AlertTriangle } from 'lucide-react'
-import Navigation from '@/components/Navigation'
+import InfoNavigation from '@/components/InfoNavigation'
+import InfoCard from '@/components/InfoCard'
+import InfoSection from '@/components/InfoSection'
+import BackToTopButton from '@/components/BackToTopButton'
 import SafetyNewsFeed from '@/components/SafetyNewsFeed'
+import heroImage from '@/assets/welcome-illustration.png'
 
 export default function SafetyPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 pt-14">
-      <Navigation />
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
-            Turvallisuus ja suositukset
+    <div className="min-h-screen bg-gradient-warm pt-14 w-full overflow-x-hidden">
+      <InfoNavigation />
+      <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-full min-w-0">
+        {/* Hero Section */}
+        <div className="text-center mb-12">
+          <div className="flex justify-center mb-6">
+            <img 
+              src={heroImage} 
+              alt="Turvallisuus-opas" 
+              className="w-32 h-32 sm:w-40 sm:h-40 object-contain"
+            />
+          </div>
+          <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4">
+            🛡️ Turvallisuus ja suositukset
           </h1>
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            Tärkeät turvallisuusohjeet ja ajankohtaiset uutiset koiranruokinnasta
+          </p>
         </div>
 
         {/* News Feed */}
@@ -24,24 +38,22 @@ export default function SafetyPage() {
           <SafetyNewsFeed />
         </div>
 
-        {/* Veterinary Advice */}
-        <Card className="mb-8 bg-green-50 border-green-200">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-green-800">
-              <Shield className="h-6 w-6" />
-              Eläinlääkärin neuvon korvaamattomuus
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-green-800 leading-relaxed mb-4">
+        <InfoCard
+          title="Eläinlääkärin neuvon korvaamattomuus"
+          variant="warm"
+          icon={<Shield className="h-6 w-6" />}
+          className="mb-8"
+        >
+          <div className="space-y-4">
+            <p className="text-white/95 leading-relaxed mb-4">
               Tämä raportti ja sen pohjalta kehitettävä sovellus ovat työkaluja ja oppaita, eivätkä ne koskaan korvaa 
               ammattilaisen antamaa yksilöllistä neuvontaa. Koiranpennun omistajaa tulee aina kannustaa keskustelemaan 
               ruokinnasta hoitavan eläinlääkärin kanssa.
             </p>
             
             <div className="space-y-3">
-              <h3 className="font-semibold text-green-800">Eläinlääkäri osaa arvioida:</h3>
-              <ul className="text-sm text-green-700 space-y-2">
+              <h3 className="font-semibold text-white">Eläinlääkäri osaa arvioida:</h3>
+              <ul className="text-sm text-white/90 space-y-2">
                 <li>• Pennun yksilöllisen kasvukäyrän</li>
                 <li>• Kuntoluokan ja kehityksen</li>
                 <li>• Mahdolliset erityistarpeet</li>
@@ -50,26 +62,25 @@ export default function SafetyPage() {
               </ul>
             </div>
             
-            <div className="bg-green-100 p-4 rounded-lg border border-green-300 mt-4">
-              <h4 className="font-semibold text-green-800 mb-2">Erityisen tärkeää konsultoida eläinlääkäriä:</h4>
-              <ul className="text-sm text-green-700 space-y-1">
+            <div className="bg-white/20 p-4 rounded-xl border border-white/30 mt-4">
+              <h4 className="font-semibold text-white mb-2">Erityisen tärkeää konsultoida eläinlääkäriä:</h4>
+              <ul className="text-sm text-white/90 space-y-1">
                 <li>• Jos pennulla on diagnosoituja terveysongelmia</li>
                 <li>• Jos pentu kuuluu jättirotuun</li>
                 <li>• Jos kasvu poikkeaa normaalista</li>
                 <li>• Erikoisruokavaliota tarvittaessa</li>
               </ul>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </InfoCard>
 
 
 
-        {/* Nutritional Considerations */}
-        <Card className="mb-8 bg-white/80 backdrop-blur-sm">
-          <CardHeader>
-            <CardTitle>Ravitsemukselliset huomiot</CardTitle>
-          </CardHeader>
-          <CardContent>
+        <InfoCard
+          title="Ravitsemukselliset huomiot"
+          description="Kriittiset ravintoaineet ja varoitukset pennun ruokinnassa"
+          className="mb-8"
+        >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
                 <h3 className="font-semibold text-gray-800">Kriittiset ravintoaineet pennuille:</h3>
@@ -115,39 +126,38 @@ export default function SafetyPage() {
                 </ul>
               </div>
             </div>
-          </CardContent>
-        </Card>
+        </InfoCard>
 
-        {/* Conclusion */}
-        <Card className="mb-8 bg-blue-50 border-blue-200">
-          <CardHeader>
-            <CardTitle className="text-blue-800">Yhteenveto</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-blue-800 leading-relaxed">
-              Pentukoiran ruokinta on monimutkainen aihe, joka vaatii huolellista harkintaa ja usein ammattilaisen 
-              ohjausta. Teknologiset työkalut voivat auttaa tiedon keräämisessä ja päätöksenteossa, mutta ne eivät 
-              koskaan korvaa eläinlääkärin ammattitaitoa tai omistajan vastuuta seurata lemmikin vointia. 
-              Vastuullinen pentukoiran ruokinta yhdistää tieteellisen tiedon, käytännön kokemuksen ja 
-              yksilöllisen harkinnan.
-            </p>
-          </CardContent>
-        </Card>
+        <InfoCard
+          title="Yhteenveto"
+          variant="purple"
+          className="mb-8"
+        >
+          <p className="text-white/95 leading-relaxed">
+            Pentukoiran ruokinta on monimutkainen aihe, joka vaatii huolellista harkintaa ja usein ammattilaisen 
+            ohjausta. Teknologiset työkalut voivat auttaa tiedon keräämisessä ja päätöksenteossa, mutta ne eivät 
+            koskaan korvaa eläinlääkärin ammattitaitoa tai omistajan vastuuta seurata lemmikin vointia. 
+            Vastuullinen pentukoiran ruokinta yhdistää tieteellisen tiedon, käytännön kokemuksen ja 
+            yksilöllisen harkinnan.
+          </p>
+        </InfoCard>
 
         {/* Navigation */}
-        <div className="flex justify-between">
+        <div className="flex flex-col sm:flex-row justify-between gap-4">
           <Link to="/info/feeding-data">
-            <Button variant="outline">
+            <Button variant="outline" className="w-full sm:w-auto">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Edellinen: Annostelutiedot
             </Button>
           </Link>
           <Link to="/info">
-            <Button>
+            <Button className="w-full sm:w-auto">
               Takaisin etusivulle
             </Button>
           </Link>
         </div>
+        
+        <BackToTopButton />
       </div>
     </div>
   )

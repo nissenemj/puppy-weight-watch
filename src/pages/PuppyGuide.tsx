@@ -3,34 +3,42 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { AlertTriangle, Calculator, Weight, Utensils, PawPrint } from 'lucide-react';
-import Navigation from '@/components/Navigation';
+import InfoNavigation from '@/components/InfoNavigation';
+import InfoCard from '@/components/InfoCard';
+import InfoSection from '@/components/InfoSection';
+import InfoBadge from '@/components/InfoBadge';
+import BackToTopButton from '@/components/BackToTopButton';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import heroImage from '@/assets/welcome-illustration.png';
 
 const PuppyGuide = () => {
   return (
-    <div className="min-h-screen bg-background pt-14">
-      <Navigation />
-      <div className="container mx-auto py-8 space-y-8">
+    <div className="min-h-screen bg-gradient-warm pt-14 w-full overflow-x-hidden">
+      <InfoNavigation />
+      <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-full min-w-0 space-y-8">
       {/* Hero Section */}
-      <div className="text-center space-y-4">
-        <h1 className="text-4xl font-heading font-bold text-primary">
-          Koiranpennun Ruokinnan Kattava Opas
+      <div className="text-center space-y-4 mb-12">
+        <div className="flex justify-center mb-6">
+          <img 
+            src={heroImage} 
+            alt="Pennun ruokintaopas" 
+            className="w-32 h-32 sm:w-40 sm:h-40 object-contain"
+          />
+        </div>
+        <h1 className="text-4xl md:text-6xl font-heading font-bold text-foreground">
+          🐕 Koiranpennun Ruokinnan Kattava Opas
         </h1>
-        <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+        <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
           Annosteluohjeet, ravitsemus ja hyvinvointi - kaikki tarvittava terveen kasvun turvaamiseksi
         </p>
       </div>
 
-      {/* Quick Navigation */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Calculator className="h-5 w-5" />
-            Pika-navigaatio
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+      <InfoCard
+        title="Pika-navigaatio"
+        icon={<Calculator className="h-5 w-5" />}
+        className="mb-8"
+      >
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <a href="#ruokintamuodot" className="p-3 rounded-lg border hover:bg-accent/10 transition-colors">
               <Utensils className="h-5 w-5 text-primary mb-2" />
@@ -48,15 +56,13 @@ const PuppyGuide = () => {
               <p className="text-sm text-muted-foreground">Nirsoilu ja vatsavaivat</p>
             </a>
           </div>
-        </CardContent>
-      </Card>
+      </InfoCard>
 
-      {/* Johdanto */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Pennun Terveen Kasvun Perusta</CardTitle>
-        </CardHeader>
-        <CardContent className="prose max-w-none">
+      <InfoCard
+        title="Pennun Terveen Kasvun Perusta"
+        className="mb-8"
+      >
+        <div className="prose max-w-none">
           <p>
             Koiranpennun saapuminen kotiin on yksi elämän suurimmista iloista, mutta se tuo mukanaan myös 
             merkittävän vastuun. Yksi tärkeimmistä pennun hyvinvointiin vaikuttavista tekijöistä on sen ruokinta. 
@@ -70,8 +76,8 @@ const PuppyGuide = () => {
               ja aineenvaihdunnasta. Ruokapussin annostelutaulukko on lähtökohta, mutta kuntoluokka on kompassi.
             </p>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </InfoCard>
 
       {/* Osa 1: Ruokintamuodot */}
       <section id="ruokintamuodot">
@@ -856,6 +862,8 @@ const PuppyGuide = () => {
           </div>
         </CardContent>
       </Card>
+      
+      <BackToTopButton />
       </div>
     </div>
   );
