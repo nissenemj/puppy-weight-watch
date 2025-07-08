@@ -326,11 +326,11 @@ export default function FeedingData() {
         {/* Tuotteet */}
         <Card className="mb-8 bg-white/80 backdrop-blur-sm">
           <CardHeader>
-            <CardTitle className="flex items-center justify-between">
+            <CardTitle className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <span>Koiranruokatiedot</span>
               <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
                 <DialogTrigger asChild>
-                  <Button>
+                  <Button className="w-full sm:w-auto">
                     <Plus className="h-4 w-4 mr-2" />
                     Lisää uusi tuote
                   </Button>
