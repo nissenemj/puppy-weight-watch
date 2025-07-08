@@ -20,9 +20,24 @@ export function IngredientInfo({ food }: IngredientInfoProps) {
   const containsAllergens = food.allergens?.filter(a => a.allergen_type === 'contains') || []
   const freeFromAllergens = food.allergens?.filter(a => a.allergen_type === 'free_from') || []
 
-  // Don't render if no ingredient data available
-  if (!food.ingredients?.length && !food.allergens?.length && !food.nutrition) {
-    return null
+  // Check if we have any data to display
+  const hasIngredients = food.ingredients?.length > 0
+  const hasAllergens = food.allergens?.length > 0 || food.nutrition
+  const hasNutrition = food.nutrition
+
+  // Don't render if no data available at all
+  if (!hasIngredients && !hasAllergens && !hasNutrition) {
+    return (
+      <Card className="mt-4">
+        <CardContent className="py-6">
+          <div className="text-center text-muted-foreground">
+            <Info className="h-8 w-8 mx-auto mb-2 opacity-50" />
+            <p className="text-lg font-medium">Ainesosatiedot eivät ole saatavilla</p>
+            <p className="text-sm">Tälle tuotteelle ei ole vielä lisätty yksityiskohtaisia ainesosa- tai ravintosisältötietoja.</p>
+          </div>
+        </CardContent>
+      </Card>
+    )
   }
 
   return (
@@ -93,9 +108,13 @@ export function IngredientInfo({ food }: IngredientInfoProps) {
               )}
             </div>
 
-            {primaryIngredients.length === 0 && proteinSources.length === 0 && carbSources.length === 0 && fatSources.length === 0 && (
-              <div className="text-center py-4 text-muted-foreground">
-                <p>Ainesosatiedot eivät ole saatavilla</p>
+            {!hasIngredients && (
+              <div className="text-center py-8 text-muted-foreground">
+                <div className="bg-gray-50 rounded-lg p-6">
+                  <Info className="h-6 w-6 mx-auto mb-2 opacity-50" />
+                  <p className="font-medium">Ainesosatiedot eivät ole saatavilla</p>
+                  <p className="text-sm mt-1">Tälle tuotteelle ei ole vielä lisätty yksityiskohtaisia ainesosatietoja.</p>
+                </div>
               </div>
             )}
           </TabsContent>
@@ -154,9 +173,13 @@ export function IngredientInfo({ food }: IngredientInfoProps) {
               </div>
             )}
 
-            {freeFromAllergens.length === 0 && containsAllergens.length === 0 && !food.nutrition && (
-              <div className="text-center py-4 text-muted-foreground">
-                <p>Allergeenimerkinnät eivät ole saatavilla</p>
+            {!hasAllergens && (
+              <div className="text-center py-8 text-muted-foreground">
+                <div className="bg-gray-50 rounded-lg p-6">
+                  <Info className="h-6 w-6 mx-auto mb-2 opacity-50" />
+                  <p className="font-medium">Allergeenimerkinnät eivät ole saatavilla</p>
+                  <p className="text-sm mt-1">Tälle tuotteelle ei ole vielä lisätty allergeeni- tai ravintoarvoaikoja.</p>
+                </div>
               </div>
             )}
           </TabsContent>
@@ -217,9 +240,13 @@ export function IngredientInfo({ food }: IngredientInfoProps) {
               </>
             )}
 
-            {!food.nutrition && (
-              <div className="text-center py-4 text-muted-foreground">
-                <p>Ravintosisältötiedot eivät ole saatavilla</p>
+            {!hasNutrition && (
+              <div className="text-center py-8 text-muted-foreground">
+                <div className="bg-gray-50 rounded-lg p-6">
+                  <Info className="h-6 w-6 mx-auto mb-2 opacity-50" />
+                  <p className="font-medium">Ravintosisältötiedot eivät ole saatavilla</p>
+                  <p className="text-sm mt-1">Tälle tuotteelle ei ole vielä lisätty ravintosisältötietoja.</p>
+                </div>
               </div>
             )}
           </TabsContent>

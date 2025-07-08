@@ -15,6 +15,14 @@ interface FoodCardProps {
 }
 
 export function FoodCard({ food, onSelect, isSelected = false, showDetails = false }: FoodCardProps) {
+  // Check if food has detailed ingredient/nutrition data
+  const hasDetailedData = Boolean(
+    food.ingredients?.length || 
+    food.allergens?.length || 
+    (food.nutrition && Object.values(food.nutrition).some(v => v !== null && v !== false)) ||
+    food.manufacturer_info
+  )
+  
   const getDosageMethodLabel = (method: string) => {
     switch (method) {
       case 'Odotettu_Aikuispaino_Ja_Ikä':
@@ -97,6 +105,16 @@ export function FoodCard({ food, onSelect, isSelected = false, showDetails = fal
             {food.notes && (
               <p className="text-sm text-muted-foreground">{food.notes}</p>
             )}
+
+            {/* Data availability indicator */}
+            <div className="flex items-center gap-2 mt-3">
+              <div className="flex items-center gap-1 text-xs">
+                <div className={`w-2 h-2 rounded-full ${hasDetailedData ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+                <span className="text-muted-foreground">
+                  {hasDetailedData ? 'Yksityiskohtaiset tiedot saatavilla' : 'Perustiedot'}
+                </span>
+              </div>
+            </div>
           </div>
           
           {onSelect && (
