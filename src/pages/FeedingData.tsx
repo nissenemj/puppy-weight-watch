@@ -15,6 +15,7 @@ import GeneralDosageSection from '@/components/GeneralDosageSection'
 import { DogFoodService, type DogFood } from '@/services/dogFoodService'
 import { supabase } from '@/integrations/supabase/client'
 import { toast } from 'sonner'
+import BackToTopButton from '@/components/BackToTopButton'
 
 export default function FeedingData() {
   const [dogFoods, setDogFoods] = useState<DogFood[]>([])
@@ -658,6 +659,8 @@ export default function FeedingData() {
             </CardContent>
           </Card>
         )}
+        
+        <BackToTopButton />
       </div>
     </div>
   )
