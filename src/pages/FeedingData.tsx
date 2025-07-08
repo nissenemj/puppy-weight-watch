@@ -29,14 +29,14 @@ export default function FeedingData() {
   const [showDetails, setShowDetails] = useState<string[]>([])
   const [filters, setFilters] = useState<FoodFilters>({
     searchTerm: '',
-    manufacturer: '',
-    foodType: '',
-    nutritionType: '',
-    dosageMethod: '',
+    manufacturer: 'all',
+    foodType: 'all',
+    nutritionType: 'all',
+    dosageMethod: 'all',
     grainFree: false,
     wheatFree: false,
     glutenFree: false,
-    proteinSource: ''
+    proteinSource: 'all'
   })
   const [newFood, setNewFood] = useState({
     name: '',
@@ -112,22 +112,22 @@ export default function FeedingData() {
     }
 
     // Manufacturer filter
-    if (filters.manufacturer) {
+    if (filters.manufacturer && filters.manufacturer !== 'all') {
       filtered = filtered.filter(food => food.manufacturer === filters.manufacturer)
     }
 
     // Food type filter
-    if (filters.foodType) {
+    if (filters.foodType && filters.foodType !== 'all') {
       filtered = filtered.filter(food => food.food_type === filters.foodType)
     }
 
     // Nutrition type filter
-    if (filters.nutritionType) {
+    if (filters.nutritionType && filters.nutritionType !== 'all') {
       filtered = filtered.filter(food => food.nutrition_type === filters.nutritionType)
     }
 
     // Dosage method filter
-    if (filters.dosageMethod) {
+    if (filters.dosageMethod && filters.dosageMethod !== 'all') {
       filtered = filtered.filter(food => food.dosage_method === filters.dosageMethod)
     }
 
@@ -145,7 +145,7 @@ export default function FeedingData() {
     }
 
     // Protein source filter
-    if (filters.proteinSource) {
+    if (filters.proteinSource && filters.proteinSource !== 'all') {
       filtered = filtered.filter(food => 
         food.ingredients?.some(ingredient => 
           ingredient.ingredient_type === 'protein' && 

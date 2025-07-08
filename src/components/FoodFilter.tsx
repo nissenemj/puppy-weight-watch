@@ -39,35 +39,35 @@ export function FoodFilter({
   const clearAllFilters = () => {
     onFiltersChange({
       searchTerm: '',
-      manufacturer: '',
-      foodType: '',
-      nutritionType: '',
-      dosageMethod: '',
+      manufacturer: 'all',
+      foodType: 'all',
+      nutritionType: 'all',
+      dosageMethod: 'all',
       grainFree: false,
       wheatFree: false,
       glutenFree: false,
-      proteinSource: ''
+      proteinSource: 'all'
     })
   }
 
   const hasActiveFilters = Object.entries(filters).some(([key, value]) => {
     if (key === 'searchTerm' && value) return true
     if (typeof value === 'boolean' && value) return true
-    if (typeof value === 'string' && value) return true
+    if (typeof value === 'string' && value && value !== 'all') return true
     return false
   })
 
   const getActiveFilterCount = () => {
     let count = 0
     if (filters.searchTerm) count++
-    if (filters.manufacturer) count++
-    if (filters.foodType) count++
-    if (filters.nutritionType) count++
-    if (filters.dosageMethod) count++
+    if (filters.manufacturer && filters.manufacturer !== 'all') count++
+    if (filters.foodType && filters.foodType !== 'all') count++
+    if (filters.nutritionType && filters.nutritionType !== 'all') count++
+    if (filters.dosageMethod && filters.dosageMethod !== 'all') count++
     if (filters.grainFree) count++
     if (filters.wheatFree) count++
     if (filters.glutenFree) count++
-    if (filters.proteinSource) count++
+    if (filters.proteinSource && filters.proteinSource !== 'all') count++
     return count
   }
 
@@ -112,14 +112,14 @@ export function FoodFilter({
               <SelectTrigger>
                 <SelectValue placeholder="Kaikki valmistajat" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="">Kaikki valmistajat</SelectItem>
-                {manufacturers.map((manufacturer) => (
-                  <SelectItem key={manufacturer} value={manufacturer}>
-                    {manufacturer}
-                  </SelectItem>
-                ))}
-              </SelectContent>
+               <SelectContent>
+                 <SelectItem value="all">Kaikki valmistajat</SelectItem>
+                 {manufacturers.map((manufacturer) => (
+                   <SelectItem key={manufacturer} value={manufacturer}>
+                     {manufacturer}
+                   </SelectItem>
+                 ))}
+               </SelectContent>
             </Select>
           </div>
           
@@ -129,12 +129,12 @@ export function FoodFilter({
               <SelectTrigger>
                 <SelectValue placeholder="Kaikki tyypit" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="">Kaikki tyypit</SelectItem>
-                <SelectItem value="Kuiva">Kuivaruoka</SelectItem>
-                <SelectItem value="Märkä">Märkäruoka</SelectItem>
-                <SelectItem value="Raaka">Raakaruoka</SelectItem>
-              </SelectContent>
+               <SelectContent>
+                 <SelectItem value="all">Kaikki tyypit</SelectItem>
+                 <SelectItem value="Kuiva">Kuivaruoka</SelectItem>
+                 <SelectItem value="Märkä">Märkäruoka</SelectItem>
+                 <SelectItem value="Raaka">Raakaruoka</SelectItem>
+               </SelectContent>
             </Select>
           </div>
         </div>
@@ -146,12 +146,12 @@ export function FoodFilter({
               <SelectTrigger>
                 <SelectValue placeholder="Kaikki ravintotyypit" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="">Kaikki ravintotyypit</SelectItem>
-                <SelectItem value="Täysravinto">Täysravinto</SelectItem>
-                <SelectItem value="Täydennysravinto">Täydennysravinto</SelectItem>
-                <SelectItem value="Täysravinto/Täydennysravinto">Täysravinto/Täydennysravinto</SelectItem>
-              </SelectContent>
+               <SelectContent>
+                 <SelectItem value="all">Kaikki ravintotyypit</SelectItem>
+                 <SelectItem value="Täysravinto">Täysravinto</SelectItem>
+                 <SelectItem value="Täydennysravinto">Täydennysravinto</SelectItem>
+                 <SelectItem value="Täysravinto/Täydennysravinto">Täysravinto/Täydennysravinto</SelectItem>
+               </SelectContent>
             </Select>
           </div>
 
@@ -161,14 +161,14 @@ export function FoodFilter({
               <SelectTrigger>
                 <SelectValue placeholder="Kaikki menetelmät" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="">Kaikki menetelmät</SelectItem>
-                <SelectItem value="Odotettu_Aikuispaino_Ja_Ikä">Aikuispaino ja ikä</SelectItem>
-                <SelectItem value="Nykyinen_Paino">Nykyinen paino</SelectItem>
-                <SelectItem value="Prosentti_Nykyisestä_Painosta">Prosentti painosta</SelectItem>
-                <SelectItem value="Kokoluokka">Kokoluokka</SelectItem>
-                <SelectItem value="Ei_Tietoa">Ei tietoa</SelectItem>
-              </SelectContent>
+               <SelectContent>
+                 <SelectItem value="all">Kaikki menetelmät</SelectItem>
+                 <SelectItem value="Odotettu_Aikuispaino_Ja_Ikä">Aikuispaino ja ikä</SelectItem>
+                 <SelectItem value="Nykyinen_Paino">Nykyinen paino</SelectItem>
+                 <SelectItem value="Prosentti_Nykyisestä_Painosta">Prosentti painosta</SelectItem>
+                 <SelectItem value="Kokoluokka">Kokoluokka</SelectItem>
+                 <SelectItem value="Ei_Tietoa">Ei tietoa</SelectItem>
+               </SelectContent>
             </Select>
           </div>
           
@@ -179,14 +179,14 @@ export function FoodFilter({
                 <SelectTrigger>
                   <SelectValue placeholder="Kaikki proteiinit" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="">Kaikki proteiinit</SelectItem>
-                  {proteinSources.map((source) => (
-                    <SelectItem key={source} value={source}>
-                      {source}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
+                 <SelectContent>
+                   <SelectItem value="all">Kaikki proteiinit</SelectItem>
+                   {proteinSources.map((source) => (
+                     <SelectItem key={source} value={source}>
+                       {source}
+                     </SelectItem>
+                   ))}
+                 </SelectContent>
               </Select>
             </div>
           )}

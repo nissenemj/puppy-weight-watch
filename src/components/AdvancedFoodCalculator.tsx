@@ -297,17 +297,17 @@ export default function AdvancedFoodCalculator({ user, currentWeight: propCurren
               <SelectTrigger className="bg-white/20 border-white/30 text-white">
                 <SelectValue placeholder="Valitse ruoka" />
               </SelectTrigger>
-              <SelectContent>
-                {loading ? (
-                  <SelectItem value="" disabled>Ladataan ruokia...</SelectItem>
-                ) : (
-                  dogFoods.map(food => (
-                    <SelectItem key={food.id} value={food.id}>
-                      {food.manufacturer} - {food.name}
-                    </SelectItem>
-                  ))
-                )}
-              </SelectContent>
+               <SelectContent>
+                 {loading ? (
+                   <SelectItem value="loading" disabled>Ladataan ruokia...</SelectItem>
+                 ) : (
+                   dogFoods.map(food => (
+                     <SelectItem key={food.id} value={food.id}>
+                       {food.manufacturer} - {food.name}
+                     </SelectItem>
+                   ))
+                 )}
+               </SelectContent>
             </Select>
           </div>
           
