@@ -731,6 +731,20 @@ export default function FeedingData() {
             </CardContent>
           </Card>
         )}
+          </TabsContent>
+
+          <TabsContent value="analysis" className="space-y-6">
+            <FoodAnalysisView />
+          </TabsContent>
+
+          <TabsContent value="dosage-images" className="space-y-6">
+            <DosageImagesSection />
+          </TabsContent>
+
+          <TabsContent value="general-dosage" className="space-y-6">
+            <GeneralDosageSection />
+          </TabsContent>
+        </Tabs>
         
         <BackToTopButton />
       </div>
