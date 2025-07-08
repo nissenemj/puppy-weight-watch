@@ -731,7 +731,7 @@ export default function FeedingData() {
             </CardContent>
           </Card>
         )}
-          </TabsContent>
+        </TabsContent>
 
           <TabsContent value="analysis" className="space-y-6">
             <FoodAnalysisView />
