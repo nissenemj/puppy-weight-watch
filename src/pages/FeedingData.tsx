@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Search, Filter, Database, AlertCircle, Plus, Edit, Save, X, Trash2 } from 'lucide-react'
+import { Search, Filter, Database, AlertCircle, Plus, Edit, Save, X, Trash2, RefreshCw } from 'lucide-react'
 import InfoNavigation from '@/components/InfoNavigation'
 import DosageImagesSection from '@/components/DosageImagesSection'
 import GeneralDosageSection from '@/components/GeneralDosageSection'
@@ -79,6 +79,27 @@ export default function FeedingData() {
 
   useEffect(() => {
     loadDogFoods()
+    
+    // Set up real-time subscription for dog foods updates
+    const channel = supabase
+      .channel('dog-foods-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'dog_foods'
+        },
+        () => {
+          console.log('Dog foods data changed, reloading...')
+          loadDogFoods()
+        }
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
   }, [])
 
   // Get unique values for filter options
@@ -357,6 +378,20 @@ export default function FeedingData() {
               manufacturers={manufacturers}
               proteinSources={proteinSources}
             />
+
+            {/* Refresh Button */}
+            <div className="flex justify-center mb-4">
+              <Button 
+                onClick={loadDogFoods} 
+                disabled={loading}
+                variant="outline"
+                size="sm"
+                className="gap-2"
+              >
+                <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+                {loading ? 'Päivitetään...' : 'Päivitä tiedot'}
+              </Button>
+            </div>
 
             <div className="mb-6 text-sm text-muted-foreground text-center">
               Näytetään {filteredFoods.length} / {dogFoods.length} tuotetta
