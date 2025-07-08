@@ -585,9 +585,8 @@ export default function ModernPuppyWeightTracker() {
             <WeightChart weightData={entries} />
           </TabsContent>
 
-          <TabsContent value="puppy-feeding" className="animate-fade-in space-y-6">
+          <TabsContent value="puppy-feeding" className="animate-fade-in">
             <FoodCalculator currentWeight={getLatestWeight()} user={user} />
-            <PuppyFeeding />
           </TabsContent>
 
           <TabsContent value="news-feed" className="animate-fade-in">
