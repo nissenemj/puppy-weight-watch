@@ -18,8 +18,10 @@ export default function InfoNavigation() {
     <nav className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-40">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          <Link to="/info" className="text-xl font-bold text-gray-900">
-            🐕 Penturuoka-opas
+          <Link to="/info" className="flex items-center gap-2 text-lg sm:text-xl font-bold text-gray-900 truncate">
+            <span className="text-xl sm:text-2xl">🐕</span>
+            <span className="hidden sm:inline">Puppy Weight Watch</span>
+            <span className="sm:hidden">PWW</span>
           </Link>
           
           <div className="hidden md:flex space-x-2">
