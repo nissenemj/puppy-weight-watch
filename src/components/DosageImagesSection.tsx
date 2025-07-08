@@ -374,15 +374,18 @@ export default function DosageImagesSection() {
                     </TabsList>
                     
                     <TabsContent value="image" className="mt-4">
-                      <div className="relative group cursor-pointer">
+                      <div 
+                        className="relative group cursor-pointer"
+                        onClick={() => setSelectedImage(getImageUrl(image.image_path))}
+                      >
                         <img
                           src={getImageUrl(image.image_path)}
                           alt={image.title}
-                          className="w-full h-auto object-contain max-h-[600px] mx-auto"
-                          onClick={() => setSelectedImage(getImageUrl(image.image_path))}
+                          className="w-full h-auto object-contain max-h-[600px] mx-auto rounded-lg"
                         />
-                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                          <Eye className="h-6 w-6 text-white" />
+                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg">
+                          <Eye className="h-8 w-8 text-white" />
+                          <span className="ml-2 text-white font-medium">Klikkaa suurentaaksesi</span>
                         </div>
                       </div>
                     </TabsContent>
@@ -514,15 +517,21 @@ export default function DosageImagesSection() {
           </div>
         )}
 
-        {/* Image preview dialog */}
+        {/* Image zoom dialog */}
         {selectedImage && (
           <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
-            <DialogContent className="max-w-6xl max-h-[95vh]">
-              <img
-                src={selectedImage}
-                alt="Annostelukuva"
-                className="w-full h-auto max-h-[90vh] object-contain"
-              />
+            <DialogContent className="max-w-7xl max-h-[95vh] p-2">
+              <DialogHeader>
+                <DialogTitle>Annostelukuva - Klikkaa sulkeaksesi</DialogTitle>
+              </DialogHeader>
+              <div className="flex items-center justify-center max-h-[85vh] overflow-hidden">
+                <img
+                  src={selectedImage}
+                  alt="Annostelukuva suurennettuna"
+                  className="max-w-full max-h-full object-contain cursor-pointer"
+                  onClick={() => setSelectedImage(null)}
+                />
+              </div>
             </DialogContent>
           </Dialog>
         )}
