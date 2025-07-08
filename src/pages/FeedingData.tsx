@@ -335,11 +335,11 @@ export default function FeedingData() {
                     Lisää uusi tuote
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="max-w-2xl">
+                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto w-[95vw] sm:w-full">
                   <DialogHeader>
                     <DialogTitle>Lisää uusi koiranruoka</DialogTitle>
                   </DialogHeader>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="name">Tuotteen nimi *</Label>
                       <Input
@@ -436,11 +436,11 @@ export default function FeedingData() {
           {filteredFoods.map((food) => (
             <Card key={food.id} className="bg-white/80 backdrop-blur-sm">
               <CardHeader>
-                <div className="flex justify-between items-start">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
                   <div className="flex-1">
                     {editingFood?.id === food.id ? (
                       <div className="space-y-4">
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <div>
                             <Label>Tuotteen nimi</Label>
                             <Input

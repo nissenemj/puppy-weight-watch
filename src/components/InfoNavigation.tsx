@@ -22,7 +22,6 @@ export default function InfoNavigation() {
           <Link to="/info" className="flex items-center gap-2 text-lg sm:text-xl font-bold text-gray-900 truncate">
             <img src={puppyLogo} alt="Puppy Logo" className="w-8 h-8 sm:w-10 sm:h-10 rounded-full" />
             <span className="hidden sm:inline">Puppy Weight Watch</span>
-            <span className="sm:hidden">PWW</span>
           </Link>
           
           <div className="hidden md:flex space-x-2">
