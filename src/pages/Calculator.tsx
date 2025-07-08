@@ -43,7 +43,7 @@ const Calculator = () => {
   ];
 
   const breadcrumbItems = [
-    { name: "Laskuri", href: "/calculator", current: true }
+    { name: "Pentulaskuri", href: "/calculator", current: true }
   ];
 
   const structuredData = [
@@ -70,7 +70,7 @@ const Calculator = () => {
         
         <header className="text-center mb-8">
           <h1 className="text-4xl font-heading font-bold bg-gradient-warm bg-clip-text text-transparent mb-4">
-            Pentulaskuri - Ruokamäärä
+            Pentulaskuri
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Laske koiranpentusi optimaalinen päivittäinen ruokamäärä huomioiden rodun, iän, painon ja aktiivisuustason.
@@ -79,9 +79,17 @@ const Calculator = () => {
         
         <EnhancedPuppyCalculator />
         
-        <div className="mt-12">
-          <FAQ items={faqs} />
-        </div>
+        <section className="mt-16 max-w-4xl mx-auto">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-heading font-bold text-foreground mb-4">
+              Usein kysytyt kysymykset
+            </h2>
+            <p className="text-muted-foreground">
+              Kattava opas koiranpennun ruokintaan ja ruokamäärien laskentaan
+            </p>
+          </div>
+          <FAQ items={faqs} title="" />
+        </section>
       </div>
     </div>
   )
