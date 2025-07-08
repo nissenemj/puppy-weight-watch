@@ -16,6 +16,7 @@ import { DogFoodService, type DogFood } from '@/services/dogFoodService'
 import { supabase } from '@/integrations/supabase/client'
 import { toast } from 'sonner'
 import BackToTopButton from '@/components/BackToTopButton'
+import heroImage from '@/assets/welcome-illustration.png'
 
 export default function FeedingData() {
   const [dogFoods, setDogFoods] = useState<DogFood[]>([])
@@ -220,15 +221,23 @@ export default function FeedingData() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-warm pt-14 w-full overflow-x-hidden">
+    <div className="min-h-screen bg-background pt-14 w-full overflow-x-hidden">
       <InfoNavigation />
       
       <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-full min-w-0">
-        <div className="mb-8">
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+        {/* Hero Section */}
+        <div className="text-center mb-12">
+          <div className="flex justify-center mb-6">
+            <img 
+              src={heroImage} 
+              alt="Annostelutiedot" 
+              className="w-32 h-32 sm:w-40 sm:h-40 object-contain"
+            />
+          </div>
+          <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4">
             📊 Annostelutiedot
           </h1>
-          <p className="text-xl text-muted-foreground max-w-4xl">
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             Yksityiskohtaiset annosteluohjeet Suomessa myytävistä penturuoista. 
             Tiedot kerätty valmistajien ohjeista ja strukturoitu ohjelmistokäyttöön.
           </p>

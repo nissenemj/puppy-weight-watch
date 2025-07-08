@@ -8,6 +8,7 @@ import Navigation from '@/components/Navigation'
 import SEO from '@/components/SEO'
 import FAQ from '@/components/FAQ'
 import { createArticleSchema, createFAQSchema, createBreadcrumbSchema } from '@/utils/structuredData'
+import heroImage from '@/assets/welcome-illustration.png'
 
 export default function InfoHome() {
   const faqs = [
@@ -40,7 +41,7 @@ export default function InfoHome() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-warm pt-14">
+    <div className="min-h-screen bg-background pt-14">
       <SEO
         title="Tietopankki - Penturuoka-opas"
         description="Laaja katsaus koiranpentujen ruokintaan ja ravitsemukseen. Kuiva-, märkä- ja raakaruokien analyysi, annostelutiedot ja turvallisuusohjeet."
@@ -52,6 +53,13 @@ export default function InfoHome() {
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="text-center mb-12">
+          <div className="flex justify-center mb-6">
+            <img 
+              src={heroImage} 
+              alt="Penturuoka-opas" 
+              className="w-32 h-32 sm:w-40 sm:h-40 object-contain"
+            />
+          </div>
           <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4">
             🐕 Penturuoka-opas
           </h1>

@@ -13,7 +13,7 @@ import heroImage from '@/assets/welcome-illustration.png'
 
 export default function SafetyPage() {
   return (
-    <div className="min-h-screen bg-gradient-warm pt-14 w-full overflow-x-hidden">
+    <div className="min-h-screen bg-background pt-14 w-full overflow-x-hidden">
       <InfoNavigation />
       <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-full min-w-0">
         {/* Hero Section */}
