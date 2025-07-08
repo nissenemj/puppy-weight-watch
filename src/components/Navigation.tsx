@@ -41,17 +41,6 @@ const Navigation = () => {
         </Link>
       </Button>
       
-      <Button 
-        asChild 
-        variant={isActive('/calculator') ? 'default' : 'ghost'} 
-        className="justify-start"
-        onClick={() => setIsOpen(false)}
-      >
-        <Link to="/calculator">
-          <Calculator className="mr-2 h-4 w-4" />
-          Ruokamäärälaskuri
-        </Link>
-      </Button>
       
       <Button 
         asChild 
@@ -130,12 +119,6 @@ const Navigation = () => {
               </Link>
             </Button>
             
-            <Button asChild variant={isActive('/calculator') ? 'default' : 'ghost'} size="sm">
-              <Link to="/calculator">
-                <Calculator className="mr-2 h-4 w-4" />
-                Laskuri
-              </Link>
-            </Button>
             
             <Button asChild variant={isActive('/info') ? 'default' : 'ghost'} size="sm">
               <Link to="/info">
