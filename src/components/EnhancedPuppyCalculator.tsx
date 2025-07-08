@@ -41,6 +41,14 @@ interface FeedingGuideline {
   calculation_formula?: string
 }
 
+interface DosageData {
+  id: string
+  weight_range?: string
+  age_range?: string
+  daily_amount?: string
+  notes?: string
+}
+
 interface CalculationResult {
   amount: number | null
   minAmount?: number
@@ -49,6 +57,7 @@ interface CalculationResult {
   disclaimers: string[]
   activityAdjustment?: string
   mealSchedule?: string
+  dosageSource?: string
 }
 
 const ACTIVITY_LEVELS = [
@@ -105,6 +114,49 @@ export default function EnhancedPuppyCalculator() {
     } catch (error) {
       console.error('Error fetching guidelines:', error)
       setGuidelines([])
+    }
+  }
+
+  const fetchDosageData = async (foodId: string): Promise<DosageData[]> => {
+    try {
+      const { data, error } = await supabase
+        .from('dosage_images')
+        .select(`
+          id,
+          title,
+          dosage_table_data (
+            id,
+            weight_range,
+            age_range,
+            daily_amount,
+            notes,
+            row_order
+          )
+        `)
+        .eq('dog_food_id', foodId)
+
+      if (error) throw error
+      
+      // Flatten the dosage table data
+      const dosageData: DosageData[] = []
+      data?.forEach(dosageImage => {
+        if (dosageImage.dosage_table_data) {
+          dosageImage.dosage_table_data.forEach((row: any) => {
+            dosageData.push({
+              id: row.id,
+              weight_range: row.weight_range,
+              age_range: row.age_range,
+              daily_amount: row.daily_amount,
+              notes: row.notes
+            })
+          })
+        }
+      })
+      
+      return dosageData
+    } catch (error) {
+      console.error('Error fetching dosage data:', error)
+      return []
     }
   }
 
@@ -207,45 +259,82 @@ export default function EnhancedPuppyCalculator() {
     let minAmount: number | undefined
     let maxAmount: number | undefined
     let warning: string | undefined
+    let dosageSource: string | undefined
     
-    // Find matching guideline
-    const matchingGuidelines = guidelines.filter(g => {
-      if (selectedFood.dosage_method === 'odotettu_aikuispaino_ja_ikä') {
-        return g.adult_weight_kg === adultWeightNum && 
-               g.age_months && isAgeInRange(ageMonthsNum, g.age_months)
-      } else if (selectedFood.dosage_method === 'nykyinen_paino') {
-        return g.current_weight_kg && 
-               currentWeightNum >= g.current_weight_kg - 1 && 
-               currentWeightNum <= g.current_weight_kg + 1
-      } else if (selectedFood.dosage_method === 'kokoluokka') {
-        return g.adult_weight_kg === adultWeightNum
-      }
-      return false
-    })
+    // Try dosage data first (visual feeding instructions)
+    const dosageData = await fetchDosageData(selectedFood.id)
+    let matchingDosageData: DosageData | null = null
     
-    if (matchingGuidelines.length > 0) {
-      const guideline = matchingGuidelines[0]
-      if (guideline.daily_amount_min && guideline.daily_amount_max) {
-        baseAmount = Math.round((guideline.daily_amount_min + guideline.daily_amount_max) / 2)
-        minAmount = guideline.daily_amount_min
-        maxAmount = guideline.daily_amount_max
-      } else if (guideline.daily_amount_min) {
-        baseAmount = guideline.daily_amount_min
+    if (dosageData.length > 0) {
+      matchingDosageData = dosageData.find(d => {
+        if (d.weight_range && currentWeight) {
+          const weightInRange = isWeightInRange(currentWeightNum, d.weight_range)
+          if (d.age_range && ageMonths) {
+            const ageInRange = isAgeInRange(ageMonthsNum, d.age_range)
+            return weightInRange && ageInRange
+          }
+          return weightInRange
+        }
+        if (d.age_range && ageMonths) {
+          return isAgeInRange(ageMonthsNum, d.age_range)
+        }
+        return false
+      })
+      
+      if (matchingDosageData && matchingDosageData.daily_amount) {
+        const amount = parseDailyAmount(matchingDosageData.daily_amount)
+        if (amount) {
+          baseAmount = amount.amount
+          minAmount = amount.minAmount
+          maxAmount = amount.maxAmount
+          dosageSource = 'Annosteluohje'
+        }
       }
-    } else {
-      // Fallback calculation if no exact match
-      if (selectedFood.dosage_method === 'nykyinen_paino' || 
-          selectedFood.dosage_method === 'prosentti_nykyisestä_painosta') {
-        // Use percentage of current weight for raw foods
-        let percentage = 0.06 // 6% default for puppies
-        if (ageMonthsNum <= 2) percentage = 0.09
-        else if (ageMonthsNum <= 4) percentage = 0.065
-        else if (ageMonthsNum <= 6) percentage = 0.045
-        else if (ageMonthsNum <= 9) percentage = 0.03
-        else percentage = 0.025
-        
-        baseAmount = Math.round(currentWeightNum * 1000 * percentage)
-        warning = 'Laskettu yleiskaavalla raakaruoalle'
+    }
+    
+    // Fall back to feeding guidelines if no dosage data match
+    if (!baseAmount) {
+      const matchingGuidelines = guidelines.filter(g => {
+        if (selectedFood.dosage_method === 'odotettu_aikuispaino_ja_ikä') {
+          return g.adult_weight_kg === adultWeightNum && 
+                 g.age_months && isAgeInRange(ageMonthsNum, g.age_months)
+        } else if (selectedFood.dosage_method === 'nykyinen_paino') {
+          return g.current_weight_kg && 
+                 currentWeightNum >= g.current_weight_kg - 1 && 
+                 currentWeightNum <= g.current_weight_kg + 1
+        } else if (selectedFood.dosage_method === 'kokoluokka') {
+          return g.adult_weight_kg === adultWeightNum
+        }
+        return false
+      })
+      
+      if (matchingGuidelines.length > 0) {
+        const guideline = matchingGuidelines[0]
+        if (guideline.daily_amount_min && guideline.daily_amount_max) {
+          baseAmount = Math.round((guideline.daily_amount_min + guideline.daily_amount_max) / 2)
+          minAmount = guideline.daily_amount_min
+          maxAmount = guideline.daily_amount_max
+          dosageSource = 'Ruokintaohje'
+        } else if (guideline.daily_amount_min) {
+          baseAmount = guideline.daily_amount_min
+          dosageSource = 'Ruokintaohje'
+        }
+      } else {
+        // Fallback calculation if no exact match
+        if (selectedFood.dosage_method === 'nykyinen_paino' || 
+            selectedFood.dosage_method === 'prosentti_nykyisestä_painosta') {
+          // Use percentage of current weight for raw foods
+          let percentage = 0.06 // 6% default for puppies
+          if (ageMonthsNum <= 2) percentage = 0.09
+          else if (ageMonthsNum <= 4) percentage = 0.065
+          else if (ageMonthsNum <= 6) percentage = 0.045
+          else if (ageMonthsNum <= 9) percentage = 0.03
+          else percentage = 0.025
+          
+          baseAmount = Math.round(currentWeightNum * 1000 * percentage)
+          warning = 'Laskettu yleiskaavalla raakaruoalle'
+          dosageSource = 'Yleiskaava'
+        }
       }
     }
     
@@ -278,7 +367,8 @@ export default function EnhancedPuppyCalculator() {
       warning,
       disclaimers,
       activityAdjustment,
-      mealSchedule
+      mealSchedule,
+      dosageSource
     }
   }
 
@@ -289,6 +379,42 @@ export default function EnhancedPuppyCalculator() {
     const min = parseFloat(parts[0])
     const max = parseFloat(parts[1])
     return age >= min && age <= max
+  }
+
+  const isWeightInRange = (weight: number, range: string): boolean => {
+    const parts = range.split('-')
+    if (parts.length !== 2) return false
+    
+    const min = parseFloat(parts[0])
+    const max = parseFloat(parts[1])
+    return weight >= min && weight <= max
+  }
+
+  const parseDailyAmount = (amount: string): { amount: number; minAmount?: number; maxAmount?: number } | null => {
+    // Handle different formats like "200g", "150-200g", "200-250"
+    const cleanAmount = amount.replace(/[^\d-.,]/g, '')
+    
+    if (cleanAmount.includes('-')) {
+      const parts = cleanAmount.split('-')
+      if (parts.length === 2) {
+        const min = parseFloat(parts[0])
+        const max = parseFloat(parts[1])
+        if (!isNaN(min) && !isNaN(max)) {
+          return {
+            amount: Math.round((min + max) / 2),
+            minAmount: min,
+            maxAmount: max
+          }
+        }
+      }
+    } else {
+      const single = parseFloat(cleanAmount)
+      if (!isNaN(single)) {
+        return { amount: single }
+      }
+    }
+    
+    return null
   }
 
   const generateMealSchedule = (ageMonths: number): string => {
@@ -394,7 +520,7 @@ export default function EnhancedPuppyCalculator() {
         <CardHeader className="p-4 sm:p-6">
           <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
             <Dog className="h-5 w-5 sm:h-6 sm:w-6" />
-            Dynaaminen penturuokintlaskuri
+            Dynaaminen penturuokintalaskuri
           </CardTitle>
           <CardDescription className="text-sm sm:text-base">
             Valitse ruoka ja sovellus pyytää automaattisesti tarvittavat tiedot
@@ -474,9 +600,12 @@ export default function EnhancedPuppyCalculator() {
                       ? `${result.minAmount}-${result.maxAmount}g`
                       : `${result.amount}g`
                     }
-                  </div>
-                  <p className="text-muted-foreground text-sm sm:text-base">päivittäinen ruokamäärä</p>
-                </div>
+                   </div>
+                   <p className="text-muted-foreground text-sm sm:text-base">päivittäinen ruokamäärä</p>
+                   {result.dosageSource && (
+                     <p className="text-xs text-muted-foreground mt-1">Lähde: {result.dosageSource}</p>
+                   )}
+                 </div>
 
                 {result.activityAdjustment && (
                   <Alert>

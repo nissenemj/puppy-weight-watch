@@ -90,6 +90,7 @@ export type Database = {
         Row: {
           created_at: string
           description: string | null
+          dog_food_id: string | null
           food_brand: string | null
           id: string
           image_path: string
@@ -100,6 +101,7 @@ export type Database = {
         Insert: {
           created_at?: string
           description?: string | null
+          dog_food_id?: string | null
           food_brand?: string | null
           id?: string
           image_path: string
@@ -110,6 +112,7 @@ export type Database = {
         Update: {
           created_at?: string
           description?: string | null
+          dog_food_id?: string | null
           food_brand?: string | null
           id?: string
           image_path?: string
@@ -117,7 +120,15 @@ export type Database = {
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "fk_dosage_images_dog_food"
+            columns: ["dog_food_id"]
+            isOneToOne: false
+            referencedRelation: "dog_foods"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       dosage_table_data: {
         Row: {
