@@ -22,6 +22,18 @@ export function FoodCard({ food, onSelect, isSelected = false, showDetails = fal
     (food.nutrition && Object.values(food.nutrition).some(v => v !== null && v !== false)) ||
     food.manufacturer_info
   )
+
+  const getSpecialFeatures = () => {
+    const features = []
+    if (food.nutrition?.grain_free) features.push("Viljaton")
+    if (food.nutrition?.wheat_free) features.push("Vehnätön") 
+    if (food.nutrition?.gluten_free) features.push("Gluteeniton")
+    if (food.nutrition?.special_features?.includes('Hypoallergeeninen')) features.push("Hypoallergeeninen")
+    if (food.nutrition?.special_features?.includes('100% kotimaista kanaa')) features.push("Kotimainen")
+    if (food.nutrition?.special_features?.includes('Raakaruoka (B.A.R.F.)')) features.push("B.A.R.F.")
+    if (food.nutrition?.special_features?.includes('VAROITUS: Turvallisuusongelmat 2023')) features.push("⚠️ Turvallisuusvaroitus")
+    return features
+  }
   
   const getDosageMethodLabel = (method: string) => {
     switch (method) {
@@ -76,30 +88,25 @@ export function FoodCard({ food, onSelect, isSelected = false, showDetails = fal
               >
                 {food.nutrition_type}
               </Badge>
+              {getSpecialFeatures().map((feature, idx) => (
+                <Badge key={idx} variant="outline" className="text-xs bg-blue-50">
+                  {feature}
+                </Badge>
+              ))}
             </div>
             
             <div className="text-sm text-muted-foreground mb-2">
               <span className="font-medium">Annostelumenetelmä:</span> {getDosageMethodLabel(food.dosage_method)}
             </div>
 
-            {food.nutrition && (
-              <div className="flex flex-wrap gap-2 mb-2">
-                {food.nutrition.grain_free && (
-                  <Badge variant="secondary" className="bg-green-100 text-green-800">
-                    Viljaton
-                  </Badge>
-                )}
-                {food.nutrition.wheat_free && (
-                  <Badge variant="secondary" className="bg-blue-100 text-blue-800">
-                    Vehnätön
-                  </Badge>
-                )}
-                {food.nutrition.gluten_free && (
-                  <Badge variant="secondary" className="bg-purple-100 text-purple-800">
-                    Gluteeniton
-                  </Badge>
-                )}
-              </div>
+            {food.nutrition?.special_features?.includes('VAROITUS: Turvallisuusongelmat 2023') && (
+              <Alert variant="destructive" className="mb-3">
+                <AlertTriangle className="h-4 w-4" />
+                <AlertDescription className="text-sm">
+                  HUOM: Joitakin tämän valmistajan tuotteita on vedetty markkinoilta turvallisuussyistä (2023). 
+                  Tarkista tuotteen nykyinen saatavuus ennen käyttöä.
+                </AlertDescription>
+              </Alert>
             )}
 
             {food.notes && (

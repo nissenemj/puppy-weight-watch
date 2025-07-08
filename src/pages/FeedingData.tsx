@@ -8,10 +8,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Search, Filter, Database, AlertCircle, Plus, Edit, Save, X, Trash2 } from 'lucide-react'
 import InfoNavigation from '@/components/InfoNavigation'
 import DosageImagesSection from '@/components/DosageImagesSection'
 import GeneralDosageSection from '@/components/GeneralDosageSection'
+import FoodAnalysisView from '@/components/FoodAnalysisView'
 import { FoodFilter, type FoodFilters } from '@/components/FoodFilter'
 import { FoodCard } from '@/components/FoodCard'
 import { DogFoodService, type DogFood } from '@/services/dogFoodService'
@@ -338,36 +340,40 @@ export default function FeedingData() {
           </Card>
         )}
 
-        {/* Enhanced Food Filter */}
-        <FoodFilter
-          filters={filters}
-          onFiltersChange={setFilters}
-          manufacturers={manufacturers}
-          proteinSources={proteinSources}
-        />
+        {/* Main Content Tabs */}
+        <Tabs defaultValue="food-list" className="w-full">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="food-list">Ruokalista</TabsTrigger>
+            <TabsTrigger value="analysis">Analyysi</TabsTrigger>
+            <TabsTrigger value="dosage-images">Annostelukuvat</TabsTrigger>
+            <TabsTrigger value="general-dosage">Yleiset ohjeet</TabsTrigger>
+          </TabsList>
 
-        <div className="mb-6 text-sm text-muted-foreground text-center">
-          Näytetään {filteredFoods.length} / {dogFoods.length} tuotetta
-        </div>
+          <TabsContent value="food-list" className="space-y-6">
+            {/* Enhanced Food Filter */}
+            <FoodFilter
+              filters={filters}
+              onFiltersChange={setFilters}
+              manufacturers={manufacturers}
+              proteinSources={proteinSources}
+            />
 
-        {/* Annostelukuvat */}
-        <DosageImagesSection />
+            <div className="mb-6 text-sm text-muted-foreground text-center">
+              Näytetään {filteredFoods.length} / {dogFoods.length} tuotetta
+            </div>
 
-        {/* Yleiset annostelutaulut */}
-        <GeneralDosageSection />
-
-        {/* Tuotteet */}
-        <Card className="mb-8 bg-card/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
-          <CardHeader>
-            <CardTitle className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xl">
-              <span>Koiranruokatiedot</span>
-              <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button className="w-full sm:w-auto">
-                    <Plus className="h-4 w-4 mr-2" />
-                    Lisää uusi tuote
-                  </Button>
-                </DialogTrigger>
+            {/* Tuotteet */}
+            <Card className="mb-8 bg-card/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
+              <CardHeader>
+                <CardTitle className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xl">
+                  <span>Koiranruokatiedot</span>
+                  <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button className="w-full sm:w-auto">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Lisää uusi tuote
+                      </Button>
+                    </DialogTrigger>
                 <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto w-[95vw] sm:w-full mx-2">
                   <DialogHeader>
                     <DialogTitle>Lisää uusi koiranruoka</DialogTitle>

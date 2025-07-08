@@ -207,19 +207,31 @@ export class DogFoodService {
         { ingredient_type: 'primary', ingredient_name: 'Riisi', percentage: 30, order_index: 1 },
         { ingredient_type: 'primary', ingredient_name: 'Kananrasva', order_index: 2 },
         { ingredient_type: 'primary', ingredient_name: 'Lohiöljy', percentage: 3, order_index: 3 },
-        { ingredient_type: 'protein', ingredient_name: 'Lammas', order_index: 0 },
-        { ingredient_type: 'protein', ingredient_name: 'Hydrolysoitu hiiva', order_index: 1 },
-        { ingredient_type: 'carb', ingredient_name: 'Riisi', order_index: 0 },
+        { ingredient_type: 'primary', ingredient_name: 'Panimohiiva', order_index: 4 },
+        { ingredient_type: 'primary', ingredient_name: 'Luonnollinen aromi', order_index: 5 },
+        { ingredient_type: 'primary', ingredient_name: 'Kuivattu omenapulppi', order_index: 6 },
+        { ingredient_type: 'protein', ingredient_name: 'Kuivattu lammas', order_index: 0 },
+        { ingredient_type: 'protein', ingredient_name: 'Hydrolysoitu hiiva', percentage: 0.5, order_index: 1 },
+        { ingredient_type: 'carb', ingredient_name: 'Riisi', percentage: 30, order_index: 0 },
         { ingredient_type: 'carb', ingredient_name: 'Hernejauho', order_index: 1 },
         { ingredient_type: 'fat', ingredient_name: 'Kananrasva', order_index: 0 },
-        { ingredient_type: 'fat', ingredient_name: 'Lohiöljy', order_index: 1 },
+        { ingredient_type: 'fat', ingredient_name: 'Lohiöljy', percentage: 3, order_index: 1 },
         { ingredient_type: 'additive', ingredient_name: 'Glukosamiini', order_index: 0 },
-        { ingredient_type: 'additive', ingredient_name: 'Kondroitiinisulfaatti', order_index: 1 }
+        { ingredient_type: 'additive', ingredient_name: 'Kondroitiinisulfaatti', order_index: 1 },
+        { ingredient_type: 'additive', ingredient_name: 'Frukto-oligosakkaridit', order_index: 2 },
+        { ingredient_type: 'additive', ingredient_name: 'Mannaani-oligosakkaridit', order_index: 3 },
+        { ingredient_type: 'additive', ingredient_name: 'Mojave yucca', order_index: 4 },
+        { ingredient_type: 'additive', ingredient_name: 'Ohdakkeen siemen', order_index: 5 },
+        { ingredient_type: 'additive', ingredient_name: 'β-glukaanit', order_index: 6 },
+        { ingredient_type: 'additive', ingredient_name: 'Kuivattu sydänruoho', order_index: 7 },
+        { ingredient_type: 'additive', ingredient_name: 'Kuivattu tyrni', order_index: 8 },
+        { ingredient_type: 'additive', ingredient_name: 'Probiootit Lactobacillus helveticus', order_index: 9 }
       ],
       allergens: [
         { allergen_type: 'free_from', allergen_name: 'Vehnä' },
         { allergen_type: 'free_from', allergen_name: 'Soija' },
-        { allergen_type: 'free_from', allergen_name: 'Maissi' }
+        { allergen_type: 'free_from', allergen_name: 'Maissi' },
+        { allergen_type: 'free_from', allergen_name: 'Gluteeni' }
       ],
       nutrition: {
         protein_percentage: 28,
@@ -229,7 +241,7 @@ export class DogFoodService {
         grain_free: false,
         wheat_free: true,
         gluten_free: true,
-        special_features: ['Hypoallergeeninen', 'Nivelten tuki', 'Probiootteja', 'Omega-3']
+        special_features: ['Hypoallergeeninen', 'Yksi eläinproteiinin lähde', 'Nivelten tuki', 'Probiootteja', 'Prebiootteja', 'Omega-3', 'Luonnolliset antioksidantit']
       },
       manufacturer_info: {
         country_of_origin: 'Tšekki',
@@ -269,16 +281,26 @@ export class DogFoodService {
         { ingredient_type: 'primary', ingredient_name: 'Siipikarjajauho', percentage: 45, order_index: 0 },
         { ingredient_type: 'primary', ingredient_name: 'Riisi', percentage: 16, order_index: 1 },
         { ingredient_type: 'primary', ingredient_name: 'Kaura', percentage: 13, order_index: 2 },
-        { ingredient_type: 'protein', ingredient_name: 'Kana', order_index: 0 },
-        { ingredient_type: 'protein', ingredient_name: 'Hydrolysoitu kananmaksa', order_index: 1 },
-        { ingredient_type: 'carb', ingredient_name: 'Riisi', order_index: 0 },
-        { ingredient_type: 'carb', ingredient_name: 'Kaura', order_index: 1 },
-        { ingredient_type: 'fat', ingredient_name: 'Kananrasva', order_index: 0 },
-        { ingredient_type: 'fat', ingredient_name: 'Camelinaöljy', order_index: 1 }
+        { ingredient_type: 'primary', ingredient_name: 'Kananrasva', percentage: 11, order_index: 3 },
+        { ingredient_type: 'primary', ingredient_name: 'Kuivattu omena', percentage: 4, order_index: 4 },
+        { ingredient_type: 'primary', ingredient_name: 'Kuorittu herne', percentage: 4, order_index: 5 },
+        { ingredient_type: 'primary', ingredient_name: 'Panimohiiva', order_index: 6 },
+        { ingredient_type: 'primary', ingredient_name: 'Camelinaöljy', percentage: 1.5, order_index: 7 },
+        { ingredient_type: 'protein', ingredient_name: 'Kana', percentage: 41, order_index: 0 },
+        { ingredient_type: 'protein', ingredient_name: 'Hydrolysoitu kananmaksa', percentage: 2, order_index: 1 },
+        { ingredient_type: 'carb', ingredient_name: 'Riisi', percentage: 16, order_index: 0 },
+        { ingredient_type: 'carb', ingredient_name: 'Kaura', percentage: 13, order_index: 1 },
+        { ingredient_type: 'carb', ingredient_name: 'Kuorittu herne', percentage: 4, order_index: 2 },
+        { ingredient_type: 'fat', ingredient_name: 'Kananrasva', percentage: 11, order_index: 0 },
+        { ingredient_type: 'fat', ingredient_name: 'Camelinaöljy', percentage: 1.5, order_index: 1 },
+        { ingredient_type: 'additive', ingredient_name: 'Mannaanioligosakkaridit', order_index: 0 },
+        { ingredient_type: 'additive', ingredient_name: 'Frukto-oligosakkaridit', order_index: 1 },
+        { ingredient_type: 'additive', ingredient_name: 'Jukkauute', order_index: 2 }
       ],
       allergens: [
         { allergen_type: 'free_from', allergen_name: 'Vehnä' },
-        { allergen_type: 'free_from', allergen_name: 'Soija' }
+        { allergen_type: 'free_from', allergen_name: 'Soija' },
+        { allergen_type: 'free_from', allergen_name: 'Gluteeni' }
       ],
       nutrition: {
         protein_percentage: 32,
@@ -288,7 +310,7 @@ export class DogFoodService {
         grain_free: false,
         wheat_free: true,
         gluten_free: true,
-        special_features: ['100% kotimaista kanaa', 'Prebiootteja', 'Omega-rasvahappoja']
+        special_features: ['100% kotimaista kanaa', 'Valmistettu Suomessa', 'Prebiootteja', 'Omega-rasvahappoja', '85% eläinperäistä proteiinia']
       },
       manufacturer_info: {
         country_of_origin: 'Suomi',
@@ -297,15 +319,15 @@ export class DogFoodService {
       }
     })
 
-    // Insert MUSH Vaisto Puppy
-    await this.insertDogFoodWithGuidelines({
+    // Insert MUSH Vaisto Puppy with enhanced data
+    const mushFood = await this.insertDogFoodWithGuidelines({
       product_code: 'MUSH_PUPPY_RAW_T1',
       name: 'MUSH Vaisto Puppy (nauta-poro-lohi)',
       manufacturer: 'MUSH',
       food_type: 'Raaka',
       nutrition_type: 'Täysravinto',
       dosage_method: 'Odotettu_Aikuispaino_Ja_Ikä',
-      notes: 'Taulukko antaa tarkat arvot.'
+      notes: 'Taulukko antaa tarkat arvot. Raakaruoka (B.A.R.F.).'
     }, [
       { adult_weight_kg: 20, age_months: '1-2', calculation_formula: 'Aikuispaino_kg * 100' },
       { adult_weight_kg: 20, age_months: '2-4', calculation_formula: 'Aikuispaino_kg * 75' },
@@ -313,6 +335,46 @@ export class DogFoodService {
       { adult_weight_kg: 20, age_months: '6-9', calculation_formula: 'Aikuispaino_kg * 30' },
       { adult_weight_kg: 20, age_months: '9+', calculation_formula: 'Aikuispaino_kg * 25' }
     ])
+
+    // Add enhanced data for MUSH
+    await this.addEnhancedFoodData(mushFood.id, {
+      ingredients: [
+        { ingredient_type: 'primary', ingredient_name: 'Nauta', percentage: 35, order_index: 0 },
+        { ingredient_type: 'primary', ingredient_name: 'Poro', percentage: 35, order_index: 1 },
+        { ingredient_type: 'primary', ingredient_name: 'Lohi', percentage: 22, order_index: 2 },
+        { ingredient_type: 'primary', ingredient_name: 'Kasvikset, hedelmät ja öljyt', percentage: 8, order_index: 3 },
+        { ingredient_type: 'protein', ingredient_name: 'Naudanliha', order_index: 0 },
+        { ingredient_type: 'protein', ingredient_name: 'Naudansydän', order_index: 1 },
+        { ingredient_type: 'protein', ingredient_name: 'Naudanmaha', order_index: 2 },
+        { ingredient_type: 'protein', ingredient_name: 'Naudanmaksa', order_index: 3 },
+        { ingredient_type: 'protein', ingredient_name: 'Poronliha', order_index: 4 },
+        { ingredient_type: 'protein', ingredient_name: 'Lohi ruotoineen', order_index: 5 },
+        { ingredient_type: 'additive', ingredient_name: 'Naudan rusto', order_index: 0 },
+        { ingredient_type: 'additive', ingredient_name: 'Poron luu', order_index: 1 },
+        { ingredient_type: 'additive', ingredient_name: 'Poron keuhko', order_index: 2 },
+        { ingredient_type: 'additive', ingredient_name: 'Poron rusto', order_index: 3 }
+      ],
+      allergens: [
+        { allergen_type: 'free_from', allergen_name: 'Viljat' },
+        { allergen_type: 'free_from', allergen_name: 'Lisäaineet' },
+        { allergen_type: 'free_from', allergen_name: 'Säilöntäaineet' }
+      ],
+      nutrition: {
+        protein_percentage: 14,
+        fat_percentage: 12,
+        fiber_percentage: 0.5,
+        moisture_percentage: 70,
+        grain_free: true,
+        wheat_free: true,
+        gluten_free: true,
+        special_features: ['Raakaruoka (B.A.R.F.)', '100% luonnollinen', 'Viljaton', 'Lisäaineeton', 'Korkea kosteuspitoisuus', 'Monipuolinen proteiinilähde']
+      },
+      manufacturer_info: {
+        country_of_origin: 'Suomi',
+        website_url: 'https://mush.fi',
+        feeding_guide_url: 'https://mush.fi/koiranruoka/penturuoka/'
+      }
+    })
 
     // Insert MUSH general guideline
     await this.insertDogFoodWithGuidelines({
@@ -327,15 +389,15 @@ export class DogFoodService {
       { calculation_formula: 'Nykyinen_paino_kg * 1000 * (0.05... 0.10)' }
     ])
 
-    // Insert SMAAK
-    await this.insertDogFoodWithGuidelines({
+    // Insert SMAAK with enhanced data and safety warning
+    const smaakFood = await this.insertDogFoodWithGuidelines({
       product_code: 'SMAAK_PUPPY_RAW',
       name: 'SMAAK Raaka täysravinto (nauta-kalkkuna-kana)',
       manufacturer: 'SMAAK',
       food_type: 'Raaka',
       nutrition_type: 'Täysravinto',
       dosage_method: 'Nykyinen_Paino',
-      notes: 'Soveltuu pennuille. Annos on laaja vaihteluväli.'
+      notes: 'Soveltuu pennuille. Annos on laaja vaihteluväli. HUOM: Joitakin SMAAK-tuotteita on vedetty markkinoilta turvallisuussyistä (2023).'
     }, [
       { current_weight_kg: 5, daily_amount_min: 75, daily_amount_max: 150 },
       { current_weight_kg: 10, daily_amount_min: 150, daily_amount_max: 300 },
@@ -343,6 +405,45 @@ export class DogFoodService {
       { current_weight_kg: 20, daily_amount_min: 300, daily_amount_max: 600 },
       { current_weight_kg: 25, daily_amount_min: 375, daily_amount_max: 750 }
     ])
+
+    // Add enhanced data for SMAAK
+    await this.addEnhancedFoodData(smaakFood.id, {
+      ingredients: [
+        { ingredient_type: 'primary', ingredient_name: 'Broilerinliha ja -luut', order_index: 0 },
+        { ingredient_type: 'primary', ingredient_name: 'Broilerinmaksa', order_index: 1 },
+        { ingredient_type: 'primary', ingredient_name: 'Jäävuorisalaatti', order_index: 2 },
+        { ingredient_type: 'primary', ingredient_name: 'Kurkku', order_index: 3 },
+        { ingredient_type: 'primary', ingredient_name: 'Panimohiiva', order_index: 4 },
+        { ingredient_type: 'protein', ingredient_name: 'Broilerinliha', order_index: 0 },
+        { ingredient_type: 'protein', ingredient_name: 'Broilerinmaksa', order_index: 1 },
+        { ingredient_type: 'carb', ingredient_name: 'Jäävuorisalaatti', order_index: 0 },
+        { ingredient_type: 'carb', ingredient_name: 'Kurkku', order_index: 1 },
+        { ingredient_type: 'fat', ingredient_name: 'Kylmäpuristettu kasvisöljy', order_index: 0 },
+        { ingredient_type: 'additive', ingredient_name: 'Pellavansiemenrouhe', order_index: 0 },
+        { ingredient_type: 'additive', ingredient_name: 'Merilevä', order_index: 1 },
+        { ingredient_type: 'additive', ingredient_name: 'Puolukka', order_index: 2 },
+        { ingredient_type: 'additive', ingredient_name: 'Glukosamiini', order_index: 3 }
+      ],
+      allergens: [
+        { allergen_type: 'free_from', allergen_name: 'Viljat' },
+        { allergen_type: 'contains', allergen_name: 'Turvallisuusvaroitus' }
+      ],
+      nutrition: {
+        protein_percentage: 15,
+        fat_percentage: 10,
+        fiber_percentage: 1,
+        moisture_percentage: 68,
+        grain_free: true,
+        wheat_free: true,
+        gluten_free: true,
+        special_features: ['Raakaruoka', 'Tuore, pakastettu', 'Viljaton', 'Suomalaiset raaka-aineet (osittain)', 'VAROITUS: Turvallisuusongelmat 2023']
+      },
+      manufacturer_info: {
+        country_of_origin: 'Suomi',
+        website_url: 'https://smaak.fi',
+        feeding_guide_url: 'https://smaak.fi/koiranruoka/'
+      }
+    })
 
     // Insert Brit Premium by Nature (full nutrition)
     await this.insertDogFoodWithGuidelines({
