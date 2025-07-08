@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { AlertTriangle, Calculator, Weight, Utensils, PawPrint } from 'lucide-react';
+import FAQ from '@/components/FAQ';
 import InfoNavigation from '@/components/InfoNavigation';
 import InfoCard from '@/components/InfoCard';
 import InfoSection from '@/components/InfoSection';
@@ -27,10 +28,17 @@ const PuppyGuide = () => {
           />
         </div>
         <h1 className="text-4xl md:text-6xl font-heading font-bold text-foreground">
-          🐕 Koiranpennun Ruokinnan Kattava Opas
+          🐕 Kattava Opas Pennun Ruokintaan
         </h1>
+        <h2 className="text-2xl md:text-3xl font-semibold text-primary mb-4">
+          Selviydy, Menesty ja Kasvata Terve Aikuinen
+        </h2>
         <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-          Annosteluohjeet, ravitsemus ja hyvinvointi - kaikki tarvittava terveen kasvun turvaamiseksi
+          Onneksi olkoon uudesta perheenjäsenestä! Ensimmäiset kuukaudet ovat ratkaisevan tärkeitä, 
+          ja oikeanlainen ruokinta on paras investointi, jonka voit koirasi tulevaisuuteen tehdä.
+        </p>
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          Tämä opas antaa sinulle kaikki työkalut pennun ruokintaviidakossa navigointiin – niin iloissa kuin haasteissakin.
         </p>
       </div>
 
@@ -39,21 +47,36 @@ const PuppyGuide = () => {
         icon={<Calculator className="h-5 w-5" />}
         className="mb-8"
       >
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <a href="#ruokintamuodot" className="p-3 rounded-lg border hover:bg-accent/10 transition-colors">
-              <Utensils className="h-5 w-5 text-primary mb-2" />
-              <h3 className="font-semibold">Ruokintamuodot</h3>
-              <p className="text-sm text-muted-foreground">Kuiva-, märkä- ja raakaruoka</p>
-            </a>
-            <a href="#ravitsemustiede" className="p-3 rounded-lg border hover:bg-accent/10 transition-colors">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <a href="#superpennun-rakennuspalikat" className="p-3 rounded-lg border hover:bg-accent/10 transition-colors">
               <PawPrint className="h-5 w-5 text-primary mb-2" />
-              <h3 className="font-semibold">Ravitsemustiede</h3>
-              <p className="text-sm text-muted-foreground">Miksi ja mitä syöttää</p>
+              <h3 className="font-semibold">Superpennun Rakennuspalikat</h3>
+              <p className="text-sm text-muted-foreground">Proteiinit, rasvat ja ravinteiden tasapaino</p>
             </a>
-            <a href="#haasteet" className="p-3 rounded-lg border hover:bg-accent/10 transition-colors">
+            <a href="#ruokinta-koulutus" className="p-3 rounded-lg border hover:bg-accent/10 transition-colors">
+              <Utensils className="h-5 w-5 text-primary mb-2" />
+              <h3 className="font-semibold">Ruokinta on Koulutusta</h3>
+              <p className="text-sm text-muted-foreground">Rutiinit, maltti ja virikkeistäminen</p>
+            </a>
+            <a href="#liikunta-leikki" className="p-3 rounded-lg border hover:bg-accent/10 transition-colors">
+              <Weight className="h-5 w-5 text-primary mb-2" />
+              <h3 className="font-semibold">Liikunta ja Leikki</h3>
+              <p className="text-sm text-muted-foreground">Oikeanlaista liikuntaa pennulle</p>
+            </a>
+            <a href="#ongelmatilanteita" className="p-3 rounded-lg border hover:bg-accent/10 transition-colors">
               <AlertTriangle className="h-5 w-5 text-accent mb-2" />
-              <h3 className="font-semibold">Haasteet</h3>
-              <p className="text-sm text-muted-foreground">Nirsoilu ja vatsavaivat</p>
+              <h3 className="font-semibold">Ongelmatilanteita</h3>
+              <p className="text-sm text-muted-foreground">Ruokahaluttomuus ja ratkaisut</p>
+            </a>
+            <a href="#erityistarpeet" className="p-3 rounded-lg border hover:bg-accent/10 transition-colors">
+              <PawPrint className="h-5 w-5 text-primary mb-2" />
+              <h3 className="font-semibold">Erityistarpeet Roduittain</h3>
+              <p className="text-sm text-muted-foreground">Pienet vs. suuret rodut</p>
+            </a>
+            <a href="#turvallisuus" className="p-3 rounded-lg border hover:bg-accent/10 transition-colors">
+              <AlertTriangle className="h-5 w-5 text-accent mb-2" />
+              <h3 className="font-semibold">Ruoan Turvallisuus</h3>
+              <p className="text-sm text-muted-foreground">Kuluttajavastuu ja varovaisuus</p>
             </a>
           </div>
       </InfoCard>
@@ -79,7 +102,348 @@ const PuppyGuide = () => {
         </div>
       </InfoCard>
 
-      {/* Osa 1: Ruokintamuodot */}
+      {/* Osa 1: Superpennun Rakennuspalikat */}
+      <section id="superpennun-rakennuspalikat">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-2xl">Osa 1: Superpennun Rakennuspalikat</CardTitle>
+            <p className="text-muted-foreground">Tarkempi katsaus pennun ravitsemuksen perustekijöihin</p>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            
+            <div className="bg-primary/10 p-4 rounded-lg border-l-4 border-primary mb-6">
+              <h4 className="font-semibold text-primary mb-2">Energiatarve</h4>
+              <p className="text-sm">
+                Kasvava pentu tarvitsee jopa kaksi kertaa enemmän energiaa painokiloa kohden kuin aikuinen koira. 
+                Tämä energia on polttoainetta paitsi leikkiin, myös koko kehon kriittiseen kehitykseen.
+              </p>
+            </div>
+
+            {/* Proteiini */}
+            <div>
+              <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
+                <Badge variant="secondary">1.1</Badge>
+                Proteiini: Elämän Perusta
+              </h3>
+              
+              <div className="space-y-3">
+                <div className="bg-accent/10 p-4 rounded-lg border border-accent/20">
+                  <h4 className="font-semibold text-accent mb-2">Tavoite: 22–32% kuiva-aineesta</h4>
+                  <p className="text-sm">
+                    Proteiinit ovat välttämättömiä lihasten, elinten ja luuston rakennusaineita. 
+                    Ne ovat myös kriittisiä toimivan immuunijärjestelmän, hormonien ja entsyymien tuotannolle.
+                  </p>
+                </div>
+                
+                <div className="bg-primary/5 p-3 rounded">
+                  <h4 className="font-semibold text-primary text-sm mb-1">Laatu ennen kaikkea</h4>
+                  <p className="text-sm">
+                    Eläinperäiset proteiinit (liha, kala) sisältävät kaikki pennulle välttämättömät aminohapot 
+                    oikeassa suhteessa, toisin kuin kasviproteiinit.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Rasvat */}
+            <div>
+              <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
+                <Badge variant="secondary">1.2</Badge>
+                Rasvat: Energiaa ja Älynystyröitä
+              </h3>
+              
+              <div className="space-y-3">
+                <div className="bg-accent/10 p-4 rounded-lg border border-accent/20">
+                  <h4 className="font-semibold text-accent mb-2">Tavoite: 8–22% kuiva-aineesta</h4>
+                  <p className="text-sm">
+                    Rasvat ovat tiivis energianlähde ja välttämättömiä rasvaliukoisten A-, D-, E- ja K-vitamiinien imeytymiselle. 
+                    Toisin kuin me ihmiset, koiran tulee saada suurin osa päivittäisestä energiastaan rasvoista.
+                  </p>
+                </div>
+                
+                <div className="bg-primary/5 p-3 rounded">
+                  <h4 className="font-semibold text-primary text-sm mb-1">Aivojen Superruoka</h4>
+                  <p className="text-sm">
+                    Omega-3-rasvahappoihin kuuluva DHA on todistetusti elintärkeä aivojen ja näön kehitykselle. 
+                    Laadukkaissa penturuoissa on usein lisättynä esimerkiksi kalaöljyä DHA:n lähteeksi.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Hiilihydraatit */}
+            <div>
+              <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
+                <Badge variant="secondary">1.3</Badge>
+                Hiilihydraatit & Kuidut: Virtaa ja Vatsan Hyvinvointia
+              </h3>
+              
+              <div className="space-y-3">
+                <p className="text-sm">
+                  Hyvin sulavat hiilihydraatit (riisi, kaura) tarjoavat tasaista energiaa ja ovat helliä 
+                  pennun kehittyvälle ruoansulatusjärjestelmälle.
+                </p>
+                
+                <div className="bg-primary/5 p-3 rounded">
+                  <h4 className="font-semibold text-primary text-sm mb-1">Kuidut (tavoite 2-4%)</h4>
+                  <p className="text-sm">
+                    Tukevat suoliston terveyttä, mutta liika kuitu voi haitata muiden ravintoaineiden imeytymistä.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Vitamiinit ja kivennäisaineet */}
+            <div>
+              <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
+                <Badge variant="secondary">1.4</Badge>
+                Vitamiinit & Kivennäisaineet: Tarkkaa Tasapainoa
+              </h3>
+              
+              <div className="space-y-3">
+                <p className="text-sm">
+                  Tässä piilee yksi penturuokinnan suurimmista haasteista. Erityisesti kalsiumin ja 
+                  fosforin suhde (n. 1,2–1,4:1) on kriittinen luuston terveydelle.
+                </p>
+                
+                <div className="bg-accent/10 p-4 rounded-lg border border-accent/20">
+                  <div className="flex items-start gap-2">
+                    <AlertTriangle className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
+                    <div>
+                      <h4 className="font-semibold text-accent">Varoitus suurille roduille</h4>
+                      <p className="text-sm mt-1">
+                        Liiallinen kalsiumin saanti on erityisen vaarallista suurille ja jättiläisroduille, 
+                        sillä se voi häiritä luuston normaalia kehitystä ja johtaa pysyviin kasvuhäiriöihin.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
+
+      {/* Osa 2: Ruokinta on Koulutusta */}
+      <section id="ruokinta-koulutus">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-2xl">Osa 2: Ruokinta on Koulutusta ja Aivojumppaa</CardTitle>
+            <p className="text-muted-foreground">Ruokahetki on paljon muutakin kuin vain vatsan täyttämistä</p>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            
+            {/* Rutiinit */}
+            <div>
+              <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
+                <Badge variant="secondary">2.1</Badge>
+                Rutiinit Luovat Turvaa
+              </h3>
+              
+              <div className="space-y-3">
+                <p className="text-sm">
+                  Tarjoa ruoka säännöllisinä aikoina rauhallisessa paikassa, jossa pentu saa syödä ilman häiriöitä. 
+                  Johdonmukaiset rutiinit auttavat pentua ennakoimaan päivän kulkua ja pysymään rauhallisempana.
+                </p>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Maltti */}
+            <div>
+              <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
+                <Badge variant="secondary">2.2</Badge>
+                Maltti on Valttia
+              </h3>
+              
+              <div className="space-y-3">
+                <p className="text-sm">
+                  Opeta pentu istumaan ja odottamaan lupaa ennen kuin se ryntää kupille. Voit aloittaa pyytämällä 
+                  istumista ja antamalla luvan heti. Vähitellen pidennä odotusaikaa.
+                </p>
+                
+                <div className="bg-primary/5 p-3 rounded">
+                  <p className="text-sm">
+                    <strong>Hyöty:</strong> Tämä yksinkertainen harjoitus opettaa pennulle itsehillintää, 
+                    josta on hyötyä monissa muissakin tilanteissa.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Ei kerjäämiselle */}
+            <div>
+              <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
+                <Badge variant="secondary">2.3</Badge>
+                Ei Kerjäämiselle
+              </h3>
+              
+              <div className="space-y-3">
+                <p className="text-sm">
+                  Vältä antamasta ruokaa omalta lautaseltasi, sillä se opettaa koiran kerjäämään. 
+                  Muista, että ihmisten ruoka voi olla haitallista.
+                </p>
+                
+                <div className="bg-accent/10 p-4 rounded-lg border border-accent/20">
+                  <h4 className="font-semibold text-accent mb-2">🔥 Hauska fakta</h4>
+                  <p className="text-sm">
+                    Yksi nakki pienelle 5 kg koiralle vastaa samaa kuin 75 kg aikuinen söisi 15 nakkia kerralla!
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Virikkeistäminen */}
+            <div>
+              <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
+                <Badge variant="secondary">2.4</Badge>
+                Virikkeistäminen Ruoalla
+              </h3>
+              
+              <div className="space-y-3">
+                <p className="text-sm">
+                  Koira on luotu käyttämään nenäänsä. Kupista syömisen sijaan voit tarjoa osan päivän ruoasta virikkeellistämällä.
+                </p>
+                
+                <div className="grid md:grid-cols-3 gap-4">
+                  <div className="p-3 border rounded-lg">
+                    <h4 className="font-semibold text-sm mb-2">Piilottelu</h4>
+                    <p className="text-xs">Piilota nappuloita asuntoon tai nurmikolle pennun etsittäväksi</p>
+                  </div>
+                  <div className="p-3 border rounded-lg">
+                    <h4 className="font-semibold text-sm mb-2">Aktivointilelu</h4>
+                    <p className="text-xs">Käytä -kuppeja, joista pennun täytyy työskennellä saadakseen ruokansa</p>
+                  </div>
+                  <div className="p-3 border rounded-lg">
+                    <h4 className="font-semibold text-sm mb-2">Tuhoaminen</h4>
+                    <p className="text-xs">Anna pennun repiä ruokansa esiin pahvilaatikoista - sallittua tuhoamista!</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
+
+      {/* Osa 3: Liikunta ja Leikki */}
+      <section id="liikunta-leikki">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-2xl">Osa 3: Liikunta ja Leikki - Pennun Fysiikka ja Fysiologia</CardTitle>
+            <p className="text-muted-foreground">Liikunta on elintärkeää pennun fyysiselle ja henkiselle kehitykselle</p>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            
+            {/* Vapauden ilo */}
+            <div>
+              <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
+                <Badge variant="secondary">3.1</Badge>
+                Vapauden Ilo
+              </h3>
+              
+              <div className="space-y-3">
+                <p className="text-sm">
+                  Paras liikunta on vapaa leikki ja liikkuminen pennun omilla ehdoilla, mieluiten toisten 
+                  sopivien koirien kanssa tai rauhallisilla metsälenkeillä. Anna pennun liikkua niin paljon kuin se itse jaksaa.
+                </p>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Vältä pakkotahtisuutta */}
+            <div>
+              <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
+                <Badge variant="secondary">3.2</Badge>
+                Vältä Pakkotahtisuutta
+              </h3>
+              
+              <div className="space-y-3">
+                <div className="bg-accent/10 p-4 rounded-lg border border-accent/20">
+                  <div className="flex items-start gap-2">
+                    <AlertTriangle className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
+                    <div>
+                      <h4 className="font-semibold text-accent">Varoitus</h4>
+                      <p className="text-sm mt-1">
+                        Älä juoksuta pentua pyörän vierellä tai pakota sitä toistuviin, raskaisiin suorituksiin, 
+                        kuten portaiden kiipeämiseen. Ne ovat liian raskaita kasvavalle luustolle ja nivelille.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Alusta on tärkeä */}
+            <div>
+              <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
+                <Badge variant="secondary">3.3</Badge>
+                Alusta on Tärkeä
+              </h3>
+              
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <h4 className="font-semibold text-primary">Suosi ✅</h4>
+                  <ul className="text-sm space-y-1">
+                    <li>• Pehmeitä alustoja (metsä, nurmi)</li>
+                    <li>• Luonnollisia maastoja</li>
+                    <li>• Vaihtelevaa maastoa</li>
+                  </ul>
+                </div>
+                <div className="space-y-2">
+                  <h4 className="font-semibold text-accent">Vältä ❌</h4>
+                  <ul className="text-sm space-y-1">
+                    <li>• Pitkiä lenkkejä kovalla asfaltilla</li>
+                    <li>• Toistuvaa kovalla alustalla juoksemista</li>
+                    <li>• Liukkaita pintoja</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Liukastumisenesto */}
+            <div>
+              <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
+                <Badge variant="secondary">3.4</Badge>
+                Varo Liukastumisia
+              </h3>
+              
+              <div className="space-y-3">
+                <div className="bg-accent/10 p-4 rounded-lg border border-accent/20">
+                  <p className="text-sm">
+                    <strong>Suurin loukkaantumisriski:</strong> Liukastuminen kotona liukkailla lattioilla pentuhepulien aikana. 
+                    Matot voivat auttaa, mutta varovaisuus on valttia.
+                  </p>
+                </div>
+                
+                <div className="bg-primary/5 p-3 rounded">
+                  <p className="text-sm">
+                    <strong>Energian purkaminen:</strong> Riittävä liikunta purkaa pennun energiaa ja auttaa sitä 
+                    rauhoittumaan kotona. Väsynyt pentu on onnellinen pentu (ja omistajakin saa hetken rauhaa).
+                  </p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
+
+      {/* Osa 4: Ruokintamuodot (entinen Osa 1) */}
       <section id="ruokintamuodot">
         <Card>
           <CardHeader>
@@ -312,103 +676,289 @@ const PuppyGuide = () => {
         </Card>
       </section>
 
-      {/* Osa 4: Haasteet */}
-      <section id="haasteet">
+      {/* Osa 4: Ongelmatilanteita */}
+      <section id="ongelmatilanteita">
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl">Osa 4: Yleisimmät Ruokintahaasteet</CardTitle>
-            <p className="text-muted-foreground">Ratkaisuja nirsoiluun ja vatsavaivoihin</p>
+            <CardTitle className="text-2xl">Osa 4: Ongelmia Ruokakupilla? Vianmääritys ja Ratkaisut</CardTitle>
+            <p className="text-muted-foreground">Joskus ruokinta ei suju kuin tanssi. Tässä yleisimmät haasteet ja ratkaisut niihin.</p>
           </CardHeader>
           <CardContent className="space-y-6">
             
-            {/* Nirsoileva pentu */}
+            {/* Apua, pentu ei syö! */}
             <div>
               <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
                 <Badge variant="secondary">4.1</Badge>
-                Nirsoileva Pentu
+                Apua, Pentu Ei Syö!
               </h3>
               
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <h4 className="font-semibold text-accent mb-2">Yleisiä syitä:</h4>
-                  <ul className="text-sm space-y-1">
-                    <li>• Liikaa herkkuja päivän aikana</li>
-                    <li>• Vapaa ruokinta (ruoka jatkuvasti tarjolla)</li>
-                    <li>• Opittu käytös ("saan jotain parempaa")</li>
-                    <li>• Stressi tai sairaus</li>
-                  </ul>
+              <div className="space-y-4">
+                <div className="bg-accent/10 p-4 rounded-lg border border-accent/20">
+                  <h4 className="font-semibold text-accent mb-2">Hampaiden vaihto (n. 4–6 kk)</h4>
+                  <p className="text-sm mb-2">
+                    Ikenet voivat olla arat, jolloin kovan nappulan pureskelu sattuu.
+                  </p>
+                  <p className="text-sm">
+                    <strong>Ratkaisu:</strong> Kostuta nappuloita lämpimällä vedellä tai maidottomalla liemellä 
+                    tai tarjoa väliaikaisesti märkäruokaa. Purulelut voivat myös helpottaa oloa.
+                  </p>
                 </div>
                 
-                <div>
-                  <h4 className="font-semibold text-primary mb-2">Ratkaisut:</h4>
-                  <ul className="text-sm space-y-1">
-                    <li>• Säännölliset ruoka-ajat (15-20 min)</li>
-                    <li>• Lopeta herkkujen antaminen</li>
-                    <li>• Tee ruoasta houkuttelevampaa (lämmin vesi)</li>
-                    <li>• Rauhoita ruokailutilanne</li>
-                  </ul>
+                <div className="bg-primary/10 p-4 rounded-lg border-l-4 border-primary">
+                  <h4 className="font-semibold text-primary mb-2">Stressi ja ympäristön muutokset</h4>
+                  <p className="text-sm mb-2">
+                    Muutto uuteen kotiin, uudet ihmiset tai muut rutiinien muutokset voivat tilapäisesti viedä ruokahalun.
+                  </p>
+                  <p className="text-sm">
+                    <strong>Ratkaisu:</strong> Anna pennulle rauha ja aikaa sopeutua. Tarjoa ruokaa säännöllisesti ja rauhallisessa paikassa.
+                  </p>
+                </div>
+                
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="bg-muted/30 p-3 rounded">
+                    <h4 className="font-semibold text-sm mb-1">Rokotusten jälkeen</h4>
+                    <p className="text-sm">On normaalia, että ruokahalu on heikompi vuorokauden ajan rokotusten jälkeen.</p>
+                  </div>
+                  <div className="bg-muted/30 p-3 rounded">
+                    <h4 className="font-semibold text-sm mb-1">Nirsoilu</h4>
+                    <p className="text-sm">Jatkuvasti saatavilla oleva ruoka voi opettaa pennun nirsoilemaan. 
+                    <strong>Ratkaisu:</strong> Rajoita ruokailuaika 15–20 minuuttiin.</p>
+                  </div>
+                </div>
+                
+                <div className="bg-accent/10 p-4 rounded-lg border border-accent/20">
+                  <div className="flex items-start gap-2">
+                    <AlertTriangle className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
+                    <div>
+                      <h4 className="font-semibold text-accent">Milloin eläinlääkäriin?</h4>
+                      <p className="text-sm mt-1">
+                        Jos ruokahaluttomuus jatkuu yli 24 tuntia tai siihen liittyy muita oireita 
+                        (oksentelu, ripuli, velttous), ota yhteyttä eläinlääkäriin.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
             <Separator />
 
-            {/* Ripuli */}
+            {/* Vatsa kuralle */}
             <div>
               <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
                 <Badge variant="secondary">4.2</Badge>
-                Pennun Ripuli
+                Vatsa Kuralle – Yleisimmät Ruokintavirheet
               </h3>
               
-              <div className="bg-accent/10 p-4 rounded-lg border border-accent/20 mb-4">
-                <h4 className="font-semibold text-accent mb-2">⚠️ Milloin välittömästi eläinlääkäriin:</h4>
-                <ul className="text-sm space-y-1">
-                  <li>• Verinen tai musta uloste</li>
-                  <li>• Raju oksentelu</li>
-                  <li>• Voimakas apaattisuus</li>
-                  <li>• Korkea kuume (yli 39.5°C)</li>
-                  <li>• Kieltäytyminen juomasta</li>
-                  <li>• Ripuli kestää yli 24 tuntia</li>
-                </ul>
+              <div className="space-y-4">
+                <div className="bg-accent/10 p-4 rounded-lg border border-accent/20">
+                  <h4 className="font-semibold text-accent mb-2">Liian nopea ruokavalion muutos</h4>
+                  <p className="text-sm mb-2">
+                    Pennun ruoansulatusjärjestelmä on herkkä eikä siedä nopeita muutoksia.
+                  </p>
+                  <p className="text-sm">
+                    <strong>Ratkaisu:</strong> Tee kaikki muutokset ruokavalioon vähitellen useiden päivien aikana 
+                    sekoittamalla uutta ruokaa vanhaan kasvavissa suhteissa.
+                  </p>
+                </div>
+                
+                <div className="bg-accent/10 p-4 rounded-lg border border-accent/20">
+                  <h4 className="font-semibold text-accent mb-2">Yliruokinta</h4>
+                  <p className="text-sm mb-2">
+                    Lihavuus pentuna on valtava riski nivelille ja luustolle, ja se voi aiheuttaa pysyviä vaurioita.
+                  </p>
+                  <p className="text-sm">
+                    <strong>Ratkaisu:</strong> Seuraa pennun painoa ja kuntoluokitusta. Kylkiluiden tulee tuntua, 
+                    mutta ei näkyä. Säädä annoskokoa tarpeen mukaan.
+                  </p>
+                </div>
+                
+                <div className="bg-primary/10 p-4 rounded-lg border-l-4 border-primary">
+                  <h4 className="font-semibold text-primary mb-2">Resurssien vartiointi</h4>
+                  <p className="text-sm mb-2">
+                    Jotkut koirat tulevat omistushaluisiksi ruoastaan tai luistaan.
+                  </p>
+                  <p className="text-sm">
+                    <strong>Ratkaisu:</strong> Älä luo kilpailutilannetta ottamalla kuppia pois kesken syömisen. 
+                    Sen sijaan opeta luopumista tekemällä siitä kannattavaa: vaihda lelu tai puruluu hetkeksi 
+                    vielä herkullisempaan namiin ja anna alkuperäinen takaisin. Tämä opettaa pennulle, 
+                    että lähestyvä ihminen on hyvä asia, ei uhka.
+                  </p>
+                </div>
               </div>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
 
-              <div>
-                <h4 className="font-semibold text-primary mb-2">Kotihoito lievässä ripulissa:</h4>
-                <ul className="text-sm space-y-1">
-                  <li>• Älä paastota pentua</li>
-                  <li>• Tarjoa pieniä annoksia helposti sulavaa ruokaa</li>
-                  <li>• Varmista riittävä nesteytys</li>
-                  <li>• Harkitse probiootteja</li>
-                </ul>
+      {/* Osa 5: Erityistarpeet */}
+      <section id="erityistarpeet">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-2xl">Osa 5: Erityistarpeet ja -ruokavaliot: Yksi Koko Ei Sovi Kaikille</CardTitle>
+            <p className="text-muted-foreground">Rotukohtaiset vaatimukset ja erityisruokavaliot</p>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            
+            {/* Rotukohtaiset vaatimukset */}
+            <div>
+              <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
+                <Badge variant="secondary">5.1</Badge>
+                Rotukohtaiset Vaatimukset
+              </h3>
+              
+              <div className="grid md:grid-cols-2 gap-6">
+                <Card className="bg-blue-50/50">
+                  <CardHeader>
+                    <CardTitle className="text-lg text-blue-800">Pienet rodut (&lt;10 kg)</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <p className="text-sm">
+                        Niillä on nopea aineenvaihdunta ja pieni vatsalaukku. Ne saavuttavat aikuiskokonsa jo 8–12 kuukaudessa.
+                      </p>
+                      <div className="bg-accent/10 p-3 rounded border border-accent/20">
+                        <h4 className="font-semibold text-accent text-sm mb-1">Erityisriski: Hypoglykemia</h4>
+                        <p className="text-sm">
+                          Verensokerin lasku, erityisesti stressitilanteissa. Tämän vuoksi useat pienet ateriat päivässä ovat tärkeitä.
+                        </p>
+                      </div>
+                      <div className="bg-primary/5 p-3 rounded">
+                        <h4 className="font-semibold text-primary text-sm mb-1">Ruokasuositus</h4>
+                        <p className="text-sm">Energiatiheä ruoka ja pieni nappulakoko.</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card className="bg-green-50/50">
+                  <CardHeader>
+                    <CardTitle className="text-lg text-green-800">Suuret ja jättiläisrodut (&gt;25 kg)</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <p className="text-sm">
+                        Kasvavat hitaasti, jopa 18–24 kuukauden ikään saakka.
+                      </p>
+                      <div className="bg-accent/10 p-3 rounded border border-accent/20">
+                        <h4 className="font-semibold text-accent text-sm mb-1">Erityisriskit</h4>
+                        <p className="text-sm">
+                          Luuston ja nivelten kehityshäiriöt, jos kasvu on liian nopeaa tai kalsiumia on ruoassa liikaa. 
+                          Myös mahalaukun kiertymän riski on suurempi suurilla aterioilla.
+                        </p>
+                      </div>
+                      <div className="bg-primary/5 p-3 rounded">
+                        <h4 className="font-semibold text-primary text-sm mb-1">Ruokasuositus</h4>
+                        <p className="text-sm">
+                          Erityisesti suurille roduille suunniteltu penturuoka, jossa on maltillinen energiapitoisuus 
+                          ja tarkasti kontrolloitu kalsiumin määrä. Useampi pieni ateria päivässä on parempi kuin yksi suuri.
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
             </div>
 
             <Separator />
 
-            {/* Ruokinnan riskit */}
+            {/* Erityisruokavaliot */}
             <div>
               <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
-                <Badge variant="secondary">4.3</Badge>
-                Ruokinnan Riskit
+                <Badge variant="secondary">5.2</Badge>
+                Erityisruokavaliot
               </h3>
               
-              <div className="grid md:grid-cols-2 gap-4">
-                <div className="bg-accent/10 p-4 rounded-lg border border-accent/20">
-                  <h4 className="font-semibold text-accent mb-2">Yliruokinnan vaarat</h4>
+              <div className="space-y-4">
+                <div className="bg-muted/30 p-4 rounded">
+                  <h4 className="font-semibold mb-2">Viljaton ruokinta</h4>
                   <p className="text-sm">
-                    "Pullea pentu" ei ole terve pentu. Liika energiansaanti kiihdyttää kasvua 
-                    epänormaalisti ja rasittaa kehittyviä niveliä.
+                    Sopii koirille, joilla on todettu vilja-allergia tai -herkkyys. 
+                    Viljattomassa ruoassa viljat on korvattu muilla hiilihydraatin lähteillä, kuten perunalla tai herneellä.
+                  </p>
+                </div>
+                
+                <div className="bg-primary/10 p-4 rounded-lg border-l-4 border-primary">
+                  <h4 className="font-semibold text-primary mb-2">Allergiat ja herkkä vatsa</h4>
+                  <p className="text-sm mb-2">
+                    Jos pennulla on jatkuvia iho- tai vatsaoireita, syynä voi olla ruoka-aineallergia.
+                  </p>
+                  <p className="text-sm">
+                    <strong>Ratkaisu:</strong> Eläinlääkärin valvonnassa toteutettu eliminaatiodieetti, 
+                    jossa käytetään vain yhtä proteiininlähdettä (ns. monoproteiiniruoka), 
+                    on tehokas tapa selvittää allergian aiheuttaja.
                   </p>
                 </div>
                 
                 <div className="bg-accent/10 p-4 rounded-lg border border-accent/20">
-                  <h4 className="font-semibold text-accent mb-2">Kotiruokavalion riskit</h4>
+                  <h4 className="font-semibold text-accent mb-2">🔬 Tieteellinen näyttö</h4>
                   <p className="text-sm">
-                    Valtaosa verkosta löytyvistä resepteistä on ravitsemuksellisesti puutteellisia. 
-                    Vaatii ammattilaisen apua.
+                    Helsingin yliopiston DogRisk-tutkimusryhmä on osoittanut, että vähän prosessoitu, 
+                    raakaruokapainotteinen ruokavalio pentuaikana on yhteydessä merkittävästi pienempään 
+                    allergioiden ja atopian riskiin aikuisiällä.
                   </p>
                 </div>
               </div>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
+
+      {/* Osa 6: Turvallisuus */}
+      <section id="turvallisuus">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-2xl">Osa 6: Ruoan Turvallisuus: Ole Tietoinen ja Vaativa Kuluttaja</CardTitle>
+            <p className="text-muted-foreground">Vaikka koiranruoan valmistus Suomessa on pääosin laadukasta, takaisinvetoja tapahtuu</p>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            
+            <div className="bg-accent/10 p-4 rounded-lg border border-accent/20 mb-6">
+              <h4 className="font-semibold text-accent mb-2">⚠️ Esimerkkitapaukset</h4>
+              <p className="text-sm">
+                Tapaukset kuten SMAAK-ruoan korkeat glykoalkaloidipitoisuudet ja Hau-Hau Champion -puruluiden 
+                aiheuttamat oireilut ovat muistutuksia siitä, että ongelmia esiintyy.
+              </p>
+            </div>
+            
+            <div>
+              <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
+                <Badge variant="secondary">6.1</Badge>
+                Valvonnan Haasteet
+              </h3>
+              
+              <p className="text-sm mb-4">
+                Ruokaviraston valvontaresurssit ovat rajalliset, mikä korostaa omistajan omaa vastuuta.
+              </p>
+              
+              <div>
+                <h4 className="font-semibold text-primary mb-3">Mitä voit tehdä?</h4>
+                <div className="grid md:grid-cols-3 gap-4">
+                  <div className="p-4 border rounded-lg">
+                    <h5 className="font-semibold text-sm mb-2">Seuraa tiedotteita</h5>
+                    <p className="text-sm">Pidä silmällä Ruokaviraston virallisia tiedotteita.</p>
+                  </div>
+                  <div className="p-4 border rounded-lg">
+                    <h5 className="font-semibold text-sm mb-2">Valitse luotettavia merkkejä</h5>
+                    <p className="text-sm">Suosi valmistajia, jotka ovat avoimia tuotantoprosesseistaan ja raaka-aineistaan.</p>
+                  </div>
+                  <div className="p-4 border rounded-lg">
+                    <h5 className="font-semibold text-sm mb-2">Ilmoita ongelmista</h5>
+                    <p className="text-sm">Jos epäilet ruoan aiheuttavan koirallesi oireita, ole yhteydessä valmistajaan ja tee ilmoitus Ruokavirastolle.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <Separator />
+
+            <div className="bg-primary/10 p-4 rounded-lg border-l-4 border-primary">
+              <h4 className="font-semibold text-primary mb-2">Tasapainon löytäminen</h4>
+              <p className="text-sm">
+                Lopulta tärkeintä on löytää tasapaino, joka sopii juuri sinun pennullesi ja elämäntilanteeseesi. 
+                Seuraa, opi ja säädä ruokintaa tarpeen mukaan. Kysy rohkeasti neuvoa eläinlääkäriltä tai 
+                ravitsemusasiantuntijalta. Onnea matkaan kohti tervettä aikuisuutta!
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -464,383 +1014,62 @@ const PuppyGuide = () => {
         </CardContent>
       </Card>
 
-      {/* Comprehensive Guide Section */}
-      <section id="kattava-opas">
+      {/* FAQ Section */}
+      <section id="usein-kysytyt-kysymykset">
         <Card>
           <CardHeader>
-            <CardTitle className="text-3xl text-center">🦸‍♂️ Kattava opas pennun ruokintaan: selviydy, menesty ja kasvata terve aikuinen</CardTitle>
-            <p className="text-muted-foreground text-center">
-              Onneksi olkoon uudesta perheenjäsenestä! Ensimmäiset kuukaudet ovat ratkaisevan tärkeitä, 
-              ja oikeanlainen ruokinta on paras investointi, jonka voit koirasi tulevaisuuteen tehdä. 
-              Tämä opas on suunniteltu antamaan sinulle kaikki työkalut, joilla navigoit pentuajan 
-              ruokintaviidakossa – niin iloissa kuin haasteissakin.
-            </p>
+            <CardTitle className="text-2xl">Usein Kysytyt Kysymykset</CardTitle>
+            <p className="text-muted-foreground">Kattava kokoelma yleisimpiä pennun ruokintaan liittyviä kysymyksiä</p>
           </CardHeader>
-          <CardContent className="space-y-8">
-            
-            {/* Superpennun rakennuspalikat */}
-            <div>
-              <h3 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-                <Badge variant="secondary">4.1</Badge>
-                🦸‍♂️ Superpennun rakennuspalikat: tarkempi katsaus kuppiin
-              </h3>
-              
-              <p className="mb-6">
-                Kasvava pentu tarvitsee jopa kaksi kertaa enemmän energiaa painokiloa kohden kuin aikuinen koira. 
-                Tämä energia on polttoainetta paitsi leikkiin, myös koko kehon kriittiseen kehitykseen.
-              </p>
-              
-              <div className="grid gap-6">
-                {/* Proteiini */}
-                <Card className="bg-blue-50/50">
-                  <CardHeader>
-                    <CardTitle className="text-lg text-blue-800">Proteiini: elämän perusta (tavoite: 22–32 % kuiva-aineesta)</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      <div>
-                        <h5 className="font-semibold text-blue-700">Miksi?</h5>
-                        <p className="text-sm">
-                          Proteiinit ovat välttämättömiä lihasten, elinten ja luuston rakennusaineita. 
-                          Ne ovat myös kriittisiä toimivan immuunijärjestelmän, hormonien ja entsyymien tuotannolle.
-                        </p>
-                      </div>
-                      <div>
-                        <h5 className="font-semibold text-blue-700">Laatu ennen kaikkea</h5>
-                        <p className="text-sm">
-                          Eläinperäiset proteiinit (liha, kala) sisältävät kaikki pennulle välttämättömät 
-                          aminohapot oikeassa suhteessa, toisin kuin kasviproteiinit.
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                {/* Rasvat */}
-                <Card className="bg-green-50/50">
-                  <CardHeader>
-                    <CardTitle className="text-lg text-green-800">Rasvat: energiaa ja älynystyröitä (tavoite: 8–22 % kuiva-aineesta)</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      <div>
-                        <h5 className="font-semibold text-green-700">Miksi?</h5>
-                        <p className="text-sm">
-                          Rasvat ovat tiivis energianlähde ja välttämättömiä rasvaliukoisten A-, D-, E- ja K-vitamiinien imeytymiselle.
-                        </p>
-                      </div>
-                      <div>
-                        <h5 className="font-semibold text-green-700">Aivojen superruoka</h5>
-                        <p className="text-sm">
-                          Omega-3-rasvahappoihin kuuluva <strong>DHA</strong> on todistetusti elintärkeä aivojen ja näön kehitykselle. 
-                          Laadukkaissa penturuoissa on usein lisättynä esimerkiksi kalaöljyä DHA:n lähteeksi.
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                {/* Hiilihydraatit */}
-                <Card className="bg-orange-50/50">
-                  <CardHeader>
-                    <CardTitle className="text-lg text-orange-800">Hiilihydraatit & kuidut: virtaa ja vatsan hyvinvointia</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      <div>
-                        <h5 className="font-semibold text-orange-700">Miksi?</h5>
-                        <p className="text-sm">
-                          Hyvin sulavat hiilihydraatit (riisi, kaura) tarjoavat tasaista energiaa ja ovat helliä 
-                          pennun kehittyvälle ruoansulatusjärjestelmälle. Kuidut (tavoite 2-4 %) tukevat suoliston terveyttä, 
-                          mutta liika kuitu voi haitata muiden ravintoaineiden imeytymistä.
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                {/* Vitamiinit & kivennäisaineet */}
-                <Card className="bg-purple-50/50">
-                  <CardHeader>
-                    <CardTitle className="text-lg text-purple-800">Vitamiinit & kivennäisaineet: tarkkaa tasapainoa</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      <div>
-                        <h5 className="font-semibold text-purple-700">Miksi?</h5>
-                        <p className="text-sm">
-                          Tässä piilee yksi penturuokinnan suurimmista haasteista. Erityisesti <strong>kalsiumin ja fosforin 
-                          suhde (n. 1,2–1,4:1)</strong> on kriittinen luuston terveydelle.
-                        </p>
-                      </div>
-                      <div className="bg-red-100 p-3 rounded border border-red-200">
-                        <h5 className="font-semibold text-red-700">Varoitus suurille roduille</h5>
-                        <p className="text-sm text-red-600">
-                          Liiallinen kalsiumin saanti on erityisen vaarallista suurille ja jättiläisroduille, 
-                          sillä se voi häiritä luuston normaalia kehitystä ja johtaa pysyviin kasvuhäiriöihin.
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-
-            <Separator />
-
-            {/* Ongelmatilanteet */}
-            <div>
-              <h3 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-                <Badge variant="secondary">4.2</Badge>
-                🚨 Ongelmia ruokakupilla? Vianmääritys ja ratkaisut
-              </h3>
-              
-              <p className="mb-6">
-                Joskus ruokinta ei suju kuin tanssi. Tässä yleisimmät haasteet ja ratkaisut niihin.
-              </p>
-              
-              <div className="space-y-6">
-                {/* Ei syö */}
-                <Card className="bg-red-50/50">
-                  <CardHeader>
-                    <CardTitle className="text-lg text-red-800">Apua, pentu ei syö!</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div>
-                        <h5 className="font-semibold text-red-700">Hampaiden vaihto (n. 4–6 kk)</h5>
-                        <p className="text-sm">
-                          Ikenet voivat olla arat, jolloin kovan nappulan pureskelu sattuu. 
-                          <strong>Ratkaisu:</strong> Kostuta nappuloita lämpimällä vedellä tai maidottomalla liemellä 
-                          tai tarjoa väliaikaisesti märkäruokaa. Purulelut voivat myös helpottaa oloa.
-                        </p>
-                      </div>
-                      <div>
-                        <h5 className="font-semibold text-red-700">Stressi ja ympäristön muutokset</h5>
-                        <p className="text-sm">
-                          Muutto uuteen kotiin, uudet ihmiset tai muut rutiinien muutokset voivat tilapäisesti viedä ruokahalun. 
-                          <strong>Ratkaisu:</strong> Anna pennulle rauha ja aikaa sopeutua. Tarjoa ruokaa säännöllisesti ja rauhallisessa paikassa.
-                        </p>
-                      </div>
-                      <div>
-                        <h5 className="font-semibold text-red-700">Nirsoilu</h5>
-                        <p className="text-sm">
-                          Jatkuvasti saatavilla oleva ruoka voi opettaa pennun nirsoilemaan. 
-                          <strong>Ratkaisu:</strong> Rajoita ruokailuaika 15–20 minuuttiin. Jos ruoka ei maistu, 
-                          ota kuppi pois ja tarjoa sitä uudelleen seuraavalla ruokinta-ajalla.
-                        </p>
-                      </div>
-                      <div className="bg-yellow-100 p-3 rounded border border-yellow-200">
-                        <h5 className="font-semibold text-yellow-700">Milloin eläinlääkäriin?</h5>
-                        <p className="text-sm text-yellow-600">
-                          Jos ruokahaluttomuus jatkuu yli 24 tuntia tai siihen liittyy muita oireita 
-                          (oksentelu, ripuli, velttous), ota yhteyttä eläinlääkäriin.
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                {/* Vatsa kuralle */}
-                <Card className="bg-yellow-50/50">
-                  <CardHeader>
-                    <CardTitle className="text-lg text-yellow-800">Vatsa kuralle – yleisimmät ruokintavirheet</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div>
-                        <h5 className="font-semibold text-yellow-700">Liian nopea ruokavalion muutos</h5>
-                        <p className="text-sm">
-                          Pennun ruoansulatusjärjestelmä on herkkä. <strong>Ratkaisu:</strong> Tee kaikki muutokset 
-                          ruokavalioon vähitellen 7–10 päivän aikana sekoittamalla uutta ruokaa vanhaan kasvavissa suhteissa.
-                        </p>
-                      </div>
-                      <div>
-                        <h5 className="font-semibold text-yellow-700">Yliruokinta</h5>
-                        <p className="text-sm">
-                          Lihavuus pentuna on valtava riski nivelille ja luustolle, ja se voi aiheuttaa pysyviä vaurioita. 
-                          <strong>Ratkaisu:</strong> Seuraa pennun painoa ja kuntoluokitusta. Kylkiluiden tulee tuntua, mutta ei näkyä. 
-                          Säädä annoskokoa tarpeen mukaan.
-                        </p>
-                      </div>
-                      <div>
-                        <h5 className="font-semibold text-yellow-700">Väärän ruoan syöttäminen</h5>
-                        <p className="text-sm">
-                          Aikuisten koirien ruoka ei sisällä tarpeeksi ravintoaineita kasvavalle pennulle. 
-                          Toisaalta liian energiapitoinen ruoka suurikokoiselle pennulle voi aiheuttaa liian nopeaa kasvua ja luusto-ongelmia.
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-
-            <Separator />
-
-            {/* Erityistarpeet */}
-            <div>
-              <h3 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-                <Badge variant="secondary">4.3</Badge>
-                🧐 Erityistarpeet ja -ruokavaliot: yksi koko ei sovi kaikille
-              </h3>
-              
-              <div className="space-y-6">
-                {/* Rotukohtaiset vaatimukset */}
-                <div>
-                  <h4 className="text-xl font-semibold mb-4">Rotukohtaiset vaatimukset</h4>
-                  
-                  <div className="grid gap-4">
-                    <Card className="bg-blue-50/50">
-                      <CardHeader>
-                        <CardTitle className="text-lg text-blue-800">Pienet rodut (&lt;10 kg)</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-sm mb-3">
-                          Niillä on nopea aineenvaihdunta ja pieni vatsalaukku. Ne saavuttavat aikuiskokonsa jo 8–12 kuukaudessa.
-                        </p>
-                        <div className="space-y-2">
-                          <div>
-                            <h5 className="font-semibold text-blue-700">Erityisriski</h5>
-                            <p className="text-sm">
-                              Hypoglykemia eli verensokerin lasku, erityisesti stressitilanteissa. 
-                              Tämän vuoksi useat pienet ateriat päivässä ovat tärkeitä.
-                            </p>
-                          </div>
-                          <div>
-                            <h5 className="font-semibold text-blue-700">Ruokasuositus</h5>
-                            <p className="text-sm">Energiatiheä ruoka ja pieni nappulakoko.</p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                    
-                    <Card className="bg-green-50/50">
-                      <CardHeader>
-                        <CardTitle className="text-lg text-green-800">Suuret ja jättiläisrodut (&gt;25 kg)</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-sm mb-3">
-                          Kasvavat hitaasti, jopa 18–24 kuukauden ikään saakka.
-                        </p>
-                        <div className="space-y-2">
-                          <div>
-                            <h5 className="font-semibold text-green-700">Erityisriski</h5>
-                            <p className="text-sm">
-                              Luuston ja nivelten kehityshäiriöt, jos kasvu on liian nopeaa tai kalsiumia on ruoassa liikaa. 
-                              Myös mahalaukun kiertymän riski on suurempi suurilla aterioilla.
-                            </p>
-                          </div>
-                          <div>
-                            <h5 className="font-semibold text-green-700">Ruokasuositus</h5>
-                            <p className="text-sm">
-                              Erityisesti suurille roduille suunniteltu penturuoka, jossa on maltillinen energiapitoisuus 
-                              ja tarkasti kontrolloitu kalsiumin määrä. Useampi pieni ateria päivässä on parempi kuin yksi suuri.
-                            </p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </div>
-                
-                {/* Erityisruokavaliot */}
-                <div>
-                  <h4 className="text-xl font-semibold mb-4">Erityisruokavaliot</h4>
-                  
-                  <div className="space-y-4">
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="text-lg">Viljaton ruokinta</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-sm">
-                          Sopii koirille, joilla on todettu vilja-allergia tai -herkkyys. Viljattomassa ruoassa 
-                          viljat on korvattu muilla hiilihydraatin lähteillä, kuten perunalla tai herneellä.
-                        </p>
-                      </CardContent>
-                    </Card>
-                    
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="text-lg">Allergiat ja herkkä vatsa</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-sm mb-3">
-                          Jos pennulla on jatkuvia iho- tai vatsaoireita, syynä voi olla ruoka-aineallergia.
-                        </p>
-                        <div className="space-y-2">
-                          <div>
-                            <h5 className="font-semibold">Ratkaisu</h5>
-                            <p className="text-sm">
-                              Eläinlääkärin valvonnassa toteutettu eliminaatiodieetti, jossa käytetään vain yhtä 
-                              proteiininlähdettä (ns. monoproteiiniruoka), on tehokas tapa selvittää allergian aiheuttaja.
-                            </p>
-                          </div>
-                          <div>
-                            <h5 className="font-semibold">Tieteellinen näyttö</h5>
-                            <p className="text-sm">
-                              Helsingin yliopiston DogRisk-tutkimusryhmä on osoittanut, että vähän prosessoitu, 
-                              raakaruokapainotteinen ruokavalio pentuaikana on yhteydessä merkittävästi pienempään 
-                              allergioiden ja atopian riskiin aikuisiällä.
-                            </p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <Separator />
-
-            {/* Ruoan turvallisuus */}
-            <div>
-              <h3 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-                <Badge variant="secondary">4.4</Badge>
-                🛡️ Ruoan turvallisuus: ole tietoinen ja vaativa kuluttaja
-              </h3>
-              
-              <div className="bg-amber-50 p-4 rounded-lg border border-amber-200 mb-6">
-                <p className="text-sm">
-                  Vaikka koiranruoan valmistus Suomessa on pääosin laadukasta, takaisinvetoja tapahtuu. 
-                  Tapaukset kuten <strong>SMAAK-ruoan korkeat glykoalkaloidipitoisuudet</strong> ja 
-                  <strong>Hau-Hau Champion -puruluiden aiheuttamat oireilut</strong> ovat muistutuksia siitä, 
-                  että ongelmia esiintyy.
-                </p>
-              </div>
-              
-              <div className="space-y-4">
-                <div>
-                  <h4 className="font-semibold">Valvonnan haasteet</h4>
-                  <p className="text-sm">
-                    Ruokaviraston valvontaresurssit ovat rajalliset, mikä korostaa omistajan omaa vastuuta.
-                  </p>
-                </div>
-                
-                <div>
-                  <h4 className="font-semibold">Mitä voit tehdä?</h4>
-                  <ol className="text-sm space-y-2 ml-4">
-                    <li><strong>1. Seuraa tiedotteita:</strong> Pidä silmällä Ruokaviraston virallisia tiedotteita.</li>
-                    <li><strong>2. Valitse luotettavia merkkejä:</strong> Suosi valmistajia, jotka ovat avoimia tuotantoprosesseistaan ja raaka-aineistaan.</li>
-                    <li><strong>3. Ilmoita ongelmista:</strong> Jos epäilet ruoan aiheuttavan koirallesi oireita, ole yhteydessä valmistajaan ja tee ilmoitus Ruokavirastolle.</li>
-                  </ol>
-                </div>
-              </div>
-            </div>
-
-            <Separator />
-
-            {/* Loppusanat */}
-            <div className="bg-primary/10 p-6 rounded-lg border border-primary/20">
-              <h4 className="font-semibold text-primary mb-3 text-center">Lopuksi</h4>
-              <p className="text-sm text-center">
-                Lopulta tärkeintä on löytää tasapaino, joka sopii juuri sinun pennullesi ja elämäntilanteeseesi. 
-                Seuraa, opi ja säädä ruokintaa tarpeen mukaan. Kysy rohkeasti neuvoa eläinlääkäriltä tai 
-                ravitsemusasiantuntijalta. <strong>Onnea matkaan kohti tervettä aikuisuutta!</strong>
-              </p>
-            </div>
+          <CardContent>
+            <FAQ items={[
+              // Painonseuranta ja kasvu
+              {
+                question: "Kuinka usein minun pitäisi punnita pentuni?",
+                answer: "Pennut tulisi punnita viikoittain ensimmäisten kuukausien ajan. Tämä auttaa seuraamaan kasvua ja varmistamaan, että pentu kehittyy normaalisti."
+              },
+              {
+                question: "Milloin pentu saavuttaa aikuispainonsa?",
+                answer: "Pienet rodut saavuttavat aikuispainonsa noin 8-12 kuukaudessa, keskikokoiset 12-15 kuukaudessa ja suuret rodut 18-24 kuukaudessa."
+              },
+              {
+                question: "Mikä on normaali painonnousu pennulle?",
+                answer: "Terve pentu yleensä kaksinkertaistaa syntymäpainonsa ensimmäisen viikon aikana ja kolminkertaistaa sen kahden viikon ikään mennessä."
+              },
+              // Ruokinta ja ruokamäärät
+              {
+                question: "Kuinka paljon ruokaa pentu tarvitsee painon mukaan?",
+                answer: "Ruokamäärä lasketaan elopainokiloa kohden. Pienet rodut (1-5 kg): 42g/kg 6 viikon iässä, vähennetään 31g/kg 7 kuukauteen mennessä. Suuret rodut (10-20 kg): 26g/kg 6 viikon iässä, vähennetään 19g/kg 8 kuukauteen mennessä. Esimerkki: 4kg, 5kk ikäinen pentu tarvitsee noin 136g päivässä."
+              },
+              {
+                question: "Kuinka monta kertaa päivässä pentua tulisi ruokkia?",
+                answer: "7-10 viikkoa: 4 kertaa päivässä. 3-4 kuukautta: 3 kertaa päivässä. 4-6 kuukautta: 3 kertaa päivässä. 6-7 kuukautta: 2 kertaa päivässä. Vuoden ikäisenä: 1-2 kertaa päivässä. Sopiva ruokintaväli on noin 4 tuntia."
+              },
+              {
+                question: "Tulisiko kuivaruoan nappulat turvottaa pennulle?",
+                answer: "Kyllä, turvottaminen on suositeltavaa pennuille, joiden hampaat ovat vielä kehittymässä. Kuivaruoan nappuloilla menee 'jokunen tunti turvota'. Lämpimällä vedellä turvottaminen on nopeampaa. Turvottaminen varmistaa riittävän nesteyden saannin."
+              },
+              {
+                question: "Milloin voin lopettaa nappuloiden turvottamisen?",
+                answer: "Noin 5 kuukauden iässä voi lopettaa pienen koiran ruoan kostuttamisen. Hampaiden vaihtuminen tapahtuu 3-7 kuukauden ikäisenä. Siirtymä tehdään asteittain: ensin turvotettuna, sitten maistellen kuivia, lopulta kokonaan kuivina kun hampaat ovat kehittyneet riittävästi."
+              },
+              {
+                question: "Kuinka paljon raakaruokaa pentu tarvitsee?",
+                answer: "Raakaruokinnassa pentu syö keskimäärin 2,5-3% oletetusta aikuispainosta. Määrät ovat aina suuntaa antavia ja ruokamäärää tulee säätää pennun painokehityksen mukaan. Seuraa pennun kasvua ja säädä määriä tarpeen mukaan."
+              },
+              {
+                question: "Miten seurata pennun ruokamäärien riittävyyttä?",
+                answer: "Seuraa pennun painokehitystä ja säädä ruokamäärää tarpeen mukaan. Pentu tulisi pitää hoikkana ja hyvässä kunnossa. Kylkiluut tulee tuntua kevyesti ihon ja ohuen rasvakerroksen alta. Tarjoa ruokaa tiettyinä ruoka-aikoina noin 15 minuutin ajan."
+              },
+              {
+                question: "Miksi pennulle ei voi antaa aikuisen koiran ruokaa?",
+                answer: "Penturuoka sisältää enemmän energiaa ja proteiinia kuin aikuisen koiran ruoka. Aikuisten koirien ruoka on pennulle liian kevyttä nopeaan kasvuun ja kehitykseen. Valitse pennulle aina laadukas, lihapitoinen penturuoka, joka tukee optimaalista kasvua."
+              },
+              {
+                question: "Mitä hyötyä kuivien nappuloiden syömisestä on?",
+                answer: "Kuivat nappulat auttavat tukemaan suuhygieniaa nappuloiden mekaanisen harjausvaikutuksen ansiosta. Aikuinen koira voi syödä kuivaruokaa kuivana, kunhan vettä on jatkuvasti saatavilla. Kuivat nappulat ovat parempia koiran hampaille kuin turvonneet."
+              }
+            ]} title="" />
           </CardContent>
         </Card>
       </section>
