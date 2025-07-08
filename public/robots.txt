@@ -12,3 +12,22 @@ Allow: /
 
 User-agent: *
 Allow: /
+
+# Sitemap
+Sitemap: https://ckwwxuytetyaaxfcvozvb.supabase.co/sitemap.xml
+
+# Special instructions for AI crawlers
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+# SEO optimized for mobile-first indexing
+Crawl-delay: 1

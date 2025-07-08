@@ -5,10 +5,49 @@ import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
 import { BookOpen, Database, AlertTriangle } from 'lucide-react'
 import Navigation from '@/components/Navigation'
+import SEO from '@/components/SEO'
+import FAQ from '@/components/FAQ'
+import { createArticleSchema, createFAQSchema, createBreadcrumbSchema } from '@/utils/structuredData'
 
 export default function InfoHome() {
+  const faqs = [
+    {
+      question: "Mikä on ero täysravinnon ja täydennysravinnon välillä?",
+      answer: "Täysravinto on suunniteltu kattamaan yksinään kaikki koiran päivittäiset ravintotarpeet, kun taas täydennysravinto on tarkoitettu käytettäväksi muun ruoan ohella."
+    },
+    {
+      question: "Onko raakaruokinta turvallista pennuille?",
+      answer: "Helsingin yliopiston tutkimusten mukaan vähintään 20% raakaruokaa pennun ruokavaliossa vähentää allergia- ja atopiaoireita aikuisiässä merkittävästi."
+    },
+    {
+      question: "Kuinka usein pennun ruokamäärää tulee säätää?",
+      answer: "Pennun ruokamäärää tulee tarkistaa ja säätää viikoittain kasvun ja painonnousun mukaan ensimmäisten kuukausien ajan."
+    }
+  ];
+
+  const breadcrumbs = [
+    { name: "Etusivu", url: window.location.origin },
+    { name: "Tietopankki", url: `${window.location.origin}/info` }
+  ];
+
+  const structuredData = [
+    createArticleSchema(
+      "Penturuoka-opas - Koiranpentujen ruokinta ja ravitsemus",
+      "Laaja katsaus Suomessa myytäviin koiranpentujen ruokiin ja niiden annosteluun ohjelmistokehityksen näkökulmasta"
+    ),
+    createFAQSchema(faqs),
+    createBreadcrumbSchema(breadcrumbs)
+  ];
+
   return (
     <div className="min-h-screen bg-gradient-warm pt-14">
+      <SEO
+        title="Tietopankki - Penturuoka-opas"
+        description="Laaja katsaus koiranpentujen ruokintaan ja ravitsemukseen. Kuiva-, märkä- ja raakaruokien analyysi, annostelutiedot ja turvallisuusohjeet."
+        keywords="penturuoka, koiranpennun ruokinta, ruokatyypit, annostelu, turvallisuus, Helsingin yliopisto, DogRisk"
+        type="article"
+        structuredData={structuredData}
+      />
       <Navigation />
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
@@ -131,6 +170,10 @@ export default function InfoHome() {
             </div>
           </CardContent>
         </Card>
+
+        <div className="mt-12">
+          <FAQ items={faqs} />
+        </div>
 
         {/* CTA Section */}
         <div className="text-center mt-12">
