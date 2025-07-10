@@ -2,8 +2,7 @@
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-import { Home, BookOpen, Database, AlertTriangle } from 'lucide-react'
-import puppyLogo from '@/assets/puppy-logo.png'
+import { Home, BookOpen, Database, AlertTriangle, Dog } from 'lucide-react'
 
 export default function InfoNavigation() {
   const location = useLocation()
@@ -20,8 +19,8 @@ export default function InfoNavigation() {
       <div className="container mx-auto px-2 sm:px-4 max-w-full">
         <div className="flex items-center justify-between h-16 min-w-0">
           <Link to="/info" className="flex items-center gap-1 sm:gap-2 text-base sm:text-lg font-bold text-gray-900 truncate min-w-0">
-            <img src={puppyLogo} alt="Puppy Logo" className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-full flex-shrink-0" />
-            <span className="hidden sm:inline truncate">Puppy Weight Watch</span>
+            <Dog className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 flex-shrink-0" />
+            <span className="hidden sm:inline truncate">Pentulaskuri</span>
           </Link>
           
           <div className="hidden lg:flex space-x-1">
