@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { ExternalLink, AlertTriangle, Info } from 'lucide-react'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { ExternalLink, AlertTriangle, Info, ChevronDown, ChevronUp } from 'lucide-react'
 import { DogFood } from '@/services/dogFoodService'
 import { IngredientInfo } from './IngredientInfo'
 
@@ -15,6 +16,8 @@ interface FoodCardProps {
 }
 
 export function FoodCard({ food, onSelect, isSelected = false, showDetails = false }: FoodCardProps) {
+  const [showDosageTable, setShowDosageTable] = useState(false)
+  
   // Check if food has detailed ingredient/nutrition data
   const hasDetailedData = Boolean(
     food.ingredients?.length || 
@@ -22,6 +25,18 @@ export function FoodCard({ food, onSelect, isSelected = false, showDetails = fal
     (food.nutrition && Object.values(food.nutrition).some(v => v !== null && v !== false)) ||
     food.manufacturer_info
   )
+
+  // Check if food has feeding guidelines
+  const hasFeedingGuidelines = Boolean(food.feeding_guidelines?.length)
+  
+  // Get nutrition summary for quick display
+  const getNutritionSummary = () => {
+    if (!food.nutrition) return null
+    const parts = []
+    if (food.nutrition.protein_percentage) parts.push(`${food.nutrition.protein_percentage}% proteiini`)
+    if (food.nutrition.fat_percentage) parts.push(`${food.nutrition.fat_percentage}% rasva`)
+    return parts.length > 0 ? parts.join(', ') : null
+  }
 
   const getSpecialFeatures = () => {
     const features = []
@@ -109,18 +124,46 @@ export function FoodCard({ food, onSelect, isSelected = false, showDetails = fal
               </Alert>
             )}
 
+            {/* Nutrition summary */}
+            {getNutritionSummary() && (
+              <div className="text-sm text-muted-foreground mb-2">
+                <span className="font-medium">Ravintosisältö:</span> {getNutritionSummary()}
+              </div>
+            )}
+
             {food.notes && (
               <p className="text-sm text-muted-foreground">{food.notes}</p>
             )}
 
+            {/* Feeding guidelines button */}
+            {hasFeedingGuidelines && (
+              <div className="mt-3">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowDosageTable(!showDosageTable)}
+                  className="text-xs"
+                >
+                  {showDosageTable ? <ChevronUp className="h-3 w-3 mr-1" /> : <ChevronDown className="h-3 w-3 mr-1" />}
+                  {showDosageTable ? 'Piilota annostustaulukko' : 'Näytä annostustaulukko'}
+                </Button>
+              </div>
+            )}
+
             {/* Data availability indicator */}
-            <div className="flex items-center gap-2 mt-3">
+            <div className="flex items-center gap-4 mt-3">
               <div className="flex items-center gap-1 text-xs">
                 <div className={`w-2 h-2 rounded-full ${hasDetailedData ? 'bg-green-500' : 'bg-gray-300'}`}></div>
                 <span className="text-muted-foreground">
                   {hasDetailedData ? 'Yksityiskohtaiset tiedot saatavilla' : 'Perustiedot'}
                 </span>
               </div>
+              {hasFeedingGuidelines && (
+                <div className="flex items-center gap-1 text-xs">
+                  <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                  <span className="text-muted-foreground">Annostusohje saatavilla</span>
+                </div>
+              )}
             </div>
           </div>
           
@@ -137,7 +180,7 @@ export function FoodCard({ food, onSelect, isSelected = false, showDetails = fal
         </div>
       </CardHeader>
 
-      {(warning || showDetails) && (
+      {(warning || showDetails || showDosageTable) && (
         <CardContent>
           {warning && (
             <Alert variant={warning.type === 'error' ? 'destructive' : 'default'} className="mb-4">
@@ -161,6 +204,63 @@ export function FoodCard({ food, onSelect, isSelected = false, showDetails = fal
                 )}
               </AlertDescription>
             </Alert>
+          )}
+
+          {/* Feeding guidelines table */}
+          {showDosageTable && hasFeedingGuidelines && (
+            <div className="mb-4">
+              <h4 className="font-semibold mb-3 text-sm">Annostusohjeet:</h4>
+              <div className="border rounded-lg overflow-hidden">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      {food.feeding_guidelines?.some(g => g.age_months) && <TableHead className="text-xs">Ikä</TableHead>}
+                      {food.feeding_guidelines?.some(g => g.current_weight_kg) && <TableHead className="text-xs">Nykypaino</TableHead>}
+                      {food.feeding_guidelines?.some(g => g.adult_weight_kg) && <TableHead className="text-xs">Aikuispaino</TableHead>}
+                      {food.feeding_guidelines?.some(g => g.size_category) && <TableHead className="text-xs">Kokoluokka</TableHead>}
+                      <TableHead className="text-xs">Päivittäinen annos</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {food.feeding_guidelines?.map((guideline) => (
+                      <TableRow key={guideline.id}>
+                        {food.feeding_guidelines?.some(g => g.age_months) && (
+                          <TableCell className="text-xs">{guideline.age_months || '-'}</TableCell>
+                        )}
+                        {food.feeding_guidelines?.some(g => g.current_weight_kg) && (
+                          <TableCell className="text-xs">{guideline.current_weight_kg ? `${guideline.current_weight_kg} kg` : '-'}</TableCell>
+                        )}
+                        {food.feeding_guidelines?.some(g => g.adult_weight_kg) && (
+                          <TableCell className="text-xs">{guideline.adult_weight_kg ? `${guideline.adult_weight_kg} kg` : '-'}</TableCell>
+                        )}
+                        {food.feeding_guidelines?.some(g => g.size_category) && (
+                          <TableCell className="text-xs">{guideline.size_category || '-'}</TableCell>
+                        )}
+                        <TableCell className="text-xs font-medium">
+                          {guideline.daily_amount_min && guideline.daily_amount_max ? 
+                            `${guideline.daily_amount_min}-${guideline.daily_amount_max} g` :
+                            guideline.daily_amount_min ? `${guideline.daily_amount_min} g` :
+                            guideline.daily_amount_max ? `${guideline.daily_amount_max} g` :
+                            '-'
+                          }
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+              {food.manufacturer_info?.feeding_guide_url && (
+                <div className="mt-2 text-xs text-muted-foreground">
+                  Tarkista aina viimeisimmät ohjeet{' '}
+                  <button 
+                    onClick={() => window.open(food.manufacturer_info?.feeding_guide_url, '_blank')}
+                    className="text-primary underline"
+                  >
+                    valmistajan sivustolta
+                  </button>
+                </div>
+              )}
+            </div>
           )}
 
           {showDetails && <IngredientInfo food={food} />}
