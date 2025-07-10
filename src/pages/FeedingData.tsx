@@ -319,22 +319,20 @@ export default function FeedingData() {
       <InfoNavigation />
       
       <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-full min-w-0">
-        {/* Hero Section */}
-        <div className="text-center mb-12">
-          <div className="flex justify-center mb-6">
-            <img 
-              src={heroImage} 
-              alt="Annostelutiedot" 
-              className="w-32 h-32 sm:w-40 sm:h-40 object-contain"
-            />
+        {/* Hero Section - Jumbo */}
+        <div className="relative w-full h-96 sm:h-[500px] lg:h-[600px] mb-12 overflow-hidden rounded-2xl">
+          <img 
+            src={heroImage} 
+            alt="Annostelutiedot" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+          <div className="absolute bottom-8 left-0 right-0 text-center text-white">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4">Annostelutiedot</h1>
+            <p className="text-lg sm:text-xl text-white/90 max-w-2xl mx-auto px-4">
+              Kattava tietokanta koiranruokien annostelutiedoista
+            </p>
           </div>
-          <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4">
-            📊 Annostelutiedot
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Yksityiskohtaiset annosteluohjeet Suomessa myytävistä penturuoista. 
-            Tiedot kerätty valmistajien ohjeista ja strukturoitu ohjelmistokäyttöön.
-          </p>
         </div>
 
         {dogFoods.length === 0 && (
