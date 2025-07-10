@@ -148,36 +148,6 @@ export default function InfoHome() {
           </Link>
         </div>
 
-        {/* Key Insights */}
-        <Card className="bg-card/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
-          <CardHeader>
-            <CardTitle className="text-xl">Keskeiset havainnot</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="text-center p-4 bg-gradient-cool rounded-xl">
-                <h3 className="font-semibold text-card-foreground mb-2">Markkinoiden keskittyneisyys</h3>
-                <p className="text-sm text-muted-foreground">
-                  Musti Group hallitsee vahvasti Suomen lemmikkiruokamarkkinoita
-                </p>
-              </div>
-              
-              <div className="text-center p-4 bg-gradient-warm rounded-xl">
-                <h3 className="font-semibold text-card-foreground mb-2">Annosteluohjeiden epästandardius</h3>
-                <p className="text-sm text-muted-foreground">
-                  Valmistajien annosteluohjeet vaihtelevat merkittävästi
-                </p>
-              </div>
-              
-              <div className="text-center p-4 bg-gradient-purple rounded-xl">
-                <h3 className="font-semibold text-card-foreground mb-2">Täys- ja täydennysravinto</h3>
-                <p className="text-sm text-muted-foreground">
-                  Kriittinen ero ravitsemuksellisesti täydellisten ruokien välillä
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
 
         <div className="mt-12">
           <FAQ items={faqs} />
