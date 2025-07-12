@@ -6,6 +6,8 @@ import FAQ from '@/components/FAQ'
 import ImageOptimized from '@/components/ImageOptimized'
 import { createWebApplicationSchema, createWeightTrackingSchema, createFAQSchema } from '@/utils/structuredData'
 import { Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
+import { FaPaw, FaDog, FaBone, FaHeart } from 'react-icons/fa'
 import heroPuppy from '@/assets/hero-puppy.png'
 import growthStages from '@/assets/growth-stages.png'
 
@@ -89,73 +91,150 @@ const Index = () => {
           <div className="grid lg:grid-cols-5 gap-8 items-center max-w-7xl mx-auto">
             
             {/* Left Navigation Cards */}
-            <div className="lg:col-span-1 space-y-4">
+            <motion.div 
+              className="lg:col-span-1 space-y-4"
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
               <Link to="/" className="block">
-                <div className="bg-white backdrop-blur-sm rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-primary/10">
+                <motion.div 
+                  className="bg-white backdrop-blur-sm rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-primary/10"
+                  whileHover={{ scale: 1.05, rotateY: 5 }}
+                  whileTap={{ scale: 0.95 }}
+                >
                   <div className="text-center">
-                    <div className="text-3xl mb-2">🐕</div>
+                    <FaDog className="text-3xl mb-2 text-primary mx-auto" />
                     <h3 className="font-heading font-semibold text-sm text-primary">Painonseuranta</h3>
                   </div>
-                </div>
+                </motion.div>
               </Link>
               <Link to="/info/feeding-data" className="block">
-                <div className="bg-white backdrop-blur-sm rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-accent/10">
+                <motion.div 
+                  className="bg-white backdrop-blur-sm rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-accent/10"
+                  whileHover={{ scale: 1.05, rotateY: -5 }}
+                  whileTap={{ scale: 0.95 }}
+                >
                   <div className="text-center">
-                    <div className="text-3xl mb-2">🦴</div>
+                    <FaBone className="text-3xl mb-2 text-accent mx-auto" />
                     <h3 className="font-heading font-semibold text-sm text-accent">Ruokinta</h3>
                   </div>
-                </div>
+                </motion.div>
               </Link>
-            </div>
+            </motion.div>
 
             {/* Central Hero Content */}
-            <div className="lg:col-span-3 text-center">
+            <motion.div 
+              className="lg:col-span-3 text-center"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
               {/* Large Central Puppy */}
-              <div className="mb-8 animate-puppy-bounce">
+              <motion.div 
+                className="mb-8"
+                initial={{ scale: 0.8, rotate: -5 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ 
+                  duration: 1,
+                  type: "spring",
+                  stiffness: 100
+                }}
+                whileHover={{ 
+                  scale: 1.05,
+                  rotate: 2,
+                  transition: { duration: 0.3 }
+                }}
+              >
                 <img 
                   src={heroPuppy} 
                   alt="Kultainen noutaja pentu" 
                   className="mx-auto w-48 h-48 sm:w-64 sm:h-64 lg:w-80 lg:h-80 object-contain drop-shadow-2xl"
                 />
-              </div>
+                {/* Floating hearts around puppy */}
+                <motion.div
+                  className="relative"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 1 }}
+                >
+                  <FaHeart className="absolute -top-10 -left-8 text-pink-400 text-lg animate-bounce" style={{ animationDelay: '0s' }} />
+                  <FaHeart className="absolute -top-6 -right-10 text-pink-400 text-sm animate-bounce" style={{ animationDelay: '0.5s' }} />
+                  <FaHeart className="absolute -bottom-4 left-6 text-pink-400 text-xs animate-bounce" style={{ animationDelay: '1s' }} />
+                </motion.div>
+              </motion.div>
               
               {/* Hero Text */}
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold mb-4 text-foreground">
+              <motion.h1 
+                className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold mb-4 text-foreground"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+              >
                 <span className="bg-gradient-warm bg-clip-text text-transparent">
                   Pentulaskuri
                 </span>
-              </h1>
-              <p className="text-base sm:text-lg lg:text-xl text-muted-foreground mb-6 font-body leading-relaxed max-w-2xl mx-auto">
+              </motion.h1>
+              <motion.p 
+                className="text-base sm:text-lg lg:text-xl text-muted-foreground mb-6 font-body leading-relaxed max-w-2xl mx-auto"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.5 }}
+              >
                 Seuraa rakkaasi koiranpentusi kasvua ja kehitystä helposti 🐾
-              </p>
+              </motion.p>
               
               {/* CTA Button */}
-              <Link to="/">
-                <button className="bg-gradient-primary text-white px-6 py-3 rounded-2xl text-base font-heading font-semibold shadow-playful hover:shadow-lg transform hover:scale-105 transition-all duration-200">
-                  Aloita seuranta
-                </button>
-              </Link>
-            </div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.7 }}
+              >
+                <Link to="/">
+                  <motion.button 
+                    className="bg-gradient-primary text-white px-6 py-3 rounded-2xl text-base font-heading font-semibold shadow-playful hover:shadow-lg transform transition-all duration-200 flex items-center gap-2 mx-auto"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <FaPaw className="text-sm" />
+                    Aloita seuranta
+                  </motion.button>
+                </Link>
+              </motion.div>
+            </motion.div>
 
             {/* Right Navigation Cards */}
-            <div className="lg:col-span-1 space-y-4">
+            <motion.div 
+              className="lg:col-span-1 space-y-4"
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
               <Link to="/calculator" className="block">
-                <div className="bg-white backdrop-blur-sm rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-primary/10">
+                <motion.div 
+                  className="bg-white backdrop-blur-sm rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-primary/10"
+                  whileHover={{ scale: 1.05, rotateY: -5 }}
+                  whileTap={{ scale: 0.95 }}
+                >
                   <div className="text-center">
-                    <div className="text-3xl mb-2">🐾</div>
+                    <FaPaw className="text-3xl mb-2 text-primary mx-auto" />
                     <h3 className="font-heading font-semibold text-sm text-primary">Laskuri</h3>
                   </div>
-                </div>
+                </motion.div>
               </Link>
               <Link to="/info" className="block">
-                <div className="bg-white backdrop-blur-sm rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-accent/10">
+                <motion.div 
+                  className="bg-white backdrop-blur-sm rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-accent/10"
+                  whileHover={{ scale: 1.05, rotateY: 5 }}
+                  whileTap={{ scale: 0.95 }}
+                >
                   <div className="text-center">
-                    <div className="text-3xl mb-2">🏠</div>
+                    <FaHeart className="text-3xl mb-2 text-accent mx-auto" />
                     <h3 className="font-heading font-semibold text-sm text-accent">Tietoa</h3>
                   </div>
-                </div>
+                </motion.div>
               </Link>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
