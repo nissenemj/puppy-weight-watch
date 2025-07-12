@@ -610,25 +610,26 @@ const Milestones: React.FC<{bookId: string}> = ({ bookId }) => {
     }
   };
 
-  const completeMilestone = async (milestoneId: string) => {
+  const toggleMilestoneCompletion = async (milestoneId: string, completed: boolean) => {
     try {
+      const updateData = completed 
+        ? { completed: true, completed_at: new Date().toISOString() }
+        : { completed: false, completed_at: null };
+
       const { error } = await supabase
         .from('puppy_milestones')
-        .update({ 
-          completed: true, 
-          completed_at: new Date().toISOString() 
-        })
+        .update(updateData)
         .eq('id', milestoneId);
 
       if (error) {
-        console.error('Error completing milestone:', error);
+        console.error('Error updating milestone:', error);
         return;
       }
 
       // Päivitä local state
       setMilestones(prev => prev.map(m => 
         m.id === milestoneId 
-          ? { ...m, completed: true, completed_at: new Date().toISOString() }
+          ? { ...m, ...updateData }
           : m
       ));
     } catch (error) {
@@ -671,7 +672,7 @@ const Milestones: React.FC<{bookId: string}> = ({ bookId }) => {
               key={milestone.id} 
               milestone={milestone} 
               index={index}
-              onComplete={completeMilestone}
+              onToggleCompletion={toggleMilestoneCompletion}
             />
           ))}
         </div>
@@ -684,10 +685,8 @@ const Milestones: React.FC<{bookId: string}> = ({ bookId }) => {
 const MilestoneCard: React.FC<{
   milestone: Milestone; 
   index: number;
-  onComplete: (id: string) => void;
-}> = ({ milestone, index, onComplete }) => {
-  const isCurrent = !milestone.completed && index === 0; // Yksinkertaistettu logiikka
-
+  onToggleCompletion: (milestoneId: string, completed: boolean) => void;
+}> = ({ milestone, index, onToggleCompletion }) => {
   return (
     <motion.div
       initial={{ opacity: 0, x: -20 }}
@@ -697,9 +696,7 @@ const MilestoneCard: React.FC<{
         flex items-center p-4 rounded-xl border-2 transition-all duration-300
         ${milestone.completed 
           ? 'bg-green-50 border-green-200' 
-          : isCurrent 
-            ? 'bg-orange-50 border-orange-200' 
-            : 'bg-gray-50 border-gray-200'
+          : 'bg-orange-50 border-orange-200'
         }
       `}
     >
@@ -707,9 +704,7 @@ const MilestoneCard: React.FC<{
         flex items-center justify-center w-12 h-12 rounded-full mr-4
         ${milestone.completed 
           ? 'bg-green-500' 
-          : isCurrent 
-            ? 'bg-orange-500' 
-            : 'bg-gray-300'
+          : 'bg-orange-500'
         }
       `}>
         {milestone.completed ? (
@@ -731,16 +726,18 @@ const MilestoneCard: React.FC<{
         )}
       </div>
       
-      {isCurrent && !milestone.completed && (
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => onComplete(milestone.id)}
-          className="bg-orange-500 text-white px-4 py-2 rounded-lg font-medium"
-        >
-          Merkitse valmiiksi
-        </motion.button>
-      )}
+      <motion.button
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={() => onToggleCompletion(milestone.id, !milestone.completed)}
+        className={`px-4 py-2 rounded-lg font-medium ${
+          milestone.completed
+            ? 'bg-gray-500 text-white hover:bg-gray-600'
+            : 'bg-orange-500 text-white hover:bg-orange-600'
+        }`}
+      >
+        {milestone.completed ? 'Peruuta' : 'Merkitse valmiiksi'}
+      </motion.button>
     </motion.div>
   );
 };
