@@ -96,6 +96,7 @@ export default {
 				'gradient-primary': 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)))',
 				'gradient-accent': 'linear-gradient(135deg, hsl(var(--accent)), hsl(var(--accent-light)))',
 				'gradient-subtle': 'linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)))',
+				'grass-gradient': 'linear-gradient(180deg, #f0f9ff 0%, #ecfdf5 50%, #f0fdf4 100%)',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
