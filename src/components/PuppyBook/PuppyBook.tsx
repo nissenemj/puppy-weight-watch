@@ -20,9 +20,12 @@ import {
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import Navigation from '@/components/Navigation';
+import MonthlyContent from './MonthlyContent';
+import MonthlyTracker from './MonthlyTracker';
 import happyPuppy from '@/assets/happy-puppy.png';
 import pawPrints from '@/assets/paw-prints.png';
 import puppyBookIcon from '@/assets/puppy-book-icon.png';
+import welcomeIllustration from '@/assets/welcome-illustration.png';
 
 // Tyyppimäärittelyt
 interface PuppyBookData {
@@ -97,9 +100,10 @@ interface Milestone {
 
 // Pääkomponentti
 const PuppyBook: React.FC = () => {
-  const [activeSection, setActiveSection] = useState('timeline');
+  const [activeSection, setActiveSection] = useState('monthly');
   const [book, setBook] = useState<PuppyBookData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [selectedMonth, setSelectedMonth] = useState(0);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -248,6 +252,21 @@ const PuppyBook: React.FC = () => {
       />
       <div className="container mx-auto px-4 py-6 max-w-4xl">
         <AnimatePresence mode="wait">
+          {activeSection === 'monthly' && (
+            <motion.div
+              key="monthly"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <MonthlyTracker 
+                bookId={book.id}
+                selectedMonth={selectedMonth}
+                onMonthChange={setSelectedMonth}
+              />
+            </motion.div>
+          )}
           {activeSection === 'timeline' && (
             <motion.div
               key="timeline"
@@ -542,7 +561,8 @@ const PuppyBookNavigation: React.FC<{
   onSectionChange: (section: string) => void;
 }> = ({ activeSection, onSectionChange }) => {
   const sections = [
-    { id: 'timeline', label: 'Aikajana', icon: Calendar, emoji: '📅' },
+    { id: 'monthly', label: 'Kuukaudet', icon: Calendar, emoji: '📅' },
+    { id: 'timeline', label: 'Aikajana', icon: Calendar, emoji: '⏰' },
     { id: 'milestones', label: 'Virstanpylväät', icon: Award, emoji: '🏆' },
     { id: 'memories', label: 'Muistot', icon: Heart, emoji: '💖' }
   ];
