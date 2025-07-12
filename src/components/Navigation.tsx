@@ -101,8 +101,8 @@ const Navigation = () => {
   )
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 items-center">
+    <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-border/50 shadow-sm">
+      <div className="container flex h-16 items-center">
         <div className="mr-4 hidden md:flex">
           <Link to="/" className="mr-6 flex items-center space-x-2">
             <Dog className="h-6 w-6" />
@@ -111,21 +111,42 @@ const Navigation = () => {
             </span>
           </Link>
           
-          <div className="hidden md:flex items-center space-x-6 text-sm font-medium">
-            <Button asChild variant={isActive('/') ? 'default' : 'ghost'} size="sm">
-              <Link to="/">
-                <Scale className="mr-2 h-4 w-4" />
-                Painonseuranta
-              </Link>
-            </Button>
+          <div className="flex overflow-x-auto scrollbar-hide">
+            <Link
+              to="/"
+              className={`flex-shrink-0 px-6 py-4 text-sm font-medium transition-all flex items-center ${
+                isActive('/') 
+                  ? 'nav-tab-active' 
+                  : 'nav-tab-inactive'
+              }`}
+            >
+              <Scale className="w-5 h-5 mr-2" />
+              Painonseuranta
+            </Link>
             
+            <Link
+              to="/calculator"
+              className={`flex-shrink-0 px-6 py-4 text-sm font-medium transition-all flex items-center ${
+                isActive('/calculator') 
+                  ? 'nav-tab-active' 
+                  : 'nav-tab-inactive'
+              }`}
+            >
+              <Calculator className="w-5 h-5 mr-2" />
+              Laskuri
+            </Link>
             
-            <Button asChild variant={isActive('/info') ? 'default' : 'ghost'} size="sm">
-              <Link to="/info">
-                <Info className="mr-2 h-4 w-4" />
-                Oppaat
-              </Link>
-            </Button>
+            <Link
+              to="/info"
+              className={`flex-shrink-0 px-6 py-4 text-sm font-medium transition-all flex items-center ${
+                isActive('/info') 
+                  ? 'nav-tab-active' 
+                  : 'nav-tab-inactive'
+              }`}
+            >
+              <Info className="w-5 h-5 mr-2" />
+              Oppaat
+            </Link>
           </div>
         </div>
 
