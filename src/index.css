@@ -1,71 +1,73 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Open+Sans:wght@400;500;600&family=Fredoka:wght@400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Pentulaskuri Design System - Modernized
-Warm gradient color palette for puppy growth tracker
-Primary: Warm orange to pink gradients
-Secondary: Blue to cyan gradients  
-Accent: Purple to rose gradients
-All colors are HSL format as required.
+/* Pentulaskuri Design System 2025 - Pentu-themed
+Leikkisä ja ystävällinen väripaletti koiranpennuille
+Primary: Kasvun vihreä (terveys ja luonto)
+Accent: Leikin oranssi (energia ja ilo)  
+Neutral: Lämpöharmaa (selkeys ja luettavuus)
+Background: Valkoinen/beige (puhtaus ja saavutettavuus)
+Kaikki värit HSL-muodossa pet tech -trendien mukaisesti.
 */
 
 @layer base {
   :root {
-    /* Modern Pentulaskuri Color Palette */
-    --background: 25 50% 98%;
-    --foreground: 0 0% 20%;
+    /* Pentu-themed Color Palette 2025 */
+    --background: 48 20% 98%; /* Lämpövalkoinen/beige tausta #FAF9F6 */
+    --foreground: 0 0% 15%; /* Tumma teksti luettavuuden vuoksi */
 
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 20%;
+    --card: 0 0% 100%; /* Valkoinen kortti */
+    --card-foreground: 0 0% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 20%;
+    --popover-foreground: 0 0% 15%;
 
-    /* Primary: Warm Orange-Pink #FF6B35 */
-    --primary: 15 100% 60%;
+    /* Pääväri: Kasvun vihreä #4CAF50 */
+    --primary: 122 39% 49%;
     --primary-foreground: 0 0% 100%;
+    --primary-glow: 122 50% 65%; /* Vaaleampi versio animaatioille */
 
-    /* Secondary: Soft Peach */
-    --secondary: 25 100% 95%;
-    --secondary-foreground: 15 100% 40%;
+    /* Sekundaariväri: Neutraali ja pehmeä */
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 46%; /* #757575 */
 
-    /* Muted: Light warm backgrounds */
-    --muted: 25 50% 96%;
-    --muted-foreground: 0 0% 45%;
+    /* Muted: Neutraalit sävyt */
+    --muted: 48 15% 95%;
+    --muted-foreground: 0 0% 46%;
 
-    /* Accent: Coral Pink #FF8A80 */
-    --accent: 8 100% 75%;
+    /* Aksenttiväri: Leikin oranssi #FF9800 */
+    --accent: 36 100% 50%;
     --accent-foreground: 0 0% 100%;
+    --accent-light: 36 100% 70%; /* Vaaleampi versio */
 
-    /* Additional gradient colors */
-    --gradient-orange: 25 100% 65%;
-    --gradient-pink: 340 100% 75%;
-    --gradient-blue: 200 100% 65%;
-    --gradient-cyan: 180 100% 75%;
-    --gradient-purple: 280 100% 70%;
-    --gradient-rose: 330 100% 75%;
+    /* Pentu-themed gradient colors */
+    --gradient-green: 122 39% 49%; /* Kasvun vihreä */
+    --gradient-green-light: 122 50% 65%;
+    --gradient-orange: 36 100% 50%; /* Leikin oranssi */
+    --gradient-orange-light: 36 100% 70%;
+    --gradient-warm-neutral: 48 20% 98%;
+    --gradient-cool-neutral: 48 15% 95%;
 
-    /* Light accessible gradients for better contrast */
-    --gradient-light-orange: 25 60% 85%;
-    --gradient-light-pink: 340 60% 88%;
-    --gradient-light-blue: 200 60% 85%;
-    --gradient-light-cyan: 180 60% 88%;
-    --gradient-light-purple: 280 60% 85%;
-    --gradient-light-rose: 330 60% 88%;
+    /* Söpöt accent-värit eri toiminnoille */
+    --chart-growth: 122 39% 49%; /* Vihreä - kasvu */
+    --chart-energy: 36 100% 50%; /* Oranssi - energia */
+    --chart-health: 200 50% 60%; /* Sininen - terveys */
+    --chart-milestone: 280 60% 65%; /* Violetti - merkkipaalut */
+    --chart-joy: 50 80% 60%; /* Keltainen - ilo */
 
-    /* Destructive remains similar for errors */
-    --destructive: 0 84% 60%;
+    /* Virhe: Pehmeä punainen #E57373 */
+    --destructive: 0 65% 68%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Borders and inputs */
-    --border: 25 30% 85%;
-    --input: 25 30% 90%;
-    --ring: 15 100% 60%;
+    /* Reunat ja syöttökentät */
+    --border: 0 0% 90%;
+    --input: 0 0% 95%;
+    --ring: 122 39% 49%; /* Sama kuin primary */
 
-    --radius: 0.5rem;
+    --radius: 1rem; /* Pyöristetymmat kulmat söpöyden vuoksi */
 
     --sidebar-background: 0 0% 98%;
 
@@ -85,48 +87,57 @@ All colors are HSL format as required.
   }
 
   .dark {
-    /* Dark mode with warm tones */
-    --background: 15 15% 8%;
-    --foreground: 25 10% 95%;
+    /* Dark mode pentu-teema */
+    --background: 0 0% 8%; /* Tumma tausta */
+    --foreground: 48 10% 95%; /* Vaalea teksti */
 
-    --card: 15 15% 10%;
-    --card-foreground: 25 10% 95%;
+    --card: 0 0% 10%; /* Tumma kortti */
+    --card-foreground: 48 10% 95%;
 
-    --popover: 15 15% 10%;
-    --popover-foreground: 25 10% 95%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 48 10% 95%;
 
-    /* Primary: Vibrant Orange-Pink for dark mode */
-    --primary: 15 100% 65%;
+    /* Primary: Vihreä pysyy samana dark modessa */
+    --primary: 122 39% 55%; /* Hieman vaaleampi dark modessa */
     --primary-foreground: 0 0% 100%;
+    --primary-glow: 122 50% 70%;
 
-    /* Dark secondary with warm tint */
-    --secondary: 15 10% 15%;
-    --secondary-foreground: 25 10% 90%;
+    /* Dark secondary */
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 48 5% 80%;
 
-    /* Dark muted with warm undertone */
-    --muted: 15 10% 15%;
-    --muted-foreground: 25 5% 65%;
+    /* Dark muted */
+    --muted: 0 0% 15%;
+    --muted-foreground: 48 5% 65%;
 
-    /* Accent: Coral Pink for dark mode */
-    --accent: 8 100% 70%;
+    /* Accent: Oranssi dark modessa */
+    --accent: 36 100% 60%; /* Hieman vaaleampi */
     --accent-foreground: 0 0% 100%;
+    --accent-light: 36 100% 75%;
 
-    /* Gradient colors for dark mode */
-    --gradient-orange: 25 100% 60%;
-    --gradient-pink: 340 100% 70%;
-    --gradient-blue: 200 100% 60%;
-    --gradient-cyan: 180 100% 70%;
-    --gradient-purple: 280 100% 65%;
-    --gradient-rose: 330 100% 70%;
+    /* Dark mode gradient colors */
+    --gradient-green: 122 39% 55%;
+    --gradient-green-light: 122 50% 70%;
+    --gradient-orange: 36 100% 60%;
+    --gradient-orange-light: 36 100% 75%;
+    --gradient-warm-neutral: 0 0% 12%;
+    --gradient-cool-neutral: 0 0% 15%;
+
+    /* Chart colors for dark mode */
+    --chart-growth: 122 39% 55%;
+    --chart-energy: 36 100% 60%;
+    --chart-health: 200 50% 65%;
+    --chart-milestone: 280 60% 70%;
+    --chart-joy: 50 80% 65%;
 
     /* Destructive for dark mode */
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 25 10% 95%;
+    --destructive: 0 65% 60%; /* Hieman vaaleampi */
+    --destructive-foreground: 0 0% 100%;
 
-    /* Dark borders and inputs with warm tint */
-    --border: 15 10% 20%;
-    --input: 15 10% 18%;
-    --ring: 15 100% 65%;
+    /* Dark borders and inputs */
+    --border: 0 0% 20%;
+    --input: 0 0% 18%;
+    --ring: 122 39% 55%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -178,47 +189,67 @@ All colors are HSL format as required.
     }
   }
 
-/* Typography System */
+  /* Pentu-themed Typography System 2025 */
   h1, h2, h3, h4, h5, h6 {
     @apply font-heading;
   }
 
   .font-heading {
-    font-family: 'Nunito', system-ui, -apple-system, sans-serif;
+    font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+    font-weight: 600; /* Leikkisä ja moderni */
   }
 
   .font-body {
     font-family: 'Open Sans', system-ui, -apple-system, sans-serif;
+    font-weight: 400; /* Selkeä ja neutraali */
   }
 
-  /* Gradient utilities */
+  .font-playful {
+    font-family: 'Fredoka', system-ui, -apple-system, sans-serif;
+    font-weight: 500; /* Söpö aksenttifontti */
+  }
+
+  /* Pentu-themed Gradient Utilities 2025 */
+  .bg-gradient-growth {
+    background: linear-gradient(135deg, hsl(var(--gradient-green)), hsl(var(--gradient-green-light)));
+  }
+
+  .bg-gradient-playful {
+    background: linear-gradient(135deg, hsl(var(--gradient-orange)), hsl(var(--gradient-orange-light)));
+  }
+
   .bg-gradient-warm {
-    background: linear-gradient(135deg, hsl(var(--gradient-orange)), hsl(var(--gradient-pink)));
+    background: linear-gradient(135deg, hsl(var(--gradient-green)), hsl(var(--gradient-orange)));
   }
 
-  .bg-gradient-cool {
-    background: linear-gradient(135deg, hsl(var(--gradient-blue)), hsl(var(--gradient-cyan)));
-  }
-
-  .bg-gradient-purple {
-    background: linear-gradient(135deg, hsl(var(--gradient-purple)), hsl(var(--gradient-rose)));
+  .bg-gradient-gentle {
+    background: linear-gradient(180deg, hsl(var(--gradient-warm-neutral)), hsl(var(--gradient-cool-neutral)));
   }
 
   .bg-gradient-primary {
-    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--gradient-orange)));
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
   }
 
-  /* Light accessible gradient utilities */
-  .bg-gradient-light-warm {
-    background: linear-gradient(135deg, hsl(var(--gradient-light-orange)), hsl(var(--gradient-light-pink)));
+  .bg-gradient-accent {
+    background: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--accent-light)));
   }
 
-  .bg-gradient-light-cool {
-    background: linear-gradient(135deg, hsl(var(--gradient-light-blue)), hsl(var(--gradient-light-cyan)));
+  /* Hienovaraiset gradientit taustoille */
+  .bg-gradient-subtle {
+    background: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)));
   }
 
-  .bg-gradient-light-purple {
-    background: linear-gradient(135deg, hsl(var(--gradient-light-purple)), hsl(var(--gradient-light-rose)));
+  /* Pentu-themed varjot */
+  .shadow-gentle {
+    box-shadow: 0 4px 16px hsl(var(--primary) / 0.1);
+  }
+
+  .shadow-playful {
+    box-shadow: 0 8px 32px hsl(var(--accent) / 0.15);
+  }
+
+  .shadow-card {
+    box-shadow: 0 2px 8px hsl(0 0% 0% / 0.08);
   }
 
   /* Focus utilities for accessibility */

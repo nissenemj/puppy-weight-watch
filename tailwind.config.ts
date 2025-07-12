@@ -19,8 +19,9 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				'heading': ['Nunito', 'system-ui', '-apple-system', 'sans-serif'],
+				'heading': ['Poppins', 'system-ui', '-apple-system', 'sans-serif'],
 				'body': ['Open Sans', 'system-ui', '-apple-system', 'sans-serif'],
+				'playful': ['Fredoka', 'system-ui', '-apple-system', 'sans-serif'],
 				'sans': ['Open Sans', 'system-ui', '-apple-system', 'sans-serif'],
 			},
 			colors: {
@@ -67,30 +68,34 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Modern gradient colors
+				// Pentu-themed colors 2025
+				'primary-glow': 'hsl(var(--primary-glow))',
+				'accent-light': 'hsl(var(--accent-light))',
+				
+				// Gradient colors for pentu theme
+				'gradient-green': 'hsl(var(--gradient-green))',
+				'gradient-green-light': 'hsl(var(--gradient-green-light))',
 				'gradient-orange': 'hsl(var(--gradient-orange))',
-				'gradient-pink': 'hsl(var(--gradient-pink))',
-				'gradient-blue': 'hsl(var(--gradient-blue))',
-				'gradient-cyan': 'hsl(var(--gradient-cyan))',
-				'gradient-purple': 'hsl(var(--gradient-purple))',
-				'gradient-rose': 'hsl(var(--gradient-rose))',
-				// Light accessible gradient colors
-				'gradient-light-orange': 'hsl(var(--gradient-light-orange))',
-				'gradient-light-pink': 'hsl(var(--gradient-light-pink))',
-				'gradient-light-blue': 'hsl(var(--gradient-light-blue))',
-				'gradient-light-cyan': 'hsl(var(--gradient-light-cyan))',
-				'gradient-light-purple': 'hsl(var(--gradient-light-purple))',
-				'gradient-light-rose': 'hsl(var(--gradient-light-rose))'
+				'gradient-orange-light': 'hsl(var(--gradient-orange-light))',
+				'gradient-warm-neutral': 'hsl(var(--gradient-warm-neutral))',
+				'gradient-cool-neutral': 'hsl(var(--gradient-cool-neutral))',
+				
+				// Chart colors for data visualization
+				'chart-growth': 'hsl(var(--chart-growth))',
+				'chart-energy': 'hsl(var(--chart-energy))',
+				'chart-health': 'hsl(var(--chart-health))',
+				'chart-milestone': 'hsl(var(--chart-milestone))',
+				'chart-joy': 'hsl(var(--chart-joy))'
 			},
 			backgroundImage: {
-				'gradient-warm': 'linear-gradient(135deg, hsl(var(--gradient-orange)), hsl(var(--gradient-pink)))',
-				'gradient-cool': 'linear-gradient(135deg, hsl(var(--gradient-blue)), hsl(var(--gradient-cyan)))',
-				'gradient-purple': 'linear-gradient(135deg, hsl(var(--gradient-purple)), hsl(var(--gradient-rose)))',
-				'gradient-primary': 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)))',
-				// Light accessible gradients
-				'gradient-light-warm': 'linear-gradient(135deg, hsl(var(--gradient-light-orange)), hsl(var(--gradient-light-pink)))',
-				'gradient-light-cool': 'linear-gradient(135deg, hsl(var(--gradient-light-blue)), hsl(var(--gradient-light-cyan)))',
-				'gradient-light-purple': 'linear-gradient(135deg, hsl(var(--gradient-light-purple)), hsl(var(--gradient-light-rose)))',
+				// Pentu-themed gradients 2025
+				'gradient-growth': 'linear-gradient(135deg, hsl(var(--gradient-green)), hsl(var(--gradient-green-light)))',
+				'gradient-playful': 'linear-gradient(135deg, hsl(var(--gradient-orange)), hsl(var(--gradient-orange-light)))',
+				'gradient-warm': 'linear-gradient(135deg, hsl(var(--gradient-green)), hsl(var(--gradient-orange)))',
+				'gradient-gentle': 'linear-gradient(180deg, hsl(var(--gradient-warm-neutral)), hsl(var(--gradient-cool-neutral)))',
+				'gradient-primary': 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)))',
+				'gradient-accent': 'linear-gradient(135deg, hsl(var(--accent)), hsl(var(--accent-light)))',
+				'gradient-subtle': 'linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)))',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -113,16 +118,8 @@ export default {
 					to: {
 						height: '0'
 					}
-				}
-			},
-			animation: {
-				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out',
-				'fade-in': 'fadeIn 0.3s ease-out',
-				'scale-in': 'scaleIn 0.2s ease-out',
-				'bounce-gentle': 'bounceGentle 2s ease-in-out infinite',
-			},
-			keyframes: {
+				},
+				// Pentu-themed animations
 				fadeIn: {
 					'0%': { opacity: '0', transform: 'translateY(10px)' },
 					'100%': { opacity: '1', transform: 'translateY(0)' },
@@ -135,6 +132,29 @@ export default {
 					'0%, 100%': { transform: 'translateY(0)' },
 					'50%': { transform: 'translateY(-5px)' },
 				},
+				'paw-wiggle': {
+					'0%, 100%': { transform: 'rotate(0deg)' },
+					'25%': { transform: 'rotate(-3deg)' },
+					'75%': { transform: 'rotate(3deg)' },
+				},
+				'puppy-bounce': {
+					'0%, 100%': { transform: 'translateY(0px) scale(1)' },
+					'50%': { transform: 'translateY(-8px) scale(1.05)' },
+				},
+				'growth-line': {
+					'0%': { transform: 'scaleX(0)' },
+					'100%': { transform: 'scaleX(1)' },
+				}
+			},
+			animation: {
+				'accordion-down': 'accordion-down 0.2s ease-out',
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'fade-in': 'fadeIn 0.3s ease-out',
+				'scale-in': 'scaleIn 0.2s ease-out',
+				'bounce-gentle': 'bounceGentle 2s ease-in-out infinite',
+				'paw-wiggle': 'paw-wiggle 1.5s ease-in-out infinite',
+				'puppy-bounce': 'puppy-bounce 2s ease-in-out infinite',
+				'growth-line': 'growth-line 1s ease-out',
 			}
 		}
 	},
