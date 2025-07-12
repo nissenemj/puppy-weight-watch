@@ -13,11 +13,16 @@ import {
   ChevronLeft,
   ChevronRight,
   Check,
-  PenTool
+  PenTool,
+  Sparkles,
+  Star
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import Navigation from '@/components/Navigation';
+import happyPuppy from '@/assets/happy-puppy.png';
+import pawPrints from '@/assets/paw-prints.png';
+import puppyBookIcon from '@/assets/puppy-book-icon.png';
 
 // Tyyppimäärittelyt
 interface PuppyBookData {
@@ -169,8 +174,8 @@ const PuppyBook: React.FC = () => {
       if (data) {
         setBook(data);
         toast({
-          title: "Onnistui!",
-          description: "Pentukirja luotu onnistuneesti",
+          title: "Onnistui! 🎉",
+          description: "Pentukirja luotu onnistuneesti! Voit nyt aloittaa pennun tarinan tallentamisen 🐕✨",
         });
 
         // Luo oletusarvoiset virstanpylväät
@@ -320,23 +325,80 @@ const CreateBookPrompt: React.FC<{
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Söpöt taustakuviot */}
+      <motion.img 
+        src={pawPrints}
+        alt=""
+        className="absolute top-10 left-10 w-20 h-20 opacity-20"
+        animate={{ rotate: 360 }}
+        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+      />
+      <motion.img 
+        src={pawPrints}
+        alt=""
+        className="absolute bottom-10 right-10 w-16 h-16 opacity-15"
+        animate={{ rotate: -360 }}
+        transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+      />
+      
       <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center"
+        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ type: "spring", bounce: 0.4 }}
+        className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center relative"
       >
-        <div className="mb-6">
-          <div className="w-20 h-20 bg-gradient-to-r from-orange-400 to-pink-400 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Book className="w-10 h-10 text-white" />
-          </div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">
-            Luo pentukirja
-          </h2>
-          <p className="text-gray-600">
-            Aloita pennun ainutlaatuisen elämäntarinan tallentaminen
-          </p>
-        </div>
+        {/* Leikkisä ikoni */}
+        <motion.div 
+          className="relative mb-6"
+          whileHover={{ scale: 1.1 }}
+          transition={{ type: "spring", stiffness: 300 }}
+        >
+          <motion.img 
+            src={happyPuppy}
+            alt="Onnellinen pentu"
+            className="w-24 h-24 mx-auto rounded-full shadow-lg"
+            animate={{ 
+              scale: [1, 1.05, 1],
+            }}
+            transition={{ 
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+          <motion.div
+            className="absolute -top-2 -right-2"
+            animate={{ 
+              rotate: [0, 10, -10, 0],
+              scale: [1, 1.2, 1]
+            }}
+            transition={{ 
+              duration: 3,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          >
+            <Sparkles className="w-6 h-6 text-yellow-400" />
+          </motion.div>
+        </motion.div>
+        
+        <motion.h2 
+          className="text-3xl font-playful font-bold text-gray-800 mb-3"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+        >
+          Luo pentukirja! 🐶
+        </motion.h2>
+        <motion.p 
+          className="text-gray-600 mb-6 font-body"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        >
+          Aloita pennun ainutlaatuisen elämäntarinan tallentaminen ✨
+        </motion.p>
 
         <div className="mb-6">
           <input
@@ -372,42 +434,103 @@ const CreateBookPrompt: React.FC<{
 // Kirjan header
 const PuppyBookHeader: React.FC<{book: PuppyBookData}> = ({ book }) => {
   return (
-    <div className="relative bg-gradient-to-r from-orange-400 via-pink-400 to-purple-400 text-white">
+    <div className="relative bg-gradient-playful text-white overflow-hidden">
+      {/* Söpöt taustakuviot */}
+      <motion.img 
+        src={pawPrints}
+        alt=""
+        className="absolute top-4 right-4 w-16 h-16 opacity-30"
+        animate={{ rotate: 360 }}
+        transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+      />
+      <motion.img 
+        src={pawPrints}
+        alt=""
+        className="absolute bottom-4 left-4 w-12 h-12 opacity-20"
+        animate={{ rotate: -360 }}
+        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+      />
+      
       <div className="absolute inset-0 bg-black/10"></div>
       <div className="relative container mx-auto px-4 py-8">
-        <div className="flex items-center space-x-6">
-          {book.cover_image_url && (
-            <div className="w-24 h-24 rounded-2xl overflow-hidden shadow-lg">
-              <img 
-                src={book.cover_image_url} 
-                alt="Kirjan kansi"
-                className="w-full h-full object-cover"
-              />
-            </div>
-          )}
+        <motion.div 
+          className="flex items-center space-x-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <motion.div
+            whileHover={{ scale: 1.05, rotate: 5 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            {book.cover_image_url ? (
+              <div className="w-24 h-24 rounded-2xl overflow-hidden shadow-lg border-4 border-white/30">
+                <img 
+                  src={book.cover_image_url} 
+                  alt="Kirjan kansi"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ) : (
+              <div className="w-24 h-24 rounded-2xl overflow-hidden shadow-lg border-4 border-white/30 bg-white/20 flex items-center justify-center">
+                <img 
+                  src={puppyBookIcon} 
+                  alt="Pentukirja"
+                  className="w-16 h-16"
+                />
+              </div>
+            )}
+          </motion.div>
+          
           <div className="flex-1">
-            <h1 className="text-3xl font-bold mb-2">{book.title}</h1>
-            <p className="text-white/80">
-              Luotu {new Date(book.created_at).toLocaleDateString('fi-FI')}
-            </p>
+            <motion.h1 
+              className="text-3xl font-playful font-bold mb-2 flex items-center gap-3"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+            >
+              {book.title} 🐕
+              <motion.div
+                animate={{ 
+                  scale: [1, 1.2, 1],
+                  rotate: [0, 10, -10, 0]
+                }}
+                transition={{ 
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              >
+                ❤️
+              </motion.div>
+            </motion.h1>
+            <motion.p 
+              className="text-white/80 font-body"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+            >
+              Luotu {new Date(book.created_at).toLocaleDateString('fi-FI')} ✨
+            </motion.p>
           </div>
+          
           <div className="flex space-x-2">
             <motion.button
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.1, rotate: 10 }}
               whileTap={{ scale: 0.95 }}
-              className="p-3 bg-white/20 rounded-xl backdrop-blur-sm"
+              className="p-3 bg-white/20 rounded-xl backdrop-blur-sm hover:bg-white/30 transition-colors"
             >
               <Share2 className="w-5 h-5" />
             </motion.button>
             <motion.button
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.1, rotate: -10 }}
               whileTap={{ scale: 0.95 }}
-              className="p-3 bg-white/20 rounded-xl backdrop-blur-sm"
+              className="p-3 bg-white/20 rounded-xl backdrop-blur-sm hover:bg-white/30 transition-colors"
             >
               <Settings className="w-5 h-5" />
             </motion.button>
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
@@ -419,30 +542,45 @@ const PuppyBookNavigation: React.FC<{
   onSectionChange: (section: string) => void;
 }> = ({ activeSection, onSectionChange }) => {
   const sections = [
-    { id: 'timeline', label: 'Aikajana', icon: Calendar },
-    { id: 'milestones', label: 'Virstanpylväät', icon: Award },
-    { id: 'memories', label: 'Muistot', icon: Heart }
+    { id: 'timeline', label: 'Aikajana', icon: Calendar, emoji: '📅' },
+    { id: 'milestones', label: 'Virstanpylväät', icon: Award, emoji: '🏆' },
+    { id: 'memories', label: 'Muistot', icon: Heart, emoji: '💖' }
   ];
 
   return (
-    <div className="bg-white border-b border-gray-200 sticky top-0 z-40">
+    <div className="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
       <div className="container mx-auto px-4">
         <div className="flex overflow-x-auto scrollbar-hide">
           {sections.map((section) => (
             <motion.button
               key={section.id}
-              whileHover={{ y: -2 }}
+              whileHover={{ y: -3, scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               onClick={() => onSectionChange(section.id)}
               className={`
-                flex-shrink-0 flex items-center space-x-2 px-6 py-4 font-medium transition-all
+                flex-shrink-0 flex items-center space-x-2 px-6 py-4 font-medium transition-all rounded-t-lg
                 ${activeSection === section.id
-                  ? 'text-orange-600 border-b-2 border-orange-600 bg-orange-50'
-                  : 'text-gray-600 hover:text-orange-500'
+                  ? 'text-orange-600 border-b-3 border-orange-600 bg-gradient-to-t from-orange-50 to-orange-25 font-semibold'
+                  : 'text-gray-600 hover:text-orange-500 hover:bg-orange-50/50'
                 }
               `}
             >
+              <motion.div
+                animate={activeSection === section.id ? { 
+                  scale: [1, 1.2, 1],
+                  rotate: [0, 10, -10, 0]
+                } : {}}
+                transition={{ 
+                  duration: 2,
+                  repeat: activeSection === section.id ? Infinity : 0,
+                  ease: "easeInOut"
+                }}
+                className="text-lg"
+              >
+                {section.emoji}
+              </motion.div>
               <section.icon className="w-5 h-5" />
-              <span>{section.label}</span>
+              <span className="font-playful">{section.label}</span>
             </motion.button>
           ))}
         </div>
@@ -490,13 +628,19 @@ const Timeline: React.FC<{bookId: string}> = ({ bookId }) => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-gray-800">Pennun aikajana</h2>
+        <motion.h2 
+          className="text-2xl font-playful font-bold text-gray-800 flex items-center gap-2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          Pennun aikajana 📅✨
+        </motion.h2>
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="bg-gradient-to-r from-orange-500 to-pink-500 text-white px-4 py-2 rounded-lg font-medium shadow-lg"
+          className="bg-gradient-playful text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-shadow font-playful"
         >
-          Lisää merkintä
+          Lisää merkintä 📝
         </motion.button>
       </div>
       
@@ -650,8 +794,23 @@ const Milestones: React.FC<{bookId: string}> = ({ bookId }) => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white rounded-2xl p-6 shadow-lg">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">Pennun kehitys</h2>
+      <div className="bg-white rounded-2xl p-6 shadow-lg relative overflow-hidden">
+        {/* Hauskoja taustakuvioita */}
+        <motion.img 
+          src={pawPrints}
+          alt=""
+          className="absolute top-2 right-2 w-8 h-8 opacity-10"
+          animate={{ rotate: 360 }}
+          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+        />
+        
+        <motion.h2 
+          className="text-2xl font-playful font-bold text-gray-800 mb-4 flex items-center gap-2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          Pennun kehitys 🚀🐕
+        </motion.h2>
         
         <div className="mb-6">
           <div className="flex justify-between items-center mb-2">
@@ -783,13 +942,19 @@ const MemoryGallery: React.FC<{bookId: string}> = ({ bookId }) => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-gray-800">Muistot</h2>
+        <motion.h2 
+          className="text-2xl font-playful font-bold text-gray-800 flex items-center gap-2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          Muistot 💖✨
+        </motion.h2>
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="bg-gradient-to-r from-orange-500 to-pink-500 text-white px-4 py-2 rounded-lg font-medium shadow-lg"
+          className="bg-gradient-playful text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-shadow font-playful"
         >
-          Lisää muisto
+          Lisää muisto 📸
         </motion.button>
       </div>
       
