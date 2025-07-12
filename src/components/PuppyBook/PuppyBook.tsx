@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import Navigation from '@/components/Navigation';
 
 // Tyyppimäärittelyt
 interface PuppyBookData {
@@ -234,6 +235,7 @@ const PuppyBook: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50">
+      <Navigation />
       <PuppyBookHeader book={book} />
       <PuppyBookNavigation 
         activeSection={activeSection} 
