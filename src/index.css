@@ -248,6 +248,24 @@ Kaikki värit HSL-muodossa pet tech -trendien mukaisesti.
     background: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--chart-energy)));
   }
 
+  /* Pentukirjan tyylit */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-tab-active {
+    @apply text-orange-600 border-b-2 border-orange-600 bg-orange-50;
+  }
+
+  .nav-tab-inactive {
+    @apply text-gray-600 hover:text-orange-500;
+  }
+
   /* Hienovaraiset gradientit taustoille */
   .bg-gradient-subtle {
     background: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)));
@@ -296,14 +314,7 @@ Kaikki värit HSL-muodossa pet tech -trendien mukaisesti.
     @apply bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100;
   }
 
-  /* Interaktiiviset navigaation parannukset */
-  .nav-tab-active {
-    @apply text-accent border-b-2 border-accent bg-accent/5 font-medium;
-  }
-
-  .nav-tab-inactive {
-    @apply text-muted-foreground hover:text-accent hover:bg-accent/5 transition-colors duration-200;
-  }
+  /* Interaktiiviset navigaation parannukset - pentukirjalle */
 
   /* Responsive utilities for better mobile experience */
   .aspect-square {

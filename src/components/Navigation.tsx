@@ -9,7 +9,8 @@ import {
   Dog, 
   ShieldCheck,
   Menu,
-  X
+  X,
+  Book
 } from 'lucide-react'
 import {
   Sheet,
@@ -40,7 +41,30 @@ const Navigation = () => {
           Painonseuranta
         </Link>
       </Button>
+
+      <Button 
+        asChild 
+        variant={isActive('/calculator') ? 'default' : 'ghost'} 
+        className="justify-start"
+        onClick={() => setIsOpen(false)}
+      >
+        <Link to="/calculator">
+          <Calculator className="mr-2 h-4 w-4" />
+          Laskuri
+        </Link>
+      </Button>
       
+      <Button 
+        asChild 
+        variant={isActive('/puppy-book') ? 'default' : 'ghost'} 
+        className="justify-start"
+        onClick={() => setIsOpen(false)}
+      >
+        <Link to="/puppy-book">
+          <Book className="mr-2 h-4 w-4" />
+          Pentukirja
+        </Link>
+      </Button>
       
       <Button 
         asChild 
@@ -134,6 +158,18 @@ const Navigation = () => {
             >
               <Calculator className="w-5 h-5 mr-2" />
               Laskuri
+            </Link>
+            
+            <Link
+              to="/puppy-book"
+              className={`flex-shrink-0 px-6 py-4 text-sm font-medium transition-all flex items-center ${
+                isActive('/puppy-book') 
+                  ? 'nav-tab-active' 
+                  : 'nav-tab-inactive'
+              }`}
+            >
+              <Book className="w-5 h-5 mr-2" />
+              Pentukirja
             </Link>
             
             <Link

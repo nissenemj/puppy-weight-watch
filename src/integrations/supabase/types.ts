@@ -534,6 +534,266 @@ export type Database = {
           },
         ]
       }
+      memories: {
+        Row: {
+          book_id: string
+          caption: string | null
+          content_type: string
+          content_url: string | null
+          created_at: string | null
+          created_by: string | null
+          id: string
+          location: Json | null
+          tags: string[] | null
+          timeline_entry_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          book_id: string
+          caption?: string | null
+          content_type?: string
+          content_url?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          location?: Json | null
+          tags?: string[] | null
+          timeline_entry_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          book_id?: string
+          caption?: string | null
+          content_type?: string
+          content_url?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          location?: Json | null
+          tags?: string[] | null
+          timeline_entry_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "memories_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "puppy_books"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "memories_timeline_entry_id_fkey"
+            columns: ["timeline_entry_id"]
+            isOneToOne: false
+            referencedRelation: "timeline_entries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      memory_comments: {
+        Row: {
+          comment_text: string
+          created_at: string | null
+          id: string
+          memory_id: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          comment_text: string
+          created_at?: string | null
+          id?: string
+          memory_id: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          comment_text?: string
+          created_at?: string | null
+          id?: string
+          memory_id?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "memory_comments_memory_id_fkey"
+            columns: ["memory_id"]
+            isOneToOne: false
+            referencedRelation: "memories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      memory_reactions: {
+        Row: {
+          created_at: string | null
+          id: string
+          memory_id: string
+          reaction_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          memory_id: string
+          reaction_type?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          memory_id?: string
+          reaction_type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "memory_reactions_memory_id_fkey"
+            columns: ["memory_id"]
+            isOneToOne: false
+            referencedRelation: "memories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      puppy_books: {
+        Row: {
+          cover_image_url: string | null
+          created_at: string | null
+          id: string
+          owner_id: string
+          privacy_settings: Json | null
+          puppy_id: string | null
+          theme: Json | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          cover_image_url?: string | null
+          created_at?: string | null
+          id?: string
+          owner_id: string
+          privacy_settings?: Json | null
+          puppy_id?: string | null
+          theme?: Json | null
+          title?: string
+          updated_at?: string | null
+        }
+        Update: {
+          cover_image_url?: string | null
+          created_at?: string | null
+          id?: string
+          owner_id?: string
+          privacy_settings?: Json | null
+          puppy_id?: string | null
+          theme?: Json | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      puppy_milestones: {
+        Row: {
+          book_id: string
+          completed: boolean | null
+          completed_at: string | null
+          completed_by: string | null
+          created_at: string | null
+          description: string | null
+          display_order: number | null
+          id: string
+          target_age_weeks: number | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          book_id: string
+          completed?: boolean | null
+          completed_at?: string | null
+          completed_by?: string | null
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          target_age_weeks?: number | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          book_id?: string
+          completed?: boolean | null
+          completed_at?: string | null
+          completed_by?: string | null
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          target_age_weeks?: number | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "puppy_milestones_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "puppy_books"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      timeline_entries: {
+        Row: {
+          book_id: string
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          entry_date: string
+          entry_type: string
+          id: string
+          is_highlight: boolean | null
+          metadata: Json | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          book_id: string
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          entry_date: string
+          entry_type: string
+          id?: string
+          is_highlight?: boolean | null
+          metadata?: Json | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          book_id?: string
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          entry_date?: string
+          entry_type?: string
+          id?: string
+          is_highlight?: boolean | null
+          metadata?: Json | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "timeline_entries_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "puppy_books"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       weight_entries: {
         Row: {
           created_at: string | null

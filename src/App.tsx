@@ -13,6 +13,7 @@ import FoodTypes from "./pages/FoodTypes";
 import FeedingData from "./pages/FeedingData";
 import SafetyPage from "./pages/SafetyPage";
 import PuppyGuide from "./pages/PuppyGuide";
+import PuppyBookPage from "./pages/PuppyBook";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +32,7 @@ const App = () => (
             <Route path="/info/feeding-data" element={<FeedingData />} />
             <Route path="/info/safety" element={<SafetyPage />} />
             <Route path="/info/puppy-guide" element={<PuppyGuide />} />
+            <Route path="/puppy-book" element={<PuppyBookPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
