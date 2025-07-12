@@ -89,16 +89,16 @@ const Index = () => {
             
             {/* Left Navigation Cards */}
             <div className="lg:col-span-1 space-y-4">
-              <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer">
+              <div className="bg-white backdrop-blur-sm rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-primary/10">
                 <div className="text-center">
-                  <div className="text-3xl mb-2">📊</div>
-                  <h3 className="font-heading font-semibold text-sm text-foreground">Painonseuranta</h3>
+                  <div className="text-3xl mb-2">🐕</div>
+                  <h3 className="font-heading font-semibold text-sm text-primary">Painonseuranta</h3>
                 </div>
               </div>
-              <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer">
+              <div className="bg-white backdrop-blur-sm rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-accent/10">
                 <div className="text-center">
-                  <div className="text-3xl mb-2">🥣</div>
-                  <h3 className="font-heading font-semibold text-sm text-foreground">Ruokinta</h3>
+                  <div className="text-3xl mb-2">🦴</div>
+                  <h3 className="font-heading font-semibold text-sm text-accent">Ruokinta</h3>
                 </div>
               </div>
             </div>
@@ -132,16 +132,16 @@ const Index = () => {
 
             {/* Right Navigation Cards */}
             <div className="lg:col-span-1 space-y-4">
-              <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer">
+              <div className="bg-white backdrop-blur-sm rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-primary/10">
                 <div className="text-center">
-                  <div className="text-3xl mb-2">🧮</div>
-                  <h3 className="font-heading font-semibold text-sm text-foreground">Laskuri</h3>
+                  <div className="text-3xl mb-2">🐾</div>
+                  <h3 className="font-heading font-semibold text-sm text-primary">Laskuri</h3>
                 </div>
               </div>
-              <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer">
+              <div className="bg-white backdrop-blur-sm rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-accent/10">
                 <div className="text-center">
-                  <div className="text-3xl mb-2">📚</div>
-                  <h3 className="font-heading font-semibold text-sm text-foreground">Tietoa</h3>
+                  <div className="text-3xl mb-2">🏠</div>
+                  <h3 className="font-heading font-semibold text-sm text-accent">Tietoa</h3>
                 </div>
               </div>
             </div>
@@ -163,37 +163,37 @@ const Index = () => {
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
             {/* Feature Card 1 */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+            <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-primary/10">
               <div className="text-center">
-                <div className="text-4xl mb-4">📈</div>
-                <h3 className="font-heading font-semibold text-lg mb-2 text-foreground">Kasvuseuranta</h3>
+                <div className="text-4xl mb-4">🐕‍🦺</div>
+                <h3 className="font-heading font-semibold text-lg mb-2 text-primary">Kasvuseuranta</h3>
                 <p className="text-sm text-muted-foreground">Seuraa pennun painon ja koon kehitystä helposti</p>
               </div>
             </div>
 
             {/* Feature Card 2 */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+            <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-accent/10">
               <div className="text-center">
-                <div className="text-4xl mb-4">🍽️</div>
-                <h3 className="font-heading font-semibold text-lg mb-2 text-foreground">Ruokamäärät</h3>
+                <div className="text-4xl mb-4">🍖</div>
+                <h3 className="font-heading font-semibold text-lg mb-2 text-accent">Ruokamäärät</h3>
                 <p className="text-sm text-muted-foreground">Laske optimaaliset ruokamäärät iän ja painon mukaan</p>
               </div>
             </div>
 
             {/* Feature Card 3 */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+            <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-primary/10">
               <div className="text-center">
-                <div className="text-4xl mb-4">🏥</div>
-                <h3 className="font-heading font-semibold text-lg mb-2 text-foreground">Terveys</h3>
+                <div className="text-4xl mb-4">🩺</div>
+                <h3 className="font-heading font-semibold text-lg mb-2 text-primary">Terveys</h3>
                 <p className="text-sm text-muted-foreground">Muistutukset rokotuksista ja terveystarkistuksista</p>
               </div>
             </div>
 
             {/* Feature Card 4 */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+            <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-accent/10">
               <div className="text-center">
-                <div className="text-4xl mb-4">📱</div>
-                <h3 className="font-heading font-semibold text-lg mb-2 text-foreground">Helppokäyttö</h3>
+                <div className="text-4xl mb-4">📲</div>
+                <h3 className="font-heading font-semibold text-lg mb-2 text-accent">Helppokäyttö</h3>
                 <p className="text-sm text-muted-foreground">Yksinkertainen käyttöliittymä mobiilissa ja tietokoneella</p>
               </div>
             </div>
