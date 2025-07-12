@@ -381,3 +381,12 @@ Kaikki värit HSL-muodossa pet tech -trendien mukaisesti.
     }
   }
 }
+
+/* Custom classes for puppy book */
+.font-playful {
+  font-family: 'Fredoka One', cursive;
+}
+
+.bg-gradient-playful {
+  background: linear-gradient(135deg, #FF6B35, #F7931E, #FFD23F);
+}

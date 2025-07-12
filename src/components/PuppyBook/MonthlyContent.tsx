@@ -99,7 +99,7 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId }) 
         animate={{ opacity: 1, y: 0 }}
         className="mb-6"
       >
-        <h2 className="text-3xl font-playful font-bold text-gray-800 mb-2 flex items-center gap-3">
+        <h2 className="text-3xl font-sans font-bold text-gray-800 mb-2 flex items-center gap-3">
           <Calendar className="w-8 h-8 text-orange-500" />
           {monthNumber === 0 ? 'Syntymä - 1 kuukausi' : `${monthNumber}. kuukausi`} 🐶
         </h2>
