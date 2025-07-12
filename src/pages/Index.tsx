@@ -5,6 +5,7 @@ import SEO from '@/components/SEO'
 import FAQ from '@/components/FAQ'
 import ImageOptimized from '@/components/ImageOptimized'
 import { createWebApplicationSchema, createWeightTrackingSchema, createFAQSchema } from '@/utils/structuredData'
+import { Link } from 'react-router-dom'
 import heroPuppy from '@/assets/hero-puppy.png'
 import growthStages from '@/assets/growth-stages.png'
 
@@ -89,18 +90,22 @@ const Index = () => {
             
             {/* Left Navigation Cards */}
             <div className="lg:col-span-1 space-y-4">
-              <div className="bg-white backdrop-blur-sm rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-primary/10">
-                <div className="text-center">
-                  <div className="text-3xl mb-2">🐕</div>
-                  <h3 className="font-heading font-semibold text-sm text-primary">Painonseuranta</h3>
+              <Link to="/" className="block">
+                <div className="bg-white backdrop-blur-sm rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-primary/10">
+                  <div className="text-center">
+                    <div className="text-3xl mb-2">🐕</div>
+                    <h3 className="font-heading font-semibold text-sm text-primary">Painonseuranta</h3>
+                  </div>
                 </div>
-              </div>
-              <div className="bg-white backdrop-blur-sm rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-accent/10">
-                <div className="text-center">
-                  <div className="text-3xl mb-2">🦴</div>
-                  <h3 className="font-heading font-semibold text-sm text-accent">Ruokinta</h3>
+              </Link>
+              <Link to="/info/feeding-data" className="block">
+                <div className="bg-white backdrop-blur-sm rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-accent/10">
+                  <div className="text-center">
+                    <div className="text-3xl mb-2">🦴</div>
+                    <h3 className="font-heading font-semibold text-sm text-accent">Ruokinta</h3>
+                  </div>
                 </div>
-              </div>
+              </Link>
             </div>
 
             {/* Central Hero Content */}
@@ -125,25 +130,31 @@ const Index = () => {
               </p>
               
               {/* CTA Button */}
-              <button className="bg-gradient-primary text-white px-6 py-3 rounded-2xl text-base font-heading font-semibold shadow-playful hover:shadow-lg transform hover:scale-105 transition-all duration-200">
-                Aloita seuranta
-              </button>
+              <Link to="/">
+                <button className="bg-gradient-primary text-white px-6 py-3 rounded-2xl text-base font-heading font-semibold shadow-playful hover:shadow-lg transform hover:scale-105 transition-all duration-200">
+                  Aloita seuranta
+                </button>
+              </Link>
             </div>
 
             {/* Right Navigation Cards */}
             <div className="lg:col-span-1 space-y-4">
-              <div className="bg-white backdrop-blur-sm rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-primary/10">
-                <div className="text-center">
-                  <div className="text-3xl mb-2">🐾</div>
-                  <h3 className="font-heading font-semibold text-sm text-primary">Laskuri</h3>
+              <Link to="/calculator" className="block">
+                <div className="bg-white backdrop-blur-sm rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-primary/10">
+                  <div className="text-center">
+                    <div className="text-3xl mb-2">🐾</div>
+                    <h3 className="font-heading font-semibold text-sm text-primary">Laskuri</h3>
+                  </div>
                 </div>
-              </div>
-              <div className="bg-white backdrop-blur-sm rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-accent/10">
-                <div className="text-center">
-                  <div className="text-3xl mb-2">🏠</div>
-                  <h3 className="font-heading font-semibold text-sm text-accent">Tietoa</h3>
+              </Link>
+              <Link to="/info" className="block">
+                <div className="bg-white backdrop-blur-sm rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-accent/10">
+                  <div className="text-center">
+                    <div className="text-3xl mb-2">🏠</div>
+                    <h3 className="font-heading font-semibold text-sm text-accent">Tietoa</h3>
+                  </div>
                 </div>
-              </div>
+              </Link>
             </div>
           </div>
         </div>
