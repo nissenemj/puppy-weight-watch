@@ -270,7 +270,8 @@ Kaikki värit HSL-muodossa pet tech -trendien mukaisesti.
 
   /* UI Parannukset 2025 - Visuaalisen hierarkian parantaminen */
   .primary-action {
-    @apply bg-gradient-to-r from-gradient-orange to-accent-light text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300;
+    @apply text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300;
+    background: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--primary)));
   }
 
   .secondary-action {
