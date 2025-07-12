@@ -218,7 +218,7 @@ Kaikki värit HSL-muodossa pet tech -trendien mukaisesti.
     background: linear-gradient(135deg, hsl(var(--gradient-orange)), hsl(var(--gradient-orange-light)));
   }
 
-  .bg-gradient-warm {
+  .bg-gradient-warm-old {
     background: linear-gradient(135deg, hsl(var(--gradient-green)), hsl(var(--gradient-orange)));
   }
 
@@ -232,6 +232,20 @@ Kaikki värit HSL-muodossa pet tech -trendien mukaisesti.
 
   .bg-gradient-accent {
     background: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--accent-light)));
+  }
+
+  
+  /* Pentu-themed gradientit komponenteille */
+  .bg-gradient-cool {
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--chart-health)));
+  }
+
+  .bg-gradient-purple {
+    background: linear-gradient(135deg, hsl(var(--chart-milestone)), hsl(var(--accent)));
+  }
+
+  .bg-gradient-warm {
+    background: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--chart-energy)));
   }
 
   /* Hienovaraiset gradientit taustoille */
