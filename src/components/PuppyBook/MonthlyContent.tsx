@@ -9,7 +9,8 @@ import {
   Edit3,
   CheckCircle,
   Clock,
-  MapPin
+  MapPin,
+  Plus
 } from 'lucide-react';
 
 interface MonthlyContentProps {
@@ -42,6 +43,8 @@ interface SocialEvent {
 
 const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId }) => {
   const [activeTab, setActiveTab] = useState<'milestones' | 'health' | 'social'>('milestones');
+  const [customTasks, setCustomTasks] = useState<{ [key: number]: string[] }>({});
+  const [newTaskInput, setNewTaskInput] = useState('');
   
   // Kuukausikohtaiset virstanpylväät
   const getMonthlyMilestones = (month: number): MilestoneItem[] => {
@@ -121,11 +124,25 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId }) 
       ]
     };
 
-    return tasksByMonth[month as keyof typeof tasksByMonth] || [
+    const baseTasks = tasksByMonth[month as keyof typeof tasksByMonth] || [
       "Jatka sosiaalistamista uusissa ympäristöissä",
       "Säännölliset kohtaamiset muiden koirien kanssa",
       "Harjoittele erilaisia tilanteita"
     ];
+    
+    // Lisää mukautetut tehtävät
+    const monthCustomTasks = customTasks[month] || [];
+    return [...baseTasks, ...monthCustomTasks];
+  };
+
+  const addCustomTask = () => {
+    if (newTaskInput.trim()) {
+      setCustomTasks(prev => ({
+        ...prev,
+        [monthNumber]: [...(prev[monthNumber] || []), newTaskInput.trim()]
+      }));
+      setNewTaskInput('');
+    }
   };
 
   const milestones = getMonthlyMilestones(monthNumber);
@@ -361,6 +378,28 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId }) 
                     </div>
                   </div>
                 ))}
+              </div>
+              
+              {/* Lisää oma tehtävä */}
+              <div className="mt-4 p-4 bg-green-50 rounded-lg border border-green-200">
+                <h5 className="font-medium text-green-800 mb-3">Lisää oma sosiaalistamistehtävä</h5>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={newTaskInput}
+                    onChange={(e) => setNewTaskInput(e.target.value)}
+                    placeholder="Esim. Tapaa naapurin koira..."
+                    className="flex-1 p-2 text-sm border border-green-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-300"
+                    onKeyPress={(e) => e.key === 'Enter' && addCustomTask()}
+                  />
+                  <button
+                    onClick={addCustomTask}
+                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-1"
+                  >
+                    <Plus className="w-4 h-4" />
+                    Lisää
+                  </button>
+                </div>
               </div>
               
               <div className="mt-4 p-4 bg-blue-50 rounded-lg">
