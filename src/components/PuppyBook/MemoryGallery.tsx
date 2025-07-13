@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Camera, Heart, MessageCircle, Plus, Grid, List } from 'lucide-react';
+import { Camera, Plus, Grid, List } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import MemoryCard from './MemoryCard';
 
 interface Memory {
   id: string;
@@ -38,9 +39,10 @@ interface MemoryComment {
 
 interface MemoryGalleryProps {
   bookId: string;
+  onRefresh?: React.MutableRefObject<(() => void) | null>;
 }
 
-const MemoryGallery: React.FC<MemoryGalleryProps> = ({ bookId }) => {
+const MemoryGallery: React.FC<MemoryGalleryProps> = ({ bookId, onRefresh }) => {
   const [memories, setMemories] = useState<Memory[]>([]);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -49,6 +51,17 @@ const MemoryGallery: React.FC<MemoryGalleryProps> = ({ bookId }) => {
   useEffect(() => {
     loadMemories();
   }, [bookId]);
+
+  // Refresh memories when requested
+  const refreshMemories = () => {
+    loadMemories();
+  };
+
+  React.useEffect(() => {
+    if (onRefresh) {
+      onRefresh.current = refreshMemories;
+    }
+  }, [onRefresh]);
 
   const loadMemories = async () => {
     try {
@@ -140,7 +153,10 @@ const MemoryGallery: React.FC<MemoryGalleryProps> = ({ bookId }) => {
           <p className="text-gray-400 mb-4">
             Aloita pennun muistojen tallentaminen
           </p>
-          <button className="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition-colors">
+          <button 
+            onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}
+            className="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition-colors"
+          >
             <Plus className="w-4 h-4 inline mr-2" />
             Lisää ensimmäinen muisto
           </button>
@@ -153,74 +169,12 @@ const MemoryGallery: React.FC<MemoryGalleryProps> = ({ bookId }) => {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: index * 0.1 }}
-              className={`rounded-xl overflow-hidden shadow-lg ${
-                viewMode === 'grid' ? 'aspect-square' : 'p-4'
-              } bg-gray-100 hover:shadow-xl transition-shadow cursor-pointer`}
             >
-              {memory.content_url ? (
-                <div className={viewMode === 'grid' ? 'relative h-full' : 'flex gap-4'}>
-                  <img
-                    src={memory.content_url}
-                    alt={memory.caption || 'Pennun muisto'}
-                    className={`object-cover ${
-                      viewMode === 'grid' ? 'w-full h-full' : 'w-20 h-20 rounded-lg'
-                    }`}
-                  />
-                  {viewMode === 'grid' && (
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 hover:opacity-100 transition-opacity">
-                      <div className="absolute bottom-4 left-4 right-4">
-                        {memory.caption && (
-                          <p className="text-white text-sm font-medium truncate">
-                            {memory.caption}
-                          </p>
-                        )}
-                        <div className="flex items-center gap-2 mt-2 text-white/80 text-xs">
-                          <Heart className="w-3 h-3" />
-                          <span>{memory.reactions?.length || 0}</span>
-                          <MessageCircle className="w-3 h-3 ml-2" />
-                          <span>{memory.comments?.length || 0}</span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className={`bg-orange-100 flex items-center justify-center ${
-                  viewMode === 'grid' ? 'h-full' : 'w-20 h-20 rounded-lg'
-                }`}>
-                  <Camera className="w-8 h-8 text-orange-500" />
-                </div>
-              )}
-              
-              {viewMode === 'list' && (
-                <div className="flex-1">
-                  <h4 className="font-semibold text-gray-800 mb-1">
-                    {memory.caption || 'Nimetön muisto'}
-                  </h4>
-                  <p className="text-gray-600 text-sm mb-2">
-                    {new Date(memory.created_at).toLocaleDateString('fi-FI')}
-                  </p>
-                  <div className="flex items-center gap-4 text-xs text-gray-500">
-                    <span className="flex items-center gap-1">
-                      <Heart className="w-3 h-3" />
-                      {memory.reactions?.length || 0}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <MessageCircle className="w-3 h-3" />
-                      {memory.comments?.length || 0}
-                    </span>
-                  </div>
-                  {memory.tags.length > 0 && (
-                    <div className="mt-2 flex flex-wrap gap-1">
-                      {memory.tags.slice(0, 3).map((tag, i) => (
-                        <span key={i} className="px-2 py-1 bg-orange-100 text-orange-600 text-xs rounded-full">
-                          #{tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
+              <MemoryCard
+                memory={memory}
+                viewMode={viewMode}
+                onMemoryUpdated={refreshMemories}
+              />
             </motion.div>
           ))}
         </div>

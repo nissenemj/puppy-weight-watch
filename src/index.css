@@ -4,6 +4,23 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Utility classes */
+@layer utilities {
+  .line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+  
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+}
+
 /* Pentulaskuri Design System 2025 - Pentu-themed
 Leikkisä ja ystävällinen väripaletti koiranpennuille
 Primary: Kasvun vihreä (terveys ja luonto)

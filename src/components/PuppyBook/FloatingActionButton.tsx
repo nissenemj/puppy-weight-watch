@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Camera, Calendar, Award, Heart, X } from 'lucide-react';
+import AddMemoryDialog from './AddMemoryDialog';
 
 interface ActionButtonProps {
   icon: React.ComponentType<any>;
@@ -25,21 +26,42 @@ const ActionButton: React.FC<ActionButtonProps> = ({ icon: Icon, label, onClick 
 
 interface FloatingActionButtonProps {
   bookId: string;
+  onMemoryAdded?: () => void;
 }
 
-const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({ bookId }) => {
+const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({ bookId, onMemoryAdded }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogType, setDialogType] = useState<'photo' | 'text' | 'event' | 'milestone'>('photo');
+
+  const handleActionClick = (type: 'photo' | 'text' | 'event' | 'milestone') => {
+    setDialogType(type);
+    setDialogOpen(true);
+    setIsOpen(false);
+  };
 
   const actions = [
-    { icon: Camera, label: 'Lisää kuva', onClick: () => console.log('Add photo') },
-    { icon: Calendar, label: 'Lisää tapahtuma', onClick: () => console.log('Add event') },
-    { icon: Award, label: 'Lisää virstanpylväs', onClick: () => console.log('Add milestone') },
-    { icon: Heart, label: 'Lisää muisto', onClick: () => console.log('Add memory') },
+    { icon: Camera, label: 'Lisää kuva', onClick: () => handleActionClick('photo') },
+    { icon: Calendar, label: 'Lisää tapahtuma', onClick: () => handleActionClick('event') },
+    { icon: Award, label: 'Lisää virstanpylväs', onClick: () => handleActionClick('milestone') },
+    { icon: Heart, label: 'Lisää muisto', onClick: () => handleActionClick('text') },
   ];
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
-      <div className="relative">
+    <>
+      <AddMemoryDialog
+        isOpen={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        bookId={bookId}
+        type={dialogType}
+        onMemoryAdded={() => {
+          onMemoryAdded?.();
+          setDialogOpen(false);
+        }}
+      />
+      
+      <div className="fixed bottom-6 right-6 z-50">
+        <div className="relative">
         {/* Action Buttons */}
         <AnimatePresence>
           {isOpen && (
@@ -102,7 +124,8 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({ bookId }) =
           />
         )}
       </AnimatePresence>
-    </div>
+      </div>
+    </>
   );
 };
 

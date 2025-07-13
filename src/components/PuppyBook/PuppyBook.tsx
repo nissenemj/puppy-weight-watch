@@ -107,6 +107,7 @@ const PuppyBook: React.FC = () => {
   const [book, setBook] = useState<PuppyBookData | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedMonth, setSelectedMonth] = useState(0);
+  const memoryGalleryRef = React.useRef<(() => void) | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -300,12 +301,22 @@ const PuppyBook: React.FC = () => {
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3 }}
             >
-              <MemoryGallery bookId={book.id} />
+              <MemoryGallery 
+                bookId={book.id} 
+                onRefresh={memoryGalleryRef}
+              />
             </motion.div>
           )}
         </AnimatePresence>
       </div>
-      <FloatingActionButton bookId={book.id} />
+      <FloatingActionButton 
+        bookId={book.id} 
+        onMemoryAdded={() => {
+          if (memoryGalleryRef.current) {
+            memoryGalleryRef.current();
+          }
+        }}
+      />
     </div>
   );
 };
