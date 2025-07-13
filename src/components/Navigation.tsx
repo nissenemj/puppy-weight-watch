@@ -10,7 +10,9 @@ import {
   ShieldCheck,
   Menu,
   X,
-  Book
+  Book,
+  Bell,
+  Settings
 } from 'lucide-react'
 import {
   Sheet,
@@ -18,6 +20,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 
 const Navigation = () => {
   const location = useLocation()
