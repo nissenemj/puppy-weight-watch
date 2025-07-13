@@ -89,6 +89,45 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId }) 
     return healthByMonth[month as keyof typeof healthByMonth] || [];
   };
 
+  const getSocializationTasks = (month: number): string[] => {
+    const tasksByMonth = {
+      0: [
+        "Esittele perheenjäseniä (aikuiset, lapset)",
+        "Totuta ääniä (ovikello, TV, imuri)",
+        "Lyhyitä kantokävelyjä turvallisilla alueilla",
+        "Tapaa 1-2 uutta ihmistä viikossa",
+        "Käytä nameja positiiviseen assosiaatioon"
+      ],
+      1: [
+        "Ensimmäiset kävelyt taluttimessa (rokotusten jälkeen)",
+        "Tapaa rauhallisia aikuisia koiria",
+        "Totuta liikenneääniä, autoja, pyöriä",
+        "Osallistu pentukursseille (1-2 kertaa/vko)",
+        "Kohtaa erilaisia ihmisiä (miehet, naiset, lapset)"
+      ],
+      2: [
+        "Vie kauppoihin (lemmikkiystävällisiin)",
+        "Autolla ajelu",
+        "Totuta erilaisiin pintoihin (ruoho, hiekka, lumi)",
+        "Järjestä leikkitreffejä samanikäisten kanssa",
+        "Esittele eläimiä (kissat, linnut) etäältä"
+      ],
+      3: [
+        "Käy julkisilla paikoilla (kahvilat, markkinat)",
+        "Totuta yksinoloon (lyhyet ajat)",
+        "Jatka koiratapaamisia, opeta rajat",
+        "Harjoittele erilaisia ääniä (ukkonen, ilmahälyttimet)",
+        "Osallistu harrastuksiin (agility, tottelevaisuus)"
+      ]
+    };
+
+    return tasksByMonth[month as keyof typeof tasksByMonth] || [
+      "Jatka sosiaalistamista uusissa ympäristöissä",
+      "Säännölliset kohtaamiset muiden koirien kanssa",
+      "Harjoittele erilaisia tilanteita"
+    ];
+  };
+
   const milestones = getMonthlyMilestones(monthNumber);
   const healthRecords = getHealthGuidelines(monthNumber);
 
@@ -258,55 +297,118 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId }) 
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            className="space-y-4"
+            className="space-y-6"
           >
             <h3 className="text-xl font-semibold text-gray-800 mb-4">
               Sosiaalistaminen ja ystävät 👥
             </h3>
             
-            <div className="bg-green-50 rounded-xl p-4 border border-green-100">
-              <h4 className="font-semibold text-gray-800 mb-3">Kuukauden sosiaalistamisehdotukset:</h4>
-              <div className="space-y-2">
-                {monthNumber <= 1 && (
-                  <>
-                    <div className="flex items-center gap-2 text-sm text-gray-700">
-                      <CheckCircle className="w-4 h-4 text-green-500" />
-                      Totuta erilaisiin ääniin (autot, kodinkoneet)
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-700">
-                      <CheckCircle className="w-4 h-4 text-green-500" />
-                      Vierailijoita kotiin turvallisesti
-                    </div>
-                  </>
-                )}
-                {monthNumber >= 2 && (
-                  <>
-                    <div className="flex items-center gap-2 text-sm text-gray-700">
-                      <CheckCircle className="w-4 h-4 text-green-500" />
-                      Kohtaamisia rauhallisten aikuisten koirien kanssa
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-700">
-                      <CheckCircle className="w-4 h-4 text-green-500" />
-                      Kävelyt erilaisissa ympäristöissä
-                    </div>
-                  </>
-                )}
-                {monthNumber >= 3 && (
-                  <div className="flex items-center gap-2 text-sm text-gray-700">
-                    <CheckCircle className="w-4 h-4 text-green-500" />
-                    Pentukurssit ja ryhmätunnit
+            {/* Kuukausikohtainen sosiaalistamisohje */}
+            <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-6 border border-green-200">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0">
+                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                    <Users className="w-6 h-6 text-green-600" />
                   </div>
-                )}
+                </div>
+                <div className="flex-1">
+                  <h4 className="font-bold text-gray-800 mb-2">
+                    {monthNumber === 0 && "Totuttaminen kotiympäristöön (8-12 viikkoa)"}
+                    {monthNumber === 1 && "Laajempi sosiaalistaminen (12-16 viikkoa)"}
+                    {monthNumber === 2 && "Syventäminen (4-6 kuukautta)"}
+                    {monthNumber >= 3 && "Vahvistaminen ja ylläpito (6+ kuukautta)"}
+                  </h4>
+                  <p className="text-gray-600 text-sm mb-3">
+                    {monthNumber === 0 && "Perheeseen kiinnittyminen ja perusäänet. Keskity turvallisiin kokemuksiin kotona."}
+                    {monthNumber === 1 && "Ulkoilut ja uudet ympäristöt. Rokotusten jälkeen laajempi sosiaalistaminen."}
+                    {monthNumber === 2 && "Uudet paikat ja pinnat. Monimuotoisia kokemuksia hallitusti."}
+                    {monthNumber >= 3 && "Monimuotoiset tilanteet ja eroahdistuksen ehkäisy. Säännöllinen ylläpito."}
+                  </p>
+                  <div className="flex items-center gap-4 text-xs text-gray-500 mb-4">
+                    <div className="flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      {monthNumber === 0 && "3-5 kertaa/päivä, 5-10 min"}
+                      {monthNumber === 1 && "Päivittäin 10-15 min"}
+                      {monthNumber === 2 && "4-5 kertaa/vko, 15-20 min"}
+                      {monthNumber >= 3 && "Päivittäin 20-30 min"}
+                    </div>
+                  </div>
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                    <p className="text-yellow-700 text-sm font-medium">⚠️ Varoituksia:</p>
+                    <p className="text-yellow-600 text-xs mt-1">
+                      {monthNumber === 0 && "Vältä koirapuistoja ennen rokotuksia. Jos pelkää, lopeta heti."}
+                      {monthNumber === 1 && "Valvo kohtaamisia. Valitse rauhalliset koirat."}
+                      {monthNumber === 2 && "Tarkkaile väsymystä. Pennut tarvitsevat lepoa."}
+                      {monthNumber >= 3 && "Hormonimuutokset voivat vaikuttaa - ole kärsivällinen."}
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div className="bg-pink-50 rounded-xl p-4 border border-pink-100">
+            {/* Sosiaalistamistehtävät */}
+            <div className="bg-white rounded-xl border border-gray-200 p-6">
+              <h4 className="font-semibold text-gray-800 mb-4">Kuukauden sosiaalistamistehtävät 📝</h4>
+              <div className="space-y-3">
+                {getSocializationTasks(monthNumber).map((task, index) => (
+                  <div key={index} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                    <input 
+                      type="checkbox" 
+                      className="mt-1 w-4 h-4 text-green-600 rounded focus:ring-green-500"
+                    />
+                    <div className="flex-1">
+                      <p className="text-gray-800 text-sm">{task}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+                <h5 className="font-medium text-blue-800 mb-2">Viikoittainen tavoite:</h5>
+                <p className="text-blue-700 text-sm">
+                  {monthNumber === 0 && "1-2 uutta ihmistä, tutut äänet ja pinnat"}
+                  {monthNumber === 1 && "2-3 uutta kokemusta, ensimmäiset kontaktit koirien kanssa"}
+                  {monthNumber === 2 && "Uusia paikkoja ja pintoja, eläinkontaktit"}
+                  {monthNumber >= 3 && "Viikoittain uusia haasteita, ylläpito"}
+                </p>
+              </div>
+            </div>
+
+            {/* Sosiaalistamismuistiinpanot */}
+            <div className="bg-pink-50 rounded-xl p-6 border border-pink-100">
+              <h4 className="font-semibold text-gray-800 mb-3">Tämän kuukauden kokemukset 📖</h4>
+              <textarea
+                placeholder="Kirjoita tähän kuukauden sosiaalistamiskokemuksia: Kenen kanssa pentu leikki? Mitkä tilanteet menivät hyvin? Mihin tarvitaan vielä harjoitusta?"
+                className="w-full p-3 text-sm border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-300"
+                rows={4}
+              />
+              <div className="mt-3 flex gap-2">
+                <button className="flex items-center gap-1 text-xs text-pink-600 hover:text-pink-700 bg-pink-100 px-3 py-1 rounded-full">
+                  <Camera className="w-3 h-3" />
+                  Lisää kuvia
+                </button>
+                <button className="flex items-center gap-1 text-xs text-pink-600 hover:text-pink-700 bg-pink-100 px-3 py-1 rounded-full">
+                  <Heart className="w-3 h-3" />
+                  Merkitse suosikki
+                </button>
+              </div>
+            </div>
+
+            {/* Ystävärekisteri */}
+            <div className="bg-purple-50 rounded-xl p-6 border border-purple-100">
               <h4 className="font-semibold text-gray-800 mb-3">Ystävärekisteri 💕</h4>
-              <button className="w-full border-2 border-dashed border-pink-300 rounded-xl p-6 text-center text-pink-600 hover:border-pink-400 hover:bg-pink-100 transition-colors">
-                <Users className="w-8 h-8 mx-auto mb-2" />
-                <span className="block font-medium">Lisää uusi ystävä</span>
-                <span className="text-sm">Tallenna pennun kaverin tiedot</span>
-              </button>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <button className="border-2 border-dashed border-purple-300 rounded-xl p-4 text-center text-purple-600 hover:border-purple-400 hover:bg-purple-100 transition-colors">
+                  <Users className="w-6 h-6 mx-auto mb-2" />
+                  <span className="block font-medium text-sm">Lisää koirakaveri</span>
+                  <span className="text-xs">Nimi, rotu, mitä leikittiin</span>
+                </button>
+                <button className="border-2 border-dashed border-purple-300 rounded-xl p-4 text-center text-purple-600 hover:border-purple-400 hover:bg-purple-100 transition-colors">
+                  <Users className="w-6 h-6 mx-auto mb-2" />
+                  <span className="block font-medium text-sm">Lisää ihmisystävä</span>
+                  <span className="text-xs">Kuka, missä tavattiin</span>
+                </button>
+              </div>
             </div>
           </motion.div>
         )}
