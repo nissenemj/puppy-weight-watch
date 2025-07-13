@@ -602,7 +602,6 @@ const PuppyBookNavigation: React.FC<{
               >
                 {section.emoji}
               </motion.div>
-              <section.icon className="w-5 h-5" />
               <span className="font-playful">{section.label}</span>
             </motion.button>
           ))}
