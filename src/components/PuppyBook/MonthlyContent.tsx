@@ -193,13 +193,18 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
           )}
         </h2>
         <p className="text-gray-600">
-          {monthNumber === 0 && "Pennun elämä alkaa - ensimmäiset viikot ovat täynnä kasvua ja oppimista"}
+            {monthNumber === 0 && "Pennun elämä alkaa - ensimmäiset viikot ovat täynnä kasvua ja oppimista"}
           {monthNumber === 1 && "Aktiivinen kasvu ja ensimmäiset sosiaaliset kokemukset"}
           {monthNumber === 2 && "Sosiaalistaminen ja peruskomentoja"}
           {monthNumber === 3 && "Itsenäistyminen ja hihnakävely"}
+          {monthNumber > 3 && "Jatkuva oppiminen ja kehittyminen"}
           {puppyAge && currentWeeks > 0 && (
             <span className="block text-sm text-green-600 font-medium mt-1">
-              Pentu on {currentWeeks} viikon ikäinen - täydellinen ikä näille aktiviteeteille! ✨
+              Pentu on {currentWeeks} viikon ikäinen - {
+                currentWeeks <= monthNumber * 4 + 4 
+                  ? "täydellinen ikä näille aktiviteeteille!" 
+                  : "jo vanhempi kuin kuukauden tavoite-ikä"
+              } ✨
             </span>
           )}
         </p>
