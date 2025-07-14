@@ -41,9 +41,14 @@ interface MemoryGalleryProps {
   bookId: string;
   onRefresh?: React.MutableRefObject<(() => void) | null>;
   onAddMemory?: () => void;
+  puppyProfile?: {
+    name: string;
+    birthDate: string;
+    profileImage?: string;
+  };
 }
 
-const MemoryGallery: React.FC<MemoryGalleryProps> = ({ bookId, onRefresh, onAddMemory }) => {
+const MemoryGallery: React.FC<MemoryGalleryProps> = ({ bookId, onRefresh, onAddMemory, puppyProfile }) => {
   const [memories, setMemories] = useState<Memory[]>([]);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -184,6 +189,7 @@ const MemoryGallery: React.FC<MemoryGalleryProps> = ({ bookId, onRefresh, onAddM
                 memory={memory}
                 viewMode={viewMode}
                 onMemoryUpdated={refreshMemories}
+                puppyProfile={puppyProfile}
               />
             </motion.div>
           ))}

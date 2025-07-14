@@ -310,6 +310,11 @@ const PuppyBook: React.FC = () => {
                 bookId={book.id} 
                 onRefresh={memoryGalleryRef}
                 onAddMemory={() => setShowFloatingAction(true)}
+                puppyProfile={{
+                  name: book.title.replace('Pennun elämäntarina', '').replace('Pentukirja', '').trim() || 'Pentu',
+                  birthDate: book.birth_date || getDefaultBirthDate(),
+                  profileImage: book.cover_image_url
+                }}
               />
             </motion.div>
           )}

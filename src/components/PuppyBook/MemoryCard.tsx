@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Heart, MessageCircle, MapPin, Calendar, MoreVertical, Edit2, Trash2 } from 'lucide-react';
+import { Heart, MessageCircle, MapPin, Calendar, MoreVertical, Edit2, Trash2, Share2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { SocialShareGenerator } from './SocialShareGenerator';
 
 interface Memory {
   id: string;
@@ -21,11 +22,17 @@ interface MemoryCardProps {
   memory: Memory;
   viewMode: 'grid' | 'list';
   onMemoryUpdated: () => void;
+  puppyProfile?: {
+    name: string;
+    birthDate: string;
+    profileImage?: string;
+  };
 }
 
-const MemoryCard: React.FC<MemoryCardProps> = ({ memory, viewMode, onMemoryUpdated }) => {
+const MemoryCard: React.FC<MemoryCardProps> = ({ memory, viewMode, onMemoryUpdated, puppyProfile }) => {
   const [showMenu, setShowMenu] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
+  const [showShareDialog, setShowShareDialog] = useState(false);
   const { toast } = useToast();
 
   const handleReaction = async () => {
@@ -251,6 +258,17 @@ const MemoryCard: React.FC<MemoryCardProps> = ({ memory, viewMode, onMemoryUpdat
             onClick={(e) => {
               e.stopPropagation();
               setShowMenu(false);
+              setShowShareDialog(true);
+            }}
+            className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 w-full"
+          >
+            <Share2 className="w-4 h-4" />
+            Jaa
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowMenu(false);
               // TODO: Implement edit functionality
             }}
             className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 w-full"
@@ -270,6 +288,16 @@ const MemoryCard: React.FC<MemoryCardProps> = ({ memory, viewMode, onMemoryUpdat
             Poista
           </button>
         </div>
+      )}
+
+      {/* Social Share Dialog */}
+      {puppyProfile && (
+        <SocialShareGenerator
+          memory={memory}
+          puppyProfile={puppyProfile}
+          isOpen={showShareDialog}
+          onClose={() => setShowShareDialog(false)}
+        />
       )}
     </motion.div>
   );

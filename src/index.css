@@ -1,5 +1,5 @@
 /* Preload critical fonts for better performance */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Dancing+Script:wght@400;700&family=Playfair+Display:wght@400;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -19,6 +19,15 @@
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
+  }
+
+  /* Font styles for social share templates */
+  .handwriting {
+    font-family: 'Dancing Script', cursive;
+  }
+  
+  .font-elegant {
+    font-family: 'Playfair Display', serif;
   }
 }
 
