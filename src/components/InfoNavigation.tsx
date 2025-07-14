@@ -21,7 +21,7 @@ export default function InfoNavigation() {
         <div className="flex items-center justify-between h-16 min-w-0">
           <Link to="/info" className="flex items-center gap-2 sm:gap-3 text-base sm:text-lg font-bold truncate min-w-0">
             <img src={appIcon} alt="Pentulaskuri" className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-xl sm:rounded-2xl shadow-lg flex-shrink-0" />
-            <span className="hidden sm:inline truncate bg-gradient-warm bg-clip-text text-transparent">Pentulaskuri</span>
+            <span className="hidden sm:inline truncate text-foreground font-semibold">Pentulaskuri</span>
           </Link>
           
           <div className="hidden lg:flex space-x-1">
