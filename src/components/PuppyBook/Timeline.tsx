@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, Plus, Clock, MapPin, Star } from 'lucide-react';
+import { Calendar, Plus, Clock, MapPin, Star, Image as ImageIcon } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import AddTimelineDialog from './AddTimelineDialog';
+
+interface TimelineEntryMetadata {
+  type?: string;
+  imageUrl?: string;
+  location?: string;
+  time?: string;
+}
 
 interface TimelineEntry {
   id: string;
@@ -12,7 +19,7 @@ interface TimelineEntry {
   title: string;
   description?: string;
   entry_date: string;
-  metadata: any;
+  metadata: TimelineEntryMetadata;
   is_highlight: boolean;
   created_by?: string;
   created_at: string;
@@ -137,15 +144,35 @@ const Timeline: React.FC<TimelineProps> = ({ bookId }) => {
                   </div>
                 </div>
                 <div className="flex-1">
+                  {/* Show image if present */}
+                  {entry.metadata?.imageUrl && (
+                    <img
+                      src={entry.metadata.imageUrl}
+                      alt="Merkinnän kuva"
+                      className="mb-2 rounded-lg max-h-48 object-cover"
+                    />
+                  )}
                   <h4 className="font-semibold text-gray-800">{entry.title}</h4>
                   {entry.description && (
                     <p className="text-gray-600 text-sm mt-1">{entry.description}</p>
                   )}
-                  <div className="flex items-center gap-4 text-xs text-gray-500 mt-2">
+                  <div className="flex items-center gap-4 text-xs text-gray-500 mt-2 flex-wrap">
                     <span className="flex items-center gap-1">
                       <Calendar className="w-3 h-3" />
                       {new Date(entry.entry_date).toLocaleDateString('fi-FI')}
                     </span>
+                    {entry.metadata?.time && (
+                      <span className="flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        {entry.metadata.time}
+                      </span>
+                    )}
+                    {entry.metadata?.location && (
+                      <span className="flex items-center gap-1">
+                        <MapPin className="w-3 h-3" />
+                        {entry.metadata.location}
+                      </span>
+                    )}
                     <span className="capitalize">{entry.entry_type}</span>
                   </div>
                 </div>

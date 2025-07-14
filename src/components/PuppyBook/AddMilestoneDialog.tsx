@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Award, Clock, Type } from 'lucide-react';
+import { X, Award, Clock, Type, MapPin, Camera } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
@@ -26,6 +26,10 @@ const AddMilestoneDialog: React.FC<AddMilestoneDialogProps> = ({
   const [targetAgeWeeks, setTargetAgeWeeks] = useState('');
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const [location, setLocation] = useState('');
+  const [milestoneTime, setMilestoneTime] = useState('');
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string>('');
 
   const milestonePresets = [
     'Ensimmäinen rokotus',
@@ -49,6 +53,31 @@ const AddMilestoneDialog: React.FC<AddMilestoneDialogProps> = ({
     setTitle(preset);
   };
 
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+    }
+  };
+
+  const uploadImage = async (file: File): Promise<string | null> => {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${bookId}/${Date.now()}.${fileExt}`;
+    const { data, error } = await supabase.storage
+      .from('puppy-books')
+      .upload(fileName, file);
+    if (error) {
+      console.error('Upload error:', error);
+      return null;
+    }
+    const { data: { publicUrl } } = supabase.storage
+      .from('puppy-books')
+      .getPublicUrl(fileName);
+    return publicUrl;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -64,6 +93,13 @@ const AddMilestoneDialog: React.FC<AddMilestoneDialogProps> = ({
     setLoading(true);
 
     try {
+      let imageUrl = null;
+      if (selectedFile) {
+        imageUrl = await uploadImage(selectedFile);
+        if (!imageUrl) {
+          throw new Error('Kuvan lataus epäonnistui');
+        }
+      }
       // Get the current highest display_order
       const { data: existingMilestones } = await supabase
         .from('puppy_milestones')
@@ -76,6 +112,12 @@ const AddMilestoneDialog: React.FC<AddMilestoneDialogProps> = ({
         ? existingMilestones[0].display_order + 1 
         : 1;
 
+      const metadata = {
+        location: location.trim() || undefined,
+        time: milestoneTime || undefined,
+        imageUrl: imageUrl || undefined,
+      };
+
       const { error } = await supabase
         .from('puppy_milestones')
         .insert({
@@ -84,7 +126,8 @@ const AddMilestoneDialog: React.FC<AddMilestoneDialogProps> = ({
           description: description.trim() || null,
           target_age_weeks: targetAgeWeeks ? parseInt(targetAgeWeeks) : null,
           completed: false,
-          display_order: nextDisplayOrder
+          display_order: nextDisplayOrder,
+          metadata,
         });
 
       if (error) {
@@ -100,6 +143,10 @@ const AddMilestoneDialog: React.FC<AddMilestoneDialogProps> = ({
       setTitle('');
       setDescription('');
       setTargetAgeWeeks('');
+      setLocation('');
+      setMilestoneTime('');
+      setSelectedFile(null);
+      setPreviewUrl('');
       
       onMilestoneAdded();
       onClose();
@@ -205,6 +252,40 @@ const AddMilestoneDialog: React.FC<AddMilestoneDialogProps> = ({
                 <p className="text-xs text-gray-500 mt-1">
                   Valinnainen: millä iällä tämä virstanpylväs tulisi saavuttaa
                 </p>
+              </div>
+
+              <div>
+                <Label htmlFor="milestoneTime">Ajankohta</Label>
+                <Input
+                  id="milestoneTime"
+                  type="time"
+                  value={milestoneTime}
+                  onChange={(e) => setMilestoneTime(e.target.value)}
+                  className="mt-1"
+                />
+              </div>
+              <div>
+                <Label htmlFor="location">Sijainti</Label>
+                <Input
+                  id="location"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  placeholder="esim. Koirapuisto, Helsinki"
+                  className="mt-1"
+                />
+              </div>
+              <div>
+                <Label htmlFor="image">Kuva</Label>
+                <Input
+                  id="image"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileSelect}
+                  className="mt-1"
+                />
+                {previewUrl && (
+                  <img src={previewUrl} alt="Preview" className="mt-2 max-h-40 rounded-lg" />
+                )}
               </div>
 
               <div className="flex gap-3 pt-4">

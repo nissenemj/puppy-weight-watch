@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Calendar, Star, Type, MapPin, Clock } from 'lucide-react';
+import { X, Calendar, Star, Type, MapPin, Clock, Camera } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
@@ -29,6 +29,10 @@ const AddTimelineDialog: React.FC<AddTimelineDialogProps> = ({
   const [isHighlight, setIsHighlight] = useState(false);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const [location, setLocation] = useState('');
+  const [entryTime, setEntryTime] = useState('');
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string>('');
 
   const entryTypes = [
     { value: 'general', label: 'Yleinen merkintä', icon: Type },
@@ -37,6 +41,31 @@ const AddTimelineDialog: React.FC<AddTimelineDialogProps> = ({
     { value: 'training', label: 'Koulutus', icon: Clock },
     { value: 'social', label: 'Sosiaalistaminen', icon: MapPin },
   ];
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+    }
+  };
+
+  const uploadImage = async (file: File): Promise<string | null> => {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${bookId}/${Date.now()}.${fileExt}`;
+    const { data, error } = await supabase.storage
+      .from('puppy-books')
+      .upload(fileName, file);
+    if (error) {
+      console.error('Upload error:', error);
+      return null;
+    }
+    const { data: { publicUrl } } = supabase.storage
+      .from('puppy-books')
+      .getPublicUrl(fileName);
+    return publicUrl;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,7 +83,19 @@ const AddTimelineDialog: React.FC<AddTimelineDialogProps> = ({
 
     try {
       const { data: user } = await supabase.auth.getUser();
-      
+      let imageUrl = null;
+      if (selectedFile) {
+        imageUrl = await uploadImage(selectedFile);
+        if (!imageUrl) {
+          throw new Error('Kuvan lataus epäonnistui');
+        }
+      }
+      const metadata = {
+        type: entryType,
+        location: location.trim() || undefined,
+        time: entryTime || undefined,
+        imageUrl: imageUrl || undefined,
+      };
       const { error } = await supabase
         .from('timeline_entries')
         .insert({
@@ -65,7 +106,7 @@ const AddTimelineDialog: React.FC<AddTimelineDialogProps> = ({
           entry_type: entryType,
           is_highlight: isHighlight,
           created_by: user.user?.id || null,
-          metadata: { type: entryType }
+          metadata,
         });
 
       if (error) {
@@ -83,6 +124,10 @@ const AddTimelineDialog: React.FC<AddTimelineDialogProps> = ({
       setEntryDate(new Date().toISOString().split('T')[0]);
       setEntryType('general');
       setIsHighlight(false);
+      setLocation('');
+      setEntryTime('');
+      setSelectedFile(null);
+      setPreviewUrl('');
       
       onEntryAdded();
       onClose();
@@ -204,6 +249,40 @@ const AddTimelineDialog: React.FC<AddTimelineDialogProps> = ({
                   <Star className="w-4 h-4 text-yellow-500" />
                   Merkitse tärkeäksi hetkeksi
                 </Label>
+              </div>
+
+              <div>
+                <Label htmlFor="entryTime">Ajankohta</Label>
+                <Input
+                  id="entryTime"
+                  type="time"
+                  value={entryTime}
+                  onChange={(e) => setEntryTime(e.target.value)}
+                  className="mt-1"
+                />
+              </div>
+              <div>
+                <Label htmlFor="location">Sijainti</Label>
+                <Input
+                  id="location"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  placeholder="esim. Koirapuisto, Helsinki"
+                  className="mt-1"
+                />
+              </div>
+              <div>
+                <Label htmlFor="image">Kuva</Label>
+                <Input
+                  id="image"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileSelect}
+                  className="mt-1"
+                />
+                {previewUrl && (
+                  <img src={previewUrl} alt="Preview" className="mt-2 max-h-40 rounded-lg" />
+                )}
               </div>
 
               <div className="flex gap-3 pt-4">

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Award, Check, Plus, Clock } from 'lucide-react';
+import { Award, Check, Plus, Clock, MapPin, Image as ImageIcon } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import AddMilestoneDialog from './AddMilestoneDialog';
@@ -15,6 +15,11 @@ interface Milestone {
   completed_at?: string;
   display_order: number;
   created_at: string;
+  metadata?: {
+    imageUrl?: string;
+    time?: string;
+    location?: string;
+  };
 }
 
 interface MilestonesProps {
@@ -181,8 +186,15 @@ const Milestones: React.FC<MilestonesProps> = ({ bookId }) => {
               >
                 {milestone.completed && <Check className="w-5 h-5" />}
               </button>
-              
               <div className="flex-1">
+                {/* Show image if present */}
+                {milestone.metadata?.imageUrl && (
+                  <img
+                    src={milestone.metadata.imageUrl}
+                    alt="Virstanpylvään kuva"
+                    className="mb-2 rounded-lg max-h-48 object-cover"
+                  />
+                )}
                 <h4 className={`font-semibold ${
                   milestone.completed ? 'text-green-800 line-through' : 'text-gray-800'
                 }`}>
@@ -191,11 +203,23 @@ const Milestones: React.FC<MilestonesProps> = ({ bookId }) => {
                 {milestone.description && (
                   <p className="text-gray-600 text-sm mt-1">{milestone.description}</p>
                 )}
-                <div className="flex items-center gap-4 text-xs text-gray-500 mt-2">
+                <div className="flex items-center gap-4 text-xs text-gray-500 mt-2 flex-wrap">
                   {milestone.target_age_weeks && (
                     <span className="flex items-center gap-1">
                       <Clock className="w-3 h-3" />
                       Tavoite: {milestone.target_age_weeks} viikkoa
+                    </span>
+                  )}
+                  {milestone.metadata?.time && (
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      {milestone.metadata.time}
+                    </span>
+                  )}
+                  {milestone.metadata?.location && (
+                    <span className="flex items-center gap-1">
+                      <MapPin className="w-3 h-3" />
+                      {milestone.metadata.location}
                     </span>
                   )}
                   {milestone.completed && milestone.completed_at && (
