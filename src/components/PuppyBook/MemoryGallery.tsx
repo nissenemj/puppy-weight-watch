@@ -40,9 +40,10 @@ interface MemoryComment {
 interface MemoryGalleryProps {
   bookId: string;
   onRefresh?: React.MutableRefObject<(() => void) | null>;
+  onAddMemory?: () => void;
 }
 
-const MemoryGallery: React.FC<MemoryGalleryProps> = ({ bookId, onRefresh }) => {
+const MemoryGallery: React.FC<MemoryGalleryProps> = ({ bookId, onRefresh, onAddMemory }) => {
   const [memories, setMemories] = useState<Memory[]>([]);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -121,6 +122,15 @@ const MemoryGallery: React.FC<MemoryGalleryProps> = ({ bookId, onRefresh }) => {
             Muistogalleria 📸
           </h2>
           <div className="flex items-center gap-2">
+            {memories.length > 0 && onAddMemory && (
+              <button
+                onClick={onAddMemory}
+                className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors flex items-center gap-2 mr-2"
+              >
+                <Plus className="w-4 h-4" />
+                Lisää muisto
+              </button>
+            )}
             <button
               onClick={() => setViewMode('grid')}
               className={`p-2 rounded-lg ${
@@ -154,7 +164,7 @@ const MemoryGallery: React.FC<MemoryGalleryProps> = ({ bookId, onRefresh }) => {
             Aloita pennun muistojen tallentaminen
           </p>
           <button 
-            onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}
+            onClick={onAddMemory || (() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }))}
             className="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition-colors"
           >
             <Plus className="w-4 h-4 inline mr-2" />

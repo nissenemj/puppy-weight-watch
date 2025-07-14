@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Award, Check, Plus, Clock } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import AddMilestoneDialog from './AddMilestoneDialog';
 
 interface Milestone {
   id: string;
@@ -23,6 +24,7 @@ interface MilestonesProps {
 const Milestones: React.FC<MilestonesProps> = ({ bookId }) => {
   const [milestones, setMilestones] = useState<Milestone[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showAddDialog, setShowAddDialog] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -113,31 +115,46 @@ const Milestones: React.FC<MilestonesProps> = ({ bookId }) => {
         animate={{ opacity: 1, y: 0 }}
         className="mb-6"
       >
-        <h2 className="text-3xl font-sans font-bold text-gray-800 mb-2 flex items-center gap-3">
-          <Award className="w-8 h-8 text-orange-500" />
-          Virstanpylväät 🏆
-        </h2>
-        <p className="text-gray-600">
-          Seuraa pennun kehitystä ja juhli saavutuksia
-        </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-3xl font-sans font-bold text-gray-800 mb-2 flex items-center gap-3">
+              <Award className="w-8 h-8 text-orange-500" />
+              Virstanpylväät 🏆
+            </h2>
+            <p className="text-gray-600">
+              Seuraa pennun kehitystä ja juhli saavutuksia
+            </p>
+          </div>
+          {milestones.length > 0 && (
+            <button
+              onClick={() => setShowAddDialog(true)}
+              className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Lisää virstanpylväs
+            </button>
+          )}
+        </div>
         
         {/* Progress Bar */}
-        <div className="mt-4 p-4 bg-orange-50 rounded-xl">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-medium text-gray-700">Edistyminen</span>
-            <span className="text-sm font-bold text-orange-600">
-              {completedMilestones}/{totalMilestones}
-            </span>
+        {milestones.length > 0 && (
+          <div className="mt-4 p-4 bg-orange-50 rounded-xl">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm font-medium text-gray-700">Edistyminen</span>
+              <span className="text-sm font-bold text-orange-600">
+                {completedMilestones}/{totalMilestones}
+              </span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-3">
+              <motion.div
+                className="bg-gradient-to-r from-orange-500 to-pink-500 h-3 rounded-full"
+                initial={{ width: 0 }}
+                animate={{ width: `${progressPercentage}%` }}
+                transition={{ duration: 1, delay: 0.5 }}
+              />
+            </div>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-3">
-            <motion.div
-              className="bg-gradient-to-r from-orange-500 to-pink-500 h-3 rounded-full"
-              initial={{ width: 0 }}
-              animate={{ width: `${progressPercentage}%` }}
-              transition={{ duration: 1, delay: 0.5 }}
-            />
-          </div>
-        </div>
+        )}
       </motion.div>
 
       <div className="space-y-4">
@@ -201,13 +218,23 @@ const Milestones: React.FC<MilestonesProps> = ({ bookId }) => {
             <p className="text-gray-400 mb-4">
               Lisää ensimmäinen virstanpylväs pennulle
             </p>
-            <button className="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition-colors">
+            <button 
+              onClick={() => setShowAddDialog(true)}
+              className="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition-colors"
+            >
               <Plus className="w-4 h-4 inline mr-2" />
               Lisää virstanpylväs
             </button>
           </div>
         )}
       </div>
+
+      <AddMilestoneDialog
+        isOpen={showAddDialog}
+        onClose={() => setShowAddDialog(false)}
+        bookId={bookId}
+        onMilestoneAdded={loadMilestones}
+      />
     </div>
   );
 };

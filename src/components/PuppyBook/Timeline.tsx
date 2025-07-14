@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Calendar, Plus, Clock, MapPin, Star } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import AddTimelineDialog from './AddTimelineDialog';
 
 interface TimelineEntry {
   id: string;
@@ -25,6 +26,7 @@ interface TimelineProps {
 const Timeline: React.FC<TimelineProps> = ({ bookId }) => {
   const [entries, setEntries] = useState<TimelineEntry[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showAddDialog, setShowAddDialog] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -76,13 +78,26 @@ const Timeline: React.FC<TimelineProps> = ({ bookId }) => {
         animate={{ opacity: 1, y: 0 }}
         className="mb-6"
       >
-        <h2 className="text-3xl font-sans font-bold text-gray-800 mb-2 flex items-center gap-3">
-          <Calendar className="w-8 h-8 text-orange-500" />
-          Pennun aikajana 📚
-        </h2>
-        <p className="text-gray-600">
-          Tallenna pennun tärkeimmät hetket ja muistot
-        </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-3xl font-sans font-bold text-gray-800 mb-2 flex items-center gap-3">
+              <Calendar className="w-8 h-8 text-orange-500" />
+              Pennun aikajana 📚
+            </h2>
+            <p className="text-gray-600">
+              Tallenna pennun tärkeimmät hetket ja muistot
+            </p>
+          </div>
+          {entries.length > 0 && (
+            <button
+              onClick={() => setShowAddDialog(true)}
+              className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Lisää merkintä
+            </button>
+          )}
+        </div>
       </motion.div>
 
       <div className="space-y-4">
@@ -95,7 +110,10 @@ const Timeline: React.FC<TimelineProps> = ({ bookId }) => {
             <p className="text-gray-400 mb-4">
               Aloita pennun tarinan tallentaminen
             </p>
-            <button className="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition-colors">
+            <button 
+              onClick={() => setShowAddDialog(true)}
+              className="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition-colors"
+            >
               <Plus className="w-4 h-4 inline mr-2" />
               Lisää ensimmäinen merkintä
             </button>
@@ -136,6 +154,13 @@ const Timeline: React.FC<TimelineProps> = ({ bookId }) => {
           ))
         )}
       </div>
+
+      <AddTimelineDialog
+        isOpen={showAddDialog}
+        onClose={() => setShowAddDialog(false)}
+        bookId={bookId}
+        onEntryAdded={loadTimelineEntries}
+      />
     </div>
   );
 };

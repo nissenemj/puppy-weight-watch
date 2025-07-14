@@ -109,6 +109,7 @@ const PuppyBook: React.FC = () => {
   const [book, setBook] = useState<PuppyBookData | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedMonth, setSelectedMonth] = useState(0);
+  const [showFloatingAction, setShowFloatingAction] = useState(false);
   const memoryGalleryRef = React.useRef<(() => void) | null>(null);
   const { toast } = useToast();
 
@@ -308,6 +309,7 @@ const PuppyBook: React.FC = () => {
               <MemoryGallery 
                 bookId={book.id} 
                 onRefresh={memoryGalleryRef}
+                onAddMemory={() => setShowFloatingAction(true)}
               />
             </motion.div>
           )}
@@ -315,6 +317,8 @@ const PuppyBook: React.FC = () => {
       </div>
       <FloatingActionButton 
         bookId={book.id} 
+        showDialog={showFloatingAction}
+        onShowDialogChange={setShowFloatingAction}
         onMemoryAdded={() => {
           if (memoryGalleryRef.current) {
             memoryGalleryRef.current();

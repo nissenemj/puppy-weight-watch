@@ -52,7 +52,7 @@ export default defineConfig(({ mode }) => ({
             '@radix-ui/react-menubar',
             '@radix-ui/react-navigation-menu',
             '@radix-ui/react-popover',
-            '@radix-ui/react-sheet',
+            
             '@radix-ui/react-toggle',
             '@radix-ui/react-toggle-group',
           ],

@@ -27,17 +27,40 @@ const ActionButton: React.FC<ActionButtonProps> = ({ icon: Icon, label, onClick 
 interface FloatingActionButtonProps {
   bookId: string;
   onMemoryAdded?: () => void;
+  showDialog?: boolean;
+  onShowDialogChange?: (show: boolean) => void;
 }
 
-const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({ bookId, onMemoryAdded }) => {
+const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({ 
+  bookId, 
+  onMemoryAdded, 
+  showDialog = false, 
+  onShowDialogChange 
+}) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(showDialog);
   const [dialogType, setDialogType] = useState<'photo' | 'text' | 'event' | 'milestone'>('photo');
+
+  // Update dialog state when external showDialog changes
+  React.useEffect(() => {
+    if (showDialog !== dialogOpen) {
+      setDialogOpen(showDialog);
+      if (showDialog) {
+        setDialogType('photo'); // Default to photo when opened externally
+      }
+    }
+  }, [showDialog, dialogOpen]);
 
   const handleActionClick = (type: 'photo' | 'text' | 'event' | 'milestone') => {
     setDialogType(type);
     setDialogOpen(true);
     setIsOpen(false);
+    onShowDialogChange?.(true);
+  };
+
+  const handleDialogClose = () => {
+    setDialogOpen(false);
+    onShowDialogChange?.(false);
   };
 
   const actions = [
@@ -51,12 +74,12 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({ bookId, onM
     <>
       <AddMemoryDialog
         isOpen={dialogOpen}
-        onClose={() => setDialogOpen(false)}
+        onClose={handleDialogClose}
         bookId={bookId}
         type={dialogType}
         onMemoryAdded={() => {
           onMemoryAdded?.();
-          setDialogOpen(false);
+          handleDialogClose();
         }}
       />
       
