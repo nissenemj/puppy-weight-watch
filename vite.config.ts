@@ -46,7 +46,7 @@ export default defineConfig(({ mode }) => ({
             '@radix-ui/react-aspect-ratio',
             '@radix-ui/react-avatar',
             '@radix-ui/react-collapsible',
-            '@radix-ui/react-command',
+            
             '@radix-ui/react-context-menu',
             '@radix-ui/react-hover-card',
             '@radix-ui/react-menubar',
