@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Calendar, CalendarIcon } from 'lucide-react';
+import { Calendar } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { format } from 'date-fns';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
@@ -35,10 +35,31 @@ export const AddHealthRecordDialog: React.FC<AddHealthRecordDialogProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Validate date is not in the future
+    if (date && date > new Date()) {
+      toast({
+        title: "Virhe",
+        description: "Päivämäärä ei voi olla tulevaisuudessa",
+        variant: "destructive"
+      });
+      return;
+    }
+
     if (!date || !type || !description.trim()) {
       toast({
         title: "Virhe",
         description: "Täytä kaikki pakolliset kentät",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Check authentication
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      toast({
+        title: "Virhe",
+        description: "Kirjaudu sisään lisätäksesi terveysmerkintöjä",
         variant: "destructive"
       });
       return;
@@ -62,9 +83,10 @@ export const AddHealthRecordDialog: React.FC<AddHealthRecordDialogProps> = ({
 
       toast({
         title: "Onnistui!",
-        description: "Terveysmerkintä lisätty",
+        description: "Terveysmerkintä lisätty onnistuneesti",
       });
 
+      // Reset form
       setOpen(false);
       setDate(new Date());
       setType('');
@@ -76,7 +98,7 @@ export const AddHealthRecordDialog: React.FC<AddHealthRecordDialogProps> = ({
       console.error('Error adding health record:', error);
       toast({
         title: "Virhe",
-        description: "Terveysmerkinnän lisääminen epäonnistui",
+        description: error instanceof Error ? error.message : "Terveysmerkinnän lisääminen epäonnistui",
         variant: "destructive"
       });
     } finally {
@@ -92,6 +114,9 @@ export const AddHealthRecordDialog: React.FC<AddHealthRecordDialogProps> = ({
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Lisää terveysmerkintä</DialogTitle>
+          <DialogDescription>
+            Lisää uusi terveysmerkintä pentukirjaan. Tähdellä merkityt kentät ovat pakollisia.
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
@@ -102,7 +127,7 @@ export const AddHealthRecordDialog: React.FC<AddHealthRecordDialogProps> = ({
                   variant="outline"
                   className="w-full justify-start text-left font-normal"
                 >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  <Calendar className="mr-2 h-4 w-4" />
                   {date ? format(date, 'dd.MM.yyyy') : 'Valitse päivämäärä'}
                 </Button>
               </PopoverTrigger>
@@ -111,7 +136,9 @@ export const AddHealthRecordDialog: React.FC<AddHealthRecordDialogProps> = ({
                   mode="single"
                   selected={date}
                   onSelect={setDate}
+                  disabled={(date) => date > new Date()}
                   initialFocus
+                  className="pointer-events-auto"
                 />
               </PopoverContent>
             </Popover>
@@ -139,6 +166,7 @@ export const AddHealthRecordDialog: React.FC<AddHealthRecordDialogProps> = ({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Esim. DHPP-rokotus"
+              maxLength={200}
             />
           </div>
 
@@ -149,6 +177,7 @@ export const AddHealthRecordDialog: React.FC<AddHealthRecordDialogProps> = ({
               value={veterinarian}
               onChange={(e) => setVeterinarian(e.target.value)}
               placeholder="Esim. Dr. Virtanen"
+              maxLength={100}
             />
           </div>
 
@@ -160,6 +189,7 @@ export const AddHealthRecordDialog: React.FC<AddHealthRecordDialogProps> = ({
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Mahdolliset sivuvaikutukset, erityishuomiot..."
               rows={3}
+              maxLength={500}
             />
           </div>
 
