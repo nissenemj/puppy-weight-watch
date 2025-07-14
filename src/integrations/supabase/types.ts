@@ -561,6 +561,42 @@ export type Database = {
           },
         ]
       }
+      health_records: {
+        Row: {
+          book_id: string
+          created_at: string
+          description: string
+          entry_date: string
+          id: string
+          notes: string | null
+          type: string
+          updated_at: string
+          veterinarian: string | null
+        }
+        Insert: {
+          book_id: string
+          created_at?: string
+          description: string
+          entry_date: string
+          id?: string
+          notes?: string | null
+          type: string
+          updated_at?: string
+          veterinarian?: string | null
+        }
+        Update: {
+          book_id?: string
+          created_at?: string
+          description?: string
+          entry_date?: string
+          id?: string
+          notes?: string | null
+          type?: string
+          updated_at?: string
+          veterinarian?: string | null
+        }
+        Relationships: []
+      }
       memories: {
         Row: {
           book_id: string

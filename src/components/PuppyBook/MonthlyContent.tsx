@@ -10,9 +10,18 @@ import {
   CheckCircle,
   Clock,
   MapPin,
-  Plus
+  Plus,
+  Edit
 } from 'lucide-react';
 import { calculatePuppyAge, getAgeAppropriateMilestones } from '@/utils/puppyAge';
+import { AddHealthRecordDialog } from './AddHealthRecordDialog';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
+import { format } from 'date-fns';
+import { fi } from 'date-fns/locale';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface MonthlyContentProps {
   monthNumber: number;
@@ -35,6 +44,18 @@ interface HealthRecord {
   notes?: string;
 }
 
+interface DatabaseHealthRecord {
+  id: string;
+  book_id: string;
+  entry_date: string;
+  type: 'vaccination' | 'deworming' | 'checkup' | 'other';
+  description: string;
+  notes: string | null;
+  veterinarian: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 interface SocialEvent {
   date: string;
   type: 'friend' | 'training' | 'experience';
@@ -47,6 +68,8 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
   const [activeTab, setActiveTab] = useState<'milestones' | 'health' | 'social'>('milestones');
   const [customTasks, setCustomTasks] = useState<{ [key: number]: string[] }>({});
   const [newTaskInput, setNewTaskInput] = useState('');
+  const [userHealthRecords, setUserHealthRecords] = useState<DatabaseHealthRecord[]>([]);
+  const { toast } = useToast();
   
   // Calculate current age if birth date is available
   const puppyAge = birthDate ? calculatePuppyAge(birthDate) : null;
@@ -92,10 +115,78 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
       ],
       3: [
         { type: 'checkup' as const, date: '', description: 'Terveystarkastus', notes: 'Kasvun ja kehityksen seuranta' }
+      ],
+      4: [
+        { type: 'vaccination' as const, date: '', description: 'Kolmas rokotus (16-20 vk)', notes: 'Viimeinen penturokotusten sarja' },
+        { type: 'checkup' as const, date: '', description: 'Hammastarkastus', notes: 'Maitohampaiden vaihto alkaa' }
+      ],
+      5: [
+        { type: 'checkup' as const, date: '', description: 'Kasvun seuranta', notes: 'Painon ja koon mittaus' }
+      ],
+      6: [
+        { type: 'checkup' as const, date: '', description: 'Sterilisaatio/kastrointi arviointi', notes: 'Keskustelu eläinlääkärin kanssa' }
+      ],
+      7: [
+        { type: 'checkup' as const, date: '', description: 'Puolivuotistarkastus', notes: 'Yleinen terveydentila' }
+      ],
+      8: [
+        { type: 'checkup' as const, date: '', description: 'Hammashygienia', notes: 'Hampaiden puhdistuksen aloitus' }
+      ],
+      9: [
+        { type: 'checkup' as const, date: '', description: 'Talvihoito', notes: 'Tassujenvälinen hoito' }
+      ],
+      10: [
+        { type: 'deworming' as const, date: '', description: 'Aikuisen madotus', notes: 'Siirtyy harvempaan aikatauluun' }
+      ],
+      11: [
+        { type: 'checkup' as const, date: '', description: 'Vuositarkastuksen valmistelu', notes: 'Ensimmäisen vuositarkastuksen valmistelu' }
+      ],
+      12: [
+        { type: 'vaccination' as const, date: '', description: 'Ensimmäinen vuosirokotus', notes: 'Täysi terveystarkastus ja rokotteet' },
+        { type: 'checkup' as const, date: '', description: 'Vuositarkastus', notes: 'Täydellinen terveystarkastus' }
       ]
     };
 
     return healthByMonth[month as keyof typeof healthByMonth] || [];
+  };
+
+  const loadHealthRecords = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('health_records')
+        .select('*')
+        .eq('book_id', bookId)
+        .order('entry_date', { ascending: false });
+
+      if (error) throw error;
+      setUserHealthRecords((data as DatabaseHealthRecord[]) || []);
+    } catch (error) {
+      console.error('Error loading health records:', error);
+    }
+  };
+
+  useEffect(() => {
+    loadHealthRecords();
+  }, [bookId]);
+
+  const getTypeLabel = (type: string) => {
+    const labels = {
+      vaccination: 'Rokotus',
+      deworming: 'Madotus', 
+      checkup: 'Tarkastus',
+      other: 'Muu'
+    };
+    return labels[type as keyof typeof labels] || type;
+  };
+
+  const getTypeBadgeVariant = (type: string): "default" | "destructive" | "secondary" | "outline" => {
+    const variants: Record<string, "default" | "destructive" | "secondary" | "outline"> = {
+      vaccination: 'default',
+      deworming: 'secondary',
+      checkup: 'outline', 
+      other: 'destructive'
+    };
+    return variants[type] || 'default';
   };
 
   const getSocializationTasks = (month: number): string[] => {
@@ -175,7 +266,7 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
   };
 
   const milestones = getMonthlyMilestones(monthNumber);
-  const healthRecords = getHealthGuidelines(monthNumber);
+  const healthGuidelines = getHealthGuidelines(monthNumber);
 
   return (
     <div className="bg-white rounded-3xl shadow-lg p-6 mb-6">
@@ -299,55 +390,91 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
             exit={{ opacity: 0, x: -20 }}
             className="space-y-4"
           >
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">
-              Terveys ja hoito 🏥
-            </h3>
-            {healthRecords.map((record, index) => (
-              <div key={index} className="bg-blue-50 rounded-xl p-4 border border-blue-100">
-                <div className="flex items-start gap-3">
-                  <div className="flex-shrink-0 mt-1">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                      record.type === 'vaccination' ? 'bg-blue-100 text-blue-600' :
-                      record.type === 'deworming' ? 'bg-green-100 text-green-600' :
-                      'bg-purple-100 text-purple-600'
-                    }`}>
-                      <Stethoscope className="w-4 h-4" />
-                    </div>
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="font-semibold text-gray-800">{record.description}</h4>
-                    {record.notes && (
-                      <p className="text-gray-600 text-sm mt-1">{record.notes}</p>
-                    )}
-                    <div className="mt-3 grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-xs text-gray-500 mb-1">Päivämäärä</label>
-                        <input
-                          type="date"
-                          className="w-full p-2 text-sm border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
-                        />
+            <div className="flex items-center justify-between">
+              <h3 className="text-xl font-semibold text-gray-800">
+                Terveys ja hoito 🏥
+              </h3>
+              <AddHealthRecordDialog bookId={bookId} onHealthRecordAdded={loadHealthRecords}>
+                <Button size="sm" className="flex items-center gap-2">
+                  <Plus className="w-4 h-4" />
+                  Lisää merkintä
+                </Button>
+              </AddHealthRecordDialog>
+            </div>
+            
+            {/* Age-based recommendations */}
+            <div className="space-y-3">
+              <h4 className="font-medium text-gray-600">Ikäkauteen sopivia toimenpiteitä:</h4>
+              {getHealthGuidelines(monthNumber).map((item, index) => (
+                <Card key={index} className="border-l-4 border-l-blue-200 bg-blue-50/50">
+                  <CardContent className="p-4">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <h5 className="font-medium text-gray-900 flex items-center gap-2">
+                          <Calendar className="w-4 h-4 text-blue-500" />
+                          {item.description}
+                        </h5>
+                        {item.notes && (
+                          <p className="text-sm text-gray-600 mt-1">{item.notes}</p>
+                        )}
                       </div>
-                      <div>
-                        <label className="block text-xs text-gray-500 mb-1">Eläinlääkäri</label>
-                        <input
-                          type="text"
-                          placeholder="Dr. Koiraystävä"
-                          className="w-full p-2 text-sm border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
-                        />
+                      <Badge variant="outline" className="text-blue-600 border-blue-300">
+                        Suositus
+                      </Badge>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {/* User's actual health records */}
+            {userHealthRecords.length > 0 && (
+              <div className="space-y-3">
+                <h4 className="font-medium text-gray-600">Tehdyt merkinnät:</h4>
+                {userHealthRecords.map((record) => (
+                  <Card key={record.id} className="border-l-4 border-l-green-200 bg-green-50/50">
+                    <CardContent className="p-4">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1 space-y-2">
+                          <div className="flex items-center gap-2">
+                            <Badge variant={getTypeBadgeVariant(record.type)}>
+                              {getTypeLabel(record.type)}
+                            </Badge>
+                            <span className="text-sm text-gray-500">
+                              {format(new Date(record.entry_date), 'dd.MM.yyyy', { locale: fi })}
+                            </span>
+                          </div>
+                          <h5 className="font-medium text-gray-900">{record.description}</h5>
+                          {record.veterinarian && (
+                            <p className="text-sm text-gray-600">
+                              Eläinlääkäri: {record.veterinarian}
+                            </p>
+                          )}
+                          {record.notes && (
+                            <p className="text-sm text-gray-600">{record.notes}</p>
+                          )}
+                        </div>
+                        <Button variant="ghost" size="sm">
+                          <Edit className="w-4 h-4" />
+                        </Button>
                       </div>
-                    </div>
-                    <div className="mt-3">
-                      <label className="block text-xs text-gray-500 mb-1">Muistiinpanot</label>
-                      <textarea
-                        placeholder="Miten hoito meni? Erityisiä huomioita?"
-                        className="w-full p-2 text-sm border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
-                        rows={2}
-                      />
-                    </div>
-                  </div>
-                </div>
+                    </CardContent>
+                  </Card>
+                ))}
               </div>
-            ))}
+            )}
+
+            {userHealthRecords.length === 0 && (
+              <Card className="border-2 border-dashed border-gray-300 bg-gray-50/50">
+                <CardContent className="p-6 text-center">
+                  <Heart className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                  <p className="text-gray-600 mb-3">Ei vielä terveysmerkintöjä</p>
+                  <p className="text-sm text-gray-500">
+                    Lisää ensimmäinen merkintä yllä olevalla painikkeella
+                  </p>
+                </CardContent>
+              </Card>
+            )}
           </motion.div>
         )}
 
