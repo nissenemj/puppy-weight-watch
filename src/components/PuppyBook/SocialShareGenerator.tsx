@@ -1,19 +1,9 @@
 import React, { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { toPng } from 'html-to-image';
-import { 
-  FacebookShareButton, 
-  TwitterShareButton, 
-  WhatsappShareButton,
-  FacebookIcon,
-  TwitterIcon,
-  WhatsappIcon
-} from 'react-share';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Download, Instagram, Camera, Heart, Sparkles, Mountain, PartyPopper } from 'lucide-react';
+import { Download, Share2, Copy, Camera, Heart, Sparkles, Mountain, PartyPopper } from 'lucide-react';
 import { format } from 'date-fns';
 import { fi } from 'date-fns/locale';
 import { useToast } from '@/hooks/use-toast';
@@ -124,42 +114,31 @@ const ShareTemplate: React.FC<{
   
   const templateStyles = {
     polaroid: (
-      <div className="w-[600px] h-[600px] bg-white p-8 shadow-2xl rounded-lg">
-        <div className="bg-gradient-to-br from-amber-50 to-orange-100 h-full rounded-lg p-6 relative border-4 border-amber-200">
+      <div className="w-[300px] h-[300px] bg-white p-4 shadow-xl rounded-lg">
+        <div className="bg-gradient-to-br from-amber-50 to-orange-100 h-full rounded-lg p-3 relative border-2 border-amber-200">
           {/* Photo */}
-          <div className="w-full h-64 bg-white rounded-lg mb-4 overflow-hidden shadow-lg transform rotate-1">
+          <div className="w-full h-32 bg-white rounded-lg mb-2 overflow-hidden shadow-lg transform rotate-1">
             {memory.content_url && (
               <img src={memory.content_url} alt="Memory" className="w-full h-full object-cover" />
             )}
           </div>
           
-          {/* Handwritten style text */}
-          <div className="space-y-2 transform -rotate-1">
-            <h2 className="text-2xl font-bold text-amber-900 handwriting">{memory.caption}</h2>
-            <p className="text-amber-800 font-medium">{memoryDate}</p>
+          {/* Content */}
+          <div className="space-y-1 transform -rotate-1">
+            <h2 className="text-lg font-bold text-amber-900 handwriting">{memory.caption}</h2>
+            <p className="text-sm text-amber-800 font-medium">{memoryDate}</p>
           </div>
           
           {/* Puppy info */}
-          <div className="absolute bottom-4 right-4 flex items-center gap-2 bg-white/80 rounded-full px-3 py-2">
+          <div className="absolute bottom-2 right-2 flex items-center gap-1 bg-white/80 rounded-full px-2 py-1">
             {puppyProfile.profileImage && (
-              <img src={puppyProfile.profileImage} alt={puppyProfile.name} className="w-8 h-8 rounded-full object-cover" />
+              <img src={puppyProfile.profileImage} alt={puppyProfile.name} className="w-4 h-4 rounded-full object-cover" />
             )}
-            <span className="text-sm text-amber-900 font-medium">{puppyProfile.name}, {age}</span>
+            <span className="text-xs text-amber-900 font-medium">{puppyProfile.name}, {age}</span>
           </div>
           
-          {/* Tags */}
-          {memory.tags && memory.tags.length > 0 && (
-            <div className="absolute top-4 right-4 flex flex-wrap gap-1">
-              {memory.tags.slice(0, 3).map((tag, index) => (
-                <span key={index} className="text-xs bg-amber-200 text-amber-800 px-2 py-1 rounded-full">
-                  #{tag}
-                </span>
-              ))}
-            </div>
-          )}
-          
           {/* Branding */}
-          <div className="absolute bottom-4 left-4 text-xs text-amber-700">
+          <div className="absolute bottom-2 left-2 text-xs text-amber-700">
             puppy-weight-watch.com
           </div>
         </div>
@@ -167,46 +146,35 @@ const ShareTemplate: React.FC<{
     ),
     
     modern: (
-      <div className="w-[600px] h-[600px] bg-gradient-to-br from-slate-50 to-gray-100 p-0 overflow-hidden">
+      <div className="w-[300px] h-[300px] bg-gradient-to-br from-slate-50 to-gray-100 p-0 overflow-hidden rounded-lg">
         {/* Header */}
-        <div className="h-16 bg-slate-800 flex items-center justify-between px-6">
-          <div className="flex items-center gap-2">
+        <div className="h-8 bg-slate-800 flex items-center justify-between px-3">
+          <div className="flex items-center gap-1">
             {puppyProfile.profileImage && (
-              <img src={puppyProfile.profileImage} alt={puppyProfile.name} className="w-8 h-8 rounded-full object-cover" />
+              <img src={puppyProfile.profileImage} alt={puppyProfile.name} className="w-4 h-4 rounded-full object-cover" />
             )}
-            <span className="text-white font-medium">{puppyProfile.name}</span>
+            <span className="text-white font-medium text-sm">{puppyProfile.name}</span>
           </div>
-          <span className="text-slate-300 text-sm">{memoryDate}</span>
+          <span className="text-slate-300 text-xs">{memoryDate}</span>
         </div>
         
         {/* Main content */}
-        <div className="p-8 space-y-6">
+        <div className="p-4 space-y-3">
           {/* Photo */}
-          <div className="w-full h-72 rounded-lg overflow-hidden shadow-lg">
+          <div className="w-full h-36 rounded-lg overflow-hidden shadow-lg">
             {memory.content_url && (
               <img src={memory.content_url} alt="Memory" className="w-full h-full object-cover" />
             )}
           </div>
           
           {/* Text */}
-          <div className="space-y-3">
-            <h2 className="text-2xl font-bold text-slate-800">{memory.caption}</h2>
-            <p className="text-slate-600">{puppyProfile.name}, {age}</p>
+          <div className="space-y-1">
+            <h2 className="text-lg font-bold text-slate-800">{memory.caption}</h2>
+            <p className="text-slate-600 text-sm">{puppyProfile.name}, {age}</p>
           </div>
           
-          {/* Tags */}
-          {memory.tags && memory.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {memory.tags.slice(0, 4).map((tag, index) => (
-                <span key={index} className="text-sm bg-slate-200 text-slate-700 px-3 py-1 rounded-full">
-                  #{tag}
-                </span>
-              ))}
-            </div>
-          )}
-          
           {/* Branding */}
-          <div className="text-xs text-slate-500 text-center pt-4 border-t border-slate-200">
+          <div className="text-xs text-slate-500 text-center pt-2 border-t border-slate-200">
             puppy-weight-watch.com
           </div>
         </div>
@@ -214,27 +182,26 @@ const ShareTemplate: React.FC<{
     ),
     
     playful: (
-      <div className="w-[600px] h-[600px] bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 p-8 relative overflow-hidden">
+      <div className="w-[300px] h-[300px] bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 p-4 relative overflow-hidden rounded-lg">
         {/* Decorative elements */}
-        <div className="absolute top-4 right-4 w-16 h-16 bg-pink-200 rounded-full opacity-50"></div>
-        <div className="absolute bottom-8 left-8 w-12 h-12 bg-purple-200 rounded-full opacity-50"></div>
-        <div className="absolute top-1/2 left-4 w-8 h-8 bg-blue-200 rounded-full opacity-50"></div>
+        <div className="absolute top-2 right-2 w-8 h-8 bg-pink-200 rounded-full opacity-50"></div>
+        <div className="absolute bottom-4 left-4 w-6 h-6 bg-purple-200 rounded-full opacity-50"></div>
         
         {/* Main content */}
         <div className="relative z-10 h-full flex flex-col">
           {/* Header */}
-          <div className="text-center mb-6">
-            <h2 className="text-3xl font-bold text-purple-900 mb-2">{memory.caption}</h2>
-            <div className="flex items-center justify-center gap-2">
+          <div className="text-center mb-3">
+            <h2 className="text-xl font-bold text-purple-900 mb-1">{memory.caption}</h2>
+            <div className="flex items-center justify-center gap-1">
               {puppyProfile.profileImage && (
-                <img src={puppyProfile.profileImage} alt={puppyProfile.name} className="w-10 h-10 rounded-full object-cover border-2 border-pink-300" />
+                <img src={puppyProfile.profileImage} alt={puppyProfile.name} className="w-5 h-5 rounded-full object-cover border border-pink-300" />
               )}
-              <span className="text-purple-800 font-semibold">{puppyProfile.name}, {age}</span>
+              <span className="text-purple-800 font-semibold text-sm">{puppyProfile.name}, {age}</span>
             </div>
           </div>
           
           {/* Photo */}
-          <div className="flex-1 rounded-3xl overflow-hidden shadow-xl border-4 border-white mb-6">
+          <div className="flex-1 rounded-2xl overflow-hidden shadow-xl border-2 border-white mb-3">
             {memory.content_url && (
               <img src={memory.content_url} alt="Memory" className="w-full h-full object-cover" />
             )}
@@ -242,20 +209,11 @@ const ShareTemplate: React.FC<{
           
           {/* Footer */}
           <div className="flex justify-between items-center">
-            <span className="text-purple-700 font-medium">{memoryDate}</span>
-            {memory.tags && memory.tags.length > 0 && (
-              <div className="flex gap-1">
-                {memory.tags.slice(0, 3).map((tag, index) => (
-                  <span key={index} className="text-xs bg-pink-200 text-pink-800 px-2 py-1 rounded-full">
-                    #{tag}
-                  </span>
-                ))}
-              </div>
-            )}
+            <span className="text-purple-700 font-medium text-sm">{memoryDate}</span>
           </div>
           
           {/* Branding */}
-          <div className="text-center text-xs text-purple-600 mt-4">
+          <div className="text-center text-xs text-purple-600 mt-2">
             ✨ puppy-weight-watch.com ✨
           </div>
         </div>
@@ -263,61 +221,42 @@ const ShareTemplate: React.FC<{
     ),
     
     adventure: (
-      <div className="w-[600px] h-[600px] bg-gradient-to-br from-green-50 to-emerald-100 p-8 relative">
-        {/* Nature pattern background */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="w-full h-full" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23059669' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M20 20c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10zm10 0c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10z'/%3E%3C/g%3E%3C/svg%3E")`,
-            backgroundSize: '40px 40px'
-          }}></div>
-        </div>
-        
+      <div className="w-[300px] h-[300px] bg-gradient-to-br from-green-50 to-emerald-100 p-4 relative rounded-lg">
         {/* Main content */}
         <div className="relative z-10 h-full flex flex-col">
           {/* Bold title */}
-          <div className="mb-6">
-            <h2 className="text-4xl font-bold text-green-900 mb-2 tracking-wide">{memory.caption}</h2>
-            <div className="w-16 h-1 bg-emerald-500 rounded"></div>
+          <div className="mb-3">
+            <h2 className="text-xl font-bold text-green-900 mb-1 tracking-wide">{memory.caption}</h2>
+            <div className="w-8 h-0.5 bg-emerald-500 rounded"></div>
           </div>
           
           {/* Photo with adventure frame */}
-          <div className="flex-1 rounded-2xl overflow-hidden shadow-2xl border-4 border-emerald-300 mb-6 relative">
+          <div className="flex-1 rounded-xl overflow-hidden shadow-xl border-2 border-emerald-300 mb-3 relative">
             {memory.content_url && (
               <img src={memory.content_url} alt="Memory" className="w-full h-full object-cover" />
             )}
             
             {/* Adventure badge */}
-            <div className="absolute top-4 right-4 bg-emerald-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+            <div className="absolute top-2 right-2 bg-emerald-500 text-white px-2 py-1 rounded-full text-xs font-bold">
               SEIKKAILU
             </div>
           </div>
           
           {/* Info section */}
           <div className="flex justify-between items-end">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               {puppyProfile.profileImage && (
-                <img src={puppyProfile.profileImage} alt={puppyProfile.name} className="w-12 h-12 rounded-full object-cover border-2 border-emerald-400" />
+                <img src={puppyProfile.profileImage} alt={puppyProfile.name} className="w-6 h-6 rounded-full object-cover border border-emerald-400" />
               )}
               <div>
-                <p className="text-green-900 font-bold text-lg">{puppyProfile.name}</p>
-                <p className="text-green-700 text-sm">{age} • {memoryDate}</p>
+                <p className="text-green-900 font-bold text-sm">{puppyProfile.name}</p>
+                <p className="text-green-700 text-xs">{age} • {memoryDate}</p>
               </div>
             </div>
-            
-            {/* Tags */}
-            {memory.tags && memory.tags.length > 0 && (
-              <div className="flex flex-col gap-1">
-                {memory.tags.slice(0, 3).map((tag, index) => (
-                  <span key={index} className="text-xs bg-green-200 text-green-800 px-2 py-1 rounded text-right">
-                    #{tag}
-                  </span>
-                ))}
-              </div>
-            )}
           </div>
           
           {/* Branding */}
-          <div className="text-center text-xs text-green-600 mt-4 font-semibold">
+          <div className="text-center text-xs text-green-600 mt-2 font-semibold">
             🏔️ puppy-weight-watch.com 🐾
           </div>
         </div>
@@ -325,27 +264,21 @@ const ShareTemplate: React.FC<{
     ),
     
     celebration: (
-      <div className="w-[600px] h-[600px] bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-100 p-8 relative overflow-hidden">
+      <div className="w-[300px] h-[300px] bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-100 p-4 relative overflow-hidden rounded-lg">
         {/* Elegant decorative elements */}
-        <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-violet-400 to-indigo-400"></div>
-        <div className="absolute top-4 right-4">
-          <div className="w-16 h-16 border-4 border-violet-300 rounded-full opacity-30"></div>
-        </div>
-        <div className="absolute bottom-4 left-4">
-          <div className="w-12 h-12 border-2 border-indigo-300 rounded-full opacity-30"></div>
-        </div>
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-violet-400 to-indigo-400"></div>
         
         {/* Main content */}
         <div className="relative z-10 h-full flex flex-col text-center">
           {/* Elegant header */}
-          <div className="mb-6">
-            <div className="text-violet-400 text-4xl mb-2">✨</div>
-            <h2 className="text-3xl font-elegant text-violet-900 mb-2 tracking-wide">{memory.caption}</h2>
-            <div className="w-24 h-px bg-gradient-to-r from-transparent via-violet-400 to-transparent mx-auto"></div>
+          <div className="mb-3">
+            <div className="text-violet-400 text-2xl mb-1">✨</div>
+            <h2 className="text-lg font-elegant text-violet-900 mb-1 tracking-wide">{memory.caption}</h2>
+            <div className="w-12 h-px bg-gradient-to-r from-transparent via-violet-400 to-transparent mx-auto"></div>
           </div>
           
           {/* Elegant photo frame */}
-          <div className="flex-1 rounded-lg overflow-hidden shadow-2xl border border-violet-200 mb-6 relative">
+          <div className="flex-1 rounded-lg overflow-hidden shadow-xl border border-violet-200 mb-3 relative">
             {memory.content_url && (
               <img src={memory.content_url} alt="Memory" className="w-full h-full object-cover" />
             )}
@@ -355,32 +288,21 @@ const ShareTemplate: React.FC<{
           </div>
           
           {/* Puppy info */}
-          <div className="flex justify-center items-center gap-4 mb-4">
+          <div className="flex justify-center items-center gap-2 mb-2">
             {puppyProfile.profileImage && (
-              <img src={puppyProfile.profileImage} alt={puppyProfile.name} className="w-14 h-14 rounded-full object-cover border-3 border-violet-300 shadow-lg" />
+              <img src={puppyProfile.profileImage} alt={puppyProfile.name} className="w-7 h-7 rounded-full object-cover border-2 border-violet-300 shadow-lg" />
             )}
             <div>
-              <p className="text-violet-900 font-bold text-xl">{puppyProfile.name}</p>
-              <p className="text-violet-700">{age}</p>
+              <p className="text-violet-900 font-bold text-sm">{puppyProfile.name}</p>
+              <p className="text-violet-700 text-xs">{age}</p>
             </div>
           </div>
           
-          {/* Date and tags */}
-          <div className="space-y-2">
-            <p className="text-violet-800 font-medium">{memoryDate}</p>
-            {memory.tags && memory.tags.length > 0 && (
-              <div className="flex justify-center gap-2 flex-wrap">
-                {memory.tags.slice(0, 4).map((tag, index) => (
-                  <span key={index} className="text-xs bg-violet-200 text-violet-800 px-3 py-1 rounded-full">
-                    #{tag}
-                  </span>
-                ))}
-              </div>
-            )}
-          </div>
+          {/* Date */}
+          <p className="text-violet-800 font-medium text-sm mb-2">{memoryDate}</p>
           
           {/* Elegant branding */}
-          <div className="text-xs text-violet-600 mt-4 font-light tracking-widest">
+          <div className="text-xs text-violet-600 font-light tracking-widest">
             PUPPY-WEIGHT-WATCH.COM
           </div>
         </div>
@@ -391,6 +313,22 @@ const ShareTemplate: React.FC<{
   return templateStyles[template];
 };
 
+// Simple native sharing functions
+const shareToFacebook = (url: string, title: string) => {
+  const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(title)}`;
+  window.open(shareUrl, '_blank', 'width=600,height=400');
+};
+
+const shareToTwitter = (url: string, title: string) => {
+  const shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`;
+  window.open(shareUrl, '_blank', 'width=600,height=400');
+};
+
+const shareToWhatsApp = (url: string, title: string) => {
+  const shareUrl = `https://wa.me/?text=${encodeURIComponent(title + ' ' + url)}`;
+  window.open(shareUrl, '_blank');
+};
+
 export const SocialShareGenerator: React.FC<SocialShareGeneratorProps> = ({
   memory,
   puppyProfile,
@@ -398,53 +336,37 @@ export const SocialShareGenerator: React.FC<SocialShareGeneratorProps> = ({
   onClose
 }) => {
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateType>('modern');
-  const [isGenerating, setIsGenerating] = useState(false);
   const shareImageRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
-
-  const generateImage = async () => {
-    if (!shareImageRef.current) return;
-
-    setIsGenerating(true);
-    try {
-      const dataUrl = await toPng(shareImageRef.current, {
-        quality: 1.0,
-        pixelRatio: 2,
-        backgroundColor: 'white'
-      });
-
-      // Create download link
-      const link = document.createElement('a');
-      link.download = `${puppyProfile.name}-muisto-${format(new Date(memory.created_at), 'yyyy-MM-dd')}.png`;
-      link.href = dataUrl;
-      link.click();
-
-      toast({
-        title: "Kuva ladattu!",
-        description: "Voit nyt jakaa kuvan sosiaalisessa mediassa",
-      });
-    } catch (error) {
-      console.error('Error generating image:', error);
-      toast({
-        title: "Virhe",
-        description: "Kuvan generointi epäonnistui",
-        variant: "destructive"
-      });
-    } finally {
-      setIsGenerating(false);
-    }
-  };
 
   const shareUrl = `https://puppy-weight-watch.com/memory/${memory.id}`;
   const shareTitle = `${puppyProfile.name}: ${memory.caption}`;
 
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      toast({
+        title: "Linkki kopioitu!",
+        description: "Voit nyt jakaa linkin sosiaalisessa mediassa",
+      });
+    });
+  };
+
+  const downloadImage = () => {
+    // For now, just copy the link since we removed html-to-image
+    copyToClipboard();
+    toast({
+      title: "Ominaisuus tulossa!",
+      description: "Kuvan lataus toteutetaan pian. Toistaiseksi linkki kopioitu.",
+    });
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Jaa muisto sosiaalisessa mediassa</DialogTitle>
           <DialogDescription>
-            Valitse mallipohja ja jaa {puppyProfile.name}:n muisto kauniina kuvana
+            Valitse mallipohja ja jaa {puppyProfile.name}:n muisto
           </DialogDescription>
         </DialogHeader>
 
@@ -480,43 +402,49 @@ export const SocialShareGenerator: React.FC<SocialShareGeneratorProps> = ({
             {/* Sharing buttons */}
             <div className="space-y-3 pt-4 border-t">
               <h4 className="font-semibold">Jaa sosiaalisessa mediassa</h4>
-              <div className="flex gap-2">
-                <FacebookShareButton url={shareUrl} hashtag="#pentuelämää">
-                  <FacebookIcon size={40} round />
-                </FacebookShareButton>
-                <TwitterShareButton url={shareUrl} title={shareTitle}>
-                  <TwitterIcon size={40} round />
-                </TwitterShareButton>
-                <WhatsappShareButton url={shareUrl} title={shareTitle}>
-                  <WhatsappIcon size={40} round />
-                </WhatsappShareButton>
+              <div className="grid grid-cols-2 gap-2">
                 <Button
                   variant="outline"
-                  size="sm"
+                  onClick={() => shareToFacebook(shareUrl, shareTitle)}
                   className="flex items-center gap-2"
-                  onClick={() => {
-                    // Instagram sharing - copy link to clipboard
-                    navigator.clipboard.writeText(shareUrl);
-                    toast({
-                      title: "Linkki kopioitu!",
-                      description: "Voit nyt jakaa linkin Instagramissa",
-                    });
-                  }}
                 >
-                  <Instagram className="w-4 h-4" />
-                  Instagram
+                  <Share2 className="w-4 h-4" />
+                  Facebook
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => shareToTwitter(shareUrl, shareTitle)}
+                  className="flex items-center gap-2"
+                >
+                  <Share2 className="w-4 h-4" />
+                  Twitter
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => shareToWhatsApp(shareUrl, shareTitle)}
+                  className="flex items-center gap-2"
+                >
+                  <Share2 className="w-4 h-4" />
+                  WhatsApp
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={copyToClipboard}
+                  className="flex items-center gap-2"
+                >
+                  <Copy className="w-4 h-4" />
+                  Kopioi linkki
                 </Button>
               </div>
             </div>
 
             {/* Download button */}
             <Button 
-              onClick={generateImage} 
-              disabled={isGenerating}
+              onClick={downloadImage}
               className="w-full flex items-center gap-2"
             >
               <Download className="w-4 h-4" />
-              {isGenerating ? 'Luodaan kuvaa...' : 'Lataa kuva'}
+              Lataa kuva (tulossa)
             </Button>
           </div>
 
@@ -529,7 +457,6 @@ export const SocialShareGenerator: React.FC<SocialShareGeneratorProps> = ({
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.3 }}
-                className="transform scale-50 origin-top-left"
               >
                 <div ref={shareImageRef}>
                   <ShareTemplate 
