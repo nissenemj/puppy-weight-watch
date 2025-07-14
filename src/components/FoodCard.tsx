@@ -20,8 +20,12 @@ export function FoodCard({ food, onSelect, isSelected = false, showDetails = fal
   
   // Check if food has detailed ingredient/nutrition data
   const hasDetailedData = Boolean(
-    food.ingredients?.length || 
+    food.food_ingredients?.length || 
     food.allergens?.length || 
+    food.ingredients ||
+    food.country_of_origin ||
+    food.protein_percentage ||
+    food.special_features?.length ||
     (food.nutrition && Object.values(food.nutrition).some(v => v !== null && v !== false)) ||
     food.manufacturer_info
   )
@@ -31,23 +35,39 @@ export function FoodCard({ food, onSelect, isSelected = false, showDetails = fal
   
   // Get nutrition summary for quick display
   const getNutritionSummary = () => {
-    if (!food.nutrition) return null
     const parts = []
-    if (food.nutrition.protein_percentage) parts.push(`${food.nutrition.protein_percentage}% proteiini`)
-    if (food.nutrition.fat_percentage) parts.push(`${food.nutrition.fat_percentage}% rasva`)
+    // Check new direct fields first, then fallback to detailed nutrition
+    const proteinPct = food.protein_percentage || food.nutrition?.protein_percentage
+    const fatPct = food.fat_percentage || food.nutrition?.fat_percentage
+    
+    if (proteinPct) parts.push(`${proteinPct}% proteiini`)
+    if (fatPct) parts.push(`${fatPct}% rasva`)
     return parts.length > 0 ? parts.join(', ') : null
   }
 
   const getSpecialFeatures = () => {
     const features = []
-    if (food.nutrition?.grain_free) features.push("Viljaton")
-    if (food.nutrition?.wheat_free) features.push("Vehnätön") 
-    if (food.nutrition?.gluten_free) features.push("Gluteeniton")
-    if (food.nutrition?.special_features?.includes('Hypoallergeeninen')) features.push("Hypoallergeeninen")
-    if (food.nutrition?.special_features?.includes('100% kotimaista kanaa')) features.push("Kotimainen")
-    if (food.nutrition?.special_features?.includes('Raakaruoka (B.A.R.F.)')) features.push("B.A.R.F.")
-    if (food.nutrition?.special_features?.includes('VAROITUS: Turvallisuusongelmat 2023')) features.push("⚠️ Turvallisuusvaroitus")
-    return features
+    
+    // Check new direct special_features field first, then detailed nutrition
+    const allFeatures = [
+      ...(food.special_features || []),
+      ...(food.nutrition?.special_features || [])
+    ]
+    
+    // Add country info if available
+    if (food.country_of_origin === 'Suomi') features.push("🇫🇮 Suomalainen")
+    else if (food.country_of_origin) features.push(`${food.country_of_origin}`)
+    
+    // Add nutrition-based features
+    if (food.nutrition?.grain_free || allFeatures.includes('Viljaton')) features.push("Viljaton")
+    if (food.nutrition?.wheat_free || allFeatures.includes('Vehnätön')) features.push("Vehnätön") 
+    if (food.nutrition?.gluten_free || allFeatures.includes('Gluteeniton')) features.push("Gluteeniton")
+    if (allFeatures.some(f => f.includes('Hypoallergeeninen'))) features.push("Hypoallergeeninen")
+    if (allFeatures.some(f => f.includes('B.A.R.F') || f.includes('Raaka'))) features.push("B.A.R.F.")
+    if (allFeatures.some(f => f.includes('DHA') || f.includes('Omega'))) features.push("Omega-3")
+    if (allFeatures.some(f => f.includes('Progut') || f.includes('suolistoparanne'))) features.push("Probiootti")
+    
+    return features.slice(0, 4) // Limit to 4 features for clean display
   }
   
   const getDosageMethodLabel = (method: string) => {
@@ -125,11 +145,27 @@ export function FoodCard({ food, onSelect, isSelected = false, showDetails = fal
             )}
 
             {/* Nutrition summary */}
-            {getNutritionSummary() && (
-              <div className="text-sm text-muted-foreground mb-2">
-                <span className="font-medium">Ravintosisältö:</span> {getNutritionSummary()}
-              </div>
-            )}
+            {/* Enhanced nutrition and origin info */}
+            <div className="space-y-1 text-sm text-muted-foreground mb-2">
+              {getNutritionSummary() && (
+                <div>
+                  <span className="font-medium">Ravintosisältö:</span> {getNutritionSummary()}
+                </div>
+              )}
+              {(food.country_of_origin || food.ingredient_origin) && (
+                <div>
+                  <span className="font-medium">Alkuperä:</span>{' '}
+                  {food.country_of_origin && `Valmistettu: ${food.country_of_origin}`}
+                  {food.country_of_origin && food.ingredient_origin && ' • '}
+                  {food.ingredient_origin && `Raaka-aineet: ${food.ingredient_origin}`}
+                </div>
+              )}
+              {food.feeding_schedule && (
+                <div>
+                  <span className="font-medium">Ruokinta:</span> {food.feeding_schedule}
+                </div>
+              )}
+            </div>
 
             {food.notes && (
               <p className="text-sm text-muted-foreground">{food.notes}</p>

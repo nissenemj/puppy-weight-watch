@@ -70,15 +70,15 @@ export default function FoodAnalysisView() {
   const selectedFoodData = foods.filter(food => selectedFoods.includes(food.id))
 
   const getProteinSources = (food: DogFood) => {
-    return food.ingredients?.filter(i => i.ingredient_type === 'protein').map(i => i.ingredient_name) || []
+    return food.food_ingredients?.filter(i => i.ingredient_type === 'protein').map(i => i.ingredient_name) || []
   }
 
   const getCarbSources = (food: DogFood) => {
-    return food.ingredients?.filter(i => i.ingredient_type === 'carb').map(i => i.ingredient_name) || []
+    return food.food_ingredients?.filter(i => i.ingredient_type === 'carb').map(i => i.ingredient_name) || []
   }
 
   const hasCompleteData = (food: DogFood) => {
-    return food.ingredients && food.ingredients.length > 0 && food.nutrition
+    return (food.food_ingredients && food.food_ingredients.length > 0) || Boolean(food.ingredients) && food.nutrition
   }
 
   const toggleFoodSelection = (foodId: string) => {

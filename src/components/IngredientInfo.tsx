@@ -12,16 +12,16 @@ interface IngredientInfoProps {
 }
 
 export function IngredientInfo({ food }: IngredientInfoProps) {
-  const primaryIngredients = food.ingredients?.filter(i => i.ingredient_type === 'primary') || []
-  const proteinSources = food.ingredients?.filter(i => i.ingredient_type === 'protein') || []
-  const carbSources = food.ingredients?.filter(i => i.ingredient_type === 'carb') || []
-  const fatSources = food.ingredients?.filter(i => i.ingredient_type === 'fat') || []
+  const primaryIngredients = food.food_ingredients?.filter(i => i.ingredient_type === 'primary') || []
+  const proteinSources = food.food_ingredients?.filter(i => i.ingredient_type === 'protein') || []
+  const carbSources = food.food_ingredients?.filter(i => i.ingredient_type === 'carb') || []
+  const fatSources = food.food_ingredients?.filter(i => i.ingredient_type === 'fat') || []
   
   const containsAllergens = food.allergens?.filter(a => a.allergen_type === 'contains') || []
   const freeFromAllergens = food.allergens?.filter(a => a.allergen_type === 'free_from') || []
 
   // Check if we have any data to display
-  const hasIngredients = food.ingredients?.length > 0
+  const hasIngredients = food.food_ingredients?.length > 0 || Boolean(food.ingredients)
   const hasAllergens = food.allergens?.length > 0 || food.nutrition
   const hasNutrition = food.nutrition
 

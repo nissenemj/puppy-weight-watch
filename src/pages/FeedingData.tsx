@@ -38,7 +38,9 @@ export default function FeedingData() {
     grainFree: false,
     wheatFree: false,
     glutenFree: false,
-    proteinSource: 'all'
+    proteinSource: 'all',
+    countryOrigin: 'all',
+    hasDetailedInfo: false
   })
   const [newFood, setNewFood] = useState({
     name: '',
@@ -111,13 +113,21 @@ export default function FeedingData() {
   const proteinSources = useMemo(() => {
     const sources = new Set<string>()
     dogFoods.forEach(food => {
-      food.ingredients?.forEach(ingredient => {
+      food.food_ingredients?.forEach(ingredient => {
         if (ingredient.ingredient_type === 'protein') {
           sources.add(ingredient.ingredient_name)
         }
       })
     })
     return Array.from(sources).sort()
+  }, [dogFoods])
+
+  const countries = useMemo(() => {
+    const countries = new Set<string>()
+    dogFoods.forEach(food => {
+      if (food.country_of_origin) countries.add(food.country_of_origin)
+    })
+    return Array.from(countries).sort()
   }, [dogFoods])
 
   // Filter foods based on current filters
@@ -170,10 +180,25 @@ export default function FeedingData() {
     // Protein source filter
     if (filters.proteinSource && filters.proteinSource !== 'all') {
       filtered = filtered.filter(food => 
-        food.ingredients?.some(ingredient => 
+        food.food_ingredients?.some(ingredient => 
           ingredient.ingredient_type === 'protein' && 
           ingredient.ingredient_name === filters.proteinSource
         )
+      )
+    }
+
+    // Country origin filter
+    if (filters.countryOrigin && filters.countryOrigin !== 'all') {
+      filtered = filtered.filter(food => food.country_of_origin === filters.countryOrigin)
+    }
+
+    // Detailed info filter
+    if (filters.hasDetailedInfo) {
+      filtered = filtered.filter(food => 
+        food.food_ingredients?.length > 0 || 
+        food.ingredients ||
+        food.protein_percentage ||
+        food.special_features?.length > 0
       )
     }
 
@@ -375,6 +400,7 @@ export default function FeedingData() {
               onFiltersChange={setFilters}
               manufacturers={manufacturers}
               proteinSources={proteinSources}
+              countries={countries}
             />
 
             {/* Refresh Button */}

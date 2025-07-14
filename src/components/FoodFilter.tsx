@@ -17,6 +17,8 @@ export interface FoodFilters {
   wheatFree: boolean
   glutenFree: boolean
   proteinSource: string
+  countryOrigin: string
+  hasDetailedInfo: boolean
 }
 
 interface FoodFilterProps {
@@ -24,13 +26,15 @@ interface FoodFilterProps {
   onFiltersChange: (filters: FoodFilters) => void
   manufacturers: string[]
   proteinSources: string[]
+  countries: string[]
 }
 
 export function FoodFilter({ 
   filters, 
   onFiltersChange, 
   manufacturers, 
-  proteinSources 
+  proteinSources,
+  countries 
 }: FoodFilterProps) {
   const updateFilter = (key: keyof FoodFilters, value: any) => {
     onFiltersChange({ ...filters, [key]: value })
@@ -46,7 +50,9 @@ export function FoodFilter({
       grainFree: false,
       wheatFree: false,
       glutenFree: false,
-      proteinSource: 'all'
+      proteinSource: 'all',
+      countryOrigin: 'all',
+      hasDetailedInfo: false
     })
   }
 
@@ -68,6 +74,8 @@ export function FoodFilter({
     if (filters.wheatFree) count++
     if (filters.glutenFree) count++
     if (filters.proteinSource && filters.proteinSource !== 'all') count++
+    if (filters.countryOrigin && filters.countryOrigin !== 'all') count++
+    if (filters.hasDetailedInfo) count++
     return count
   }
 
@@ -190,6 +198,25 @@ export function FoodFilter({
               </Select>
             </div>
           )}
+
+          {countries.length > 0 && (
+            <div>
+              <Label>Valmistusmaa</Label>
+              <Select value={filters.countryOrigin} onValueChange={(value) => updateFilter('countryOrigin', value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Kaikki maat" />
+                </SelectTrigger>
+                 <SelectContent>
+                   <SelectItem value="all">Kaikki maat</SelectItem>
+                   {countries.map((country) => (
+                     <SelectItem key={country} value={country}>
+                       {country === 'Suomi' ? '🇫🇮 Suomi' : country}
+                     </SelectItem>
+                   ))}
+                 </SelectContent>
+              </Select>
+            </div>
+          )}
         </div>
         
         <div className="flex flex-wrap gap-6">
@@ -218,6 +245,15 @@ export function FoodFilter({
               onCheckedChange={(checked) => updateFilter('glutenFree', checked as boolean)}
             />
             <Label htmlFor="gluten-free">Gluteeniton</Label>
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <Checkbox 
+              id="detailed-info"
+              checked={filters.hasDetailedInfo}
+              onCheckedChange={(checked) => updateFilter('hasDetailedInfo', checked as boolean)}
+            />
+            <Label htmlFor="detailed-info">Yksityiskohtaiset tiedot</Label>
           </div>
         </div>
       </CardContent>

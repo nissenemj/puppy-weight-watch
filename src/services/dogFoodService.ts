@@ -51,8 +51,18 @@ export interface DogFood {
   dosage_method: 'Odotettu_Aikuispaino_Ja_Ikä' | 'Nykyinen_Paino' | 'Prosentti_Nykyisestä_Painosta' | 'Kokoluokka' | 'Ei_Tietoa'
   notes?: string
   created_at: string
+  // New expanded fields
+  ingredients?: string
+  country_of_origin?: string
+  ingredient_origin?: string
+  protein_percentage?: number
+  fat_percentage?: number
+  special_features?: string[]
+  feeding_schedule?: string
+  energy_content?: number
+  // Existing detailed data fields
   feeding_guidelines?: FeedingGuideline[]
-  ingredients?: FoodIngredient[]
+  food_ingredients?: FoodIngredient[]
   allergens?: FoodAllergen[]
   nutrition?: FoodNutrition
   manufacturer_info?: FoodManufacturer
@@ -97,7 +107,8 @@ export class DogFoodService {
       food_type: item.food_type as DogFood['food_type'],
       nutrition_type: item.nutrition_type as DogFood['nutrition_type'],
       dosage_method: item.dosage_method as DogFood['dosage_method'],
-      ingredients: (item.food_ingredients || []).map((ing: any) => ({
+      // Keep detailed ingredients as array for backward compatibility
+      food_ingredients: (item.food_ingredients || []).map((ing: any) => ({
         ...ing,
         ingredient_type: ing.ingredient_type as FoodIngredient['ingredient_type']
       })),

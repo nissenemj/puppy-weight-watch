@@ -16,37 +16,64 @@ export type Database = {
     Tables: {
       dog_foods: {
         Row: {
+          country_of_origin: string | null
           created_at: string
           dosage_method: string
+          energy_content: number | null
+          fat_percentage: number | null
+          feeding_schedule: string | null
           food_type: string
           id: string
+          ingredient_origin: string | null
+          ingredients: string | null
           manufacturer: string
           name: string
           notes: string | null
           nutrition_type: string
+          price_range: string | null
           product_code: string
+          protein_percentage: number | null
+          special_features: string[] | null
         }
         Insert: {
+          country_of_origin?: string | null
           created_at?: string
           dosage_method: string
+          energy_content?: number | null
+          fat_percentage?: number | null
+          feeding_schedule?: string | null
           food_type: string
           id?: string
+          ingredient_origin?: string | null
+          ingredients?: string | null
           manufacturer: string
           name: string
           notes?: string | null
           nutrition_type: string
+          price_range?: string | null
           product_code: string
+          protein_percentage?: number | null
+          special_features?: string[] | null
         }
         Update: {
+          country_of_origin?: string | null
           created_at?: string
           dosage_method?: string
+          energy_content?: number | null
+          fat_percentage?: number | null
+          feeding_schedule?: string | null
           food_type?: string
           id?: string
+          ingredient_origin?: string | null
+          ingredients?: string | null
           manufacturer?: string
           name?: string
           notes?: string | null
           nutrition_type?: string
+          price_range?: string | null
           product_code?: string
+          protein_percentage?: number | null
+          special_features?: string[] | null
         }
         Relationships: []
       }
