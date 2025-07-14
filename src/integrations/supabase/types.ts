@@ -763,10 +763,15 @@ export type Database = {
           completed: boolean | null
           completed_at: string | null
           completed_by: string | null
+          completion_images: string[] | null
+          completion_location: Json | null
+          completion_notes: string | null
+          completion_time: string | null
           created_at: string | null
           description: string | null
           display_order: number | null
           id: string
+          month_number: number | null
           target_age_weeks: number | null
           title: string
           updated_at: string | null
@@ -776,10 +781,15 @@ export type Database = {
           completed?: boolean | null
           completed_at?: string | null
           completed_by?: string | null
+          completion_images?: string[] | null
+          completion_location?: Json | null
+          completion_notes?: string | null
+          completion_time?: string | null
           created_at?: string | null
           description?: string | null
           display_order?: number | null
           id?: string
+          month_number?: number | null
           target_age_weeks?: number | null
           title: string
           updated_at?: string | null
@@ -789,10 +799,15 @@ export type Database = {
           completed?: boolean | null
           completed_at?: string | null
           completed_by?: string | null
+          completion_images?: string[] | null
+          completion_location?: Json | null
+          completion_notes?: string | null
+          completion_time?: string | null
           created_at?: string | null
           description?: string | null
           display_order?: number | null
           id?: string
+          month_number?: number | null
           target_age_weeks?: number | null
           title?: string
           updated_at?: string | null

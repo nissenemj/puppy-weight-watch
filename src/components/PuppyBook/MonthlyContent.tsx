@@ -93,9 +93,10 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
   const [healthEntries, setHealthEntries] = useState<{ [key: string]: EntryData }>({});
   const [socialEntries, setSocialEntries] = useState<{ [key: string]: EntryData }>({});
   
-  // State for tracking completed milestones and tasks
-  const [completedMilestones, setCompletedMilestones] = useState<{ [key: string]: boolean }>({});
+  // State for database milestones and tasks
+  const [dbMilestones, setDbMilestones] = useState<MilestoneItem[]>([]);
   const [completedTasks, setCompletedTasks] = useState<{ [key: string]: boolean }>({});
+  const [loadingMilestones, setLoadingMilestones] = useState(true);
   
   const { toast } = useToast();
   
@@ -178,6 +179,40 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
     return healthByMonth[month as keyof typeof healthByMonth] || [];
   };
 
+  // Load milestone data from database
+  const loadMilestones = async () => {
+    try {
+      setLoadingMilestones(true);
+      const { data, error } = await supabase
+        .from('puppy_milestones')
+        .select('*')
+        .eq('book_id', bookId)
+        .eq('month_number', monthNumber);
+
+      if (error) throw error;
+      
+      // Convert database milestones to our MilestoneItem format
+      const dbMilestoneData = (data || []).map(milestone => ({
+        id: milestone.id,
+        title: milestone.title,
+        description: milestone.description || '',
+        completed: milestone.completed || false,
+        targetWeeks: milestone.target_age_weeks || 0
+      }));
+      
+      setDbMilestones(dbMilestoneData);
+    } catch (error) {
+      console.error('Error loading milestones:', error);
+      toast({
+        title: "Virhe",
+        description: "Virstanpylväiden lataaminen epäonnistui",
+        variant: "destructive"
+      });
+    } finally {
+      setLoadingMilestones(false);
+    }
+  };
+
   const loadHealthRecords = async () => {
     try {
       const { data, error } = await supabase
@@ -194,8 +229,9 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
   };
 
   useEffect(() => {
+    loadMilestones();
     loadHealthRecords();
-  }, [bookId]);
+  }, [bookId, monthNumber]);
 
   const getTypeLabel = (type: string) => {
     const labels = {
@@ -330,12 +366,69 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
     return entries[id] || { images: [], notes: '' };
   };
 
-  // Toggle functions for checkboxes
-  const toggleMilestone = (milestoneId: string) => {
-    setCompletedMilestones(prev => ({
-      ...prev,
-      [milestoneId]: !prev[milestoneId]
-    }));
+  // Save milestone completion to database
+  const saveMilestone = async (milestoneId: string, entryData: EntryData) => {
+    try {
+      // Check if this is a database milestone
+      const dbMilestone = dbMilestones.find(m => m.id === milestoneId);
+      
+      if (dbMilestone) {
+        // Update existing database milestone
+        const { error } = await supabase
+          .from('puppy_milestones')
+          .update({
+            completed: !dbMilestone.completed,
+            completed_at: !dbMilestone.completed ? new Date().toISOString() : null,
+            completed_by: !dbMilestone.completed ? (await supabase.auth.getUser()).data.user?.id : null,
+            completion_notes: entryData.notes,
+            completion_images: entryData.images,
+            completion_location: entryData.location ? JSON.parse(JSON.stringify(entryData.location)) : null,
+            completion_time: entryData.time
+          })
+          .eq('id', milestoneId);
+
+        if (error) throw error;
+      } else {
+        // Create new milestone from static data
+        const staticMilestone = getMonthlyMilestones(monthNumber).find(m => m.id === milestoneId);
+        if (!staticMilestone) return;
+
+        const { error } = await supabase
+          .from('puppy_milestones')
+          .insert({
+            book_id: bookId,
+            title: staticMilestone.title,
+            description: staticMilestone.description,
+            target_age_weeks: staticMilestone.targetWeeks,
+            month_number: monthNumber,
+            completed: true,
+            completed_at: new Date().toISOString(),
+            completed_by: (await supabase.auth.getUser()).data.user?.id,
+            completion_notes: entryData.notes,
+            completion_images: entryData.images,
+            completion_location: entryData.location ? JSON.parse(JSON.stringify(entryData.location)) : null,
+            completion_time: entryData.time
+          });
+
+        if (error) throw error;
+      }
+
+      toast({
+        title: "Tallennettu!",
+        description: "Virstanpylväs on tallennettu onnistuneesti",
+        variant: "default"
+      });
+
+      // Reload milestones to reflect changes
+      await loadMilestones();
+    } catch (error) {
+      console.error('Error saving milestone:', error);
+      toast({
+        title: "Virhe",
+        description: "Virstanpylvään tallennus epäonnistui",
+        variant: "destructive"
+      });
+    }
   };
 
   const toggleTask = (taskId: string) => {
@@ -416,69 +509,124 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
             <h3 className="text-xl font-semibold text-gray-800 mb-4">
               Kuukauden virstanpylväät ⭐
             </h3>
-            {milestones.map((milestone) => (
-              <div key={milestone.id} className="bg-orange-50 rounded-xl p-4 border border-orange-100">
-                <div className="flex items-start gap-3">
-                  <div className="flex-shrink-0 mt-1">
-                    <button
-                      onClick={() => toggleMilestone(milestone.id)}
-                      className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
-                        completedMilestones[milestone.id]
-                          ? 'bg-green-500 border-green-500 hover:bg-green-600' 
-                          : 'border-gray-300 hover:border-orange-400'
-                      }`}
-                    >
-                      {completedMilestones[milestone.id] && <CheckCircle className="w-4 h-4 text-white" />}
-                    </button>
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="font-semibold text-gray-800">{milestone.title}</h4>
-                    <p className="text-gray-600 text-sm mb-2">{milestone.description}</p>
-                    <div className="flex items-center gap-2 text-xs text-gray-500">
-                      <Clock className="w-3 h-3" />
-                      Tavoite: {milestone.targetWeeks} viikkoa
-                    </div>
-                  </div>
-                  <button className="p-2 text-gray-400 hover:text-orange-500 transition-colors">
-                    <Edit3 className="w-4 h-4" />
-                  </button>
-                </div>
-                <div className="mt-3 pt-3 border-t border-orange-200">
-                  <textarea
-                    placeholder="Kirjoita muistiinpanoja tästä virstanpylväästä..."
-                    className="w-full p-2 text-sm border border-orange-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300"
-                    rows={2}
-                    value={getEntryData('milestone', milestone.id).notes}
-                    onChange={(e) => updateMilestoneEntry(milestone.id, 'notes', e.target.value)}
-                  />
-                  <div className="mt-2 space-y-2">
-                    <div className="flex items-center gap-4">
-                      <ImageUploader
-                        onImageAdded={(imageUrl) => {
-                          const currentImages = getEntryData('milestone', milestone.id).images;
-                          updateMilestoneEntry(milestone.id, 'images', [...currentImages, imageUrl]);
-                        }}
-                        images={getEntryData('milestone', milestone.id).images}
-                        onImageRemoved={(imageUrl) => {
-                          const currentImages = getEntryData('milestone', milestone.id).images;
-                          updateMilestoneEntry(milestone.id, 'images', currentImages.filter(img => img !== imageUrl));
-                        }}
-                      />
-                      <LocationSelector
-                        onLocationAdded={(location) => updateMilestoneEntry(milestone.id, 'location', location)}
-                        location={getEntryData('milestone', milestone.id).location}
-                        onLocationRemoved={() => updateMilestoneEntry(milestone.id, 'location', undefined)}
-                      />
-                      <TimePicker
-                        onTimeAdded={(time) => updateMilestoneEntry(milestone.id, 'time', time)}
-                        time={getEntryData('milestone', milestone.id).time}
-                        onTimeRemoved={() => updateMilestoneEntry(milestone.id, 'time', undefined)}
-                      />
-                    </div>
-                  </div>
-                </div>
+            {loadingMilestones ? (
+              <div className="flex justify-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600"></div>
               </div>
-            ))}
+            ) : (
+              <>
+                {/* Render database milestones first */}
+                {dbMilestones.map((milestone) => (
+                  <div key={milestone.id} className="bg-orange-50 rounded-xl p-4 border border-orange-100">
+                    <div className="flex items-start gap-3">
+                      <div className="flex-shrink-0 mt-1">
+                        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                          milestone.completed 
+                            ? 'bg-green-500 border-green-500' 
+                            : 'border-gray-300'
+                        }`}>
+                          {milestone.completed && <CheckCircle className="w-4 h-4 text-white" />}
+                        </div>
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-gray-800">{milestone.title}</h4>
+                        <p className="text-gray-600 text-sm mb-2">{milestone.description}</p>
+                        <div className="flex items-center gap-2 text-xs text-gray-500">
+                          <Clock className="w-3 h-3" />
+                          Tavoite: {milestone.targetWeeks} viikkoa
+                        </div>
+                        {milestone.completed && (
+                          <Badge variant="default" className="mt-2">
+                            Saavutettu ✓
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                    {milestone.completed && (
+                      <div className="mt-3 pt-3 border-t border-orange-200 bg-green-50 rounded-lg p-3">
+                        <p className="text-sm text-green-700 font-medium">Virstanpylväs saavutettu!</p>
+                        <p className="text-xs text-green-600 mt-1">Tämä merkintä on tallennettu aikajanalle</p>
+                      </div>
+                    )}
+                  </div>
+                ))}
+
+                {/* Render static milestones that haven't been saved yet */}
+                {milestones
+                  .filter(staticMilestone => !dbMilestones.some(dbMilestone => 
+                    staticMilestone.title === dbMilestone.title
+                  ))
+                  .map((milestone) => (
+                    <div key={milestone.id} className="bg-orange-50 rounded-xl p-4 border border-orange-100">
+                      <div className="flex items-start gap-3">
+                        <div className="flex-shrink-0 mt-1">
+                          <div className="w-6 h-6 rounded-full border-2 border-gray-300 flex items-center justify-center">
+                            {/* Empty for uncompleted */}
+                          </div>
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-semibold text-gray-800">{milestone.title}</h4>
+                          <p className="text-gray-600 text-sm mb-2">{milestone.description}</p>
+                          <div className="flex items-center gap-2 text-xs text-gray-500">
+                            <Clock className="w-3 h-3" />
+                            Tavoite: {milestone.targetWeeks} viikkoa
+                          </div>
+                        </div>
+                      </div>
+                      <div className="mt-3 pt-3 border-t border-orange-200">
+                        <textarea
+                          placeholder="Kirjoita muistiinpanoja tästä virstanpylväästä..."
+                          className="w-full p-2 text-sm border border-orange-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300"
+                          rows={2}
+                          value={getEntryData('milestone', milestone.id).notes}
+                          onChange={(e) => updateMilestoneEntry(milestone.id, 'notes', e.target.value)}
+                        />
+                        <div className="mt-2 space-y-2">
+                          <div className="flex items-center gap-4">
+                            <ImageUploader
+                              onImageAdded={(imageUrl) => {
+                                const currentImages = getEntryData('milestone', milestone.id).images;
+                                updateMilestoneEntry(milestone.id, 'images', [...currentImages, imageUrl]);
+                              }}
+                              images={getEntryData('milestone', milestone.id).images}
+                              onImageRemoved={(imageUrl) => {
+                                const currentImages = getEntryData('milestone', milestone.id).images;
+                                updateMilestoneEntry(milestone.id, 'images', currentImages.filter(img => img !== imageUrl));
+                              }}
+                            />
+                            <LocationSelector
+                              onLocationAdded={(location) => updateMilestoneEntry(milestone.id, 'location', location)}
+                              location={getEntryData('milestone', milestone.id).location}
+                              onLocationRemoved={() => updateMilestoneEntry(milestone.id, 'location', undefined)}
+                            />
+                            <TimePicker
+                              onTimeAdded={(time) => updateMilestoneEntry(milestone.id, 'time', time)}
+                              time={getEntryData('milestone', milestone.id).time}
+                              onTimeRemoved={() => updateMilestoneEntry(milestone.id, 'time', undefined)}
+                            />
+                          </div>
+                          <div className="flex justify-end">
+                            <Button
+                              size="sm"
+                              onClick={() => saveMilestone(milestone.id, getEntryData('milestone', milestone.id))}
+                              className="bg-green-600 hover:bg-green-700"
+                            >
+                              💾 Tallenna virstanpylväs
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                }
+                
+                {dbMilestones.length === 0 && milestones.length === 0 && (
+                  <div className="text-center py-8 text-gray-500">
+                    <p>Ei virstanpylväitä tälle kuukaudelle</p>
+                  </div>
+                )}
+              </>
+            )}
           </motion.div>
         )}
 
