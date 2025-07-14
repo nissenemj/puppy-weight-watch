@@ -93,6 +93,10 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
   const [healthEntries, setHealthEntries] = useState<{ [key: string]: EntryData }>({});
   const [socialEntries, setSocialEntries] = useState<{ [key: string]: EntryData }>({});
   
+  // State for tracking completed milestones and tasks
+  const [completedMilestones, setCompletedMilestones] = useState<{ [key: string]: boolean }>({});
+  const [completedTasks, setCompletedTasks] = useState<{ [key: string]: boolean }>({});
+  
   const { toast } = useToast();
   
   // Calculate current age if birth date is available
@@ -326,6 +330,21 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
     return entries[id] || { images: [], notes: '' };
   };
 
+  // Toggle functions for checkboxes
+  const toggleMilestone = (milestoneId: string) => {
+    setCompletedMilestones(prev => ({
+      ...prev,
+      [milestoneId]: !prev[milestoneId]
+    }));
+  };
+
+  const toggleTask = (taskId: string) => {
+    setCompletedTasks(prev => ({
+      ...prev,
+      [taskId]: !prev[taskId]
+    }));
+  };
+
   const milestones = getMonthlyMilestones(monthNumber);
   const healthGuidelines = getHealthGuidelines(monthNumber);
 
@@ -401,13 +420,16 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
               <div key={milestone.id} className="bg-orange-50 rounded-xl p-4 border border-orange-100">
                 <div className="flex items-start gap-3">
                   <div className="flex-shrink-0 mt-1">
-                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                      milestone.completed 
-                        ? 'bg-green-500 border-green-500' 
-                        : 'border-gray-300'
-                    }`}>
-                      {milestone.completed && <CheckCircle className="w-4 h-4 text-white" />}
-                    </div>
+                    <button
+                      onClick={() => toggleMilestone(milestone.id)}
+                      className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
+                        completedMilestones[milestone.id]
+                          ? 'bg-green-500 border-green-500 hover:bg-green-600' 
+                          : 'border-gray-300 hover:border-orange-400'
+                      }`}
+                    >
+                      {completedMilestones[milestone.id] && <CheckCircle className="w-4 h-4 text-white" />}
+                    </button>
                   </div>
                   <div className="flex-1">
                     <h4 className="font-semibold text-gray-800">{milestone.title}</h4>
@@ -649,17 +671,24 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
             <div className="bg-white rounded-xl border border-gray-200 p-6">
               <h4 className="font-semibold text-gray-800 mb-4">Kuukauden sosiaalistamistehtävät 📝</h4>
               <div className="space-y-3">
-                {getSocializationTasks(monthNumber).map((task, index) => (
-                  <div key={index} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-                    <input 
-                      type="checkbox" 
-                      className="mt-1 w-4 h-4 text-green-600 rounded focus:ring-green-500"
-                    />
-                    <div className="flex-1">
-                      <p className="text-gray-800 text-sm">{task}</p>
-                    </div>
-                  </div>
-                ))}
+                 {getSocializationTasks(monthNumber).map((task, index) => {
+                   const taskId = `task-${monthNumber}-${index}`;
+                   return (
+                     <div key={index} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                       <input 
+                         type="checkbox" 
+                         className="mt-1 w-4 h-4 text-green-600 rounded focus:ring-green-500"
+                         checked={completedTasks[taskId] || false}
+                         onChange={() => toggleTask(taskId)}
+                       />
+                       <div className="flex-1">
+                         <p className={`text-sm ${completedTasks[taskId] ? 'text-gray-500 line-through' : 'text-gray-800'}`}>
+                           {task}
+                         </p>
+                       </div>
+                     </div>
+                   );
+                 })}
               </div>
               
               {/* Lisää oma tehtävä */}
