@@ -1,21 +1,94 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { ExternalLink, AlertTriangle, Info, ChevronDown, ChevronUp } from 'lucide-react'
+import { ExternalLink, AlertTriangle, Info, ChevronDown, ChevronUp, Edit, Trash2, Save, X } from 'lucide-react'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Label } from '@/components/ui/label'
 import { DogFood } from '@/services/dogFoodService'
 import { IngredientInfo } from './IngredientInfo'
+import { supabase } from '@/integrations/supabase/client'
+
+// Component to show linked dosage images
+function LinkedDosageImages({ foodId }: { foodId: string }) {
+  const [dosageImages, setDosageImages] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchLinkedImages = async () => {
+      try {
+        const { data } = await supabase
+          .from('dosage_images')
+          .select('*')
+          .eq('dog_food_id', foodId)
+          .order('created_at', { ascending: false })
+
+        setDosageImages(data || [])
+      } catch (error) {
+        console.error('Error fetching linked dosage images:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    if (foodId) {
+      fetchLinkedImages()
+    }
+  }, [foodId])
+
+  if (loading || dosageImages.length === 0) return null
+
+  return (
+    <div className="mt-3 p-3 bg-blue-50 rounded-lg">
+      <h4 className="text-sm font-medium mb-2 text-blue-800">Linkitetyt annostelukuvat:</h4>
+      <div className="space-y-2">
+        {dosageImages.map((image) => (
+          <div key={image.id} className="flex items-center justify-between text-sm">
+            <span className="text-blue-700">{image.title}</span>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => {
+                // Scroll to dosage images tab and show this image
+                const dosageTab = document.querySelector('[data-value="dosage-images"]') as HTMLElement
+                if (dosageTab) {
+                  dosageTab.click()
+                  setTimeout(() => {
+                    const imageCard = document.querySelector(`[data-image-id="${image.id}"]`)
+                    if (imageCard) {
+                      imageCard.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                    }
+                  }, 100)
+                }
+              }}
+              className="text-xs h-7"
+            >
+              Näytä kuva
+            </Button>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
 
 interface FoodCardProps {
   food: DogFood
   onSelect?: (food: DogFood) => void
   isSelected?: boolean
   showDetails?: boolean
+  isAdmin?: boolean
+  onEdit?: (food: DogFood) => void
+  onDelete?: (id: string) => void
+  onUpdate?: (food: DogFood) => void
+  editingFood?: DogFood | null
 }
 
-export function FoodCard({ food, onSelect, isSelected = false, showDetails = false }: FoodCardProps) {
+export function FoodCard({ food, onSelect, isSelected = false, showDetails = false, isAdmin = false, onEdit, onDelete, onUpdate, editingFood }: FoodCardProps) {
   const [showDosageTable, setShowDosageTable] = useState(false)
   
   // Check if food has detailed ingredient/nutrition data
@@ -108,13 +181,100 @@ export function FoodCard({ food, onSelect, isSelected = false, showDetails = fal
   }
 
   const warning = getDosageWarning()
+  const isEditing = editingFood?.id === food.id
 
   return (
     <Card className={`${isSelected ? 'border-primary bg-primary/5' : ''} transition-colors`}>
       <CardHeader>
         <div className="flex justify-between items-start">
           <div className="flex-1">
-            <CardTitle className="text-lg mb-2">{food.name}</CardTitle>
+            {isEditing ? (
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  <div>
+                    <Label>Tuotteen nimi</Label>
+                    <Input
+                      value={editingFood.name}
+                      onChange={(e) => onEdit?.({ ...editingFood, name: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <Label>Valmistaja</Label>
+                    <Input
+                      value={editingFood.manufacturer}
+                      onChange={(e) => onEdit?.({ ...editingFood, manufacturer: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <Label>Tuotekoodi</Label>
+                    <Input
+                      value={editingFood.product_code}
+                      onChange={(e) => onEdit?.({ ...editingFood, product_code: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <Label>Ruokatyyppi</Label>
+                    <Select value={editingFood.food_type} onValueChange={(value) => onEdit?.({ ...editingFood, food_type: value as any })}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Kuiva">Kuiva</SelectItem>
+                        <SelectItem value="Märkä">Märkä</SelectItem>
+                        <SelectItem value="Raaka">Raaka</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label>Ravitsemustyyppi</Label>
+                    <Select value={editingFood.nutrition_type} onValueChange={(value) => onEdit?.({ ...editingFood, nutrition_type: value as any })}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Täysravinto">Täysravinto</SelectItem>
+                        <SelectItem value="Täydennysravinto">Täydennysravinto</SelectItem>
+                        <SelectItem value="Täysravinto/Täydennysravinto">Täysravinto/Täydennysravinto</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label>Annostelumenetelmä</Label>
+                    <Select value={editingFood.dosage_method} onValueChange={(value) => onEdit?.({ ...editingFood, dosage_method: value as any })}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Odotettu_Aikuispaino_Ja_Ikä">Odotettu aikuispaino + ikä</SelectItem>
+                        <SelectItem value="Nykyinen_Paino">Nykyinen paino</SelectItem>
+                        <SelectItem value="Prosentti_Nykyisestä_Painosta">Prosentti nykyisestä painosta</SelectItem>
+                        <SelectItem value="Kokoluokka">Kokoluokka</SelectItem>
+                        <SelectItem value="Ei_Tietoa">Ei tietoa</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="lg:col-span-2">
+                    <Label>Huomiot</Label>
+                    <Textarea
+                      value={editingFood.notes || ''}
+                      onChange={(e) => onEdit?.({ ...editingFood, notes: e.target.value })}
+                    />
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <Button size="sm" onClick={() => onUpdate?.(editingFood)}>
+                    <Save className="h-4 w-4 mr-1" />
+                    Tallenna
+                  </Button>
+                  <Button size="sm" variant="outline" onClick={() => onEdit?.(null as any)}>
+                    <X className="h-4 w-4 mr-1" />
+                    Peruuta
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <>
+                <CardTitle className="text-lg mb-2">{food.name}</CardTitle>
             <div className="flex flex-wrap gap-2 mb-2">
               <Badge variant="outline">{food.manufacturer}</Badge>
               <Badge variant="secondary">{food.food_type}</Badge>
@@ -201,18 +361,44 @@ export function FoodCard({ food, onSelect, isSelected = false, showDetails = fal
                 </div>
               )}
             </div>
+
+            {/* Linked dosage images indicator */}
+            <LinkedDosageImages foodId={food.id} />
+            </>
+            )}
           </div>
           
-          {onSelect && (
-            <Button
-              variant={isSelected ? "default" : "outline"}
-              size="sm"
-              onClick={() => onSelect(food)}
-              className="ml-4"
-            >
-              {isSelected ? 'Valittu' : 'Valitse'}
-            </Button>
-          )}
+          <div className="flex gap-2 ml-4">
+            {onSelect && !isEditing && (
+              <Button
+                variant={isSelected ? "default" : "outline"}
+                size="sm"
+                onClick={() => onSelect(food)}
+              >
+                {isSelected ? 'Valittu' : 'Valitse'}
+              </Button>
+            )}
+            
+            {isAdmin && !isEditing && (
+              <>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => onEdit?.(food)}
+                >
+                  <Edit className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => onDelete?.(food.id)}
+                  className="text-destructive hover:text-destructive"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </>
+            )}
+          </div>
         </div>
       </CardHeader>
 

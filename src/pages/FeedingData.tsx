@@ -51,6 +51,18 @@ export default function FeedingData() {
     dosage_method: 'Nykyinen_Paino',
     notes: ''
   })
+  const [currentUser, setCurrentUser] = useState<any>(null)
+
+  useEffect(() => {
+    // Check current user for admin privileges
+    const checkUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      setCurrentUser(user)
+    }
+    checkUser()
+  }, [])
+
+  const isAdmin = currentUser?.email === 'nissenemj@gmail.com'
 
   const loadDogFoods = async () => {
     try {
@@ -534,9 +546,14 @@ export default function FeedingData() {
         <div className="grid gap-6">
           {filteredFoods.map((food) => (
             <div key={food.id}>
-              <FoodCard
+                <FoodCard
                 food={food}
                 showDetails={showDetails.includes(food.id)}
+                isAdmin={isAdmin}
+                onEdit={isAdmin ? setEditingFood : undefined}
+                onDelete={isAdmin ? deleteFood : undefined}
+                onUpdate={isAdmin ? updateFood : undefined}
+                editingFood={editingFood}
               />
               
               <div className="flex justify-center mt-4 mb-6">

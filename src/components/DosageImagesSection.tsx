@@ -8,8 +8,45 @@ import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Plus, Upload, Trash2, Eye, Save, X } from 'lucide-react'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { supabase } from '@/integrations/supabase/client'
 import { useToast } from '@/hooks/use-toast'
+import { Badge } from '@/components/ui/badge'
+
+// Component to show linked food info
+function LinkedFoodInfo({ foodId }: { foodId: string }) {
+  const [foodInfo, setFoodInfo] = useState<any>(null)
+
+  useEffect(() => {
+    const fetchFoodInfo = async () => {
+      try {
+        const { data } = await supabase
+          .from('dog_foods')
+          .select('name, manufacturer')
+          .eq('id', foodId)
+          .single()
+
+        setFoodInfo(data)
+      } catch (error) {
+        console.error('Error fetching food info:', error)
+      }
+    }
+
+    if (foodId) {
+      fetchFoodInfo()
+    }
+  }, [foodId])
+
+  if (!foodInfo) return null
+
+  return (
+    <div className="flex items-center gap-1 mt-1">
+      <Badge variant="outline" className="text-xs bg-green-50">
+        🔗 {foodInfo.manufacturer} - {foodInfo.name}
+      </Badge>
+    </div>
+  )
+}
 
 interface DosageTableRow {
   id?: string
@@ -26,6 +63,7 @@ interface DosageImage {
   description?: string
   image_path: string
   food_brand?: string
+  dog_food_id?: string
   created_at: string
   table_data?: DosageTableRow[]
 }
@@ -38,17 +76,35 @@ export default function DosageImagesSection() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
   const [editingTableId, setEditingTableId] = useState<string | null>(null)
   const [tableRows, setTableRows] = useState<DosageTableRow[]>([])
+  const [dogFoods, setDogFoods] = useState<any[]>([])
   const [newImage, setNewImage] = useState({
     title: '',
     description: '',
     food_brand: '',
+    dog_food_id: '',
     file: null as File | null
   })
   const { toast } = useToast()
 
   useEffect(() => {
     fetchDosageImages()
+    fetchDogFoods()
   }, [])
+
+  const fetchDogFoods = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('dog_foods')
+        .select('id, name, manufacturer')
+        .order('manufacturer', { ascending: true })
+        .order('name', { ascending: true })
+
+      if (error) throw error
+      setDogFoods(data || [])
+    } catch (error) {
+      console.error('Error fetching dog foods:', error)
+    }
+  }
 
   const fetchDosageImages = async () => {
     try {
@@ -125,6 +181,7 @@ export default function DosageImagesSection() {
           title: newImage.title,
           description: newImage.description || null,
           food_brand: newImage.food_brand || null,
+          dog_food_id: newImage.dog_food_id || null,
           image_path: fileName
         })
 
@@ -135,7 +192,7 @@ export default function DosageImagesSection() {
         description: "Annostelukuva tallennettiin onnistuneesti"
       })
 
-      setNewImage({ title: '', description: '', food_brand: '', file: null })
+      setNewImage({ title: '', description: '', food_brand: '', dog_food_id: '', file: null })
       setIsDialogOpen(false)
       fetchDosageImages()
     } catch (error) {
@@ -290,6 +347,21 @@ export default function DosageImagesSection() {
                   />
                 </div>
                 <div>
+                  <Label htmlFor="dog_food_id">Linkitä ruokaan</Label>
+                  <Select value={newImage.dog_food_id} onValueChange={(value) => setNewImage(prev => ({ ...prev, dog_food_id: value }))}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Valitse ruoka (valinnainen)" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {dogFoods.map((food) => (
+                        <SelectItem key={food.id} value={food.id}>
+                          {food.manufacturer} - {food.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
                   <Label htmlFor="food_brand">Ruokamerkki</Label>
                   <Input
                     id="food_brand"
@@ -334,13 +406,16 @@ export default function DosageImagesSection() {
         ) : (
           <div className="space-y-6">
             {dosageImages.map((image) => (
-              <Card key={image.id} className="overflow-hidden">
+              <Card key={image.id} className="overflow-hidden" data-image-id={image.id}>
                 <CardHeader>
                   <div className="flex justify-between items-start">
                     <div>
                       <h3 className="font-semibold text-lg">{image.title}</h3>
                       {image.food_brand && (
                         <p className="text-sm text-muted-foreground">{image.food_brand}</p>
+                      )}
+                      {image.dog_food_id && (
+                        <LinkedFoodInfo foodId={image.dog_food_id} />
                       )}
                       {image.description && (
                         <p className="text-sm text-muted-foreground mt-1">{image.description}</p>
