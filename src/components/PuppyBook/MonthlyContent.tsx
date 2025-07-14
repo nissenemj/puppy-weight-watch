@@ -15,6 +15,9 @@ import {
 } from 'lucide-react';
 import { calculatePuppyAge, getAgeAppropriateMilestones } from '@/utils/puppyAge';
 import { AddHealthRecordDialog } from './AddHealthRecordDialog';
+import { ImageUploader } from './ImageUploader';
+import { LocationSelector } from './LocationSelector';
+import { TimePicker } from './TimePicker';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
@@ -64,11 +67,32 @@ interface SocialEvent {
   photos?: string[];
 }
 
+interface LocationData {
+  name: string;
+  coordinates?: {
+    lat: number;
+    lng: number;
+  };
+}
+
+interface EntryData {
+  images: string[];
+  location?: LocationData;
+  time?: string;
+  notes: string;
+}
+
 const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, birthDate }) => {
   const [activeTab, setActiveTab] = useState<'milestones' | 'health' | 'social'>('milestones');
   const [customTasks, setCustomTasks] = useState<{ [key: number]: string[] }>({});
   const [newTaskInput, setNewTaskInput] = useState('');
   const [userHealthRecords, setUserHealthRecords] = useState<DatabaseHealthRecord[]>([]);
+  
+  // State for managing entry data for each milestone/health/social item
+  const [milestoneEntries, setMilestoneEntries] = useState<{ [key: string]: EntryData }>({});
+  const [healthEntries, setHealthEntries] = useState<{ [key: string]: EntryData }>({});
+  const [socialEntries, setSocialEntries] = useState<{ [key: string]: EntryData }>({});
+  
   const { toast } = useToast();
   
   // Calculate current age if birth date is available
@@ -265,6 +289,43 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
     }
   };
 
+  // Helper functions for managing entry data
+  const updateMilestoneEntry = (milestoneId: string, field: keyof EntryData, value: any) => {
+    setMilestoneEntries(prev => ({
+      ...prev,
+      [milestoneId]: {
+        ...prev[milestoneId] || { images: [], notes: '' },
+        [field]: value
+      }
+    }));
+  };
+
+  const updateHealthEntry = (healthId: string, field: keyof EntryData, value: any) => {
+    setHealthEntries(prev => ({
+      ...prev,
+      [healthId]: {
+        ...prev[healthId] || { images: [], notes: '' },
+        [field]: value
+      }
+    }));
+  };
+
+  const updateSocialEntry = (socialId: string, field: keyof EntryData, value: any) => {
+    setSocialEntries(prev => ({
+      ...prev,
+      [socialId]: {
+        ...prev[socialId] || { images: [], notes: '' },
+        [field]: value
+      }
+    }));
+  };
+
+  const getEntryData = (type: 'milestone' | 'health' | 'social', id: string): EntryData => {
+    const entries = type === 'milestone' ? milestoneEntries : 
+                   type === 'health' ? healthEntries : socialEntries;
+    return entries[id] || { images: [], notes: '' };
+  };
+
   const milestones = getMonthlyMilestones(monthNumber);
   const healthGuidelines = getHealthGuidelines(monthNumber);
 
@@ -365,16 +426,33 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
                     placeholder="Kirjoita muistiinpanoja tästä virstanpylväästä..."
                     className="w-full p-2 text-sm border border-orange-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300"
                     rows={2}
+                    value={getEntryData('milestone', milestone.id).notes}
+                    onChange={(e) => updateMilestoneEntry(milestone.id, 'notes', e.target.value)}
                   />
-                  <div className="mt-2 flex items-center gap-2">
-                    <button className="flex items-center gap-1 text-xs text-orange-600 hover:text-orange-700">
-                      <Camera className="w-3 h-3" />
-                      Lisää kuva
-                    </button>
-                    <button className="flex items-center gap-1 text-xs text-orange-600 hover:text-orange-700">
-                      <MapPin className="w-3 h-3" />
-                      Lisää sijainti
-                    </button>
+                  <div className="mt-2 space-y-2">
+                    <div className="flex items-center gap-4">
+                      <ImageUploader
+                        onImageAdded={(imageUrl) => {
+                          const currentImages = getEntryData('milestone', milestone.id).images;
+                          updateMilestoneEntry(milestone.id, 'images', [...currentImages, imageUrl]);
+                        }}
+                        images={getEntryData('milestone', milestone.id).images}
+                        onImageRemoved={(imageUrl) => {
+                          const currentImages = getEntryData('milestone', milestone.id).images;
+                          updateMilestoneEntry(milestone.id, 'images', currentImages.filter(img => img !== imageUrl));
+                        }}
+                      />
+                      <LocationSelector
+                        onLocationAdded={(location) => updateMilestoneEntry(milestone.id, 'location', location)}
+                        location={getEntryData('milestone', milestone.id).location}
+                        onLocationRemoved={() => updateMilestoneEntry(milestone.id, 'location', undefined)}
+                      />
+                      <TimePicker
+                        onTimeAdded={(time) => updateMilestoneEntry(milestone.id, 'time', time)}
+                        time={getEntryData('milestone', milestone.id).time}
+                        onTimeRemoved={() => updateMilestoneEntry(milestone.id, 'time', undefined)}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -454,12 +532,46 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
                             <p className="text-sm text-gray-600">{record.notes}</p>
                           )}
                         </div>
-                        <Button variant="ghost" size="sm">
-                          <Edit className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
+                         <Button variant="ghost" size="sm">
+                           <Edit className="w-4 h-4" />
+                         </Button>
+                       </div>
+                       <div className="mt-3 pt-3 border-t border-green-200">
+                         <textarea
+                           placeholder="Lisää muistiinpanoja..."
+                           className="w-full p-2 text-sm border border-green-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-300"
+                           rows={2}
+                           value={getEntryData('health', record.id).notes}
+                           onChange={(e) => updateHealthEntry(record.id, 'notes', e.target.value)}
+                         />
+                         <div className="mt-2 space-y-2">
+                           <div className="flex items-center gap-4">
+                             <ImageUploader
+                               onImageAdded={(imageUrl) => {
+                                 const currentImages = getEntryData('health', record.id).images;
+                                 updateHealthEntry(record.id, 'images', [...currentImages, imageUrl]);
+                               }}
+                               images={getEntryData('health', record.id).images}
+                               onImageRemoved={(imageUrl) => {
+                                 const currentImages = getEntryData('health', record.id).images;
+                                 updateHealthEntry(record.id, 'images', currentImages.filter(img => img !== imageUrl));
+                               }}
+                             />
+                             <LocationSelector
+                               onLocationAdded={(location) => updateHealthEntry(record.id, 'location', location)}
+                               location={getEntryData('health', record.id).location}
+                               onLocationRemoved={() => updateHealthEntry(record.id, 'location', undefined)}
+                             />
+                             <TimePicker
+                               onTimeAdded={(time) => updateHealthEntry(record.id, 'time', time)}
+                               time={getEntryData('health', record.id).time}
+                               onTimeRemoved={() => updateHealthEntry(record.id, 'time', undefined)}
+                             />
+                           </div>
+                         </div>
+                       </div>
+                     </CardContent>
+                   </Card>
                 ))}
               </div>
             )}
@@ -590,16 +702,33 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
                 placeholder="Kirjoita tähän kuukauden sosiaalistamiskokemuksia: Kenen kanssa pentu leikki? Mitkä tilanteet menivät hyvin? Mihin tarvitaan vielä harjoitusta?"
                 className="w-full p-3 text-sm border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-300"
                 rows={4}
+                value={getEntryData('social', `month-${monthNumber}`).notes}
+                onChange={(e) => updateSocialEntry(`month-${monthNumber}`, 'notes', e.target.value)}
               />
-              <div className="mt-3 flex gap-2">
-                <button className="flex items-center gap-1 text-xs text-pink-600 hover:text-pink-700 bg-pink-100 px-3 py-1 rounded-full">
-                  <Camera className="w-3 h-3" />
-                  Lisää kuvia
-                </button>
-                <button className="flex items-center gap-1 text-xs text-pink-600 hover:text-pink-700 bg-pink-100 px-3 py-1 rounded-full">
-                  <Heart className="w-3 h-3" />
-                  Merkitse suosikki
-                </button>
+              <div className="mt-3 space-y-2">
+                <div className="flex items-center gap-4">
+                  <ImageUploader
+                    onImageAdded={(imageUrl) => {
+                      const currentImages = getEntryData('social', `month-${monthNumber}`).images;
+                      updateSocialEntry(`month-${monthNumber}`, 'images', [...currentImages, imageUrl]);
+                    }}
+                    images={getEntryData('social', `month-${monthNumber}`).images}
+                    onImageRemoved={(imageUrl) => {
+                      const currentImages = getEntryData('social', `month-${monthNumber}`).images;
+                      updateSocialEntry(`month-${monthNumber}`, 'images', currentImages.filter(img => img !== imageUrl));
+                    }}
+                  />
+                  <LocationSelector
+                    onLocationAdded={(location) => updateSocialEntry(`month-${monthNumber}`, 'location', location)}
+                    location={getEntryData('social', `month-${monthNumber}`).location}
+                    onLocationRemoved={() => updateSocialEntry(`month-${monthNumber}`, 'location', undefined)}
+                  />
+                  <TimePicker
+                    onTimeAdded={(time) => updateSocialEntry(`month-${monthNumber}`, 'time', time)}
+                    time={getEntryData('social', `month-${monthNumber}`).time}
+                    onTimeRemoved={() => updateSocialEntry(`month-${monthNumber}`, 'time', undefined)}
+                  />
+                </div>
               </div>
             </div>
 
