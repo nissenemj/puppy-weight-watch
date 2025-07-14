@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Calendar, 
@@ -12,10 +12,12 @@ import {
   MapPin,
   Plus
 } from 'lucide-react';
+import { calculatePuppyAge, getAgeAppropriateMilestones } from '@/utils/puppyAge';
 
 interface MonthlyContentProps {
   monthNumber: number;
   bookId: string;
+  birthDate?: string;
 }
 
 interface MilestoneItem {
@@ -41,10 +43,14 @@ interface SocialEvent {
   photos?: string[];
 }
 
-const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId }) => {
+const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, birthDate }) => {
   const [activeTab, setActiveTab] = useState<'milestones' | 'health' | 'social'>('milestones');
   const [customTasks, setCustomTasks] = useState<{ [key: number]: string[] }>({});
   const [newTaskInput, setNewTaskInput] = useState('');
+  
+  // Calculate current age if birth date is available
+  const puppyAge = birthDate ? calculatePuppyAge(birthDate) : null;
+  const currentWeeks = puppyAge?.weeks || 0;
   
   // Kuukausikohtaiset virstanpylväät
   const getMonthlyMilestones = (month: number): MilestoneItem[] => {
@@ -93,44 +99,67 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId }) 
   };
 
   const getSocializationTasks = (month: number): string[] => {
-    const tasksByMonth = {
-      0: [
-        "Esittele perheenjäseniä (aikuiset, lapset)",
-        "Totuta ääniä (ovikello, TV, imuri)",
-        "Lyhyitä kantokävelyjä turvallisilla alueilla",
-        "Tapaa 1-2 uutta ihmistä viikossa",
-        "Käytä nameja positiiviseen assosiaatioon"
-      ],
-      1: [
-        "Ensimmäiset kävelyt taluttimessa (rokotusten jälkeen)",
-        "Tapaa rauhallisia aikuisia koiria",
-        "Totuta liikenneääniä, autoja, pyöriä",
-        "Osallistu pentukursseille (1-2 kertaa/vko)",
-        "Kohtaa erilaisia ihmisiä (miehet, naiset, lapset)"
-      ],
-      2: [
-        "Vie kauppoihin (lemmikkiystävällisiin)",
-        "Autolla ajelu",
-        "Totuta erilaisiin pintoihin (ruoho, hiekka, lumi)",
-        "Järjestä leikkitreffejä samanikäisten kanssa",
-        "Esittele eläimiä (kissat, linnut) etäältä"
-      ],
-      3: [
-        "Käy julkisilla paikoilla (kahvilat, markkinat)",
-        "Totuta yksinoloon (lyhyet ajat)",
-        "Jatka koiratapaamisia, opeta rajat",
-        "Harjoittele erilaisia ääniä (ukkonen, ilmahälyttimet)",
-        "Osallistu harrastuksiin (agility, tottelevaisuus)"
-      ]
+    // Age-based socialization tasks (more accurate than month-based)
+    const getTasksByWeeks = (weeks: number): string[] => {
+      if (weeks < 8) {
+        return [
+          "Esittele perheenjäseniä (aikuiset, lapset)",
+          "Totuta kotiääniä (ovikello, TV, imuri)",
+          "Lyhyitä kantokävelyjä turvallisilla alueilla",
+          "Totuta erilaisiin pintoihin (matto, parketti, kylpy)",
+          "Käytä nameja positiiviseen assosiaatioon"
+        ];
+      } else if (weeks < 12) {
+        return [
+          "Ensimmäiset kävelyt taluttimessa (rokotusten jälkeen)",
+          "Tapaa rauhallisia aikuisia koiria",
+          "Totuta liikenneääniä, autoja, pyöriä",
+          "Tapaa 2-3 uutta ihmistä viikossa",
+          "Harjoittele peruskomentoja (istu, tule)"
+        ];
+      } else if (weeks < 16) {
+        return [
+          "Osallistu pentukursseille (1-2 kertaa/vko)",
+          "Kohtaa erilaisia ihmisiä (miehet, naiset, lapset)",
+          "Vie kauppoihin (lemmikkiystävällisiin)",
+          "Totuta erilaisiin pintoihin (ruoho, hiekka, lumi)",
+          "Harjoittele hihnakävelyä"
+        ];
+      } else if (weeks < 20) {
+        return [
+          "Järjestä leikkitreffejä samanikäisten kanssa",
+          "Esittele eläimiä (kissat, linnut) etäältä",
+          "Autolla ajelu lyhyitä matkoja",
+          "Käy julkisilla paikoilla (kahvilat, markkinat)",
+          "Harjoittele yksinoloa (5-15 min)"
+        ];
+      } else {
+        return [
+          "Totuta yksinoloon (30-60 min)",
+          "Jatka koiratapaamisia, opeta rajat",
+          "Harjoittele erilaisia ääniä (ukkonen, ilmahälyttimet)",
+          "Osallistu harrastuksiin (agility, tottelevaisuus)",
+          "Syventämisharjoitukset (haku, noutaminen)"
+        ];
+      }
     };
 
-    const baseTasks = tasksByMonth[month as keyof typeof tasksByMonth] || [
-      "Jatka sosiaalistamista uusissa ympäristöissä",
-      "Säännölliset kohtaamiset muiden koirien kanssa",
-      "Harjoittele erilaisia tilanteita"
-    ];
+    // Use age-based tasks if birth date is available, otherwise use month-based
+    let baseTasks: string[];
+    if (birthDate && currentWeeks > 0) {
+      baseTasks = getTasksByWeeks(currentWeeks);
+    } else {
+      // Fallback to month-based tasks
+      const tasksByMonth = {
+        0: getTasksByWeeks(6),  // ~6 weeks average
+        1: getTasksByWeeks(10), // ~10 weeks average
+        2: getTasksByWeeks(14), // ~14 weeks average
+        3: getTasksByWeeks(18)  // ~18 weeks average
+      };
+      baseTasks = tasksByMonth[month as keyof typeof tasksByMonth] || getTasksByWeeks(20);
+    }
     
-    // Lisää mukautetut tehtävät
+    // Add custom tasks
     const monthCustomTasks = customTasks[month] || [];
     return [...baseTasks, ...monthCustomTasks];
   };
@@ -157,12 +186,22 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId }) 
       >
         <h2 className="text-3xl font-sans font-bold text-gray-800 mb-2 flex items-center gap-3">
           {monthNumber === 0 ? 'Syntymä - 1 kuukausi' : `${monthNumber}. kuukausi`} 🐶
+          {puppyAge && (
+            <span className="text-sm font-normal text-orange-600 bg-orange-100 px-3 py-1 rounded-full">
+              Ikä: {puppyAge.ageString}
+            </span>
+          )}
         </h2>
         <p className="text-gray-600">
           {monthNumber === 0 && "Pennun elämä alkaa - ensimmäiset viikot ovat täynnä kasvua ja oppimista"}
           {monthNumber === 1 && "Aktiivinen kasvu ja ensimmäiset sosiaaliset kokemukset"}
           {monthNumber === 2 && "Sosiaalistaminen ja peruskomentoja"}
           {monthNumber === 3 && "Itsenäistyminen ja hihnakävely"}
+          {puppyAge && currentWeeks > 0 && (
+            <span className="block text-sm text-green-600 font-medium mt-1">
+              Pentu on {currentWeeks} viikon ikäinen - täydellinen ikä näille aktiviteeteille! ✨
+            </span>
+          )}
         </p>
       </motion.div>
 

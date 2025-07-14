@@ -5,12 +5,14 @@ import MonthlyContent from './MonthlyContent';
 
 interface MonthlyTrackerProps {
   bookId: string;
+  birthDate?: string;
   selectedMonth: number;
   onMonthChange: (month: number) => void;
 }
 
 const MonthlyTracker: React.FC<MonthlyTrackerProps> = ({ 
   bookId, 
+  birthDate,
   selectedMonth, 
   onMonthChange 
 }) => {
@@ -70,7 +72,7 @@ const MonthlyTracker: React.FC<MonthlyTrackerProps> = ({
       </div>
 
       {/* Monthly Content */}
-      <MonthlyContent monthNumber={selectedMonth} bookId={bookId} />
+      <MonthlyContent monthNumber={selectedMonth} bookId={bookId} birthDate={birthDate} />
     </div>
   );
 };

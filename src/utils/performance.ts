@@ -70,11 +70,19 @@ export const lazyLoad = <T extends React.ComponentType<any>>(
 ) => {
   const LazyComponent = React.lazy(importFn);
   
-  return (props: React.ComponentProps<T>) => (
-    <React.Suspense fallback={fallback ? <fallback /> : <div>Loading...</div>}>
-      <LazyComponent {...props} />
-    </React.Suspense>
-  );
+  const WrappedComponent = (props: any) => {
+    const fallbackComponent = fallback 
+      ? React.createElement(fallback) 
+      : React.createElement('div', { children: 'Loading...' });
+    
+    return React.createElement(
+      React.Suspense,
+      { fallback: fallbackComponent },
+      React.createElement(LazyComponent, props)
+    );
+  };
+  
+  return WrappedComponent as T;
 };
 
 // Intersection Observer utility for lazy loading

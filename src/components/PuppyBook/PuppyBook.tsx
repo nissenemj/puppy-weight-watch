@@ -29,6 +29,7 @@ import happyPuppy from '@/assets/happy-puppy.png';
 import pawPrints from '@/assets/paw-prints.png';
 import puppyBookIcon from '@/assets/puppy-book-icon.png';
 import welcomeIllustration from '@/assets/welcome-illustration.png';
+import { calculatePuppyAge, getMonthNumberFromAge, getDefaultBirthDate } from '@/utils/puppyAge';
 
 // Tyyppimäärittelyt
 interface PuppyBookData {
@@ -36,6 +37,7 @@ interface PuppyBookData {
   puppy_id?: string;
   owner_id: string;
   title: string;
+  birth_date?: string;
   cover_image_url?: string;
   theme: any;
   privacy_settings: any;
@@ -149,7 +151,7 @@ const PuppyBook: React.FC = () => {
     }
   };
 
-  const createBook = async (title: string) => {
+  const createBook = async (title: string, birthDate?: string) => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
@@ -160,6 +162,7 @@ const PuppyBook: React.FC = () => {
           {
             owner_id: user.id,
             title: title || 'Pennun elämäntarina',
+            birth_date: birthDate || getDefaultBirthDate(),
             theme: {
               colorScheme: 'warm',
               fontFamily: 'sans-serif'
@@ -266,6 +269,7 @@ const PuppyBook: React.FC = () => {
             >
               <MonthlyTracker 
                 bookId={book.id}
+                birthDate={book.birth_date}
                 selectedMonth={selectedMonth}
                 onMonthChange={setSelectedMonth}
               />
@@ -346,14 +350,15 @@ const PuppyBookSkeleton: React.FC = () => {
 
 // Kirjan luomisprompt
 const CreateBookPrompt: React.FC<{
-  onBookCreated: (title: string) => void;
+  onBookCreated: (title: string, birthDate?: string) => void;
 }> = ({ onBookCreated }) => {
   const [title, setTitle] = useState('');
+  const [birthDate, setBirthDate] = useState(getDefaultBirthDate());
   const [isCreating, setIsCreating] = useState(false);
 
   const handleCreateBook = async () => {
     setIsCreating(true);
-    await onBookCreated(title);
+    await onBookCreated(title, birthDate);
     setIsCreating(false);
   };
 
@@ -433,7 +438,7 @@ const CreateBookPrompt: React.FC<{
           Aloita pennun ainutlaatuisen elämäntarinan tallentaminen ✨
         </motion.p>
 
-        <div className="mb-6">
+        <div className="mb-6 space-y-4">
           <input
             type="text"
             placeholder="Kirjan nimi (esim. Rexin elämäntarina)"
@@ -441,6 +446,20 @@ const CreateBookPrompt: React.FC<{
             onChange={(e) => setTitle(e.target.value)}
             className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
           />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Pennun syntymäpäivä 🎂
+            </label>
+            <input
+              type="date"
+              value={birthDate}
+              onChange={(e) => setBirthDate(e.target.value)}
+              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Syntymäpäivän perusteella järjestelmä ehdottaa iänmukaisia aktiviteetteja ja virstanpylväitä
+            </p>
+          </div>
         </div>
 
         <motion.button
