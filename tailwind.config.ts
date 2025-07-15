@@ -71,6 +71,8 @@ export default {
 				// Pentu-themed colors 2025
 				'primary-glow': 'hsl(var(--primary-glow))',
 				'accent-light': 'hsl(var(--accent-light))',
+				'cute-green': '#4CAF50',
+				'fun-orange': '#FF9800',
 				
 				// Gradient colors for pentu theme
 				'gradient-green': 'hsl(var(--gradient-green))',
