@@ -178,7 +178,7 @@ Kaikki värit HSL-muodossa pet tech -trendien mukaisesti.
 
 @layer base {
   * {
-    @apply border-border;
+    border-color: hsl(var(--border));
     box-sizing: border-box;
   }
 
