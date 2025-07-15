@@ -410,9 +410,9 @@ export default function ModernPuppyWeightTracker() {
           <div className="flex items-center gap-3 sm:gap-4">
             <img src={appIcon} alt="Pentulaskuri" className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl sm:rounded-3xl shadow-lg animate-bounce-gentle" />
             <div>
-              <h1 className="text-2xl sm:text-4xl font-bold bg-gradient-warm bg-clip-text text-transparent">
-                Pentulaskuri
-              </h1>
+            <h1 className="text-2xl sm:text-4xl font-bold text-foreground">
+              Pentulaskuri
+            </h1>
               <p className="text-gray-600 text-sm sm:text-lg">Seuraa pentusi kasvua ja ruokintaa</p>
             </div>
           </div>
