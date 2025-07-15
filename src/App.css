@@ -1,42 +1,77 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
+body, html, .main-bg {
+  background: #eaf8e3;
+  min-height: 100vh;
+  font-family: 'Quicksand', 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 2rem;
+  background: #fff;
+  border-radius: 1rem 1rem 0 0;
+}
+.logo {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #f7b267;
+}
+nav a, nav button {
+  margin-left: 1rem;
+  text-decoration: none;
+  color: #4a7c59;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2rem 0;
+}
+.side-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.side-menu.right {
+  align-items: flex-end;
+}
+.hero-content {
+  text-align: center;
+  margin: 0 2rem;
+}
+.hero-dog {
+  width: 200px;
+  margin-bottom: 1rem;
+}
+.info-grid {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin: 2rem 0;
+}
+.info-card {
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px #0001;
+  padding: 2rem;
+  min-width: 150px;
   text-align: center;
 }
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+.dogs-bottom {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin: 2rem 0 0 0;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+.dogs-bottom img {
+  width: 150px;
 }
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+.info-grid.bottom {
+  margin-top: 0;
 }
