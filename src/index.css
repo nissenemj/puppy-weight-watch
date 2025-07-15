@@ -1,3 +1,4 @@
+
 /* Preload critical fonts for better performance */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Dancing+Script:wght@400;700&family=Playfair+Display:wght@400;600;700&display=swap');
 
@@ -188,7 +189,9 @@ Kaikki värit HSL-muodossa pet tech -trendien mukaisesti.
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: 'Open Sans', system-ui, -apple-system, sans-serif;
     /* Improved mobile typography */
     font-size: 16px; /* Prevent zoom on iOS */
     line-height: 1.5;
@@ -455,7 +458,8 @@ Kaikki värit HSL-muodossa pet tech -trendien mukaisesti.
 
   /* Pentu-themed Typography System 2025 */
   h1, h2, h3, h4, h5, h6 {
-    @apply font-heading;
+    font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+    font-weight: 600; /* Leikkisä ja moderni */
   }
 
   .font-heading {
@@ -523,11 +527,17 @@ Kaikki värit HSL-muodossa pet tech -trendien mukaisesti.
   }
 
   .nav-tab-active {
-    @apply text-orange-600 border-b-2 border-orange-600 bg-orange-50;
+    color: hsl(var(--accent));
+    border-bottom: 2px solid hsl(var(--accent));
+    background-color: hsl(var(--accent) / 0.1);
   }
 
   .nav-tab-inactive {
-    @apply text-gray-600 hover:text-orange-500;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .nav-tab-inactive:hover {
+    color: hsl(var(--accent));
   }
 
   /* Hienovaraiset gradientit taustoille */
@@ -561,21 +571,51 @@ Kaikki värit HSL-muodossa pet tech -trendien mukaisesti.
 
   /* Mobile-first image handling */
   img {
-    @apply max-w-full h-auto;
+    max-width: 100%;
+    height: auto;
   }
 
   /* UI Parannukset 2025 - Visuaalisen hierarkian parantaminen */
   .primary-action {
-    @apply text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300;
+    color: white;
+    padding: 2rem 2rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transform: translateY(0);
+    transition: all 0.3s ease;
     background: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--primary)));
   }
 
+  .primary-action:hover {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    transform: translateY(-0.25rem);
+  }
+
   .secondary-action {
-    @apply bg-white text-accent border-2 border-accent/20 px-6 py-3 rounded-lg font-medium hover:bg-accent/5 transition-colors;
+    background-color: white;
+    color: hsl(var(--accent));
+    border: 2px solid hsl(var(--accent) / 0.2);
+    padding: 1.5rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: colors 0.2s ease;
+  }
+
+  .secondary-action:hover {
+    background-color: hsl(var(--accent) / 0.05);
   }
 
   .card-elevated {
-    @apply bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100;
+    background-color: white;
+    border-radius: 1rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    border: 1px solid hsl(var(--border));
+    transition: box-shadow 0.3s ease;
+  }
+
+  .card-elevated:hover {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   }
 
   /* Interaktiiviset navigaation parannukset - pentukirjalle */
