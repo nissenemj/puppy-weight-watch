@@ -172,7 +172,7 @@ const Index = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
               >
-                <span className="bg-gradient-warm bg-clip-text text-transparent">
+                <span className="text-foreground font-semibold">
                   Pentulaskuri
                 </span>
               </motion.h1>
