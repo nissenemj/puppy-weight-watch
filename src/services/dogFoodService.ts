@@ -599,4 +599,149 @@ export class DogFoodService {
       }
     }
   }
+
+  // Update enhanced food data
+  static async updateEnhancedFoodData(foodId: string, data: {
+    ingredients?: Array<FoodIngredient>,
+    allergens?: Array<FoodAllergen>,
+    nutrition?: FoodNutrition,
+    manufacturer_info?: FoodManufacturer
+  }): Promise<void> {
+    // Update/replace ingredients
+    if (data.ingredients !== undefined) {
+      // Delete existing ingredients
+      await supabase.from('food_ingredients').delete().eq('dog_food_id', foodId)
+      
+      // Insert new ingredients
+      if (data.ingredients.length > 0) {
+        const ingredientsWithFoodId = data.ingredients.map((ingredient, index) => ({
+          ingredient_type: ingredient.ingredient_type,
+          ingredient_name: ingredient.ingredient_name,
+          percentage: ingredient.percentage,
+          order_index: index,
+          dog_food_id: foodId
+        }))
+        
+        const { error } = await supabase
+          .from('food_ingredients')
+          .insert(ingredientsWithFoodId)
+        
+        if (error) throw error
+      }
+    }
+
+    // Update/replace allergens
+    if (data.allergens !== undefined) {
+      // Delete existing allergens
+      await supabase.from('food_allergens').delete().eq('dog_food_id', foodId)
+      
+      // Insert new allergens
+      if (data.allergens.length > 0) {
+        const allergensWithFoodId = data.allergens.map(allergen => ({
+          allergen_type: allergen.allergen_type,
+          allergen_name: allergen.allergen_name,
+          dog_food_id: foodId
+        }))
+        
+        const { error } = await supabase
+          .from('food_allergens')
+          .insert(allergensWithFoodId)
+        
+        if (error) throw error
+      }
+    }
+
+    // Update nutrition
+    if (data.nutrition !== undefined) {
+      // Check if nutrition exists
+      const { data: existing } = await supabase
+        .from('food_nutrition')
+        .select('id')
+        .eq('dog_food_id', foodId)
+        .single()
+
+      if (existing) {
+        // Update existing
+        const { error } = await supabase
+          .from('food_nutrition')
+          .update({
+            protein_percentage: data.nutrition.protein_percentage,
+            fat_percentage: data.nutrition.fat_percentage,
+            fiber_percentage: data.nutrition.fiber_percentage,
+            moisture_percentage: data.nutrition.moisture_percentage,
+            grain_free: data.nutrition.grain_free,
+            wheat_free: data.nutrition.wheat_free,
+            gluten_free: data.nutrition.gluten_free,
+            special_features: data.nutrition.special_features
+          })
+          .eq('dog_food_id', foodId)
+        
+        if (error) throw error
+      } else {
+        // Insert new
+        const { error } = await supabase
+          .from('food_nutrition')
+          .insert({
+            ...data.nutrition,
+            dog_food_id: foodId
+          })
+        
+        if (error) throw error
+      }
+    }
+
+    // Update manufacturer info
+    if (data.manufacturer_info !== undefined) {
+      // Check if manufacturer info exists
+      const { data: existing } = await supabase
+        .from('food_manufacturers')
+        .select('id')
+        .eq('dog_food_id', foodId)
+        .single()
+
+      if (existing) {
+        // Update existing
+        const { error } = await supabase
+          .from('food_manufacturers')
+          .update({
+            country_of_origin: data.manufacturer_info.country_of_origin,
+            website_url: data.manufacturer_info.website_url,
+            feeding_guide_url: data.manufacturer_info.feeding_guide_url
+          })
+          .eq('dog_food_id', foodId)
+        
+        if (error) throw error
+      } else {
+        // Insert new
+        const { error } = await supabase
+          .from('food_manufacturers')
+          .insert({
+            ...data.manufacturer_info,
+            dog_food_id: foodId
+          })
+        
+        if (error) throw error
+      }
+    }
+  }
+
+  // Delete ingredient
+  static async deleteIngredient(ingredientId: string): Promise<void> {
+    const { error } = await supabase
+      .from('food_ingredients')
+      .delete()
+      .eq('id', ingredientId)
+    
+    if (error) throw error
+  }
+
+  // Delete allergen
+  static async deleteAllergen(allergenId: string): Promise<void> {
+    const { error } = await supabase
+      .from('food_allergens')
+      .delete()
+      .eq('id', allergenId)
+    
+    if (error) throw error
+  }
 }

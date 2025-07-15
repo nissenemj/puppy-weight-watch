@@ -4,14 +4,20 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ExternalLink, AlertTriangle, Info, ChevronDown, ChevronUp, Edit, Trash2, Save, X } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
-import { DogFood } from '@/services/dogFoodService'
+import { DogFood, DogFoodService } from '@/services/dogFoodService'
 import { IngredientInfo } from './IngredientInfo'
+import { IngredientEditor } from './admin/IngredientEditor'
+import { AllergenEditor } from './admin/AllergenEditor'
+import { NutritionEditor } from './admin/NutritionEditor'
+import { ManufacturerEditor } from './admin/ManufacturerEditor'
 import { supabase } from '@/integrations/supabase/client'
+import { toast } from 'sonner'
 
 // Component to show linked dosage images
 function LinkedDosageImages({ foodId }: { foodId: string }) {
@@ -90,6 +96,8 @@ interface FoodCardProps {
 
 export function FoodCard({ food, onSelect, isSelected = false, showDetails = false, isAdmin = false, onEdit, onDelete, onUpdate, editingFood }: FoodCardProps) {
   const [showDosageTable, setShowDosageTable] = useState(false)
+  const [enhancedEditingFood, setEnhancedEditingFood] = useState<DogFood | null>(null)
+  const [savingEnhanced, setSavingEnhanced] = useState(false)
   
   // Check if food has detailed ingredient/nutrition data
   const hasDetailedData = Boolean(
@@ -182,6 +190,47 @@ export function FoodCard({ food, onSelect, isSelected = false, showDetails = fal
 
   const warning = getDosageWarning()
   const isEditing = editingFood?.id === food.id
+  const isEnhancedEditing = enhancedEditingFood?.id === food.id
+
+  const startEnhancedEdit = () => {
+    setEnhancedEditingFood({
+      ...food,
+      food_ingredients: food.food_ingredients || [],
+      allergens: food.allergens || [],
+      nutrition: food.nutrition || null,
+      manufacturer_info: food.manufacturer_info || null
+    })
+  }
+
+  const saveEnhancedEdit = async () => {
+    if (!enhancedEditingFood) return
+
+    try {
+      setSavingEnhanced(true)
+
+      // Update basic food data first
+      await onUpdate?.(enhancedEditingFood)
+
+      // Update enhanced data
+      await DogFoodService.updateEnhancedFoodData(enhancedEditingFood.id, {
+        ingredients: enhancedEditingFood.food_ingredients,
+        allergens: enhancedEditingFood.allergens,
+        nutrition: enhancedEditingFood.nutrition,
+        manufacturer_info: enhancedEditingFood.manufacturer_info
+      })
+
+      toast.success('Ruokatieto päivitetty onnistuneesti!')
+      setEnhancedEditingFood(null)
+      
+      // Reload data to show changes
+      window.location.reload()
+    } catch (error) {
+      console.error('Error saving enhanced food data:', error)
+      toast.error('Tietojen tallentaminen epäonnistui')
+    } finally {
+      setSavingEnhanced(false)
+    }
+  }
 
   return (
     <Card className={`${isSelected ? 'border-primary bg-primary/5' : ''} transition-colors`}>
@@ -379,14 +428,24 @@ export function FoodCard({ food, onSelect, isSelected = false, showDetails = fal
               </Button>
             )}
             
-            {isAdmin && !isEditing && (
+            {isAdmin && !isEditing && !isEnhancedEditing && (
               <>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => onEdit?.(food)}
+                  title="Muokkaa perustietoja"
                 >
                   <Edit className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={startEnhancedEdit}
+                  title="Muokkaa yksityiskohtaisia tietoja"
+                >
+                  <Edit className="h-4 w-4 mr-1" />
+                  Yksityiskohdat
                 </Button>
                 <Button
                   variant="ghost"
@@ -395,6 +454,28 @@ export function FoodCard({ food, onSelect, isSelected = false, showDetails = fal
                   className="text-destructive hover:text-destructive"
                 >
                   <Trash2 className="h-4 w-4" />
+                </Button>
+              </>
+            )}
+            
+            {isEnhancedEditing && (
+              <>
+                <Button
+                  size="sm"
+                  onClick={saveEnhancedEdit}
+                  disabled={savingEnhanced}
+                >
+                  <Save className="h-4 w-4 mr-1" />
+                  {savingEnhanced ? 'Tallennetaan...' : 'Tallenna'}
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setEnhancedEditingFood(null)}
+                  disabled={savingEnhanced}
+                >
+                  <X className="h-4 w-4 mr-1" />
+                  Peruuta
                 </Button>
               </>
             )}
@@ -486,6 +567,63 @@ export function FoodCard({ food, onSelect, isSelected = false, showDetails = fal
           )}
 
           {showDetails && <IngredientInfo food={food} />}
+        </CardContent>
+      )}
+
+      {/* Enhanced editing interface */}
+      {isEnhancedEditing && enhancedEditingFood && (
+        <CardContent className="border-t">
+          <div className="mb-4">
+            <h3 className="text-lg font-semibold">Muokkaa yksityiskohtaisia tietoja</h3>
+            <p className="text-sm text-muted-foreground">
+              Täydennä ruoan tiedot ainesosilla, allergeeneilla, ravitsemustiedoilla ja valmistajatiedoilla.
+            </p>
+          </div>
+
+          <Tabs defaultValue="ingredients" className="w-full">
+            <TabsList className="grid w-full grid-cols-4">
+              <TabsTrigger value="ingredients">Ainesosat</TabsTrigger>
+              <TabsTrigger value="allergens">Allergeenit</TabsTrigger>
+              <TabsTrigger value="nutrition">Ravitsemus</TabsTrigger>
+              <TabsTrigger value="manufacturer">Valmistaja</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="ingredients" className="mt-4">
+              <IngredientEditor
+                ingredients={enhancedEditingFood.food_ingredients || []}
+                onChange={(ingredients) => 
+                  setEnhancedEditingFood(prev => prev ? { ...prev, food_ingredients: ingredients } : null)
+                }
+              />
+            </TabsContent>
+
+            <TabsContent value="allergens" className="mt-4">
+              <AllergenEditor
+                allergens={enhancedEditingFood.allergens || []}
+                onChange={(allergens) => 
+                  setEnhancedEditingFood(prev => prev ? { ...prev, allergens } : null)
+                }
+              />
+            </TabsContent>
+
+            <TabsContent value="nutrition" className="mt-4">
+              <NutritionEditor
+                nutrition={enhancedEditingFood.nutrition}
+                onChange={(nutrition) => 
+                  setEnhancedEditingFood(prev => prev ? { ...prev, nutrition } : null)
+                }
+              />
+            </TabsContent>
+
+            <TabsContent value="manufacturer" className="mt-4">
+              <ManufacturerEditor
+                manufacturer={enhancedEditingFood.manufacturer_info}
+                onChange={(manufacturer_info) => 
+                  setEnhancedEditingFood(prev => prev ? { ...prev, manufacturer_info } : null)
+                }
+              />
+            </TabsContent>
+          </Tabs>
         </CardContent>
       )}
     </Card>
