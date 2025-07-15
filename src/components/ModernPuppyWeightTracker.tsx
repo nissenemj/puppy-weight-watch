@@ -279,7 +279,7 @@ export default function ModernPuppyWeightTracker() {
             <CardHeader className="text-center">
               <div className="flex items-center justify-center gap-3 mb-4">
                 <img src={appIcon} alt="Pentulaskuri" className="w-12 h-12 rounded-2xl shadow-lg" />
-                <CardTitle className="text-3xl bg-gradient-warm bg-clip-text text-transparent">
+                <CardTitle className="text-3xl text-foreground font-semibold">
                   Pentulaskuri
                 </CardTitle>
               </div>

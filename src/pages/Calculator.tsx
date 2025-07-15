@@ -69,7 +69,7 @@ const Calculator = () => {
         <Breadcrumb items={breadcrumbItems} />
         
         <header className="text-center mb-8">
-          <h1 className="text-4xl font-heading font-bold bg-gradient-warm bg-clip-text text-transparent mb-4">
+          <h1 className="text-4xl font-heading font-bold text-foreground mb-4">
             Pentulaskuri
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">

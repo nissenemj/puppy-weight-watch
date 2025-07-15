@@ -176,7 +176,7 @@ export default function OnboardingWizard({ user, onComplete }: OnboardingWizardP
                 })()}
               </div>
             </div>
-            <CardTitle className="text-2xl sm:text-3xl bg-gradient-warm bg-clip-text text-transparent">
+            <CardTitle className="text-2xl sm:text-3xl text-foreground font-semibold">
               {steps[currentStep].title}
             </CardTitle>
             <CardDescription className="text-base sm:text-lg text-gray-600">

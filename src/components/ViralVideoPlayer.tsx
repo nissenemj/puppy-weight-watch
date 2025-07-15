@@ -31,19 +31,12 @@ export const ViralVideoPlayer: React.FC<ViralVideoPlayerProps> = ({
     >
       <Card className="overflow-hidden shadow-lg rounded-2xl">
         <div className="relative">
-          <ReactPlayer
-            url={videoUrl}
-            width="100%"
-            height="300px"
-            controls
-            playing={false}
-            light={true}
-            config={{
-              youtube: {
-                playerVars: { showinfo: 1 }
-              }
-            }}
-          />
+          <div className="w-full h-[300px] bg-muted rounded-lg flex items-center justify-center">
+            <div className="text-center">
+              <div className="text-lg font-semibold mb-2">Video Player</div>
+              <div className="text-sm text-muted-foreground">{videoUrl}</div>
+            </div>
+          </div>
           <div className="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded-full text-xs">
             {views} views
           </div>
