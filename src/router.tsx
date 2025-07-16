@@ -1,5 +1,4 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { HelmetProvider } from "react-helmet-async";
 
 // Pages
 import Index from "./pages/Index";
@@ -62,9 +61,5 @@ const router = createBrowserRouter([
 ]);
 
 export default function Router() {
-  return (
-    <HelmetProvider>
-      <RouterProvider router={router} />
-    </HelmetProvider>
-  );
+  return <RouterProvider router={router} />;
 }
