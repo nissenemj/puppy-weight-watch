@@ -86,6 +86,68 @@ nav a, nav button {
   @apply text-muted-foreground hover:text-foreground;
 }
 
+/* Skip to content link */
+.skip-link {
+  position: fixed !important;
+  left: -9999px;
+  top: 1rem;
+  z-index: 2000;
+  transition: left 0.3s ease;
+}
+
+.skip-link:focus {
+  left: 1rem !important;
+}
+
+/* Hamburger animation */
+.hamburger-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hamburger-line,
+.hamburger-line::before,
+.hamburger-line::after {
+  content: "";
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 2px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.hamburger-line::before {
+  transform: translateY(-6px);
+}
+
+.hamburger-line::after {
+  transform: translateY(4px);
+}
+
+.hamburger-line.open {
+  background: transparent;
+}
+
+.hamburger-line.open::before {
+  transform: rotate(45deg);
+}
+
+.hamburger-line.open::after {
+  transform: rotate(-45deg);
+}
+
+/* Navigation enhancements */
+.nav-link:hover {
+  transform: translateY(-1px);
+}
+
+.nav-link:active {
+  transform: translateY(0);
+}
+
 /* Mobile navigation fixes */
 @media (max-width: 768px) {
   .scrollbar-hide {
@@ -95,5 +157,20 @@ nav a, nav button {
   
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+  
+  /* Prevent scroll when mobile menu is open */
+  body.menu-open {
+    overflow: hidden;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .hamburger-line,
+  .hamburger-line::before,
+  .hamburger-line::after,
+  .nav-link {
+    transition: none;
   }
 }
