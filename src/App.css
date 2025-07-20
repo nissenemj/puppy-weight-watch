@@ -1,3 +1,4 @@
+
 body, html, .main-bg {
   background: #eaf8e3;
   min-height: 100vh;
@@ -74,4 +75,25 @@ nav a, nav button {
 }
 .info-grid.bottom {
   margin-top: 0;
+}
+
+/* Navigation styles */
+.nav-tab-active {
+  @apply text-primary border-b-2 border-primary;
+}
+
+.nav-tab-inactive {
+  @apply text-muted-foreground hover:text-foreground;
+}
+
+/* Mobile navigation fixes */
+@media (max-width: 768px) {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }

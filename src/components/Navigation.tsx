@@ -1,3 +1,4 @@
+
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
@@ -18,6 +19,9 @@ import {
   Sheet,
   SheetContent,
   SheetTrigger,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
 } from "@/components/ui/sheet"
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -143,8 +147,8 @@ const Navigation = () => {
               to="/"
               className={`flex-shrink-0 px-6 py-4 text-sm font-medium transition-all flex items-center ${
                 isActive('/') 
-                  ? 'nav-tab-active' 
-                  : 'nav-tab-inactive'
+                  ? 'text-primary border-b-2 border-primary' 
+                  : 'text-muted-foreground hover:text-foreground'
               }`}
             >
               <Scale className="w-5 h-5 mr-2" />
@@ -155,8 +159,8 @@ const Navigation = () => {
               to="/calculator"
               className={`flex-shrink-0 px-6 py-4 text-sm font-medium transition-all flex items-center ${
                 isActive('/calculator') 
-                  ? 'nav-tab-active' 
-                  : 'nav-tab-inactive'
+                  ? 'text-primary border-b-2 border-primary' 
+                  : 'text-muted-foreground hover:text-foreground'
               }`}
             >
               <Calculator className="w-5 h-5 mr-2" />
@@ -167,8 +171,8 @@ const Navigation = () => {
               to="/puppy-book"
               className={`flex-shrink-0 px-6 py-4 text-sm font-medium transition-all flex items-center ${
                 isActive('/puppy-book') 
-                  ? 'nav-tab-active' 
-                  : 'nav-tab-inactive'
+                  ? 'text-primary border-b-2 border-primary' 
+                  : 'text-muted-foreground hover:text-foreground'
               }`}
             >
               <Book className="w-5 h-5 mr-2" />
@@ -179,8 +183,8 @@ const Navigation = () => {
               to="/info"
               className={`flex-shrink-0 px-6 py-4 text-sm font-medium transition-all flex items-center ${
                 isActive('/info') 
-                  ? 'nav-tab-active' 
-                  : 'nav-tab-inactive'
+                  ? 'text-primary border-b-2 border-primary' 
+                  : 'text-muted-foreground hover:text-foreground'
               }`}
             >
               <Info className="w-5 h-5 mr-2" />
@@ -195,22 +199,29 @@ const Navigation = () => {
             <Button
               variant="ghost"
               className="mr-2 px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden"
+              aria-label="Avaa navigointivalikko"
             >
               <Menu className="h-6 w-6" />
               <span className="sr-only">Avaa valikko</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="pr-0">
+          <SheetContent side="left" className="pr-0 w-80 sm:w-96">
+            <SheetHeader>
+              <SheetTitle className="sr-only">Navigointivalikko</SheetTitle>
+              <SheetDescription className="sr-only">
+                Valitse sivu navigoidaksesi sovelluksessa
+              </SheetDescription>
+            </SheetHeader>
             <div className="px-6">
               <Link
                 to="/"
-                className="flex items-center space-x-2"
+                className="flex items-center space-x-2 mb-6"
                 onClick={() => setIsOpen(false)}
               >
                 <Dog className="h-6 w-6" />
                 <span className="font-bold">Pentulaskuri</span>
               </Link>
-              <div className="my-4 h-[calc(100vh-8rem)] pb-10 pl-6">
+              <div className="my-4 h-[calc(100vh-8rem)] pb-10">
                 <div className="flex flex-col space-y-3">
                   <NavigationLinks />
                 </div>
