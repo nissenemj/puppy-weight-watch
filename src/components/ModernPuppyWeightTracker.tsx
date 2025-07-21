@@ -17,6 +17,7 @@ import PuppyFeeding from './PuppyFeeding'
 import SafetyNewsFeed from './SafetyNewsFeed'
 import OnboardingWizard from '@/features/onboarding/components/OnboardingWizard'
 import { Scale, TrendingUp, Calculator, Utensils, Bell, LogIn, UserPlus, RefreshCw } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 // Import the generated assets
 import appIcon from '@/assets/app-icon.png'
@@ -434,28 +435,40 @@ export default function ModernPuppyWeightTracker() {
           <TabsList className="grid w-full grid-cols-4 h-16 md:h-14 rounded-2xl bg-white/50 backdrop-blur-sm overflow-x-auto">
             <TabsTrigger 
               value="weight-tracking" 
-              className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 rounded-xl data-[state=active]:bg-gradient-cool data-[state=active]:text-white transition-all duration-200 hover:scale-105 px-2 sm:px-4"
+              className={cn(
+                "flex flex-col sm:flex-row items-center gap-1 sm:gap-2 rounded-xl transition-all duration-200 hover:scale-105 px-2 sm:px-4 text-white font-medium",
+                activeTab === "weight-tracking" ? "bg-gradient-cool !important" : "text-muted-foreground hover:text-foreground"
+              )}
             >
               <Scale className="h-5 w-5 sm:h-4 sm:w-4" />
               <span className="text-xs sm:text-sm">Paino</span>
             </TabsTrigger>
             <TabsTrigger 
               value="growth-chart" 
-              className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 rounded-xl data-[state=active]:bg-gradient-purple data-[state=active]:text-white transition-all duration-200 hover:scale-105 px-2 sm:px-4"
+              className={cn(
+                "flex flex-col sm:flex-row items-center gap-1 sm:gap-2 rounded-xl transition-all duration-200 hover:scale-105 px-2 sm:px-4 text-white font-medium",
+                activeTab === "growth-chart" ? "bg-gradient-purple !important" : "text-muted-foreground hover:text-foreground"
+              )}
             >
               <TrendingUp className="h-5 w-5 sm:h-4 sm:w-4" />
               <span className="text-xs sm:text-sm">Kasvu</span>
             </TabsTrigger>
             <TabsTrigger 
               value="puppy-feeding" 
-              className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 rounded-xl data-[state=active]:bg-gradient-warm data-[state=active]:text-white transition-all duration-200 hover:scale-105 px-2 sm:px-4"
+              className={cn(
+                "flex flex-col sm:flex-row items-center gap-1 sm:gap-2 rounded-xl transition-all duration-200 hover:scale-105 px-2 sm:px-4 text-white font-medium",
+                activeTab === "puppy-feeding" ? "bg-gradient-warm !important" : "text-muted-foreground hover:text-foreground"
+              )}
             >
               <Utensils className="h-5 w-5 sm:h-4 sm:w-4" />
               <span className="text-xs sm:text-sm">Ruokinta</span>
             </TabsTrigger>
             <TabsTrigger 
               value="news-feed" 
-              className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 rounded-xl data-[state=active]:bg-gradient-purple data-[state=active]:text-white transition-all duration-200 hover:scale-105 px-2 sm:px-4"
+              className={cn(
+                "flex flex-col sm:flex-row items-center gap-1 sm:gap-2 rounded-xl transition-all duration-200 hover:scale-105 px-2 sm:px-4 text-white font-medium",
+                activeTab === "news-feed" ? "bg-gradient-purple !important" : "text-muted-foreground hover:text-foreground"
+              )}
             >
               <Bell className="h-5 w-5 sm:h-4 sm:w-4" />
               <span className="text-xs sm:text-sm">Uutiset</span>

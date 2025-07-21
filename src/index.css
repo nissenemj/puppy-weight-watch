@@ -1,716 +1,146 @@
 
-/* Delightful puppy-themed fonts for a warm, modern feel */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Quicksand:wght@400;500;600&family=Nunito+Sans:wght@400;600;700&family=Dancing+Script:wght@400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@200;300;400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Utility classes */
-@layer utilities {
-  .line-clamp-1 {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
-  }
-  
-  .line-clamp-2 {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-  }
-
-  /* Font styles for social share templates */
-  .handwriting {
-    font-family: 'Dancing Script', cursive;
-  }
-  
-  .font-elegant {
-    font-family: 'Playfair Display', serif;
-  }
-}
-
-/* Playful Puppy Design System 2025 🐾
-Nature-inspired pastel palette that feels soft, friendly, and joyful
-Based on the delightful design system for puppy tracking apps
-*/
-
 @layer base {
   :root {
-    /* Warm & Delightful Color Palette */
-    --background: 44 55% 94%; /* Warm Sand #FFEDC2 */
-    --foreground: 30 15% 20%; /* Charcoal Paw #333333 */
-
-    --card: 0 0% 97%; /* Cloud White #F7F7F7 */
-    --card-foreground: 30 15% 20%;
-
-    --popover: 0 0% 97%;
-    --popover-foreground: 30 15% 20%;
-
-    /* Primary: Mint Sprout #A8E6CF */
-    --primary: 151 52% 78%;
-    --primary-foreground: 30 15% 20%;
-    --primary-glow: 151 52% 85%; /* Lighter version for animations */
-
-    /* Secondary: Peach Blossom #FFD3B6 */
-    --secondary: 23 100% 85%;
-    --secondary-foreground: 30 15% 20%;
-
-    /* Muted: Sky Puddle #DCEFFF */
-    --muted: 210 100% 93%;
-    --muted-foreground: 35 20% 51%; /* Cocoa Fur #B39C82 */
-
-    /* Accent: Peach Blossom for highlights */
-    --accent: 23 100% 85%;
-    --accent-foreground: 30 15% 20%;
-    --accent-light: 23 100% 90%;
-
-    /* Playful gradient colors */
-    --gradient-mint: 151 52% 78%; /* Mint Sprout */
-    --gradient-mint-light: 151 52% 85%;
-    --gradient-peach: 23 100% 85%; /* Peach Blossom */
-    --gradient-peach-light: 23 100% 90%;
-    --gradient-sky: 210 100% 93%; /* Sky Puddle */
-    --gradient-warm: 44 55% 94%; /* Warm Sand */
-
-    /* Puppy-themed chart colors */
-    --chart-growth: 151 52% 78%; /* Mint - growth */
-    --chart-energy: 23 100% 85%; /* Peach - energy */
-    --chart-health: 210 65% 75%; /* Sky blue - health */
-    --chart-milestone: 280 60% 80%; /* Light purple - milestones */
-    --chart-joy: 50 85% 75%; /* Warm yellow - joy */
-
-    /* Soft error: Gentle coral */
-    --destructive: 0 70% 80%;
-    --destructive-foreground: 30 15% 20%;
-
-    /* Borders and inputs with soft colors */
-    --border: 35 20% 85%;
-    --input: 210 100% 96%;
-    --ring: 151 52% 78%;
-
-    --radius: 1rem; /* Rounded for puppy cuteness */
-
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 84% 4.9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.75rem;
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Pentu-themed colors 2025 - Made darker for better contrast */
+    --primary-glow: 210 100% 45%;
+    --accent-light: 30 95% 85%;
+    
+    /* Darker gradient colors for better text contrast */
+    --gradient-mint: 160 84% 35%;        /* Much darker mint */
+    --gradient-mint-light: 160 75% 45%;   /* Darker mint light */
+    --gradient-peach: 25 85% 45%;         /* Much darker peach */
+    --gradient-peach-light: 25 75% 55%;   /* Darker peach light */
+    --gradient-sky: 200 85% 40%;          /* Darker sky blue */
+    --gradient-warm: 185 80% 38%;         /* Darker warm blue-green */
+    
+    /* Darker chart colors for active states */
+    --chart-growth: 160 75% 30%;          /* Very dark mint for growth */
+    --chart-energy: 25 80% 35%;           /* Very dark peach for energy */
+    --chart-health: 200 80% 30%;          /* Very dark blue for health */
+    --chart-milestone: 280 75% 35%;       /* Very dark purple for milestone */
+    --chart-joy: 45 85% 40%;              /* Dark golden yellow for joy */
   }
 
   .dark {
-    /* Cozy dark mode for evening puppy tracking */
-    --background: 30 15% 8%; /* Dark charcoal */
-    --foreground: 0 0% 93%; /* Cloud white text */
-
-    --card: 30 15% 12%; /* Darker card background */
-    --card-foreground: 0 0% 93%;
-
-    --popover: 30 15% 12%;
-    --popover-foreground: 0 0% 93%;
-
-    /* Primary: Softer mint for dark mode */
-    --primary: 151 45% 70%;
-    --primary-foreground: 30 15% 15%;
-    --primary-glow: 151 45% 80%;
-
-    /* Secondary: Muted peach for dark mode */
-    --secondary: 23 30% 25%;
-    --secondary-foreground: 0 0% 85%;
-
-    /* Dark muted */
-    --muted: 30 15% 18%;
-    --muted-foreground: 35 15% 65%;
-
-    /* Accent: Warmer peach for dark mode */
-    --accent: 23 70% 75%;
-    --accent-foreground: 30 15% 15%;
-    --accent-light: 23 70% 80%;
-
-    /* Dark mode gradients */
-    --gradient-mint: 151 45% 70%;
-    --gradient-mint-light: 151 45% 80%;
-    --gradient-peach: 23 70% 75%;
-    --gradient-peach-light: 23 70% 80%;
-    --gradient-sky: 210 50% 35%;
-    --gradient-warm: 30 15% 12%;
-
-    /* Dark mode chart colors */
-    --chart-growth: 151 45% 70%;
-    --chart-energy: 23 70% 75%;
-    --chart-health: 210 60% 70%;
-    --chart-milestone: 280 50% 75%;
-    --chart-joy: 50 70% 70%;
-
-    /* Gentle destructive for dark mode */
-    --destructive: 0 60% 70%;
-    --destructive-foreground: 30 15% 15%;
-
-    /* Dark borders and inputs */
-    --border: 30 15% 25%;
-    --input: 30 15% 20%;
-    --ring: 151 45% 70%;
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 84% 4.9%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 94.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-primary: 224.3 76.3% 94.1%;
+    --sidebar-primary-foreground: 240 5.9% 10%;
     --sidebar-accent: 240 3.7% 15.9%;
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Dark mode - keep existing values as they work well */
+    --primary-glow: 217.2 91.2% 59.8%;
+    --accent-light: 30 80% 70%;
+    
+    --gradient-mint: 160 65% 55%;
+    --gradient-mint-light: 160 55% 65%;
+    --gradient-peach: 25 75% 65%;
+    --gradient-peach-light: 25 65% 75%;
+    --gradient-sky: 200 70% 60%;
+    --gradient-warm: 185 65% 58%;
+    
+    --chart-growth: 160 65% 55%;
+    --chart-energy: 25 75% 65%;
+    --chart-health: 200 70% 60%;
+    --chart-milestone: 280 65% 65%;
+    --chart-joy: 45 80% 70%;
   }
 }
 
 @layer base {
   * {
-    border-color: hsl(var(--border));
-    box-sizing: border-box;
+    @apply border-border;
   }
-
-  html, body {
-    overflow-x: hidden;
-    max-width: 100vw;
-  }
-
   body {
-    background-color: hsl(var(--background));
-    color: hsl(var(--foreground));
-    font-family: 'Quicksand', 'Poppins', system-ui, -apple-system, sans-serif;
-    /* Improved mobile typography */
-    font-size: 16px; /* Prevent zoom on iOS */
-    line-height: 1.5;
+    @apply bg-background text-foreground;
   }
+}
 
-  /* Mobile-first responsive text sizes */
-  @media (max-width: 768px) {
-    body {
-      font-size: 16px;
-    }
-    
-    h1 { font-size: 2rem; }
-    h2 { font-size: 1.75rem; }
-    h3 { font-size: 1.5rem; }
-    h4 { font-size: 1.25rem; }
-    
-    /* Ensure minimum touch targets on mobile */
-    button, input, select, textarea {
-      min-height: 44px;
-    }
-    
-    /* Enhanced mobile UX */
-    .mobile-optimized {
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
-    }
-    
-    /* Improved scrolling */
-    .smooth-scroll {
-      scroll-behavior: smooth;
-      -webkit-overflow-scrolling: touch;
-    }
-    
-    /* Better focus indicators for accessibility */
-    .focus-visible {
-      outline: 2px solid hsl(var(--primary));
-      outline-offset: 2px;
-    }
-    
-    /* Loading states */
-    .loading-skeleton {
-      background: linear-gradient(90deg, hsl(var(--muted)) 25%, hsl(var(--muted) / 0.5) 50%, hsl(var(--muted)) 75%);
-      background-size: 200% 100%;
-      animation: loading 1.5s infinite;
-    }
-    
-    @keyframes loading {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
-    
-    /* Enhanced hover effects */
-    .hover-lift {
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    
-    .hover-lift:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-    }
-    
-    /* Improved button states */
-    .btn-primary {
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .btn-primary::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-      transition: left 0.5s;
-    }
-    
-    .btn-primary:hover::before {
-      left: 100%;
-    }
-    
-    /* Card animations */
-    .card-enter {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    
-    .card-enter-active {
-      opacity: 1;
-      transform: translateY(0);
-      transition: opacity 0.3s ease, transform 0.3s ease;
-    }
-    
-    /* Toast notifications */
-    .toast-enter {
-      opacity: 0;
-      transform: translateX(100%);
-    }
-    
-    .toast-enter-active {
-      opacity: 1;
-      transform: translateX(0);
-      transition: opacity 0.3s ease, transform 0.3s ease;
-    }
-    
-    .toast-exit {
-      opacity: 1;
-      transform: translateX(0);
-    }
-    
-    .toast-exit-active {
-      opacity: 0;
-      transform: translateX(100%);
-      transition: opacity 0.3s ease, transform 0.3s ease;
-    }
-    
-    /* Progress indicators */
-    .progress-bar {
-      background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--accent)));
-      transition: width 0.3s ease;
-    }
-    
-    /* Enhanced form inputs */
-    .input-enhanced {
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    }
-    
-    .input-enhanced:focus {
-      border-color: hsl(var(--primary));
-      box-shadow: 0 0 0 3px hsl(var(--primary) / 0.1);
-    }
-    
-    /* Loading spinners */
-    .spinner {
-      animation: spin 1s linear infinite;
-    }
-    
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-    
-    /* Pulse animation for notifications */
-    .pulse {
-      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-    }
-    
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-    
-    /* Bounce animation for interactive elements */
-    .bounce {
-      animation: bounce 1s infinite;
-    }
-    
-    @keyframes bounce {
-      0%, 20%, 53%, 80%, 100% {
-        transform: translate3d(0, 0, 0);
-      }
-      40%, 43% {
-        transform: translate3d(0, -8px, 0);
-      }
-      70% {
-        transform: translate3d(0, -4px, 0);
-      }
-      90% {
-        transform: translate3d(0, -2px, 0);
-      }
-    }
-    
-    /* Shake animation for errors */
-    .shake {
-      animation: shake 0.5s ease-in-out;
-    }
-    
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-5px); }
-      75% { transform: translateX(5px); }
-    }
-    
-    /* Fade in animation */
-    .fade-in {
-      animation: fadeIn 0.5s ease-in-out;
-    }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    
-    /* Slide up animation */
-    .slide-up {
-      animation: slideUp 0.3s ease-out;
-    }
-    
-    @keyframes slideUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    /* Scale animation for buttons */
-    .scale-on-hover {
-      transition: transform 0.2s ease;
-    }
-    
-    .scale-on-hover:hover {
-      transform: scale(1.05);
-    }
-    
-    .scale-on-hover:active {
-      transform: scale(0.95);
-    }
-    
-    /* Enhanced shadows */
-    .shadow-soft {
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-    
-    .shadow-medium {
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-    }
-    
-    .shadow-strong {
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    }
-    
-    /* Gradient text */
-    .gradient-text {
-      background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    
-    /* Glass morphism effect */
-    .glass {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-    
-    /* Dark mode glass */
-    .dark .glass {
-      background: rgba(0, 0, 0, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
+@layer utilities {
+  /* Gradient background utilities with much darker colors for better contrast */
+  .bg-gradient-cool {
+    background: linear-gradient(135deg, hsl(var(--chart-health)), hsl(var(--gradient-sky)));
   }
   
-  /* Better spacing for mobile */
-    .mobile-spacing {
-      padding: 1rem;
-    }
+  .bg-gradient-purple {
+    background: linear-gradient(135deg, hsl(var(--chart-milestone)), hsl(var(--gradient-warm)));
   }
-
-  /* Playful Puppy Typography System 2025 🐾 */
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Poppins', system-ui, -apple-system, sans-serif;
-    font-weight: 700; /* Bold for headings */
+  
+  .bg-gradient-warm {
+    background: linear-gradient(135deg, hsl(var(--chart-energy)), hsl(var(--chart-joy)));
   }
-
-  .font-heading {
-    font-family: 'Poppins', system-ui, -apple-system, sans-serif;
-    font-weight: 700; /* Bold for puppy energy */
-  }
-
-  .font-body {
-    font-family: 'Quicksand', system-ui, -apple-system, sans-serif;
-    font-weight: 400; /* Regular for readability */
-  }
-
-  .font-caption {
-    font-family: 'Nunito Sans', system-ui, -apple-system, sans-serif;
-    font-weight: 600; /* Semi-bold for labels */
-  }
-
-  .font-playful {
-    font-family: 'Dancing Script', cursive;
-    font-weight: 400; /* Handwriting accent font */
-  }
-
-  /* Playful Puppy Gradient Utilities 2025 🌈 */
-  .bg-gradient-mint {
-    background: linear-gradient(135deg, hsl(var(--gradient-mint)), hsl(var(--gradient-mint-light)));
-  }
-
-  .bg-gradient-peach {
-    background: linear-gradient(135deg, hsl(var(--gradient-peach)), hsl(var(--gradient-peach-light)));
-  }
-
+  
   .bg-gradient-primary {
     background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
   }
-
-  .bg-gradient-warm {
-    background: linear-gradient(135deg, hsl(var(--gradient-mint)), hsl(var(--gradient-peach)));
-  }
-
-  .bg-gradient-sky {
-    background: linear-gradient(180deg, hsl(var(--gradient-sky)), hsl(var(--gradient-warm)));
-  }
-
-  /* Playful button effects */
-  .btn-paw-print {
-    position: relative;
-    overflow: hidden;
-  }
-
-  .btn-paw-print::before {
-    content: '🐾';
-    position: absolute;
-    top: 50%;
-    left: -100%;
-    transform: translateY(-50%);
-    transition: left 0.3s ease;
-    opacity: 0.3;
-  }
-
-  .btn-paw-print:hover::before {
-    left: 100%;
-  }
-
-  .bg-gradient-accent {
-    background: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--accent-light)));
-  }
-
-  
-  /* Pentu-themed gradientit komponenteille */
-  .bg-gradient-cool {
-    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--chart-health)));
-  }
-
-  .bg-gradient-purple {
-    background: linear-gradient(135deg, hsl(var(--chart-milestone)), hsl(var(--accent)));
-  }
-
-  .bg-gradient-warm {
-    background: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--chart-energy)));
-  }
-
-  /* Pentukirjan tyylit */
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
-
-  .nav-tab-active {
-    color: hsl(var(--accent));
-    border-bottom: 2px solid hsl(var(--accent));
-    background-color: hsl(var(--accent) / 0.1);
-  }
-
-  .nav-tab-inactive {
-    color: hsl(var(--muted-foreground));
-  }
-
-  .nav-tab-inactive:hover {
-    color: hsl(var(--accent));
-  }
-
-  /* Hienovaraiset gradientit taustoille */
-  .bg-gradient-subtle {
-    background: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)));
-  }
-
-  /* Pentu-themed varjot */
-  .shadow-gentle {
-    box-shadow: 0 4px 16px hsl(var(--primary) / 0.1);
-  }
-
-  .shadow-playful {
-    box-shadow: 0 8px 32px hsl(var(--accent) / 0.15);
-  }
-
-  .shadow-card {
-    box-shadow: 0 2px 8px hsl(0 0% 0% / 0.08);
-  }
-
-  /* Focus utilities for accessibility */
-  .focus-visible\:ring-accent:focus-visible {
-    outline: 2px solid hsl(var(--accent));
-    outline-offset: 2px;
-  }
-
-  .focus-visible\:ring-primary:focus-visible {
-    outline: 2px solid hsl(var(--primary));
-    outline-offset: 2px;
-  }
-
-  /* Mobile-first image handling */
-  img {
-    max-width: 100%;
-    height: auto;
-  }
-
-  /* UI Parannukset 2025 - Visuaalisen hierarkian parantaminen */
-  .primary-action {
-    color: white;
-    padding: 2rem 2rem;
-    border-radius: 0.75rem;
-    font-weight: 600;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    transform: translateY(0);
-    transition: all 0.3s ease;
-    background: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--primary)));
-  }
-
-  .primary-action:hover {
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-    transform: translateY(-1px);
-  }
-
-  .secondary-action {
-    background-color: white;
-    color: hsl(var(--accent));
-    border: 2px solid hsl(var(--accent) / 0.2);
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.5rem;
-    font-weight: 500;
-    transition: background-color 0.2s ease;
-  }
-
-  .secondary-action:hover {
-    background-color: hsl(var(--accent) / 0.05);
-  }
-
-  .card-elevated {
-    background-color: white;
-    border-radius: 1rem;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    border: 1px solid hsl(var(--border));
-    transition: box-shadow 0.3s ease;
-  }
-
-  .card-elevated:hover {
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-  }
-
-  /* Interaktiiviset navigaation parannukset - pentukirjalle */
-
-  /* Responsive utilities for better mobile experience */
-  .aspect-square {
-    aspect-ratio: 1 / 1;
-  }
-
-  .aspect-video {
-    aspect-ratio: 16 / 9;
-  }
-
-  /* Better mobile touch targets */
-  @media (max-width: 768px) {
-    /* Ensure all clickable elements meet minimum 44px touch target */
-    .touch-target {
-      min-height: 44px;
-      min-width: 44px;
-    }
-
-    /* Improved mobile spacing */
-    .mobile-container {
-      padding-left: 1rem;
-      padding-right: 1rem;
-      max-width: 100%;
-      overflow-x: hidden;
-    }
-
-    /* Responsive text that scales properly */
-    .responsive-text-xl {
-      font-size: 1.25rem; /* 20px */
-      line-height: 1.75rem; /* 28px */
-    }
-
-    .responsive-text-2xl {
-      font-size: 1.5rem; /* 24px */
-      line-height: 2rem; /* 32px */
-    }
-
-    .responsive-text-3xl {
-      font-size: 1.875rem; /* 30px */
-      line-height: 2.25rem; /* 36px */
-    }
-
-    /* Mobile-specific utilities */
-    .mobile-full-width {
-      width: 100vw;
-      margin-left: calc(-50vw + 50%);
-      margin-right: calc(-50vw + 50%);
-      padding-left: 1rem;
-      padding-right: 1rem;
-    }
-
-    /* Force text wrapping */
-    .mobile-text-wrap {
-      word-wrap: break-word;
-      word-break: break-word;
-      hyphens: auto;
-    }
-
-    /* Mobile responsive tables */
-    .mobile-table-scroll {
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: thin;
-    }
-  }
-
-/* Custom classes for puppy book */
-.font-playful {
-  font-family: 'Fredoka One', cursive;
-}
-
-.bg-gradient-playful {
-  background: linear-gradient(135deg, #FF6B35, #F7931E, #FFD23F);
 }
