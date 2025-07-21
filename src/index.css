@@ -49,19 +49,19 @@
     --accent-light: 30 95% 85%;
     
     /* Darker gradient colors for better text contrast */
-    --gradient-mint: 160 84% 35%;        /* Much darker mint */
-    --gradient-mint-light: 160 75% 45%;   /* Darker mint light */
-    --gradient-peach: 25 85% 45%;         /* Much darker peach */
-    --gradient-peach-light: 25 75% 55%;   /* Darker peach light */
-    --gradient-sky: 200 85% 40%;          /* Darker sky blue */
-    --gradient-warm: 185 80% 38%;         /* Darker warm blue-green */
+    --gradient-mint: 160 84% 25%;        /* Much darker mint for better contrast */
+    --gradient-mint-light: 160 75% 35%;   /* Darker mint light */
+    --gradient-peach: 25 85% 35%;         /* Much darker peach for better contrast */
+    --gradient-peach-light: 25 75% 45%;   /* Darker peach light */
+    --gradient-sky: 200 85% 30%;          /* Much darker sky blue for better contrast */
+    --gradient-warm: 185 80% 28%;         /* Much darker warm blue-green */
     
-    /* Darker chart colors for active states */
-    --chart-growth: 160 75% 30%;          /* Very dark mint for growth */
-    --chart-energy: 25 80% 35%;           /* Very dark peach for energy */
-    --chart-health: 200 80% 30%;          /* Very dark blue for health */
-    --chart-milestone: 280 75% 35%;       /* Very dark purple for milestone */
-    --chart-joy: 45 85% 40%;              /* Dark golden yellow for joy */
+    /* Much darker chart colors for active states with better contrast */
+    --chart-growth: 160 75% 20%;          /* Very dark mint for growth */
+    --chart-energy: 25 80% 25%;           /* Very dark peach for energy */
+    --chart-health: 200 80% 20%;          /* Very dark blue for health */
+    --chart-milestone: 280 75% 25%;       /* Very dark purple for milestone */
+    --chart-joy: 45 85% 30%;              /* Dark golden yellow for joy */
   }
 
   .dark {
