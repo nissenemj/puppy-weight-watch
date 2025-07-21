@@ -16,14 +16,6 @@ import {
   Sun
 } from 'lucide-react'
 import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-} from "@/components/ui/sheet"
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -32,7 +24,7 @@ import {
 
 const Navigation = () => {
   const location = useLocation()
-  const [isOpen, setIsOpen] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isDark, setIsDark] = useState(false)
   const [showMoreMenu, setShowMoreMenu] = useState(false)
   const [hiddenItems, setHiddenItems] = useState<number[]>([])
@@ -48,7 +40,7 @@ const Navigation = () => {
   const SkipLink = () => (
     <a 
       href="#main-content"
-      className="skip-link absolute left-[-999px] top-auto z-[2000] bg-primary text-primary-foreground px-4 py-2 rounded focus:left-4 focus:top-4"
+      className="skip-link fixed left-[-9999px] top-4 z-[2000] bg-primary text-primary-foreground px-4 py-2 rounded focus:left-4 transition-all duration-300"
     >
       Siirry suoraan sisältöön
     </a>
@@ -121,15 +113,22 @@ const Navigation = () => {
 
   // Mobile menu effect
   useEffect(() => {
-    if (isOpen) {
+    if (isMobileMenuOpen) {
       document.body.style.overflow = 'hidden'
+      document.body.classList.add('menu-open')
     } else {
       document.body.style.overflow = ''
+      document.body.classList.remove('menu-open')
     }
     return () => {
       document.body.style.overflow = ''
+      document.body.classList.remove('menu-open')
     }
-  }, [isOpen])
+  }, [isMobileMenuOpen])
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false)
+  }
 
   const NavLink = ({ item, index, className = "" }: { 
     item: typeof navItems[0], 
@@ -142,7 +141,7 @@ const Navigation = () => {
         to={item.href}
         className={`
           nav-link relative inline-flex items-center px-4 py-3 text-sm font-medium 
-          transition-all duration-200 rounded-lg
+          transition-all duration-200 rounded-lg hover:scale-105 active:scale-95
           ${active 
             ? 'text-primary bg-primary/10 font-semibold' 
             : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
@@ -150,7 +149,7 @@ const Navigation = () => {
           ${className}
         `}
         aria-current={active ? 'page' : undefined}
-        onClick={() => setIsOpen(false)}
+        onClick={closeMobileMenu}
       >
         <item.icon className="mr-2 h-4 w-4" />
         {item.label}
@@ -247,59 +246,79 @@ const Navigation = () => {
               )}
             </Button>
 
-            {/* Mobile Menu - Fixed implementation */}
-            <Sheet open={isOpen} onOpenChange={setIsOpen}>
-              <SheetTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="p-2 md:hidden"
-                  aria-label="Avaa navigointivalikko"
-                  aria-expanded={isOpen}
-                  aria-controls="mobile-nav"
-                >
-                  {isOpen ? (
-                    <X className="h-5 w-5" />
-                  ) : (
-                    <Menu className="h-5 w-5" />
-                  )}
-                  <span className="sr-only">Valikko</span>
-                </Button>
-              </SheetTrigger>
-              
-              <SheetContent 
-                side="left" 
-                className="w-80 sm:w-96 px-0 z-[1000]"
-                id="mobile-nav"
-              >
-                <SheetHeader className="px-6 pb-4">
-                  <SheetTitle className="text-left flex items-center gap-2">
-                    <Dog className="h-5 w-5 text-primary" />
-                    Pentulaskuri
-                  </SheetTitle>
-                  <SheetDescription className="text-left">
-                    Valitse sivu navigoidaksesi sovelluksessa
-                  </SheetDescription>
-                </SheetHeader>
-                
-                <nav 
-                  className="px-6 space-y-2"
-                  aria-label="Mobiilinavigaatio"
-                >
-                  {navItems.map((item, index) => (
-                    <NavLink 
-                      key={item.href}
-                      item={item} 
-                      index={index}
-                      className="w-full justify-start"
-                    />
-                  ))}
-                </nav>
-              </SheetContent>
-            </Sheet>
+            {/* Mobile Menu Button */}
+            <Button
+              variant="ghost"
+              size="sm"
+              className="p-2 md:hidden"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Avaa navigointivalikko"
+              aria-expanded={isMobileMenuOpen}
+            >
+              {isMobileMenuOpen ? (
+                <X className="h-5 w-5" />
+              ) : (
+                <Menu className="h-5 w-5" />
+              )}
+            </Button>
           </div>
         </div>
       </header>
+
+      {/* Mobile Off-Canvas Menu */}
+      <div 
+        className={`fixed inset-0 z-[60] md:hidden transition-all duration-300 ease-in-out ${
+          isMobileMenuOpen ? 'visible' : 'invisible'
+        }`}
+        aria-hidden={!isMobileMenuOpen}
+      >
+        {/* Backdrop */}
+        <div 
+          className={`absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${
+            isMobileMenuOpen ? 'opacity-100' : 'opacity-0'
+          }`}
+          onClick={closeMobileMenu}
+        />
+        
+        {/* Off-canvas panel */}
+        <div 
+          className={`absolute left-0 top-0 h-full w-80 bg-background border-r shadow-xl transition-transform duration-300 ease-in-out ${
+            isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
+        >
+          {/* Mobile menu header */}
+          <div className="flex items-center justify-between px-6 py-4 border-b">
+            <div className="flex items-center gap-2">
+              <Dog className="h-5 w-5 text-primary" />
+              <span className="font-bold text-lg">Pentulaskuri</span>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={closeMobileMenu}
+              className="p-2"
+              aria-label="Sulje valikko"
+            >
+              <X className="h-5 w-5" />
+            </Button>
+          </div>
+          
+          {/* Mobile navigation items */}
+          <nav 
+            className="px-6 py-4 space-y-2"
+            aria-label="Mobiilinavigaatio"
+          >
+            {navItems.map((item, index) => (
+              <NavLink 
+                key={item.href}
+                item={item} 
+                index={index}
+                className="w-full justify-start text-base py-4 hover:translate-x-1"
+              />
+            ))}
+          </nav>
+        </div>
+      </div>
       
       {/* Main content wrapper */}
       <main id="main-content" className="focus:outline-none" tabIndex={-1}>
