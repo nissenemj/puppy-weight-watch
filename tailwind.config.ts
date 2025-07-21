@@ -20,9 +20,13 @@ export default {
 		extend: {
 			fontFamily: {
 				'heading': ['Poppins', 'system-ui', '-apple-system', 'sans-serif'],
-				'body': ['Open Sans', 'system-ui', '-apple-system', 'sans-serif'],
-				'playful': ['Fredoka', 'system-ui', '-apple-system', 'sans-serif'],
-				'sans': ['Open Sans', 'system-ui', '-apple-system', 'sans-serif'],
+				'body': ['Quicksand', 'system-ui', '-apple-system', 'sans-serif'],
+				'caption': ['Nunito Sans', 'system-ui', '-apple-system', 'sans-serif'],
+				'playful': ['Dancing Script', 'cursive'],
+				'sans': ['Quicksand', 'Poppins', 'system-ui', '-apple-system', 'sans-serif'],
+				'poppins': ['Poppins', 'sans-serif'],
+				'quicksand': ['Quicksand', 'sans-serif'],
+				'nunito': ['Nunito Sans', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
@@ -72,13 +76,13 @@ export default {
 				'primary-glow': 'hsl(var(--primary-glow))',
 				'accent-light': 'hsl(var(--accent-light))',
 				
-				// Gradient colors for pentu theme
-				'gradient-green': 'hsl(var(--gradient-green))',
-				'gradient-green-light': 'hsl(var(--gradient-green-light))',
-				'gradient-orange': 'hsl(var(--gradient-orange))',
-				'gradient-orange-light': 'hsl(var(--gradient-orange-light))',
-				'gradient-warm-neutral': 'hsl(var(--gradient-warm-neutral))',
-				'gradient-cool-neutral': 'hsl(var(--gradient-cool-neutral))',
+				// Playful puppy gradient colors
+				'gradient-mint': 'hsl(var(--gradient-mint))',
+				'gradient-mint-light': 'hsl(var(--gradient-mint-light))',
+				'gradient-peach': 'hsl(var(--gradient-peach))',
+				'gradient-peach-light': 'hsl(var(--gradient-peach-light))',
+				'gradient-sky': 'hsl(var(--gradient-sky))',
+				'gradient-warm': 'hsl(var(--gradient-warm))',
 				
 				// Chart colors for data visualization
 				'chart-growth': 'hsl(var(--chart-growth))',
@@ -88,15 +92,14 @@ export default {
 				'chart-joy': 'hsl(var(--chart-joy))'
 			},
 			backgroundImage: {
-				// Pentu-themed gradients 2025
-				'gradient-growth': 'linear-gradient(135deg, hsl(var(--gradient-green)), hsl(var(--gradient-green-light)))',
-				'gradient-playful': 'linear-gradient(135deg, hsl(var(--gradient-orange)), hsl(var(--gradient-orange-light)))',
-				'gradient-warm': 'linear-gradient(135deg, hsl(var(--gradient-green)), hsl(var(--gradient-orange)))',
-				'gradient-gentle': 'linear-gradient(180deg, hsl(var(--gradient-warm-neutral)), hsl(var(--gradient-cool-neutral)))',
+				// Playful puppy gradients 2025 🌈
+				'gradient-mint': 'linear-gradient(135deg, hsl(var(--gradient-mint)), hsl(var(--gradient-mint-light)))',
+				'gradient-peach': 'linear-gradient(135deg, hsl(var(--gradient-peach)), hsl(var(--gradient-peach-light)))',
+				'gradient-warm': 'linear-gradient(135deg, hsl(var(--gradient-mint)), hsl(var(--gradient-peach)))',
+				'gradient-sky': 'linear-gradient(180deg, hsl(var(--gradient-sky)), hsl(var(--gradient-warm)))',
 				'gradient-primary': 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)))',
 				'gradient-accent': 'linear-gradient(135deg, hsl(var(--accent)), hsl(var(--accent-light)))',
 				'gradient-subtle': 'linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)))',
-				'grass-gradient': 'linear-gradient(180deg, #f0f9ff 0%, #ecfdf5 50%, #f0fdf4 100%)',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

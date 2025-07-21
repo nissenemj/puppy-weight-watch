@@ -1,6 +1,6 @@
 
-/* Preload critical fonts for better performance */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Dancing+Script:wght@400;700&family=Playfair+Display:wght@400;600;700&display=swap');
+/* Delightful puppy-themed fonts for a warm, modern feel */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Quicksand:wght@400;500;600&family=Nunito+Sans:wght@400;600;700&family=Dancing+Script:wght@400;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -32,70 +32,66 @@
   }
 }
 
-/* Pentulaskuri Design System 2025 - Pentu-themed
-Leikkisä ja ystävällinen väripaletti koiranpennuille
-Primary: Kasvun vihreä (terveys ja luonto)
-Accent: Leikin oranssi (energia ja ilo)  
-Neutral: Lämpöharmaa (selkeys ja luettavuus)
-Background: Valkoinen/beige (puhtaus ja saavutettavuus)
-Kaikki värit HSL-muodossa pet tech -trendien mukaisesti.
+/* Playful Puppy Design System 2025 🐾
+Nature-inspired pastel palette that feels soft, friendly, and joyful
+Based on the delightful design system for puppy tracking apps
 */
 
 @layer base {
   :root {
-    /* Pentu-themed Color Palette 2025 */
-    --background: 48 20% 98%; /* Lämpövalkoinen/beige tausta #FAF9F6 */
-    --foreground: 0 0% 15%; /* Tumma teksti luettavuuden vuoksi */
+    /* Warm & Delightful Color Palette */
+    --background: 44 55% 94%; /* Warm Sand #FFEDC2 */
+    --foreground: 30 15% 20%; /* Charcoal Paw #333333 */
 
-    --card: 0 0% 100%; /* Valkoinen kortti */
-    --card-foreground: 0 0% 15%;
+    --card: 0 0% 97%; /* Cloud White #F7F7F7 */
+    --card-foreground: 30 15% 20%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 15%;
+    --popover: 0 0% 97%;
+    --popover-foreground: 30 15% 20%;
 
-    /* Pääväri: Kasvun vihreä #4CAF50 */
-    --primary: 122 39% 49%;
-    --primary-foreground: 0 0% 100%;
-    --primary-glow: 122 50% 65%; /* Vaaleampi versio animaatioille */
+    /* Primary: Mint Sprout #A8E6CF */
+    --primary: 151 52% 78%;
+    --primary-foreground: 30 15% 20%;
+    --primary-glow: 151 52% 85%; /* Lighter version for animations */
 
-    /* Sekundaariväri: Neutraali ja pehmeä */
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 46%; /* #757575 */
+    /* Secondary: Peach Blossom #FFD3B6 */
+    --secondary: 23 100% 85%;
+    --secondary-foreground: 30 15% 20%;
 
-    /* Muted: Neutraalit sävyt */
-    --muted: 48 15% 95%;
-    --muted-foreground: 0 0% 46%;
+    /* Muted: Sky Puddle #DCEFFF */
+    --muted: 210 100% 93%;
+    --muted-foreground: 35 20% 51%; /* Cocoa Fur #B39C82 */
 
-    /* Aksenttiväri: Leikin oranssi #FF9800 */
-    --accent: 36 100% 50%;
-    --accent-foreground: 0 0% 100%;
-    --accent-light: 36 100% 70%; /* Vaaleampi versio */
+    /* Accent: Peach Blossom for highlights */
+    --accent: 23 100% 85%;
+    --accent-foreground: 30 15% 20%;
+    --accent-light: 23 100% 90%;
 
-    /* Pentu-themed gradient colors */
-    --gradient-green: 122 39% 49%; /* Kasvun vihreä */
-    --gradient-green-light: 122 50% 65%;
-    --gradient-orange: 36 100% 50%; /* Leikin oranssi */
-    --gradient-orange-light: 36 100% 70%;
-    --gradient-warm-neutral: 48 20% 98%;
-    --gradient-cool-neutral: 48 15% 95%;
+    /* Playful gradient colors */
+    --gradient-mint: 151 52% 78%; /* Mint Sprout */
+    --gradient-mint-light: 151 52% 85%;
+    --gradient-peach: 23 100% 85%; /* Peach Blossom */
+    --gradient-peach-light: 23 100% 90%;
+    --gradient-sky: 210 100% 93%; /* Sky Puddle */
+    --gradient-warm: 44 55% 94%; /* Warm Sand */
 
-    /* Söpöt accent-värit eri toiminnoille */
-    --chart-growth: 122 39% 49%; /* Vihreä - kasvu */
-    --chart-energy: 36 100% 50%; /* Oranssi - energia */
-    --chart-health: 200 50% 60%; /* Sininen - terveys */
-    --chart-milestone: 280 60% 65%; /* Violetti - merkkipaalut */
-    --chart-joy: 50 80% 60%; /* Keltainen - ilo */
+    /* Puppy-themed chart colors */
+    --chart-growth: 151 52% 78%; /* Mint - growth */
+    --chart-energy: 23 100% 85%; /* Peach - energy */
+    --chart-health: 210 65% 75%; /* Sky blue - health */
+    --chart-milestone: 280 60% 80%; /* Light purple - milestones */
+    --chart-joy: 50 85% 75%; /* Warm yellow - joy */
 
-    /* Virhe: Pehmeä punainen #E57373 */
-    --destructive: 0 65% 68%;
-    --destructive-foreground: 0 0% 100%;
+    /* Soft error: Gentle coral */
+    --destructive: 0 70% 80%;
+    --destructive-foreground: 30 15% 20%;
 
-    /* Reunat ja syöttökentät */
-    --border: 0 0% 90%;
-    --input: 0 0% 95%;
-    --ring: 122 39% 49%; /* Sama kuin primary */
+    /* Borders and inputs with soft colors */
+    --border: 35 20% 85%;
+    --input: 210 100% 96%;
+    --ring: 151 52% 78%;
 
-    --radius: 1rem; /* Pyöristetymmat kulmat söpöyden vuoksi */
+    --radius: 1rem; /* Rounded for puppy cuteness */
 
     --sidebar-background: 0 0% 98%;
 
@@ -115,57 +111,57 @@ Kaikki värit HSL-muodossa pet tech -trendien mukaisesti.
   }
 
   .dark {
-    /* Dark mode pentu-teema */
-    --background: 0 0% 8%; /* Tumma tausta */
-    --foreground: 48 10% 95%; /* Vaalea teksti */
+    /* Cozy dark mode for evening puppy tracking */
+    --background: 30 15% 8%; /* Dark charcoal */
+    --foreground: 0 0% 93%; /* Cloud white text */
 
-    --card: 0 0% 10%; /* Tumma kortti */
-    --card-foreground: 48 10% 95%;
+    --card: 30 15% 12%; /* Darker card background */
+    --card-foreground: 0 0% 93%;
 
-    --popover: 0 0% 10%;
-    --popover-foreground: 48 10% 95%;
+    --popover: 30 15% 12%;
+    --popover-foreground: 0 0% 93%;
 
-    /* Primary: Vihreä pysyy samana dark modessa */
-    --primary: 122 39% 55%; /* Hieman vaaleampi dark modessa */
-    --primary-foreground: 0 0% 100%;
-    --primary-glow: 122 50% 70%;
+    /* Primary: Softer mint for dark mode */
+    --primary: 151 45% 70%;
+    --primary-foreground: 30 15% 15%;
+    --primary-glow: 151 45% 80%;
 
-    /* Dark secondary */
-    --secondary: 0 0% 15%;
-    --secondary-foreground: 48 5% 80%;
+    /* Secondary: Muted peach for dark mode */
+    --secondary: 23 30% 25%;
+    --secondary-foreground: 0 0% 85%;
 
     /* Dark muted */
-    --muted: 0 0% 15%;
-    --muted-foreground: 48 5% 65%;
+    --muted: 30 15% 18%;
+    --muted-foreground: 35 15% 65%;
 
-    /* Accent: Oranssi dark modessa */
-    --accent: 36 100% 60%; /* Hieman vaaleampi */
-    --accent-foreground: 0 0% 100%;
-    --accent-light: 36 100% 75%;
+    /* Accent: Warmer peach for dark mode */
+    --accent: 23 70% 75%;
+    --accent-foreground: 30 15% 15%;
+    --accent-light: 23 70% 80%;
 
-    /* Dark mode gradient colors */
-    --gradient-green: 122 39% 55%;
-    --gradient-green-light: 122 50% 70%;
-    --gradient-orange: 36 100% 60%;
-    --gradient-orange-light: 36 100% 75%;
-    --gradient-warm-neutral: 0 0% 12%;
-    --gradient-cool-neutral: 0 0% 15%;
+    /* Dark mode gradients */
+    --gradient-mint: 151 45% 70%;
+    --gradient-mint-light: 151 45% 80%;
+    --gradient-peach: 23 70% 75%;
+    --gradient-peach-light: 23 70% 80%;
+    --gradient-sky: 210 50% 35%;
+    --gradient-warm: 30 15% 12%;
 
-    /* Chart colors for dark mode */
-    --chart-growth: 122 39% 55%;
-    --chart-energy: 36 100% 60%;
-    --chart-health: 200 50% 65%;
-    --chart-milestone: 280 60% 70%;
-    --chart-joy: 50 80% 65%;
+    /* Dark mode chart colors */
+    --chart-growth: 151 45% 70%;
+    --chart-energy: 23 70% 75%;
+    --chart-health: 210 60% 70%;
+    --chart-milestone: 280 50% 75%;
+    --chart-joy: 50 70% 70%;
 
-    /* Destructive for dark mode */
-    --destructive: 0 65% 60%; /* Hieman vaaleampi */
-    --destructive-foreground: 0 0% 100%;
+    /* Gentle destructive for dark mode */
+    --destructive: 0 60% 70%;
+    --destructive-foreground: 30 15% 15%;
 
     /* Dark borders and inputs */
-    --border: 0 0% 20%;
-    --input: 0 0% 18%;
-    --ring: 122 39% 55%;
+    --border: 30 15% 25%;
+    --input: 30 15% 20%;
+    --ring: 151 45% 70%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -191,7 +187,7 @@ Kaikki värit HSL-muodossa pet tech -trendien mukaisesti.
   body {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
-    font-family: 'Open Sans', system-ui, -apple-system, sans-serif;
+    font-family: 'Quicksand', 'Poppins', system-ui, -apple-system, sans-serif;
     /* Improved mobile typography */
     font-size: 16px; /* Prevent zoom on iOS */
     line-height: 1.5;
@@ -456,46 +452,71 @@ Kaikki värit HSL-muodossa pet tech -trendien mukaisesti.
     }
   }
 
-  /* Pentu-themed Typography System 2025 */
+  /* Playful Puppy Typography System 2025 🐾 */
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Poppins', system-ui, -apple-system, sans-serif;
-    font-weight: 600;
+    font-weight: 700; /* Bold for headings */
   }
 
   .font-heading {
     font-family: 'Poppins', system-ui, -apple-system, sans-serif;
-    font-weight: 600; /* Leikkisä ja moderni */
+    font-weight: 700; /* Bold for puppy energy */
   }
 
   .font-body {
-    font-family: 'Open Sans', system-ui, -apple-system, sans-serif;
-    font-weight: 400; /* Selkeä ja neutraali */
+    font-family: 'Quicksand', system-ui, -apple-system, sans-serif;
+    font-weight: 400; /* Regular for readability */
+  }
+
+  .font-caption {
+    font-family: 'Nunito Sans', system-ui, -apple-system, sans-serif;
+    font-weight: 600; /* Semi-bold for labels */
   }
 
   .font-playful {
-    font-family: 'Fredoka', system-ui, -apple-system, sans-serif;
-    font-weight: 500; /* Söpö aksenttifontti */
+    font-family: 'Dancing Script', cursive;
+    font-weight: 400; /* Handwriting accent font */
   }
 
-  /* Pentu-themed Gradient Utilities 2025 */
-  .bg-gradient-growth {
-    background: linear-gradient(135deg, hsl(var(--gradient-green)), hsl(var(--gradient-green-light)));
+  /* Playful Puppy Gradient Utilities 2025 🌈 */
+  .bg-gradient-mint {
+    background: linear-gradient(135deg, hsl(var(--gradient-mint)), hsl(var(--gradient-mint-light)));
   }
 
-  .bg-gradient-playful {
-    background: linear-gradient(135deg, hsl(var(--gradient-orange)), hsl(var(--gradient-orange-light)));
-  }
-
-  .bg-gradient-warm-old {
-    background: linear-gradient(135deg, hsl(var(--gradient-green)), hsl(var(--gradient-orange)));
-  }
-
-  .bg-gradient-gentle {
-    background: linear-gradient(180deg, hsl(var(--gradient-warm-neutral)), hsl(var(--gradient-cool-neutral)));
+  .bg-gradient-peach {
+    background: linear-gradient(135deg, hsl(var(--gradient-peach)), hsl(var(--gradient-peach-light)));
   }
 
   .bg-gradient-primary {
     background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+  }
+
+  .bg-gradient-warm {
+    background: linear-gradient(135deg, hsl(var(--gradient-mint)), hsl(var(--gradient-peach)));
+  }
+
+  .bg-gradient-sky {
+    background: linear-gradient(180deg, hsl(var(--gradient-sky)), hsl(var(--gradient-warm)));
+  }
+
+  /* Playful button effects */
+  .btn-paw-print {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-paw-print::before {
+    content: '🐾';
+    position: absolute;
+    top: 50%;
+    left: -100%;
+    transform: translateY(-50%);
+    transition: left 0.3s ease;
+    opacity: 0.3;
+  }
+
+  .btn-paw-print:hover::before {
+    left: 100%;
   }
 
   .bg-gradient-accent {
