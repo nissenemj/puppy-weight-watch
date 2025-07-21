@@ -1,4 +1,3 @@
-
 import Navigation from '@/components/Navigation'
 import ModernPuppyWeightTracker from '@/components/ModernPuppyWeightTracker'
 import SEO from '@/components/SEO'
@@ -14,7 +13,6 @@ import growthStages from '@/assets/growth-stages.png'
 
 const Index = () => {
   const faqs = [
-    // Painonseuranta ja kasvu
     {
       question: "Kuinka usein minun pitäisi punnita pentuni?",
       answer: "Pennut tulisi punnita viikoittain ensimmäisten kuukausien ajan. Tämä auttaa seuraamaan kasvua ja varmistamaan, että pentu kehittyy normaalisti."
@@ -31,7 +29,6 @@ const Index = () => {
       question: "Voiko sovellusta käyttää ilman rekisteröitymistä?",
       answer: "Kyllä! Voit käyttää perusominaisuuksia ilman rekisteröitymistä. Rekisteröityminen mahdollistaa tietojen tallentamisen ja synkronoinnin."
     },
-    // Ruokinta ja ruokamäärät
     {
       question: "Kuinka paljon ruokaa pentu tarvitsee painon mukaan?",
       answer: "Ruokamäärä lasketaan elopainokiloa kohden. Pienet rodut (1-5 kg): 42g/kg 6 viikon iässä, vähennetään 31g/kg 7 kuukauteen mennessä. Suuret rodut (10-20 kg): 26g/kg 6 viikon iässä, vähennetään 19g/kg 8 kuukauteen mennessä. Esimerkki: 4kg, 5kk ikäinen pentu tarvitsee noin 136g päivässä."
@@ -83,7 +80,7 @@ const Index = () => {
       />
       <Navigation />
       
-      {/* Hero Section with Central Puppy and Navigation Cards */}
+      {/* Hero Section with Central Puppy and Button Navigation */}
       <section className="relative min-h-screen flex items-center justify-center bg-grass-gradient overflow-hidden">
         {/* Grass pattern background */}
         <div className="absolute inset-0 bg-emerald-50/30 opacity-60"></div>
@@ -91,34 +88,34 @@ const Index = () => {
         <div className="container mx-auto px-4 py-16 relative z-10">
           <div className="grid lg:grid-cols-5 gap-8 items-center max-w-7xl mx-auto">
             
-            {/* Left Navigation Cards */}
+            {/* Left Navigation Buttons */}
             <motion.div 
-              className="lg:col-span-1 space-y-4"
+              className="lg:col-span-1 space-y-3"
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
               <Link to="/" className="block">
                 <motion.div 
-                  className="bg-white backdrop-blur-sm rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-primary/10"
-                  whileHover={{ scale: 1.05, rotateY: 5 }}
-                  whileTap={{ scale: 0.95 }}
+                  className="bg-primary/10 backdrop-blur-sm rounded-full p-3 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-primary/20 hover:bg-primary/20"
+                  whileHover={{ scale: 1.1, rotateY: 5 }}
+                  whileTap={{ scale: 0.9 }}
                 >
                   <div className="text-center">
-                    <FaDog className="text-3xl mb-2 text-primary mx-auto" />
-                    <h3 className="font-heading font-semibold text-sm text-primary">Painonseuranta</h3>
+                    <FaDog className="text-2xl mb-1 text-primary mx-auto" />
+                    <h3 className="font-heading font-semibold text-xs text-primary">Painonseuranta</h3>
                   </div>
                 </motion.div>
               </Link>
               <Link to="/info/feeding-data" className="block">
                 <motion.div 
-                  className="bg-white backdrop-blur-sm rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-accent/10"
-                  whileHover={{ scale: 1.05, rotateY: -5 }}
-                  whileTap={{ scale: 0.95 }}
+                  className="bg-accent/10 backdrop-blur-sm rounded-full p-3 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-accent/20 hover:bg-accent/20"
+                  whileHover={{ scale: 1.1, rotateY: -5 }}
+                  whileTap={{ scale: 0.9 }}
                 >
                   <div className="text-center">
-                    <FaBone className="text-3xl mb-2 text-accent mx-auto" />
-                    <h3 className="font-heading font-semibold text-sm text-accent">Ruokinta</h3>
+                    <FaBone className="text-2xl mb-1 text-accent mx-auto" />
+                    <h3 className="font-heading font-semibold text-xs text-accent">Ruokinta</h3>
                   </div>
                 </motion.div>
               </Link>
@@ -204,34 +201,34 @@ const Index = () => {
               </motion.div>
             </motion.div>
 
-            {/* Right Navigation Cards */}
+            {/* Right Navigation Buttons */}
             <motion.div 
-              className="lg:col-span-1 space-y-4"
+              className="lg:col-span-1 space-y-3"
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
               <Link to="/calculator" className="block">
                 <motion.div 
-                  className="bg-white backdrop-blur-sm rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-primary/10"
-                  whileHover={{ scale: 1.05, rotateY: -5 }}
-                  whileTap={{ scale: 0.95 }}
+                  className="bg-primary/10 backdrop-blur-sm rounded-full p-3 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-primary/20 hover:bg-primary/20"
+                  whileHover={{ scale: 1.1, rotateY: -5 }}
+                  whileTap={{ scale: 0.9 }}
                 >
                   <div className="text-center">
-                    <FaPaw className="text-3xl mb-2 text-primary mx-auto" />
-                    <h3 className="font-heading font-semibold text-sm text-primary">Laskuri</h3>
+                    <FaPaw className="text-2xl mb-1 text-primary mx-auto" />
+                    <h3 className="font-heading font-semibold text-xs text-primary">Laskuri</h3>
                   </div>
                 </motion.div>
               </Link>
               <Link to="/info" className="block">
                 <motion.div 
-                  className="bg-white backdrop-blur-sm rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-accent/10"
-                  whileHover={{ scale: 1.05, rotateY: 5 }}
-                  whileTap={{ scale: 0.95 }}
+                  className="bg-accent/10 backdrop-blur-sm rounded-full p-3 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-accent/20 hover:bg-accent/20"
+                  whileHover={{ scale: 1.1, rotateY: 5 }}
+                  whileTap={{ scale: 0.9 }}
                 >
                   <div className="text-center">
-                    <FaHeart className="text-3xl mb-2 text-accent mx-auto" />
-                    <h3 className="font-heading font-semibold text-sm text-accent">Tietoa</h3>
+                    <FaHeart className="text-2xl mb-1 text-accent mx-auto" />
+                    <h3 className="font-heading font-semibold text-xs text-accent">Tietoa</h3>
                   </div>
                 </motion.div>
               </Link>
@@ -254,7 +251,7 @@ const Index = () => {
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
             {/* Feature Card 1 */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-primary/10">
+            <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
               <div className="text-center">
                 <div className="text-4xl mb-4">🐕‍🦺</div>
                 <h3 className="font-heading font-semibold text-lg mb-2 text-primary">Kasvuseuranta</h3>
@@ -263,7 +260,7 @@ const Index = () => {
             </div>
 
             {/* Feature Card 2 */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-accent/10">
+            <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
               <div className="text-center">
                 <div className="text-4xl mb-4">🍖</div>
                 <h3 className="font-heading font-semibold text-lg mb-2 text-accent">Ruokamäärät</h3>
@@ -272,7 +269,7 @@ const Index = () => {
             </div>
 
             {/* Feature Card 3 */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-primary/10">
+            <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
               <div className="text-center">
                 <div className="text-4xl mb-4">🩺</div>
                 <h3 className="font-heading font-semibold text-lg mb-2 text-primary">Terveys</h3>
@@ -281,7 +278,7 @@ const Index = () => {
             </div>
 
             {/* Feature Card 4 */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-accent/10">
+            <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
               <div className="text-center">
                 <div className="text-4xl mb-4">📲</div>
                 <h3 className="font-heading font-semibold text-lg mb-2 text-accent">Helppokäyttö</h3>
