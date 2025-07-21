@@ -212,7 +212,7 @@ const Navigation = () => {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent 
                     align="end"
-                    className="min-w-48 bg-background/95 backdrop-blur-lg"
+                    className="min-w-48 bg-background/95 backdrop-blur-lg z-[100]"
                   >
                     {hiddenItems.map(index => (
                       <DropdownMenuItem key={navItems[index].href} asChild>
@@ -247,7 +247,7 @@ const Navigation = () => {
               )}
             </Button>
 
-            {/* Mobile Menu */}
+            {/* Mobile Menu - Fixed implementation */}
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
                 <Button
@@ -258,16 +258,18 @@ const Navigation = () => {
                   aria-expanded={isOpen}
                   aria-controls="mobile-nav"
                 >
-                  <div className="hamburger-icon relative w-5 h-5">
-                    <span className={`hamburger-line ${isOpen ? 'open' : ''}`} />
-                  </div>
+                  {isOpen ? (
+                    <X className="h-5 w-5" />
+                  ) : (
+                    <Menu className="h-5 w-5" />
+                  )}
                   <span className="sr-only">Valikko</span>
                 </Button>
               </SheetTrigger>
               
               <SheetContent 
                 side="left" 
-                className="w-80 sm:w-96 px-0"
+                className="w-80 sm:w-96 px-0 z-[1000]"
                 id="mobile-nav"
               >
                 <SheetHeader className="px-6 pb-4">

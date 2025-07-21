@@ -1,4 +1,5 @@
 
+
 body, html, .main-bg {
   background: #eaf8e3;
   min-height: 100vh;
@@ -99,46 +100,6 @@ nav a, nav button {
   left: 1rem !important;
 }
 
-/* Hamburger animation */
-.hamburger-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.hamburger-line,
-.hamburger-line::before,
-.hamburger-line::after {
-  content: "";
-  display: block;
-  width: 20px;
-  height: 2px;
-  background: currentColor;
-  border-radius: 2px;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-}
-
-.hamburger-line::before {
-  transform: translateY(-6px);
-}
-
-.hamburger-line::after {
-  transform: translateY(4px);
-}
-
-.hamburger-line.open {
-  background: transparent;
-}
-
-.hamburger-line.open::before {
-  transform: rotate(45deg);
-}
-
-.hamburger-line.open::after {
-  transform: rotate(-45deg);
-}
-
 /* Navigation enhancements */
 .nav-link:hover {
   transform: translateY(-1px);
@@ -167,9 +128,6 @@ nav a, nav button {
 
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
-  .hamburger-line,
-  .hamburger-line::before,
-  .hamburger-line::after,
   .nav-link {
     transition: none;
   }
