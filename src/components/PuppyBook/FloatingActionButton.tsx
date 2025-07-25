@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Camera, Calendar, Award, Heart, X } from 'lucide-react';
+import { Plus, Camera, Calendar, Award, Heart, X, Stethoscope } from 'lucide-react';
 import AddMemoryDialog from './AddMemoryDialog';
+import { AddHealthRecordDialog } from './AddHealthRecordDialog';
 
 interface ActionButtonProps {
   icon: React.ComponentType<any>;
@@ -27,6 +28,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({ icon: Icon, label, onClick 
 interface FloatingActionButtonProps {
   bookId: string;
   onMemoryAdded?: () => void;
+  onHealthRecordAdded?: () => void;
   showDialog?: boolean;
   onShowDialogChange?: (show: boolean) => void;
 }
@@ -34,11 +36,13 @@ interface FloatingActionButtonProps {
 const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({ 
   bookId, 
   onMemoryAdded, 
+  onHealthRecordAdded,
   showDialog = false, 
   onShowDialogChange 
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(showDialog);
+  const [healthDialogOpen, setHealthDialogOpen] = useState(false);
   const [dialogType, setDialogType] = useState<'photo' | 'text' | 'event' | 'milestone'>('photo');
 
   // Update dialog state when external showDialog changes
@@ -63,11 +67,17 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
     onShowDialogChange?.(false);
   };
 
+  const handleHealthClick = () => {
+    setHealthDialogOpen(true);
+    setIsOpen(false);
+  };
+
   const actions = [
     { icon: Camera, label: 'Lisää kuva', onClick: () => handleActionClick('photo') },
     { icon: Calendar, label: 'Lisää tapahtuma', onClick: () => handleActionClick('event') },
     { icon: Award, label: 'Lisää virstanpylväs', onClick: () => handleActionClick('milestone') },
     { icon: Heart, label: 'Lisää muisto', onClick: () => handleActionClick('text') },
+    { icon: Stethoscope, label: 'Lisää terveysmerkintä', onClick: handleHealthClick },
   ];
 
   return (
@@ -82,6 +92,17 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
           handleDialogClose();
         }}
       />
+
+      <AddHealthRecordDialog
+        bookId={bookId}
+        open={healthDialogOpen}
+        onOpenChange={setHealthDialogOpen}
+        onHealthRecordAdded={() => {
+          onHealthRecordAdded?.();
+        }}
+      >
+        <div />
+      </AddHealthRecordDialog>
       
       <div className="fixed bottom-6 right-6 z-50">
         <div className="relative">

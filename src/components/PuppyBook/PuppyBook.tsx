@@ -329,6 +329,10 @@ const PuppyBook: React.FC = () => {
             memoryGalleryRef.current();
           }
         }}
+        onHealthRecordAdded={() => {
+          // Refresh health records data if needed
+          // Could trigger a refresh of timeline or monthly tracker
+        }}
       />
     </div>
   );

@@ -566,34 +566,46 @@ export type Database = {
           book_id: string
           created_at: string
           description: string
+          dosage: string | null
           entry_date: string
           id: string
+          medication_name: string | null
           notes: string | null
+          time: string | null
           type: string
           updated_at: string
           veterinarian: string | null
+          weight_kg: number | null
         }
         Insert: {
           book_id: string
           created_at?: string
           description: string
+          dosage?: string | null
           entry_date: string
           id?: string
+          medication_name?: string | null
           notes?: string | null
+          time?: string | null
           type: string
           updated_at?: string
           veterinarian?: string | null
+          weight_kg?: number | null
         }
         Update: {
           book_id?: string
           created_at?: string
           description?: string
+          dosage?: string | null
           entry_date?: string
           id?: string
+          medication_name?: string | null
           notes?: string | null
+          time?: string | null
           type?: string
           updated_at?: string
           veterinarian?: string | null
+          weight_kg?: number | null
         }
         Relationships: []
       }
@@ -871,6 +883,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      vaccination_templates: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          manufacturer: string | null
+          name: string
+          recommended_age_weeks: number[] | null
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          manufacturer?: string | null
+          name: string
+          recommended_age_weeks?: number[] | null
+          type: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          manufacturer?: string | null
+          name?: string
+          recommended_age_weeks?: number[] | null
+          type?: string
+        }
+        Relationships: []
       }
       weight_entries: {
         Row: {
