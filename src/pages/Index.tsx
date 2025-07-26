@@ -179,7 +179,7 @@ const Index = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.5 }}
               >
-                Seuraa rakkaasi koiranpentusi kasvua ja kehitystä helposti 🐾
+                Seuraa koiranpentusi kasvua ja kehitystä helposti 🐾
               </motion.p>
               
               {/* CTA Button */}
