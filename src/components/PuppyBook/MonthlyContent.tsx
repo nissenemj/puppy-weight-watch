@@ -27,6 +27,9 @@ import { fi } from 'date-fns/locale';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { VeterinaryGuidance } from './VeterinaryGuidance';
+import { SourceBadges } from './SourceBadges';
+import { AlertTriangle } from 'lucide-react';
 
 interface MonthlyContentProps {
   monthNumber: number;
@@ -61,6 +64,10 @@ interface DatabaseHealthRecord {
   time: string | null;
   medication_name: string | null;
   dosage: string | null;
+  vaccine_brand: string | null;
+  lot_number: string | null;
+  reaction_observed: boolean | null;
+  reaction_description: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -687,6 +694,14 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
                 </Button>
               </AddHealthRecordDialog>
             </div>
+
+            {/* Veterinary Guidance */}
+            <VeterinaryGuidance 
+              ageWeeks={currentWeeks}
+              showVaccinationWarning={currentWeeks < 16}
+              showDewormingSchedule={currentWeeks <= 12}
+              showReactionGuidance={true}
+            />
             
             {/* Age-based recommendations */}
             <div className="space-y-3">
@@ -750,22 +765,51 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
                              </div>
                            )}
                            
-                           {/* Display weight */}
-                           {record.weight_kg && (
-                             <p className="text-sm text-gray-600 flex items-center gap-1">
-                               <Weight className="w-3 h-3" />
-                               Paino: {record.weight_kg} kg
-                             </p>
-                           )}
-                           
-                           {record.veterinarian && (
-                             <p className="text-sm text-gray-600">
-                               Eläinlääkäri: {record.veterinarian}
-                             </p>
-                           )}
-                           {record.notes && (
-                             <p className="text-sm text-gray-600">{record.notes}</p>
-                           )}
+                            {/* Display AEFI information for vaccinations */}
+                            {record.type === 'vaccination' && (
+                              <div className="space-y-1">
+                                {record.vaccine_brand && (
+                                  <p className="text-sm text-gray-600">
+                                    Rokotteen merkki: {record.vaccine_brand}
+                                  </p>
+                                )}
+                                {record.lot_number && (
+                                  <p className="text-sm text-gray-600">
+                                    Erä-numero: {record.lot_number}
+                                  </p>
+                                )}
+                                {record.reaction_observed && (
+                                  <div className="p-2 bg-orange-50 border border-orange-200 rounded-lg">
+                                    <p className="text-sm text-orange-800 font-medium flex items-center gap-1">
+                                      <AlertTriangle className="w-3 h-3" />
+                                      Rokotusreaktio havaittu (AEFI)
+                                    </p>
+                                    {record.reaction_description && (
+                                      <p className="text-xs text-orange-600 mt-1">
+                                        {record.reaction_description}
+                                      </p>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                            )}
+
+                            {/* Display weight */}
+                            {record.weight_kg && (
+                              <p className="text-sm text-gray-600 flex items-center gap-1">
+                                <Weight className="w-3 h-3" />
+                                Paino: {record.weight_kg} kg
+                              </p>
+                            )}
+                            
+                            {record.veterinarian && (
+                              <p className="text-sm text-gray-600">
+                                Eläinlääkäri: {record.veterinarian}
+                              </p>
+                            )}
+                            {record.notes && (
+                              <p className="text-sm text-gray-600">{record.notes}</p>
+                            )}
                          </div>
                          <Button variant="ghost" size="sm">
                            <Edit className="w-4 h-4" />
@@ -822,6 +866,11 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
                 </CardContent>
               </Card>
             )}
+
+            {/* Source References */}
+            <div className="mt-6 pt-4 border-t border-gray-200">
+              <SourceBadges categories={['vaccination', 'deworming']} />
+            </div>
           </motion.div>
         )}
 

@@ -561,19 +561,60 @@ export type Database = {
           },
         ]
       }
+      growth_centiles: {
+        Row: {
+          age_weeks: number
+          created_at: string | null
+          id: string
+          p10: number
+          p3: number
+          p50: number
+          p90: number
+          p97: number
+          size_class: string
+        }
+        Insert: {
+          age_weeks: number
+          created_at?: string | null
+          id?: string
+          p10: number
+          p3: number
+          p50: number
+          p90: number
+          p97: number
+          size_class: string
+        }
+        Update: {
+          age_weeks?: number
+          created_at?: string | null
+          id?: string
+          p10?: number
+          p3?: number
+          p50?: number
+          p90?: number
+          p97?: number
+          size_class?: string
+        }
+        Relationships: []
+      }
       health_records: {
         Row: {
           book_id: string
           created_at: string
           description: string
           dosage: string | null
+          dose: string | null
           entry_date: string
           id: string
+          lot_number: string | null
           medication_name: string | null
           notes: string | null
+          reaction_description: string | null
+          reaction_observed: boolean | null
           time: string | null
           type: string
           updated_at: string
+          vaccine_brand: string | null
           veterinarian: string | null
           weight_kg: number | null
         }
@@ -582,13 +623,18 @@ export type Database = {
           created_at?: string
           description: string
           dosage?: string | null
+          dose?: string | null
           entry_date: string
           id?: string
+          lot_number?: string | null
           medication_name?: string | null
           notes?: string | null
+          reaction_description?: string | null
+          reaction_observed?: boolean | null
           time?: string | null
           type: string
           updated_at?: string
+          vaccine_brand?: string | null
           veterinarian?: string | null
           weight_kg?: number | null
         }
@@ -597,13 +643,18 @@ export type Database = {
           created_at?: string
           description?: string
           dosage?: string | null
+          dose?: string | null
           entry_date?: string
           id?: string
+          lot_number?: string | null
           medication_name?: string | null
           notes?: string | null
+          reaction_description?: string | null
+          reaction_observed?: boolean | null
           time?: string | null
           type?: string
           updated_at?: string
+          vaccine_brand?: string | null
           veterinarian?: string | null
           weight_kg?: number | null
         }

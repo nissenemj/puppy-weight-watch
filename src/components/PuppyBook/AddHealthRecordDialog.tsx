@@ -5,7 +5,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Calendar, Clock, Weight, Pill } from 'lucide-react';
+import { Calendar, Clock, Weight, Pill, AlertTriangle } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { format } from 'date-fns';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
@@ -50,6 +51,12 @@ export const AddHealthRecordDialog: React.FC<AddHealthRecordDialogProps> = ({
   const [selectedTemplate, setSelectedTemplate] = useState('');
   const [templates, setTemplates] = useState<VaccinationTemplate[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // AEFI fields
+  const [vaccineBrand, setVaccineBrand] = useState('');
+  const [lotNumber, setLotNumber] = useState('');
+  const [reactionObserved, setReactionObserved] = useState(false);
+  const [reactionDescription, setReactionDescription] = useState('');
   const { toast } = useToast();
 
   // Fetch vaccination templates
@@ -131,7 +138,11 @@ export const AddHealthRecordDialog: React.FC<AddHealthRecordDialogProps> = ({
           veterinarian: veterinarian.trim() || null,
           weight_kg: weightKg ? parseFloat(weightKg) : null,
           medication_name: medicationName.trim() || null,
-          dosage: dosage.trim() || null
+          dosage: dosage.trim() || null,
+          vaccine_brand: vaccineBrand.trim() || null,
+          lot_number: lotNumber.trim() || null,
+          reaction_observed: reactionObserved,
+          reaction_description: reactionDescription.trim() || null
         });
 
       if (error) throw error;
@@ -149,10 +160,14 @@ export const AddHealthRecordDialog: React.FC<AddHealthRecordDialogProps> = ({
       setDescription('');
       setNotes('');
       setVeterinarian('');
-      setWeightKg('');
-      setMedicationName('');
-      setDosage('');
-      setSelectedTemplate('');
+          setWeightKg('');
+          setMedicationName('');
+          setDosage('');
+          setSelectedTemplate('');
+          setVaccineBrand('');
+          setLotNumber('');
+          setReactionObserved(false);
+          setReactionDescription('');
       onHealthRecordAdded();
     } catch (error) {
       console.error('Error adding health record:', error);
@@ -334,6 +349,66 @@ export const AddHealthRecordDialog: React.FC<AddHealthRecordDialogProps> = ({
               />
             </div>
           </div>
+
+          {/* AEFI Fields for Vaccinations */}
+          {type === 'vaccination' && (
+            <>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="vaccineBrand">Rokotteen merkki</Label>
+                  <Input
+                    id="vaccineBrand"
+                    value={vaccineBrand}
+                    onChange={(e) => setVaccineBrand(e.target.value)}
+                    placeholder="Esim. Nobivac"
+                    maxLength={100}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="lotNumber">Erä-/lot-numero</Label>
+                  <Input
+                    id="lotNumber"
+                    value={lotNumber}
+                    onChange={(e) => setLotNumber(e.target.value)}
+                    placeholder="Esim. ABC123"
+                    maxLength={50}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-3 p-3 border rounded-lg bg-muted/50">
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="reactionObserved"
+                    checked={reactionObserved}
+                    onCheckedChange={(checked) => setReactionObserved(checked === true)}
+                  />
+                  <Label htmlFor="reactionObserved" className="flex items-center">
+                    <AlertTriangle className="w-4 h-4 mr-2 text-orange-500" />
+                    Havaittiin rokotusreaktio (AEFI)
+                  </Label>
+                </div>
+
+                {reactionObserved && (
+                  <div className="space-y-2">
+                    <Label htmlFor="reactionDescription">Reaktion kuvaus</Label>
+                    <Textarea
+                      id="reactionDescription"
+                      value={reactionDescription}
+                      onChange={(e) => setReactionDescription(e.target.value)}
+                      placeholder="Kuvaile havaittua reaktiota: ihottuma, oksentelu, väsymys..."
+                      rows={2}
+                      maxLength={300}
+                    />
+                    <p className="text-xs text-orange-600">
+                      Ilmoita vakavat reaktiot eläinlääkärille ja rokotteen valmistajalle.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </>
+          )}
 
           <div className="space-y-2">
             <Label htmlFor="notes">Lisätiedot</Label>
