@@ -21,9 +21,9 @@ export default function InfoCard({
 }: InfoCardProps) {
   const variantClasses = {
     default: 'bg-card/95 backdrop-blur-sm border-0 shadow-xl rounded-2xl',
-    warm: 'bg-gradient-light-warm text-card-foreground border-0 shadow-xl rounded-2xl',
-    cool: 'bg-gradient-light-cool text-card-foreground border-0 shadow-xl rounded-2xl',
-    purple: 'bg-gradient-light-purple text-card-foreground border-0 shadow-xl rounded-2xl',
+    warm: 'bg-gradient-peach text-card-foreground border-0 shadow-xl rounded-2xl',
+    cool: 'bg-gradient-mint text-card-foreground border-0 shadow-xl rounded-2xl',
+    purple: 'bg-gradient-primary text-primary-foreground border-0 shadow-xl rounded-2xl',
     accent: 'bg-accent/15 backdrop-blur-sm border-accent/30 shadow-xl rounded-2xl text-card-foreground'
   }
 

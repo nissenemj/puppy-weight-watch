@@ -45,15 +45,15 @@ export default function SafetyPage() {
           className="mb-8"
         >
           <div className="space-y-4">
-            <p className="text-white/95 leading-relaxed mb-4">
+            <p className="text-card-foreground leading-relaxed mb-4">
               Tämä raportti ja sen pohjalta kehitettävä sovellus ovat työkaluja ja oppaita, eivätkä ne koskaan korvaa 
               ammattilaisen antamaa yksilöllistä neuvontaa. Koiranpennun omistajaa tulee aina kannustaa keskustelemaan 
               ruokinnasta hoitavan eläinlääkärin kanssa.
             </p>
             
             <div className="space-y-3">
-              <h3 className="font-semibold text-white">Eläinlääkäri osaa arvioida:</h3>
-              <ul className="text-sm text-white/90 space-y-2">
+              <h3 className="font-semibold text-card-foreground">Eläinlääkäri osaa arvioida:</h3>
+              <ul className="text-sm text-card-foreground/90 space-y-2">
                 <li>• Pennun yksilöllisen kasvukäyrän</li>
                 <li>• Kuntoluokan ja kehityksen</li>
                 <li>• Mahdolliset erityistarpeet</li>
@@ -62,9 +62,9 @@ export default function SafetyPage() {
               </ul>
             </div>
             
-            <div className="bg-white/20 p-4 rounded-xl border border-white/30 mt-4">
-              <h4 className="font-semibold text-white mb-2">Erityisen tärkeää konsultoida eläinlääkäriä:</h4>
-              <ul className="text-sm text-white/90 space-y-1">
+            <div className="bg-card-foreground/20 p-4 rounded-xl border border-card-foreground/30 mt-4">
+              <h4 className="font-semibold text-card-foreground mb-2">Erityisen tärkeää konsultoida eläinlääkäriä:</h4>
+              <ul className="text-sm text-card-foreground/90 space-y-1">
                 <li>• Jos pennulla on diagnosoituja terveysongelmia</li>
                 <li>• Jos pentu kuuluu jättirotuun</li>
                 <li>• Jos kasvu poikkeaa normaalista</li>
@@ -83,44 +83,44 @@ export default function SafetyPage() {
         >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
-                <h3 className="font-semibold text-gray-800">Kriittiset ravintoaineet pennuille:</h3>
+                <h3 className="font-semibold text-card-foreground">Kriittiset ravintoaineet pennuille:</h3>
                 <ul className="text-sm space-y-2">
                   <li className="flex items-start gap-2">
-                    <span className="text-blue-600">•</span>
+                    <span className="text-primary">•</span>
                     <span><strong>Proteiini:</strong> Lihaksiston ja kudosten kehitykseen</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-blue-600">•</span>
+                    <span className="text-primary">•</span>
                     <span><strong>Kalsium ja fosfori:</strong> Luuston kehitykseen</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-blue-600">•</span>
+                    <span className="text-primary">•</span>
                     <span><strong>DHA:</strong> Aivojen ja näön kehitykseen</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-blue-600">•</span>
+                    <span className="text-primary">•</span>
                     <span><strong>Energia:</strong> Nopean kasvun tukemiseen</span>
                   </li>
                 </ul>
               </div>
               
               <div className="space-y-4">
-                <h3 className="font-semibold text-gray-800">Varoitukset:</h3>
+                <h3 className="font-semibold text-card-foreground">Varoitukset:</h3>
                 <ul className="text-sm space-y-2">
                   <li className="flex items-start gap-2">
-                    <span className="text-red-600">⚠️</span>
+                    <span className="text-destructive">⚠️</span>
                     <span>Liiallinen kalsium voi aiheuttaa luusto-ongelmia</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-red-600">⚠️</span>
+                    <span className="text-destructive">⚠️</span>
                     <span>Liiallinen energia kiihdyttää kasvua epänormaalisti</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-red-600">⚠️</span>
+                    <span className="text-destructive">⚠️</span>
                     <span>Puutteellinen ravitsemus hidastaa kehitystä</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-red-600">⚠️</span>
+                    <span className="text-destructive">⚠️</span>
                     <span>Suurirodun pennuille erityishuomiot</span>
                   </li>
                 </ul>
@@ -133,7 +133,7 @@ export default function SafetyPage() {
           variant="purple"
           className="mb-8"
         >
-          <p className="text-white/95 leading-relaxed">
+          <p className="text-primary-foreground leading-relaxed">
             Pentukoiran ruokinta on monimutkainen aihe, joka vaatii huolellista harkintaa ja usein ammattilaisen 
             ohjausta. Teknologiset työkalut voivat auttaa tiedon keräämisessä ja päätöksenteossa, mutta ne eivät 
             koskaan korvaa eläinlääkärin ammattitaitoa tai omistajan vastuuta seurata lemmikin vointia. 
