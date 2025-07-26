@@ -23,6 +23,11 @@ const HeaderButtons: React.FC<HeaderButtonsProps> = ({
     return false
   }
 
+  // Determine appropriate logo text - use generic text to avoid overlap with navigation
+  const getLogoText = () => {
+    return "Pentulaskuri" // Always use generic app name
+  }
+
   return (
     <div className="flex items-center gap-4">
       {showLogo && (
@@ -33,7 +38,7 @@ const HeaderButtons: React.FC<HeaderButtonsProps> = ({
             className="w-10 h-10 rounded-lg shadow-sm"
           />
           <span className="font-bold text-xl text-foreground hidden sm:block">
-            {logoText}
+            {getLogoText()}
           </span>
         </Link>
       )}
