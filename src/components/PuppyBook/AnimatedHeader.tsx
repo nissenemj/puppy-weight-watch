@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Heart, Sparkles, PawPrint, Calendar, Clock } from 'lucide-react';
+import { Heart, Sparkles, PawPrint, Calendar, Clock, Settings } from 'lucide-react';
 import { format, differenceInWeeks, differenceInDays, parseISO } from 'date-fns';
 import { fi } from 'date-fns/locale';
 
@@ -11,6 +11,7 @@ interface AnimatedHeaderProps {
   puppyName?: string;
   birthDate?: string;
   puppyImageUrl?: string;
+  onEditProfile?: () => void;
 }
 
 const calculateAge = (birthDate: string) => {
@@ -33,7 +34,8 @@ const AnimatedHeader: React.FC<AnimatedHeaderProps> = ({
   showHeroVideo = true,
   puppyName,
   birthDate,
-  puppyImageUrl
+  puppyImageUrl,
+  onEditProfile
 }) => {
   const puppyAge = birthDate ? calculateAge(birthDate) : null;
   const placeholderPuppyUrl = "https://images.unsplash.com/photo-1552053831-71594a27632d?w=200&h=200&fit=crop&crop=face"; // Söpö koiranpentu
@@ -80,7 +82,7 @@ const AnimatedHeader: React.FC<AnimatedHeaderProps> = ({
           </motion.div>
 
           {/* Content */}
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-0 relative">
             <motion.div
               className="flex items-center gap-3 mb-2"
               initial={{ opacity: 0, x: -20 }}
@@ -149,6 +151,21 @@ const AnimatedHeader: React.FC<AnimatedHeaderProps> = ({
                 {subtitle}
               </motion.p>
             </motion.div>
+
+            {/* Edit Profile Button */}
+            {onEditProfile && (
+              <motion.button
+                onClick={onEditProfile}
+                className="absolute top-0 right-0 p-2 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 hover:bg-white/30 transition-colors"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: 1 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Settings className="w-4 h-4 text-white" />
+              </motion.button>
+            )}
           </div>
         </div>
 

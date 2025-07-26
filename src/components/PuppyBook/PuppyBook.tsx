@@ -35,6 +35,7 @@ import AnimatedHeader from './AnimatedHeader';
 import FloatingActionButton from './FloatingActionButton';
 import ShareDialog from './ShareDialog';
 import SettingsDialog from './SettingsDialog';
+import PuppyProfileEditor from './PuppyProfileEditor';
 import happyPuppy from '@/assets/happy-puppy.png';
 import pawPrints from '@/assets/paw-prints.png';
 import puppyBookIcon from '@/assets/puppy-book-icon.png';
@@ -122,6 +123,7 @@ const PuppyBook: React.FC = () => {
   const [showFloatingAction, setShowFloatingAction] = useState(false);
   const [showShareDialog, setShowShareDialog] = useState(false);
   const [showSettingsDialog, setShowSettingsDialog] = useState(false);
+  const [showProfileEditor, setShowProfileEditor] = useState(false);
   const memoryGalleryRef = React.useRef<(() => void) | null>(null);
   const { toast } = useToast();
 
@@ -268,6 +270,10 @@ const PuppyBook: React.FC = () => {
       <AnimatedHeader 
         title="Pentu kasvaa – seuraa matkaa!"
         subtitle="Tallenna ainutlaatuisia hetkiä ja jaa iloa yhteisön kanssa ✨"
+        puppyName={book.title}
+        birthDate={book.birth_date}
+        puppyImageUrl={book.cover_image_url}
+        onEditProfile={() => setShowProfileEditor(true)}
       />
       <PuppyBookNavigation 
         activeSection={activeSection} 
@@ -405,6 +411,13 @@ const PuppyBook: React.FC = () => {
       <SettingsDialog
         isOpen={showSettingsDialog}
         onClose={() => setShowSettingsDialog(false)}
+        book={book}
+        onBookUpdated={(updatedBook) => setBook({ ...book, ...updatedBook })}
+      />
+      
+      <PuppyProfileEditor
+        isOpen={showProfileEditor}
+        onClose={() => setShowProfileEditor(false)}
         book={book}
         onBookUpdated={(updatedBook) => setBook({ ...book, ...updatedBook })}
       />
