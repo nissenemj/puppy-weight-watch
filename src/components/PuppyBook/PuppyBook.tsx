@@ -25,6 +25,8 @@ import Timeline from './Timeline';
 import Milestones from './Milestones';
 import MemoryGallery from './MemoryGallery';
 import FloatingActionButton from './FloatingActionButton';
+import ShareDialog from './ShareDialog';
+import SettingsDialog from './SettingsDialog';
 import happyPuppy from '@/assets/happy-puppy.png';
 import pawPrints from '@/assets/paw-prints.png';
 import puppyBookIcon from '@/assets/puppy-book-icon.png';
@@ -110,6 +112,8 @@ const PuppyBook: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [selectedMonth, setSelectedMonth] = useState(0);
   const [showFloatingAction, setShowFloatingAction] = useState(false);
+  const [showShareDialog, setShowShareDialog] = useState(false);
+  const [showSettingsDialog, setShowSettingsDialog] = useState(false);
   const memoryGalleryRef = React.useRef<(() => void) | null>(null);
   const { toast } = useToast();
 
@@ -253,7 +257,11 @@ const PuppyBook: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50">
       <Navigation />
-      <PuppyBookHeader book={book} />
+      <PuppyBookHeader 
+        book={book} 
+        onShareClick={() => setShowShareDialog(true)}
+        onSettingsClick={() => setShowSettingsDialog(true)}
+      />
       <PuppyBookNavigation 
         activeSection={activeSection} 
         onSectionChange={setActiveSection} 
@@ -333,6 +341,21 @@ const PuppyBook: React.FC = () => {
           // Refresh health records data if needed
           // Could trigger a refresh of timeline or monthly tracker
         }}
+      />
+      
+      {/* Dialogs */}
+      <ShareDialog
+        isOpen={showShareDialog}
+        onClose={() => setShowShareDialog(false)}
+        bookTitle={book.title}
+        bookId={book.id}
+      />
+      
+      <SettingsDialog
+        isOpen={showSettingsDialog}
+        onClose={() => setShowSettingsDialog(false)}
+        book={book}
+        onBookUpdated={(updatedBook) => setBook({ ...book, ...updatedBook })}
       />
     </div>
   );
@@ -497,7 +520,11 @@ const CreateBookPrompt: React.FC<{
 };
 
 // Kirjan header
-const PuppyBookHeader: React.FC<{book: PuppyBookData}> = ({ book }) => {
+const PuppyBookHeader: React.FC<{
+  book: PuppyBookData;
+  onShareClick: () => void;
+  onSettingsClick: () => void;
+}> = ({ book, onShareClick, onSettingsClick }) => {
   return (
     <div className="relative bg-gradient-playful text-white overflow-hidden">
       {/* Söpöt taustakuviot */}
@@ -583,6 +610,7 @@ const PuppyBookHeader: React.FC<{book: PuppyBookData}> = ({ book }) => {
             <motion.button
               whileHover={{ scale: 1.1, rotate: 10 }}
               whileTap={{ scale: 0.95 }}
+              onClick={onShareClick}
               className="p-3 bg-white/20 rounded-xl backdrop-blur-sm hover:bg-white/30 transition-colors"
             >
               <Share2 className="w-5 h-5" />
@@ -590,6 +618,7 @@ const PuppyBookHeader: React.FC<{book: PuppyBookData}> = ({ book }) => {
             <motion.button
               whileHover={{ scale: 1.1, rotate: -10 }}
               whileTap={{ scale: 0.95 }}
+              onClick={onSettingsClick}
               className="p-3 bg-white/20 rounded-xl backdrop-blur-sm hover:bg-white/30 transition-colors"
             >
               <Settings className="w-5 h-5" />
