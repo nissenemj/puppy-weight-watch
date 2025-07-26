@@ -1,19 +1,43 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Heart, Sparkles, PawPrint } from 'lucide-react';
-import heroIllustration from '@/assets/hero-illustration.png';
+import { Heart, Sparkles, PawPrint, Calendar, Clock } from 'lucide-react';
+import { format, differenceInWeeks, differenceInDays, parseISO } from 'date-fns';
+import { fi } from 'date-fns/locale';
 
 interface AnimatedHeaderProps {
   title: string;
   subtitle?: string;
   showHeroVideo?: boolean;
+  puppyName?: string;
+  birthDate?: string;
+  puppyImageUrl?: string;
 }
+
+const calculateAge = (birthDate: string) => {
+  const birth = parseISO(birthDate);
+  const now = new Date();
+  const weeks = differenceInWeeks(now, birth);
+  const totalDays = differenceInDays(now, birth);
+  const months = Math.floor(weeks / 4.33); // Average weeks per month
+  
+  return {
+    weeks,
+    months,
+    totalDays
+  };
+};
 
 const AnimatedHeader: React.FC<AnimatedHeaderProps> = ({ 
   title, 
   subtitle = "Seuraa pennun kasvua ja tallenna ainutlaatuisia hetkiä",
-  showHeroVideo = true 
+  showHeroVideo = true,
+  puppyName,
+  birthDate,
+  puppyImageUrl
 }) => {
+  const puppyAge = birthDate ? calculateAge(birthDate) : null;
+  const placeholderPuppyUrl = "https://images.unsplash.com/photo-1535268647677-300dbf3d78d1?w=200&h=200&fit=crop&crop=face";
+
   return (
     <div className="relative bg-gradient-primary min-h-[300px] rounded-b-3xl overflow-hidden">
       {/* Background decorations */}
@@ -34,68 +58,99 @@ const AnimatedHeader: React.FC<AnimatedHeaderProps> = ({
         </motion.div>
       </div>
 
-      {/* Hero illustration */}
-      {showHeroVideo && (
-        <motion.div
-          className="absolute right-8 top-8 w-48 h-48 opacity-30"
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 0.3 }}
-          transition={{ duration: 1, ease: "easeOut" }}
-        >
-          <img 
-            src={heroIllustration} 
-            alt="Pentu tutkii maailmaa" 
-            className="w-full h-full object-contain"
-          />
-        </motion.div>
-      )}
-
       <div className="relative z-10 p-8 text-white">
-        <motion.div
-          className="flex items-center gap-3 mb-4"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-        >
+        <div className="flex items-start gap-6">
+          {/* Puppy Image */}
           <motion.div
-            animate={{ 
-              rotate: [0, 10, -10, 0],
-              scale: [1, 1.1, 1]
-            }}
-            transition={{ 
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
+            className="flex-shrink-0"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            <Sparkles className="w-8 h-8 text-yellow-300" />
+            <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-white/30 shadow-lg">
+              <img 
+                src={puppyImageUrl || placeholderPuppyUrl}
+                alt={puppyName ? `${puppyName} pentu` : "Pentu"}
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.currentTarget.src = placeholderPuppyUrl;
+                }}
+              />
+            </div>
           </motion.div>
-          
-          <motion.h1 
-            className="text-4xl md:text-5xl font-heading font-bold"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
-            {title}
-          </motion.h1>
-        </motion.div>
 
-        <motion.div
-          className="overflow-hidden"
-          initial={{ height: 0, opacity: 0 }}
-          animate={{ height: "auto", opacity: 1 }}
-          transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
-        >
-          <motion.p 
-            className="text-xl font-body text-blue-100 max-w-md"
-            initial={{ y: 20 }}
-            animate={{ y: 0 }}
-            transition={{ duration: 0.8, delay: 0.7 }}
-          >
-            {subtitle}
-          </motion.p>
-        </motion.div>
+          {/* Content */}
+          <div className="flex-1 min-w-0">
+            <motion.div
+              className="flex items-center gap-3 mb-2"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            >
+              <motion.div
+                animate={{ 
+                  rotate: [0, 10, -10, 0],
+                  scale: [1, 1.1, 1]
+                }}
+                transition={{ 
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              >
+                <Sparkles className="w-6 h-6 text-yellow-300" />
+              </motion.div>
+              
+              <motion.h1 
+                className="text-2xl md:text-3xl lg:text-4xl font-heading font-bold truncate"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+              >
+                {puppyName || title}
+              </motion.h1>
+            </motion.div>
+
+            {/* Birth date and age */}
+            {birthDate && puppyAge && (
+              <motion.div
+                className="space-y-1 mb-3"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+              >
+                <div className="flex items-center gap-2 text-blue-100">
+                  <Calendar className="w-4 h-4" />
+                  <span className="text-sm">
+                    Syntynyt: {format(parseISO(birthDate), 'dd.MM.yyyy', { locale: fi })}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 text-blue-100">
+                  <Clock className="w-4 h-4" />
+                  <span className="text-sm">
+                    Ikä: {puppyAge.weeks} viikkoa ({puppyAge.months} kuukautta)
+                  </span>
+                </div>
+              </motion.div>
+            )}
+
+            <motion.div
+              className="overflow-hidden"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              transition={{ duration: 1, delay: 0.6, ease: "easeOut" }}
+            >
+              <motion.p 
+                className="text-lg font-body text-blue-100 max-w-md"
+                initial={{ y: 20 }}
+                animate={{ y: 0 }}
+                transition={{ duration: 0.8, delay: 0.8 }}
+              >
+                {subtitle}
+              </motion.p>
+            </motion.div>
+          </div>
+        </div>
 
         {/* Animated progress indicator */}
         <motion.div
