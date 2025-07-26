@@ -21,7 +21,8 @@ import DogSelector from './DogSelector'
 import WeightEntryForm from './WeightEntryForm'
 import WeightEntryList from './WeightEntryList'
 import { useWeightEntries } from '@/hooks/useWeightEntries'
-import { Scale, TrendingUp, Calculator, Utensils, Bell, RefreshCw, LogOut } from 'lucide-react'
+import { Scale, TrendingUp, Calculator, Utensils, Bell, RefreshCw, LogOut, BookOpen, ArrowRight } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 
 interface Dog {
@@ -37,9 +38,10 @@ interface Dog {
 interface WeightTrackerProps {
   user: User
   onSignOut: () => void
+  hasBooks?: boolean
 }
 
-const WeightTracker = ({ user, onSignOut }: WeightTrackerProps) => {
+const WeightTracker = ({ user, onSignOut, hasBooks = false }: WeightTrackerProps) => {
   const [selectedDog, setSelectedDog] = useState<Dog | null>(null)
   const [activeTab, setActiveTab] = useState('weight-tracking')
   const { toast } = useToast()
@@ -154,6 +156,28 @@ const WeightTracker = ({ user, onSignOut }: WeightTrackerProps) => {
         
         <div className="container mx-auto p-3 sm:p-4 max-w-full overflow-x-hidden">
 
+        {/* Informative banner for puppy book users */}
+        {hasBooks && (
+          <div className="mb-6 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4 shadow-sm">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <BookOpen className="h-5 w-5 text-blue-600" />
+                <div>
+                  <p className="font-medium text-blue-900">Löysimme sinulle pentukirjan!</p>
+                  <p className="text-sm text-blue-700">Voit käyttää painonseurantaa myös pentukirjan sisältä kasvuseurannassa.</p>
+                </div>
+              </div>
+              <Link 
+                to="/puppy-book" 
+                className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+              >
+                Avaa pentukirja
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </div>
+        )}
+
         <Tabs value={activeTab} onValueChange={setActiveTab} onSwipe={handleTabSwipe} className="space-y-6">
           <TabsList className="grid w-full grid-cols-4 h-16 md:h-14 rounded-2xl bg-white/50 backdrop-blur-sm overflow-x-auto">
             <TabsTrigger 
@@ -206,7 +230,9 @@ const WeightTracker = ({ user, onSignOut }: WeightTrackerProps) => {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-xs sm:text-sm font-medium text-blue-600 mb-2">Nykyinen paino</p>
-                      <p className="text-xl sm:text-2xl font-bold text-blue-800">{getLatestWeight()} kg</p>
+                      <p className="text-xl sm:text-2xl font-bold text-blue-800">
+                        {entries.length > 0 ? `${getLatestWeight()} kg` : 'Ei merkintöjä'}
+                      </p>
                     </div>
                     <Scale className="h-6 w-6 sm:h-8 sm:w-8 text-blue-500" />
                   </div>
@@ -251,17 +277,27 @@ const WeightTracker = ({ user, onSignOut }: WeightTrackerProps) => {
               ) : (
                 <Card className="bg-white/70 backdrop-blur-sm border-0 shadow-xl">
                   <CardContent className="p-8 text-center">
-                    <p className="text-muted-foreground">Valitse ensin koira lisätäksesi painomerkintöjä</p>
+                    <Scale className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                    <p className="text-lg font-medium text-muted-foreground mb-2">Valitse koira aloittaaksesi</p>
+                    <p className="text-sm text-muted-foreground">Lisää koira tai valitse olemassa oleva koira ylhäältä</p>
                   </CardContent>
                 </Card>
               )}
               
-              {selectedDog && entries.length > 0 && (
+              {selectedDog && entries.length > 0 ? (
                 <WeightEntryList 
                   entries={entries} 
                   userId={user.id} 
                 />
-              )}
+              ) : selectedDog && entries.length === 0 ? (
+                <Card className="bg-white/70 backdrop-blur-sm border-0 shadow-xl">
+                  <CardContent className="p-8 text-center">
+                    <TrendingUp className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                    <p className="text-lg font-medium text-muted-foreground mb-2">Ei vielä painomerkintöjä</p>
+                    <p className="text-sm text-muted-foreground">Lisää ensimmäinen painomerkintä vasemmalla olevalla lomakkeella</p>
+                  </CardContent>
+                </Card>
+              ) : null}
             </div>
           </TabsContent>
 

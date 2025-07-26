@@ -39,6 +39,7 @@ export default function DogSelector({ user, selectedDogId, onDogSelect }: DogSel
 
   const loadDogs = async () => {
     try {
+      setLoading(true)
       const { data, error } = await supabase
         .from('dogs')
         .select('*')
@@ -49,15 +50,18 @@ export default function DogSelector({ user, selectedDogId, onDogSelect }: DogSel
 
       setDogs(data || [])
       
-      // Auto-select first dog if none selected
+      // Auto-select first dog if none selected and dogs exist
       if (data && data.length > 0 && !selectedDogId) {
-        onDogSelect(data[0].id, data[0])
+        // Small delay to ensure parent component is ready
+        setTimeout(() => {
+          onDogSelect(data[0].id, data[0])
+        }, 100)
       }
     } catch (error) {
       console.error('Error loading dogs:', error)
       toast({
-        title: "Virhe",
-        description: "Koirien lataaminen epäonnistui",
+        title: "Virhe koirien lataamisessa",
+        description: "Tarkista internetyhteytesi ja yritä uudelleen",
         variant: "destructive"
       })
     } finally {

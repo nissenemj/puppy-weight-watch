@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Scale, TrendingUp, Calendar, Info } from 'lucide-react';
+import { Scale, TrendingUp, Calendar, Info, ExternalLink } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useWeightEntries } from '@/hooks/useWeightEntries';
@@ -10,6 +11,7 @@ import WeightChart from '@/components/WeightChart';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
 
 interface WeightGrowthSectionProps {
   bookId: string;
@@ -206,15 +208,27 @@ const WeightGrowthSection: React.FC<WeightGrowthSectionProps> = ({
           </Card>
         </div>
 
-        {/* Infolaatikko */}
-        <Alert className="mb-6">
-          <Info className="h-4 w-4" />
-          <AlertDescription>
-            <strong>Vinkki:</strong> Painotiedot haetaan automaattisesti painonseuranta-sivulta. 
-            Kaikki lisäämäsi painomittaukset näkyvät myös täällä pentukirjassa! 
-            {!dogId && " Yhdistä koira pentukirjaasi nähdäksesi painotiedot."}
-          </AlertDescription>
-        </Alert>
+        {/* Infolaatikko ja painonseuranta-linkki */}
+        <div className="space-y-4 mb-6">
+          <Alert>
+            <Info className="h-4 w-4" />
+            <AlertDescription>
+              <strong>Vinkki:</strong> Painotiedot haetaan automaattisesti painonseuranta-sivulta. 
+              Kaikki lisäämäsi painomittaukset näkyvät myös täällä pentukirjassa! 
+              {!dogId && " Yhdistä koira pentukirjaasi nähdäksesi painotiedot."}
+            </AlertDescription>
+          </Alert>
+          
+          <div className="flex justify-center">
+            <Button asChild className="bg-orange-500 hover:bg-orange-600 text-white">
+              <Link to="/weight-tracker" className="flex items-center gap-2">
+                <Scale className="h-4 w-4" />
+                Avaa painonseuranta
+                <ExternalLink className="h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+        </div>
       </motion.div>
 
       {/* Kasvukäyrä */}
@@ -251,12 +265,16 @@ const WeightGrowthSection: React.FC<WeightGrowthSectionProps> = ({
           <h3 className="text-lg font-semibold text-gray-500 mb-2">
             Ei vielä painomittauksia
           </h3>
-          <p className="text-gray-400 mb-4">
-            Aloita pennun painonseuranta lisäämällä ensimmäinen mittaus painonseuranta-sivulla
+          <p className="text-gray-400 mb-6">
+            Aloita pennun painonseuranta lisäämällä ensimmäinen mittaus
           </p>
-          <Badge variant="outline" className="text-orange-600 border-orange-300">
-            💡 Siirry painonseurantaan lisätäksesi mittauksia
-          </Badge>
+          <Button asChild className="bg-orange-500 hover:bg-orange-600 text-white">
+            <Link to="/weight-tracker" className="flex items-center gap-2">
+              <Scale className="h-4 w-4" />
+              Siirry painonseurantaan
+              <ExternalLink className="h-4 w-4" />
+            </Link>
+          </Button>
         </motion.div>
       )}
     </div>

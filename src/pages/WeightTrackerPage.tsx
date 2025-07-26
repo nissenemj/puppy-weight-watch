@@ -30,14 +30,15 @@ const WeightTrackerPage = () => {
     return () => subscription.unsubscribe()
   }, [])
 
-  const checkForOnboarding = async (user: User) => {
-    try {
-      // Only redirect if we're on weight-tracker page to avoid infinite loops
-      if (location.pathname !== '/weight-tracker') {
-        return
-      }
+  const [hasBooks, setHasBooks] = useState(false)
+  const [hasDogs, setHasDogs] = useState(false)
+  const [checkingData, setCheckingData] = useState(true)
 
-      // Check if user has puppy books first
+  const checkUserData = async (user: User) => {
+    try {
+      setCheckingData(true)
+      
+      // Check if user has puppy books
       const { data: books, error: booksError } = await supabase
         .from('puppy_books')
         .select('id, dog_id')
@@ -46,39 +47,53 @@ const WeightTrackerPage = () => {
 
       if (booksError) {
         console.error('Error checking puppy books:', booksError)
-        return
+        toast({
+          title: "Virhe tietojen haussa",
+          description: "Pentukirjojen tarkistaminen epäonnistui",
+          variant: "destructive"
+        })
+      } else {
+        setHasBooks(books && books.length > 0)
       }
 
-      // If user has puppy books, redirect to puppy book
-      if (books && books.length > 0) {
-        navigate('/puppy-book')
-        return
-      }
-
-      // Check if user has any dogs (indicating they've completed onboarding)
-      const { data: dogs, error } = await supabase
+      // Check if user has any dogs
+      const { data: dogs, error: dogsError } = await supabase
         .from('dogs')
         .select('id')
         .eq('user_id', user.id)
         .limit(1)
 
-      if (error) {
-        console.error('Error checking dogs:', error)
-        return
-      }
-
-      // If no dogs found, redirect to onboarding
-      if (!dogs || dogs.length === 0) {
-        navigate('/onboarding')
+      if (dogsError) {
+        console.error('Error checking dogs:', dogsError)
+        toast({
+          title: "Virhe tietojen haussa", 
+          description: "Koirien tarkistaminen epäonnistui",
+          variant: "destructive"
+        })
+      } else {
+        const dogsExist = dogs && dogs.length > 0
+        setHasDogs(dogsExist)
+        
+        // Only redirect to onboarding if no dogs at all
+        if (!dogsExist) {
+          navigate('/onboarding')
+        }
       }
     } catch (error) {
-      console.error('Error in checkForOnboarding:', error)
+      console.error('Error in checkUserData:', error)
+      toast({
+        title: "Virhe",
+        description: "Tietojen lataaminen epäonnistui",
+        variant: "destructive"
+      })
+    } finally {
+      setCheckingData(false)
     }
   }
 
   useEffect(() => {
     if (user && !loading) {
-      checkForOnboarding(user)
+      checkUserData(user)
     }
   }, [user, loading, navigate])
 
@@ -113,7 +128,18 @@ const WeightTrackerPage = () => {
     return <AuthenticationWrapper onAuthSuccess={handleAuthSuccess} />
   }
 
-  return <WeightTracker user={user} onSignOut={handleSignOut} />
+  if (checkingData) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-25 to-purple-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-gray-600">Tarkistetaan tietoja...</p>
+        </div>
+      </div>
+    )
+  }
+
+  return <WeightTracker user={user} onSignOut={handleSignOut} hasBooks={hasBooks} />
 }
 
 export default WeightTrackerPage
