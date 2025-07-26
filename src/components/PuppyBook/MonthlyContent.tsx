@@ -13,7 +13,10 @@ import {
   Plus,
   Edit,
   Weight,
-  Pill
+  Pill,
+  Scale,
+  TrendingUp,
+  Activity
 } from 'lucide-react';
 import { calculatePuppyAge, getAgeAppropriateMilestones } from '@/utils/puppyAge';
 import { AddHealthRecordDialog } from './AddHealthRecordDialog';
@@ -30,6 +33,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { VeterinaryGuidance } from './VeterinaryGuidance';
 import { SourceBadges } from './SourceBadges';
 import { AlertTriangle } from 'lucide-react';
+import { useWeightEntries } from '@/hooks/useWeightEntries';
 
 interface MonthlyContentProps {
   monthNumber: number;
@@ -96,7 +100,7 @@ interface EntryData {
 }
 
 const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, birthDate }) => {
-  const [activeTab, setActiveTab] = useState<'milestones' | 'health' | 'social'>('milestones');
+  const [activeTab, setActiveTab] = useState<'milestones' | 'health' | 'social' | 'weight'>('milestones');
   const [customTasks, setCustomTasks] = useState<{ [key: number]: string[] }>({});
   const [newTaskInput, setNewTaskInput] = useState('');
   const [userHealthRecords, setUserHealthRecords] = useState<DatabaseHealthRecord[]>([]);
@@ -110,8 +114,16 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
   const [dbMilestones, setDbMilestones] = useState<MilestoneItem[]>([]);
   const [completedTasks, setCompletedTasks] = useState<{ [key: string]: boolean }>({});
   const [loadingMilestones, setLoadingMilestones] = useState(true);
+  const [dogId, setDogId] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
   
   const { toast } = useToast();
+
+  // Hae käyttäjän painomittaukset
+  const { data: weightEntries } = useWeightEntries(
+    userId || '', 
+    dogId || undefined
+  );
   
   // Calculate current age if birth date is available
   const puppyAge = birthDate ? calculatePuppyAge(birthDate) : null;
@@ -244,7 +256,35 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
   useEffect(() => {
     loadMilestones();
     loadHealthRecords();
+    loadUserAndDogData();
   }, [bookId, monthNumber]);
+
+  const loadUserAndDogData = async () => {
+    try {
+      // Hae käyttäjän tiedot
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      setUserId(user.id);
+
+      // Hae pentukirjaan liittyvä koira
+      const { data: book, error: bookError } = await supabase
+        .from('puppy_books')
+        .select('dog_id')
+        .eq('id', bookId)
+        .single();
+
+      if (bookError) {
+        console.error('Error loading book:', bookError);
+        return;
+      }
+
+      if (book?.dog_id) {
+        setDogId(book.dog_id);
+      }
+    } catch (error) {
+      console.error('Error loading user and dog data:', error);
+    }
+  };
 
   const getTypeLabel = (type: string) => {
     const labels = {
@@ -524,7 +564,8 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
         {[
           { id: 'milestones', label: 'Virstanpylväät', icon: CheckCircle },
           { id: 'health', label: 'Terveys', icon: Stethoscope },
-          { id: 'social', label: 'Sosiaalistaminen', icon: Users }
+          { id: 'social', label: 'Sosiaalistaminen', icon: Users },
+          { id: 'weight', label: 'Paino', icon: Scale }
         ].map((tab) => (
           <button
             key={tab.id}
@@ -1039,6 +1080,200 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
                 </button>
               </div>
             </div>
+          </motion.div>
+        )}
+
+        {activeTab === 'weight' && (
+          <motion.div
+            key="weight"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            className="space-y-6"
+          >
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">
+              Painonseuranta 📊
+            </h3>
+            
+            {/* Kuukauden painotiedot */}
+            {weightEntries && weightEntries.length > 0 ? (
+              <div className="space-y-4">
+                {/* Tilastokortit */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <Card className="bg-blue-50 border-blue-200">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-3">
+                        <Scale className="w-8 h-8 text-blue-600" />
+                        <div>
+                          <p className="text-sm font-medium text-blue-700">Viimeisin paino</p>
+                          <p className="text-2xl font-bold text-blue-800">
+                            {weightEntries[weightEntries.length - 1]?.weight} kg
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="bg-green-50 border-green-200">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-3">
+                        <TrendingUp className="w-8 h-8 text-green-600" />
+                        <div>
+                          <p className="text-sm font-medium text-green-700">Kasvu yhteensä</p>
+                          <p className="text-2xl font-bold text-green-800">
+                            {weightEntries.length > 1 
+                              ? `+${(weightEntries[weightEntries.length - 1]?.weight - weightEntries[0]?.weight).toFixed(1)} kg`
+                              : 'Ei tietoa'
+                            }
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="bg-orange-50 border-orange-200">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-3">
+                        <Activity className="w-8 h-8 text-orange-600" />
+                        <div>
+                          <p className="text-sm font-medium text-orange-700">Mittauksia</p>
+                          <p className="text-2xl font-bold text-orange-800">
+                            {weightEntries.length} kpl
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* Kuukauden painomittaukset */}
+                <Card>
+                  <CardContent className="p-4">
+                    <h4 className="font-semibold text-gray-800 mb-3">Kuukauden mittaukset</h4>
+                    <div className="space-y-2">
+                      {weightEntries
+                        .filter(entry => {
+                          if (!birthDate) return true;
+                          const entryDate = new Date(entry.date);
+                          const birthDateObj = new Date(birthDate);
+                          const ageInWeeks = Math.floor((entryDate.getTime() - birthDateObj.getTime()) / (1000 * 60 * 60 * 24 * 7));
+                          const monthStart = monthNumber * 4;
+                          const monthEnd = (monthNumber + 1) * 4;
+                          return ageInWeeks >= monthStart && ageInWeeks < monthEnd;
+                        })
+                        .slice(-5) // Näytä viimeisimmät 5 mittausta
+                        .map((entry, index) => (
+                          <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div className="flex items-center gap-3">
+                              <Scale className="w-4 h-4 text-blue-500" />
+                              <div>
+                                <p className="font-medium text-gray-800">{entry.weight} kg</p>
+                                <p className="text-sm text-gray-500">
+                                  {new Date(entry.date).toLocaleDateString('fi-FI')}
+                                </p>
+                              </div>
+                            </div>
+                            {index > 0 && (
+                              <div className="text-sm text-gray-500">
+                                {(() => {
+                                  const previousWeight = weightEntries[index - 1]?.weight;
+                                  const change = entry.weight - previousWeight;
+                                  return change > 0 
+                                    ? `+${change.toFixed(1)} kg` 
+                                    : `${change.toFixed(1)} kg`;
+                                })()}
+                              </div>
+                            )}
+                          </div>
+                        ))
+                      }
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Painoseurannan vinkki */}
+                <Card className="bg-blue-50 border-blue-200">
+                  <CardContent className="p-4">
+                    <div className="flex items-start gap-3">
+                      <Scale className="w-5 h-5 text-blue-600 mt-0.5" />
+                      <div>
+                        <h5 className="font-medium text-blue-800 mb-1">💡 Painonseurannan vinkki</h5>
+                        <p className="text-sm text-blue-700">
+                          Säännöllinen punnitseminen auttaa huomaamaan kasvun muutokset ajoissa. 
+                          Kaikki painonseuranta-sivulla lisäämäsi mittaukset näkyvät automaattisesti myös täällä pentukirjassa!
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            ) : (
+              /* Ei painotietoja */
+              <Card className="border-2 border-dashed border-gray-300 bg-gray-50/50">
+                <CardContent className="p-8 text-center">
+                  <Scale className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <h4 className="text-lg font-semibold text-gray-500 mb-2">
+                    Ei vielä painomittauksia
+                  </h4>
+                  <p className="text-gray-400 mb-4">
+                    Aloita pennun painonseuranta lisäämällä ensimmäinen mittaus painonseuranta-sivulla
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-2 justify-center items-center">
+                    <Badge variant="outline" className="text-blue-600 border-blue-300">
+                      💡 Siirry painonseurantaan
+                    </Badge>
+                    <span className="text-sm text-gray-500">tai</span>
+                    <Badge variant="outline" className="text-green-600 border-green-300">
+                      🔗 Yhdistä koira pentukirjaan
+                    </Badge>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Kuukausikohtaiset painon odotusarvot */}
+            <Card className="bg-green-50 border-green-200">
+              <CardContent className="p-4">
+                <h5 className="font-medium text-green-800 mb-3">Kuukauden painokehitys</h5>
+                <div className="space-y-2 text-sm text-green-700">
+                  {monthNumber === 0 && (
+                    <>
+                      <p>• Syntymäpaino: 150-600g (rodusta riippuen)</p>
+                      <p>• 1 viikko: kaksinkertainen syntymäpaino</p>
+                      <p>• 1 kuukausi: 4-6x syntymäpaino</p>
+                    </>
+                  )}
+                  {monthNumber === 1 && (
+                    <>
+                      <p>• Nopea kasvu: 100-200g viikossa</p>
+                      <p>• Paino noin 2-4 kg (pienistä suuriin rotuihin)</p>
+                      <p>• Ensimmäinen rokotus: punnitseminen tärkeää</p>
+                    </>
+                  )}
+                  {monthNumber === 2 && (
+                    <>
+                      <p>• Jatkuva kasvu: 150-300g viikossa</p>
+                      <p>• Paino noin 4-8 kg riippuen rodusta</p>
+                      <p>• Toinen rokotus: seuraa painon kehitystä</p>
+                    </>
+                  )}
+                  {monthNumber === 3 && (
+                    <>
+                      <p>• Hidastuva kasvu: 100-250g viikossa</p>
+                      <p>• Paino noin 6-12 kg riippuen rodusta</p>
+                      <p>• Aikuispainon arviointi mahdollista</p>
+                    </>
+                  )}
+                  {monthNumber >= 4 && (
+                    <>
+                      <p>• Tasaantuva kasvu: noin {monthNumber < 8 ? '100-200g' : '50-150g'} viikossa</p>
+                      <p>• Paino lähestyy aikuispainoa</p>
+                      <p>• Seuraa kasvukäyriä säännöllisesti</p>
+                    </>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
           </motion.div>
         )}
       </AnimatePresence>

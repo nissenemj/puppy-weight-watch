@@ -23,7 +23,8 @@ import {
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import Navigation from '@/components/Navigation';
-import HeaderButtons from '@/components/HeaderButtons';
+import AppLogo from '@/components/AppLogo';
+import NavigationButtons from '@/components/NavigationButtons';
 import MonthlyTracker from './MonthlyTracker';
 import Timeline from './Timeline';
 import Milestones from './Milestones';
@@ -32,6 +33,7 @@ import CommunityFeed from './CommunityFeed';
 import Leaderboard from './Leaderboard';
 import WeeklyChallenges from './WeeklyChallenges';
 import UserSpotlight from './UserSpotlight';
+import WeightGrowthSection from './WeightGrowthSection';
 import AnimatedHeader from './AnimatedHeader';
 import FloatingActionButton from './FloatingActionButton';
 import ShareDialog from './ShareDialog';
@@ -271,7 +273,10 @@ const PuppyBook: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-gradient-mint-light/20 via-gradient-peach-light/20 to-gradient-sky/20">
       <div className="bg-white/90 backdrop-blur-md border-b border-gray-200/50 p-4 sticky top-0 z-40">
         <div className="max-w-6xl mx-auto">
-          <HeaderButtons showLogo={true} logoText="Pentukirja" />
+          <div className="flex items-center justify-between">
+            <AppLogo logoText="Pentukirja" />
+            <NavigationButtons />
+          </div>
         </div>
       </div>
       <AnimatedHeader 
@@ -325,6 +330,17 @@ const PuppyBook: React.FC = () => {
               transition={{ duration: 0.3 }}
             >
               <Milestones bookId={book.id} />
+            </motion.div>
+          )}
+          {activeSection === 'growth' && (
+            <motion.div
+              key="growth"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <WeightGrowthSection bookId={book.id} birthDate={book.birth_date} />
             </motion.div>
           )}
           {activeSection === 'memories' && (
@@ -724,6 +740,7 @@ const PuppyBookNavigation: React.FC<{
     { id: 'monthly', label: 'Kuukaudet', icon: Calendar, emoji: '📅' },
     { id: 'timeline', label: 'Aikajana', icon: Calendar, emoji: '⏰' },
     { id: 'milestones', label: 'Virstanpylväät', icon: Award, emoji: '🏆' },
+    { id: 'growth', label: 'Kasvu', icon: Target, emoji: '📊' },
     { id: 'memories', label: 'Muistot', icon: Heart, emoji: '💖' },
     { id: 'community', label: 'Yhteisö', icon: Users, emoji: '👥' }
   ];

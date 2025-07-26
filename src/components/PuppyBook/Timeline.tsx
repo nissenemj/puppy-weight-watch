@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, Plus, Clock, MapPin, Star } from 'lucide-react';
+import { Calendar, Plus, Clock, MapPin, Star, Scale, Activity } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import AddTimelineDialog from './AddTimelineDialog';
@@ -127,26 +127,46 @@ const Timeline: React.FC<TimelineProps> = ({ bookId }) => {
               className="bg-orange-50 rounded-xl p-4 border border-orange-100"
             >
               <div className="flex items-start gap-3">
-                <div className="flex-shrink-0 mt-1">
-                  <div className="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center">
-                    {entry.is_highlight ? (
-                      <Star className="w-5 h-5 text-white" />
-                    ) : (
-                      <Clock className="w-5 h-5 text-white" />
-                    )}
-                  </div>
+              <div className="flex-shrink-0 mt-1">
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                  entry.entry_type === 'weight_measurement' 
+                    ? 'bg-blue-500' 
+                    : 'bg-orange-500'
+                }`}>
+                  {entry.entry_type === 'weight_measurement' ? (
+                    <Scale className="w-5 h-5 text-white" />
+                  ) : entry.is_highlight ? (
+                    <Star className="w-5 h-5 text-white" />
+                  ) : (
+                    <Clock className="w-5 h-5 text-white" />
+                  )}
                 </div>
+              </div>
                 <div className="flex-1">
                   <h4 className="font-semibold text-gray-800">{entry.title}</h4>
                   {entry.description && (
                     <p className="text-gray-600 text-sm mt-1">{entry.description}</p>
+                  )}
+                  {/* Näytä ylimääräistä tietoa painomittauksille */}
+                  {entry.entry_type === 'weight_measurement' && entry.metadata?.weight_kg && (
+                    <div className="mt-2 p-2 bg-blue-50 rounded-lg">
+                      <div className="flex items-center gap-2 text-sm text-blue-700">
+                        <Activity className="w-4 h-4" />
+                        <span className="font-medium">{entry.metadata.weight_kg} kg</span>
+                        {entry.metadata.auto_generated && (
+                          <span className="text-xs text-blue-500">(Automaattinen merkintä)</span>
+                        )}
+                      </div>
+                    </div>
                   )}
                   <div className="flex items-center gap-4 text-xs text-gray-500 mt-2">
                     <span className="flex items-center gap-1">
                       <Calendar className="w-3 h-3" />
                       {new Date(entry.entry_date).toLocaleDateString('fi-FI')}
                     </span>
-                    <span className="capitalize">{entry.entry_type}</span>
+                    <span className="capitalize">
+                      {entry.entry_type === 'weight_measurement' ? 'Painomittaus' : entry.entry_type}
+                    </span>
                   </div>
                 </div>
               </div>
