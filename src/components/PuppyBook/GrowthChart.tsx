@@ -115,7 +115,7 @@ const GrowthChart: React.FC<GrowthChartProps> = ({
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
-          Kasvukäyrä (Waltham-standardit)
+          Kasvukäyrä
           <Select value={sizeClass} onValueChange={(value: SizeClass) => setSizeClass(value)}>
             <SelectTrigger className="w-64">
               <SelectValue />
