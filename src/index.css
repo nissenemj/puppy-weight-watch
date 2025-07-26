@@ -64,6 +64,7 @@
     --chart-joy: 45 85% 30%;              /* Dark golden yellow for joy */
   }
 
+  /* Dark mode disabled - commented out for future use
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
@@ -98,7 +99,6 @@
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
 
-    /* Dark mode - keep existing values as they work well */
     --primary-glow: 217.2 91.2% 59.8%;
     --accent-light: 30 80% 70%;
     
@@ -115,6 +115,7 @@
     --chart-milestone: 280 65% 65%;
     --chart-joy: 45 80% 70%;
   }
+  */
 }
 
 @layer base {

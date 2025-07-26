@@ -14,9 +14,9 @@ export default function InfoBadge({ children, variant = 'default', className }: 
     secondary: 'bg-secondary text-secondary-foreground',
     destructive: 'bg-destructive text-destructive-foreground',
     outline: 'border border-input bg-background text-foreground',
-    success: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100',
-    warning: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100',
-    info: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100'
+    success: 'bg-green-100 text-green-800',
+    warning: 'bg-yellow-100 text-yellow-800',
+    info: 'bg-blue-100 text-blue-800'
   }
 
   return (

@@ -10,8 +10,6 @@ import {
   Menu,
   X,
   MoreHorizontal,
-  Moon,
-  Sun,
   UtensilsCrossed,
   Database,
   Book,
@@ -29,7 +27,6 @@ import HeaderButtons from './HeaderButtons'
 const Navigation = () => {
   const location = useLocation()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [isDark, setIsDark] = useState(false)
   
   const isActive = (path: string) => {
     if (path === '/') return location.pathname === '/'
@@ -87,22 +84,6 @@ const Navigation = () => {
   ]
 
 
-  // Dark mode toggle
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme')
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    const shouldBeDark = savedTheme === 'dark' || (!savedTheme && prefersDark)
-    
-    setIsDark(shouldBeDark)
-    document.documentElement.classList.toggle('dark', shouldBeDark)
-  }, [])
-
-  const toggleTheme = () => {
-    const newIsDark = !isDark
-    setIsDark(newIsDark)
-    document.documentElement.classList.toggle('dark', newIsDark)
-    localStorage.setItem('theme', newIsDark ? 'dark' : 'light')
-  }
 
   // Mobile menu effect
   useEffect(() => {
@@ -243,22 +224,8 @@ const Navigation = () => {
             </DropdownMenu>
           </nav>
 
-          {/* Theme Toggle & Mobile Menu */}
+          {/* Mobile Menu */}
           <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={toggleTheme}
-              className="p-2"
-              aria-label={`Vaihda ${isDark ? 'vaaleaan' : 'tummaan'} teemaan`}
-            >
-              {isDark ? (
-                <Sun className="h-4 w-4" />
-              ) : (
-                <Moon className="h-4 w-4" />
-              )}
-            </Button>
-
             {/* Mobile Menu Button */}
             <Button
               variant="ghost"
