@@ -256,7 +256,7 @@ const PuppyBook: React.FC = () => {
   }
 
   if (!book) {
-    return <CreateBookPrompt onBookCreated={createBook} user={user} />;
+    return <CreateBookPrompt onBookCreated={createBook} user={user} onBookSelect={handleBookSelect} />;
   }
 
   return (
@@ -473,7 +473,8 @@ const PuppyBookSkeleton: React.FC = () => {
 const CreateBookPrompt: React.FC<{
   onBookCreated: (title: string, birthDate?: string, coverImageUrl?: string) => void;
   user: any;
-}> = ({ onBookCreated, user }) => {
+  onBookSelect: (bookId: string, bookData: any) => void;
+}> = ({ onBookCreated, user, onBookSelect }) => {
   const [title, setTitle] = useState('');
   const [birthDate, setBirthDate] = useState(getDefaultBirthDate());
   const [coverImageUrl, setCoverImageUrl] = useState('');
@@ -565,9 +566,7 @@ const CreateBookPrompt: React.FC<{
           <PuppyBookSelector
             user={user}
             selectedBookId=""
-            onBookSelect={(bookId, book) => {
-              window.location.reload();
-            }}
+            onBookSelect={onBookSelect}
           />
         </div>
       </motion.div>
