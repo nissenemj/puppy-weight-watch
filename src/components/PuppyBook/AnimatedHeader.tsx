@@ -156,14 +156,19 @@ const AnimatedHeader: React.FC<AnimatedHeaderProps> = ({
             {onEditProfile && (
               <motion.button
                 onClick={onEditProfile}
-                className="absolute top-0 right-0 p-2 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 hover:bg-white/30 transition-colors"
+                className={`absolute top-0 right-0 p-2 rounded-full backdrop-blur-sm border border-white/30 hover:bg-white/30 transition-colors ${
+                  !puppyImageUrl || !birthDate 
+                    ? 'bg-yellow-400/80 hover:bg-yellow-500/80 animate-pulse' 
+                    : 'bg-white/20'
+                }`}
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.5, delay: 1 }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                title={!puppyImageUrl || !birthDate ? 'Lisää puuttuvia tietoja' : 'Muokkaa pennun tietoja'}
               >
-                <Settings className="w-4 h-4 text-white" />
+                <Settings className={`w-4 h-4 ${!puppyImageUrl || !birthDate ? 'text-gray-800' : 'text-white'}`} />
               </motion.button>
             )}
           </div>

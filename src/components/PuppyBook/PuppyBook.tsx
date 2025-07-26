@@ -36,6 +36,7 @@ import FloatingActionButton from './FloatingActionButton';
 import ShareDialog from './ShareDialog';
 import SettingsDialog from './SettingsDialog';
 import PuppyProfileEditor from './PuppyProfileEditor';
+import { ImageUploader } from './ImageUploader';
 import happyPuppy from '@/assets/happy-puppy.png';
 import pawPrints from '@/assets/paw-prints.png';
 import puppyBookIcon from '@/assets/puppy-book-icon.png';
@@ -166,7 +167,7 @@ const PuppyBook: React.FC = () => {
     }
   };
 
-  const createBook = async (title: string, birthDate?: string) => {
+  const createBook = async (title: string, birthDate?: string, coverImageUrl?: string) => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
@@ -178,6 +179,7 @@ const PuppyBook: React.FC = () => {
             owner_id: user.id,
             title: title || 'Pennun elämäntarina',
             birth_date: birthDate || getDefaultBirthDate(),
+            cover_image_url: coverImageUrl || null,
             theme: {
               colorScheme: 'warm',
               fontFamily: 'sans-serif'
@@ -450,15 +452,16 @@ const PuppyBookSkeleton: React.FC = () => {
 
 // Kirjan luomisprompt
 const CreateBookPrompt: React.FC<{
-  onBookCreated: (title: string, birthDate?: string) => void;
+  onBookCreated: (title: string, birthDate?: string, coverImageUrl?: string) => void;
 }> = ({ onBookCreated }) => {
   const [title, setTitle] = useState('');
   const [birthDate, setBirthDate] = useState(getDefaultBirthDate());
+  const [coverImageUrl, setCoverImageUrl] = useState('');
   const [isCreating, setIsCreating] = useState(false);
 
   const handleCreateBook = async () => {
     setIsCreating(true);
-    await onBookCreated(title, birthDate);
+    await onBookCreated(title, birthDate, coverImageUrl);
     setIsCreating(false);
   };
 
@@ -546,6 +549,18 @@ const CreateBookPrompt: React.FC<{
             onChange={(e) => setTitle(e.target.value)}
             className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
           />
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Pennun kuva 📸
+            </label>
+            <ImageUploader
+              onImageAdded={setCoverImageUrl}
+              images={coverImageUrl ? [coverImageUrl] : []}
+              onImageRemoved={() => setCoverImageUrl('')}
+            />
+          </div>
+          
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Pennun syntymäpäivä 🎂
