@@ -276,6 +276,7 @@ const PuppyBook: React.FC = () => {
         birthDate={book.birth_date}
         puppyImageUrl={book.cover_image_url}
         onEditProfile={() => setShowProfileEditor(true)}
+        bannerColor={book.theme?.bannerColor || 'orange'}
       />
       <PuppyBookNavigation 
         activeSection={activeSection} 

@@ -12,6 +12,7 @@ interface AnimatedHeaderProps {
   birthDate?: string;
   puppyImageUrl?: string;
   onEditProfile?: () => void;
+  bannerColor?: string;
 }
 
 const calculateAge = (birthDate: string) => {
@@ -35,13 +36,26 @@ const AnimatedHeader: React.FC<AnimatedHeaderProps> = ({
   puppyName,
   birthDate,
   puppyImageUrl,
-  onEditProfile
+  onEditProfile,
+  bannerColor = 'orange'
 }) => {
   const puppyAge = birthDate ? calculateAge(birthDate) : null;
   const placeholderPuppyUrl = "https://images.unsplash.com/photo-1552053831-71594a27632d?w=200&h=200&fit=crop&crop=face"; // Söpö koiranpentu
 
+  const getGradientClass = (color: string) => {
+    const gradients = {
+      orange: 'bg-gradient-to-br from-orange-400 to-orange-600',
+      blue: 'bg-gradient-to-br from-blue-400 to-blue-600',
+      green: 'bg-gradient-to-br from-green-400 to-green-600',
+      pink: 'bg-gradient-to-br from-pink-400 to-pink-600',
+      purple: 'bg-gradient-to-br from-purple-400 to-purple-600',
+      red: 'bg-gradient-to-br from-red-400 to-red-600'
+    };
+    return gradients[color as keyof typeof gradients] || gradients.orange;
+  };
+
   return (
-    <div className="relative bg-gradient-primary min-h-[300px] rounded-b-3xl overflow-hidden">
+    <div className={`relative ${getGradientClass(bannerColor)} min-h-[300px] rounded-b-3xl overflow-hidden`}>
       {/* Background decorations */}
       <div className="absolute inset-0 overflow-hidden">
         <motion.div

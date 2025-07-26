@@ -23,9 +23,15 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
 
     setUploading(true);
     try {
+      // Get current user ID for file path
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError || !user) {
+        throw new Error('Käyttäjä ei ole kirjautunut sisään');
+      }
+
       const fileExt = file.name.split('.').pop();
       const fileName = `${Math.random()}.${fileExt}`;
-      const filePath = `puppy-memories/${fileName}`;
+      const filePath = `${user.id}/puppy-profile/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
         .from('puppy-books')

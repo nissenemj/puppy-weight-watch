@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Settings, Save, X, Calendar, Type, Image as ImageIcon } from 'lucide-react';
+import { Settings, Save, X, Calendar, Type, Image as ImageIcon, Palette } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,8 +17,9 @@ interface PuppyProfileEditorProps {
     title: string;
     birth_date?: string;
     cover_image_url?: string;
+    theme?: any;
   };
-  onBookUpdated: (updatedData: Partial<{ title: string; birth_date: string; cover_image_url: string }>) => void;
+  onBookUpdated: (updatedData: Partial<{ title: string; birth_date: string; cover_image_url: string; theme: any }>) => void;
 }
 
 const PuppyProfileEditor: React.FC<PuppyProfileEditorProps> = ({
@@ -32,8 +33,18 @@ const PuppyProfileEditor: React.FC<PuppyProfileEditorProps> = ({
   const [profileImages, setProfileImages] = useState<string[]>(
     book.cover_image_url ? [book.cover_image_url] : []
   );
+  const [selectedColor, setSelectedColor] = useState(book.theme?.bannerColor || 'orange');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+
+  const colorOptions = [
+    { name: 'Oranssi', value: 'orange', class: 'bg-orange-500' },
+    { name: 'Sininen', value: 'blue', class: 'bg-blue-500' },
+    { name: 'Vihreä', value: 'green', class: 'bg-green-500' },
+    { name: 'Vaaleanpunainen', value: 'pink', class: 'bg-pink-500' },
+    { name: 'Violetti', value: 'purple', class: 'bg-purple-500' },
+    { name: 'Punainen', value: 'red', class: 'bg-red-500' }
+  ];
 
   const handleImageAdded = (imageUrl: string) => {
     setProfileImages([imageUrl]); // Only one profile image allowed
@@ -55,10 +66,15 @@ const PuppyProfileEditor: React.FC<PuppyProfileEditorProps> = ({
 
     setIsLoading(true);
     try {
+      const currentTheme = book.theme || {};
       const updates = {
         title: puppyName.trim(),
         birth_date: birthDate || null,
-        cover_image_url: profileImages[0] || null
+        cover_image_url: profileImages[0] || null,
+        theme: {
+          ...currentTheme,
+          bannerColor: selectedColor
+        }
       };
 
       const { error } = await supabase
@@ -138,6 +154,31 @@ const PuppyProfileEditor: React.FC<PuppyProfileEditorProps> = ({
               onChange={(e) => setBirthDate(e.target.value)}
               className="w-full py-3 px-4 text-gray-900 bg-white border-2 border-gray-300 focus:border-primary text-base"
             />
+          </div>
+
+          {/* Banner Color */}
+          <div>
+            <Label className="flex items-center gap-3 text-gray-900 font-semibold mb-4 text-base">
+              <Palette className="w-5 h-5 text-gray-700" />
+              Bannerin taustaväri
+            </Label>
+            <div className="grid grid-cols-3 gap-3">
+              {colorOptions.map((color) => (
+                <button
+                  key={color.value}
+                  type="button"
+                  onClick={() => setSelectedColor(color.value)}
+                  className={`flex items-center gap-3 p-3 rounded-lg border-2 transition-all ${
+                    selectedColor === color.value 
+                      ? 'border-primary bg-primary/10' 
+                      : 'border-gray-300 bg-white hover:border-gray-400'
+                  }`}
+                >
+                  <div className={`w-6 h-6 rounded-full ${color.class}`}></div>
+                  <span className="text-sm font-medium text-gray-700">{color.name}</span>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
