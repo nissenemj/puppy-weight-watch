@@ -31,6 +31,24 @@ const WeightTrackerPage = () => {
 
   const checkForOnboarding = async (user: User) => {
     try {
+      // Check if user has puppy books first
+      const { data: books, error: booksError } = await supabase
+        .from('puppy_books')
+        .select('id, dog_id')
+        .eq('owner_id', user.id)
+        .limit(1)
+
+      if (booksError) {
+        console.error('Error checking puppy books:', booksError)
+        return
+      }
+
+      // If user has puppy books, redirect to puppy book
+      if (books && books.length > 0) {
+        navigate('/puppy-book')
+        return
+      }
+
       // Check if user has any dogs (indicating they've completed onboarding)
       const { data: dogs, error } = await supabase
         .from('dogs')

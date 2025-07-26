@@ -45,6 +45,7 @@ import pawPrints from '@/assets/paw-prints.png';
 import puppyBookIcon from '@/assets/puppy-book-icon.png';
 import welcomeIllustration from '@/assets/welcome-illustration.png';
 import { calculatePuppyAge, getMonthNumberFromAge, getDefaultBirthDate } from '@/utils/puppyAge';
+import PuppyBookSelector from './PuppyBookSelector';
 
 // Tyyppimäärittelyt
 interface PuppyBookData {
@@ -123,6 +124,8 @@ const PuppyBook: React.FC = () => {
   const [activeSection, setActiveSection] = useState('monthly');
   const [book, setBook] = useState<PuppyBookData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<any>(null);
+  const [selectedBookId, setSelectedBookId] = useState<string>('');
   const [selectedMonth, setSelectedMonth] = useState(0);
   const [showFloatingAction, setShowFloatingAction] = useState(false);
   const [showShareDialog, setShowShareDialog] = useState(false);
@@ -132,42 +135,23 @@ const PuppyBook: React.FC = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    loadUserPuppyBook();
+    loadUser();
   }, []);
 
-  const loadUserPuppyBook = async () => {
+  const loadUser = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        setLoading(false);
-        return;
-      }
-
-      const { data: books, error } = await supabase
-        .from('puppy_books')
-        .select('*')
-        .eq('owner_id', user.id)
-        .limit(1);
-
-      if (error) {
-        console.error('Error loading puppy book:', error);
-        toast({
-          title: "Virhe",
-          description: "Pentukirjan lataaminen epäonnistui",
-          variant: "destructive",
-        });
-        setLoading(false);
-        return;
-      }
-
-      if (books && books.length > 0) {
-        setBook(books[0]);
-      }
+      setUser(user);
+      setLoading(false);
     } catch (error) {
-      console.error('Error:', error);
-    } finally {
+      console.error('Error loading user:', error);
       setLoading(false);
     }
+  };
+
+  const handleBookSelect = (bookId: string, bookData: any) => {
+    setSelectedBookId(bookId);
+    setBook(bookData);
   };
 
   const createBook = async (title: string, birthDate?: string, coverImageUrl?: string) => {
@@ -265,8 +249,14 @@ const PuppyBook: React.FC = () => {
     return <PuppyBookSkeleton />;
   }
 
+  if (!user) {
+    return <div className="min-h-screen bg-gradient-to-br from-gradient-mint-light/20 via-gradient-peach-light/20 to-gradient-sky/20 flex items-center justify-center">
+      <p className="text-gray-600">Kirjaudu sisään nähdäksesi pentukirjasi</p>
+    </div>;
+  }
+
   if (!book) {
-    return <CreateBookPrompt onBookCreated={createBook} />;
+    return <CreateBookPrompt onBookCreated={createBook} user={user} />;
   }
 
   return (
@@ -275,7 +265,14 @@ const PuppyBook: React.FC = () => {
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between">
             <AppLogo logoText="Pentukirja" />
-            <NavigationButtons />
+            <div className="flex items-center gap-4">
+              <PuppyBookSelector
+                user={user}
+                selectedBookId={selectedBookId}
+                onBookSelect={handleBookSelect}
+              />
+              <NavigationButtons />
+            </div>
           </div>
         </div>
       </div>
@@ -475,7 +472,8 @@ const PuppyBookSkeleton: React.FC = () => {
 // Kirjan luomisprompt
 const CreateBookPrompt: React.FC<{
   onBookCreated: (title: string, birthDate?: string, coverImageUrl?: string) => void;
-}> = ({ onBookCreated }) => {
+  user: any;
+}> = ({ onBookCreated, user }) => {
   const [title, setTitle] = useState('');
   const [birthDate, setBirthDate] = useState(getDefaultBirthDate());
   const [coverImageUrl, setCoverImageUrl] = useState('');
@@ -552,7 +550,7 @@ const CreateBookPrompt: React.FC<{
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
         >
-          Luo pentukirja! 🐶
+          Luo ensimmäinen pentukirja! 🐶
         </motion.h2>
         <motion.p 
           className="text-gray-600 mb-6 font-body"
@@ -560,61 +558,18 @@ const CreateBookPrompt: React.FC<{
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
-          Aloita pennun ainutlaatuisen elämäntarinan tallentaminen ✨
+          Valitse koira ja aloita pennun ainutlaatuisen elämäntarinan tallentaminen ✨
         </motion.p>
 
-        <div className="mb-6 space-y-4">
-          <input
-            type="text"
-            placeholder="Kirjan nimi (esim. Rexin elämäntarina)"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
+        <div className="mb-6">
+          <PuppyBookSelector
+            user={user}
+            selectedBookId=""
+            onBookSelect={(bookId, book) => {
+              window.location.reload();
+            }}
           />
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Pennun kuva 📸
-            </label>
-            <ImageUploader
-              onImageAdded={setCoverImageUrl}
-              images={coverImageUrl ? [coverImageUrl] : []}
-              onImageRemoved={() => setCoverImageUrl('')}
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Pennun syntymäpäivä 🎂
-            </label>
-            <input
-              type="date"
-              value={birthDate}
-              onChange={(e) => setBirthDate(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
-            />
-            <p className="text-xs text-gray-500 mt-1">
-              Syntymäpäivän perusteella järjestelmä ehdottaa iänmukaisia aktiviteetteja ja virstanpylväitä
-            </p>
-          </div>
         </div>
-
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          onClick={handleCreateBook}
-          disabled={isCreating}
-          className="w-full bg-gradient-to-r from-orange-500 to-pink-500 text-white py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-shadow disabled:opacity-50"
-        >
-          {isCreating ? (
-            <div className="flex items-center justify-center">
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-              Luodaan kirjaa...
-            </div>
-          ) : (
-            'Luo pentukirja'
-          )}
-        </motion.button>
       </motion.div>
     </div>
   );
