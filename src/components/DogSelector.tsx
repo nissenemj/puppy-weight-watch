@@ -163,14 +163,14 @@ export default function DogSelector({ user, selectedDogId, onDogSelect }: DogSel
               <Button 
                 onClick={addDog} 
                 disabled={!newDogName.trim()}
-                className="flex-1"
+                className="flex-1 text-white"
               >
                 Lisää koira
               </Button>
               <Button 
                 variant="outline" 
                 onClick={() => setIsAddingDog(false)}
-                className="flex-1"
+                className="flex-1 text-gray-900 dark:text-white"
               >
                 Peruuta
               </Button>
