@@ -48,7 +48,7 @@ const Navigation = () => {
 
   // Additional features navigation items (excluding main buttons)
   const additionalNavItems = [
-    { href: '/', icon: Scale, label: 'Painonseuranta', description: 'Seuraa pennun kasvua' },
+    { href: '/calculator', icon: Calculator, label: 'Pentulaskuri', description: 'Laske ruokamäärät' },
     { 
       href: '/info', 
       icon: Info, 
@@ -200,17 +200,17 @@ const Navigation = () => {
                 {/* Group items */}
                 <div className="px-2 py-1.5">
                   <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
-                    Painonseuranta
+                    Laskurit
                   </div>
                   <DropdownMenuItem asChild>
                     <Link 
-                      to="/"
+                      to="/calculator"
                       className="flex items-start gap-3 p-3 rounded-md"
                     >
-                      <Scale className="h-4 w-4 mt-0.5 text-primary" />
+                      <Calculator className="h-4 w-4 mt-0.5 text-primary" />
                       <div>
-                        <div className="font-medium">Painonseuranta</div>
-                        <div className="text-xs text-muted-foreground">Seuraa pennun kasvua</div>
+                        <div className="font-medium">Pentulaskuri</div>
+                        <div className="text-xs text-muted-foreground">Laske ruokamäärät</div>
                       </div>
                     </Link>
                   </DropdownMenuItem>
@@ -341,21 +341,21 @@ const Navigation = () => {
                  <Book className="h-5 w-5" />
                  Pentukirja
                </Link>
-               <Link
-                 to="/calculator"
-                 className={`
-                   flex items-center gap-3 px-4 py-4 rounded-lg font-medium transition-all duration-200
-                   ${isActive('/calculator') 
-                     ? 'text-primary bg-primary/10 font-semibold' 
-                     : 'text-foreground hover:bg-accent/50'
-                   }
-                 `}
-                 onClick={closeMobileMenu}
-                 aria-current={isActive('/calculator') ? 'page' : undefined}
-               >
-                 <Calculator className="h-5 w-5" />
-                 Pentulaskuri
-               </Link>
+                <Link
+                  to="/"
+                  className={`
+                    flex items-center gap-3 px-4 py-4 rounded-lg font-medium transition-all duration-200
+                    ${isActive('/') 
+                      ? 'text-primary bg-primary/10 font-semibold' 
+                      : 'text-foreground hover:bg-accent/50'
+                    }
+                  `}
+                  onClick={closeMobileMenu}
+                  aria-current={isActive('/') ? 'page' : undefined}
+                >
+                  <Scale className="h-5 w-5" />
+                  Painonseuranta
+                </Link>
              </div>
 
              {/* Additional features */}
