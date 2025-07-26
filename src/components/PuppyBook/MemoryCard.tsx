@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Heart, MessageCircle, MapPin, Calendar, MoreVertical, Edit2, Trash2, Share2 } from 'lucide-react';
+import { Heart, MessageCircle, MapPin, Calendar, MoreVertical, Edit2, Trash2, Share2, Sparkles } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { SocialShareGenerator } from './SocialShareGenerator';
+import CommentSection from './CommentSection';
+import StickerEditor from './StickerEditor';
 
 interface Memory {
   id: string;
@@ -15,7 +17,7 @@ interface Memory {
   location?: any;
   created_at: string;
   reactions?: Array<{ id: string; user_id: string; reaction_type: string }>;
-  comments?: Array<{ id: string; user_id: string; comment_text: string; created_at: string }>;
+  comments?: Array<{ id: string; memory_id: string; user_id: string; comment_text: string; created_at: string }>;
 }
 
 interface MemoryCardProps {
@@ -33,6 +35,8 @@ const MemoryCard: React.FC<MemoryCardProps> = ({ memory, viewMode, onMemoryUpdat
   const [showMenu, setShowMenu] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [showShareDialog, setShowShareDialog] = useState(false);
+  const [showComments, setShowComments] = useState(false);
+  const [showStickerEditor, setShowStickerEditor] = useState(false);
   const { toast } = useToast();
 
   const handleReaction = async () => {
@@ -154,10 +158,16 @@ const MemoryCard: React.FC<MemoryCardProps> = ({ memory, viewMode, onMemoryUpdat
                       <Heart className={`w-3 h-3 ${isLiked ? 'fill-current' : ''}`} />
                       <span>{memory.reactions?.length || 0}</span>
                     </button>
-                    <span className="flex items-center gap-1">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowComments(!showComments);
+                      }}
+                      className="flex items-center gap-1 hover:text-blue-300 transition-colors"
+                    >
                       <MessageCircle className="w-3 h-3" />
                       <span>{memory.comments?.length || 0}</span>
-                    </span>
+                    </button>
                   </div>
                   <button
                     onClick={(e) => {
@@ -228,10 +238,16 @@ const MemoryCard: React.FC<MemoryCardProps> = ({ memory, viewMode, onMemoryUpdat
               <Heart className={`w-3 h-3 ${isLiked ? 'fill-current' : ''}`} />
               {memory.reactions?.length || 0}
             </button>
-            <span className="flex items-center gap-1">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowComments(!showComments);
+              }}
+              className="flex items-center gap-1 hover:text-blue-500 transition-colors"
+            >
               <MessageCircle className="w-3 h-3" />
               {memory.comments?.length || 0}
-            </span>
+            </button>
           </div>
           
           {memory.tags.length > 0 && (
@@ -265,6 +281,19 @@ const MemoryCard: React.FC<MemoryCardProps> = ({ memory, viewMode, onMemoryUpdat
             <Share2 className="w-4 h-4" />
             Jaa
           </button>
+          {memory.content_url && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowMenu(false);
+                setShowStickerEditor(true);
+              }}
+              className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 w-full"
+            >
+              <Sparkles className="w-4 h-4" />
+              Lisää tarroja
+            </button>
+          )}
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -290,6 +319,15 @@ const MemoryCard: React.FC<MemoryCardProps> = ({ memory, viewMode, onMemoryUpdat
         </div>
       )}
 
+      {/* Comment Section */}
+      {showComments && (
+        <CommentSection
+          memoryId={memory.id}
+          initialComments={memory.comments}
+          onCommentAdded={onMemoryUpdated}
+        />
+      )}
+
       {/* Social Share Dialog */}
       {puppyProfile && (
         <SocialShareGenerator
@@ -297,6 +335,19 @@ const MemoryCard: React.FC<MemoryCardProps> = ({ memory, viewMode, onMemoryUpdat
           puppyProfile={puppyProfile}
           isOpen={showShareDialog}
           onClose={() => setShowShareDialog(false)}
+        />
+      )}
+
+      {/* Sticker Editor */}
+      {memory.content_url && (
+        <StickerEditor
+          isOpen={showStickerEditor}
+          onClose={() => setShowStickerEditor(false)}
+          imageUrl={memory.content_url}
+          onStickerAdded={(editedUrl) => {
+            // Could save the edited image or share it
+            setShowStickerEditor(false);
+          }}
         />
       )}
     </motion.div>

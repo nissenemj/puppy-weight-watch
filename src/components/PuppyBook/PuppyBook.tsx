@@ -15,7 +15,8 @@ import {
   Check,
   PenTool,
   Sparkles,
-  Star
+  Star,
+  Users
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -24,6 +25,7 @@ import MonthlyTracker from './MonthlyTracker';
 import Timeline from './Timeline';
 import Milestones from './Milestones';
 import MemoryGallery from './MemoryGallery';
+import CommunityFeed from './CommunityFeed';
 import FloatingActionButton from './FloatingActionButton';
 import ShareDialog from './ShareDialog';
 import SettingsDialog from './SettingsDialog';
@@ -324,6 +326,17 @@ const PuppyBook: React.FC = () => {
                   profileImage: book.cover_image_url
                 }}
               />
+            </motion.div>
+          )}
+          {activeSection === 'community' && (
+            <motion.div
+              key="community"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <CommunityFeed />
             </motion.div>
           )}
         </AnimatePresence>
@@ -639,7 +652,8 @@ const PuppyBookNavigation: React.FC<{
     { id: 'monthly', label: 'Kuukaudet', icon: Calendar, emoji: '📅' },
     { id: 'timeline', label: 'Aikajana', icon: Calendar, emoji: '⏰' },
     { id: 'milestones', label: 'Virstanpylväät', icon: Award, emoji: '🏆' },
-    { id: 'memories', label: 'Muistot', icon: Heart, emoji: '💖' }
+    { id: 'memories', label: 'Muistot', icon: Heart, emoji: '💖' },
+    { id: 'community', label: 'Yhteisö', icon: Users, emoji: '👥' }
   ];
 
   return (
