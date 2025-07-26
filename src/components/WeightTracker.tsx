@@ -99,23 +99,28 @@ const WeightTracker = ({ user, onSignOut }: WeightTrackerProps) => {
       className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-25 to-purple-50 relative"
     >
       {/* Navigation Header */}
-      <header className="bg-white/90 backdrop-blur-md border-b border-gray-200/50 p-4 sticky top-0 z-40">
-        <div className="flex items-center justify-between max-w-6xl mx-auto">
-          <HeaderButtons 
-            showLogo={true} 
-            logoText="Painonseuranta"
-          />
-          
-          <div className="flex items-center gap-4">
-            <DogSelector
-              user={user}
-              selectedDogId={selectedDog?.id}
-              onDogSelect={handleDogSelect}
-            />
-            <div className="hidden sm:block text-right">
-              <p className="text-sm font-medium text-gray-900">Tervetuloa</p>
-              <p className="text-xs text-gray-600">{user.email}</p>
+      <header className="bg-white/90 backdrop-blur-md border-b border-gray-200/50 sticky top-0 z-40">
+        <div className="max-w-6xl mx-auto">
+          {/* Top row: Logo and user info */}
+          <div className="flex items-center justify-between p-4 pb-2">
+            <HeaderButtons showLogo={true} />
+            
+            <div className="flex items-center gap-4">
+              <DogSelector
+                user={user}
+                selectedDogId={selectedDog?.id}
+                onDogSelect={handleDogSelect}
+              />
+              <div className="hidden sm:block text-right">
+                <p className="text-sm font-medium text-gray-900">Tervetuloa</p>
+                <p className="text-xs text-gray-600">{user.email}</p>
+              </div>
             </div>
+          </div>
+          
+          {/* Bottom row: Navigation buttons */}
+          <div className="px-4 pb-4">
+            <HeaderButtons />
           </div>
         </div>
       </header>
