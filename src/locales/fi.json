@@ -1,0 +1,69 @@
+{
+  "app": {
+    "title": "Pentukirja",
+    "tagline": "Tallenna pennun elämäntarina"
+  },
+  "navigation": {
+    "home": "Etusivu",
+    "calculator": "Laskuri",
+    "weightTracker": "Painonseuranta",
+    "puppyGuide": "Pentuopas",
+    "puppyBook": "Pentukirja",
+    "safety": "Turvallisuus",
+    "foodTypes": "Ruokatyypit"
+  },
+  "common": {
+    "save": "Tallenna",
+    "cancel": "Peruuta",
+    "delete": "Poista",
+    "edit": "Muokkaa",
+    "loading": "Ladataan...",
+    "error": "Virhe",
+    "success": "Onnistui!",
+    "welcome": "Tervetuloa",
+    "continue": "Jatka",
+    "back": "Takaisin",
+    "next": "Seuraava",
+    "previous": "Edellinen",
+    "close": "Sulje"
+  },
+  "puppyBook": {
+    "title": "Pentukirja",
+    "subtitle": "Tallenna pennun ainutlaatuinen elämäntarina",
+    "createMemory": "Luo muisto",
+    "addMilestone": "Lisää virstanpylväs",
+    "viewGallery": "Näytä galleria",
+    "noMemories": "Ei vielä muistoja. Luo ensimmäinen muisto!",
+    "memoryAdded": "Muisto lisätty onnistuneesti! 🐾",
+    "milestoneReached": "Upea virstanpylväs saavutettu! 🎉"
+  },
+  "weightTracker": {
+    "title": "Painonseuranta",
+    "addWeight": "Lisää paino",
+    "currentWeight": "Nykyinen paino",
+    "targetWeight": "Tavoitepaino",
+    "progress": "Edistyminen",
+    "weightAdded": "Paino lisätty! Hienoa työtä! 💪",
+    "keepTracking": "Jatka seurantaa säännöllisesti"
+  },
+  "messages": {
+    "encouragement": {
+      "weightProgress": "Hienoa! Pentu kasvaa hyvin! 🌟",
+      "firstEntry": "Tervetuloa seurannan pariin! Olet ottanut tärkeän askeleen pennun hyvinvoinnin seurannassa.",
+      "consistentTracking": "Loistavaa! Säännöllinen seuranta auttaa pennun optimaalista kasvua.",
+      "milestone": "Upea virstanpylväs! Pennun kehitys etenee mainiosti."
+    },
+    "guidance": {
+      "feedingTip": "Muista: Säännöllinen ruokinta edistää terveellistä kasvua.",
+      "weightConcern": "Jos huomaat äkillisiä muutoksia, ota yhteyttä eläinlääkäriin.",
+      "celebration": "Jokainen päivä pennun kanssa on ainutlaatuinen! 🐕❤️"
+    }
+  },
+  "errors": {
+    "generic": "Jotain meni pieleen. Yritä uudelleen.",
+    "network": "Verkkovirhe. Tarkista internetyhteytesi.",
+    "validation": "Tarkista syöttämäsi tiedot.",
+    "notFound": "Sivua ei löytynyt.",
+    "unauthorized": "Ei käyttöoikeutta."
+  }
+}

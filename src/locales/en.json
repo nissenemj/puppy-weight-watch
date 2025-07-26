@@ -1,0 +1,69 @@
+{
+  "app": {
+    "title": "Puppy Book",
+    "tagline": "Record your puppy's life story"
+  },
+  "navigation": {
+    "home": "Home",
+    "calculator": "Calculator",
+    "weightTracker": "Weight Tracker",
+    "puppyGuide": "Puppy Guide",
+    "puppyBook": "Puppy Book",
+    "safety": "Safety",
+    "foodTypes": "Food Types"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success!",
+    "welcome": "Welcome",
+    "continue": "Continue",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close"
+  },
+  "puppyBook": {
+    "title": "Puppy Book",
+    "subtitle": "Record your puppy's unique life story",
+    "createMemory": "Create Memory",
+    "addMilestone": "Add Milestone",
+    "viewGallery": "View Gallery",
+    "noMemories": "No memories yet. Create your first memory!",
+    "memoryAdded": "Memory added successfully! 🐾",
+    "milestoneReached": "Amazing milestone reached! 🎉"
+  },
+  "weightTracker": {
+    "title": "Weight Tracker",
+    "addWeight": "Add Weight",
+    "currentWeight": "Current Weight",
+    "targetWeight": "Target Weight",
+    "progress": "Progress",
+    "weightAdded": "Weight added! Great work! 💪",
+    "keepTracking": "Keep tracking regularly"
+  },
+  "messages": {
+    "encouragement": {
+      "weightProgress": "Excellent! Your puppy is growing well! 🌟",
+      "firstEntry": "Welcome to tracking! You've taken an important step in monitoring your puppy's wellbeing.",
+      "consistentTracking": "Great job! Regular tracking helps ensure optimal puppy growth.",
+      "milestone": "Amazing milestone! Your puppy's development is progressing wonderfully."
+    },
+    "guidance": {
+      "feedingTip": "Remember: Regular feeding promotes healthy growth.",
+      "weightConcern": "If you notice sudden changes, contact your veterinarian.",
+      "celebration": "Every day with your puppy is unique! 🐕❤️"
+    }
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again.",
+    "network": "Network error. Check your internet connection.",
+    "validation": "Please check the information you entered.",
+    "notFound": "Page not found.",
+    "unauthorized": "Access denied."
+  }
+}
