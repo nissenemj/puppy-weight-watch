@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
 import { BookOpen, Database, AlertTriangle } from 'lucide-react'
 import Navigation from '@/components/Navigation'
+import HeaderButtons from '@/components/HeaderButtons'
 import SEO from '@/components/SEO'
 import FAQ from '@/components/FAQ'
 import { createArticleSchema, createFAQSchema, createBreadcrumbSchema } from '@/utils/structuredData'
@@ -41,7 +42,7 @@ export default function InfoHome() {
   ];
 
   return (
-    <div className="min-h-screen bg-background pt-14">
+    <div className="min-h-screen bg-background">
       <SEO
         title="Tietopankki - Penturuoka-opas"
         description="Laaja katsaus koiranpentujen ruokintaan ja ravitsemukseen. Kuiva-, märkä- ja raakaruokien analyysi, annostelutiedot ja turvallisuusohjeet."
@@ -49,7 +50,11 @@ export default function InfoHome() {
         type="article"
         structuredData={structuredData}
       />
-      <Navigation />
+      <div className="bg-white/90 backdrop-blur-md border-b border-gray-200/50 p-4 sticky top-0 z-40">
+        <div className="max-w-6xl mx-auto">
+          <HeaderButtons showLogo={true} logoText="Tietopankki" />
+        </div>
+      </div>
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="text-center mb-12">

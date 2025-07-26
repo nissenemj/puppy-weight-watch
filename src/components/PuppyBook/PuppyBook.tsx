@@ -23,6 +23,7 @@ import {
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import Navigation from '@/components/Navigation';
+import HeaderButtons from '@/components/HeaderButtons';
 import MonthlyTracker from './MonthlyTracker';
 import Timeline from './Timeline';
 import Milestones from './Milestones';
@@ -268,7 +269,11 @@ const PuppyBook: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gradient-mint-light/20 via-gradient-peach-light/20 to-gradient-sky/20">
-      <Navigation />
+      <div className="bg-white/90 backdrop-blur-md border-b border-gray-200/50 p-4 sticky top-0 z-40">
+        <div className="max-w-6xl mx-auto">
+          <HeaderButtons showLogo={true} logoText="Pentukirja" />
+        </div>
+      </div>
       <AnimatedHeader 
         title="Pentu kasvaa – seuraa matkaa!"
         subtitle="Tallenna ainutlaatuisia hetkiä ja jaa iloa yhteisön kanssa ✨"
