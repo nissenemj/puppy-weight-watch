@@ -130,10 +130,10 @@ export default function SafetyPage() {
 
         <InfoCard
           title="Yhteenveto"
-          variant="purple"
+          variant="accent"
           className="mb-8"
         >
-          <p className="text-primary-foreground leading-relaxed">
+          <p className="text-card-foreground leading-relaxed">
             Pentukoiran ruokinta on monimutkainen aihe, joka vaatii huolellista harkintaa ja usein ammattilaisen 
             ohjausta. Teknologiset työkalut voivat auttaa tiedon keräämisessä ja päätöksenteossa, mutta ne eivät 
             koskaan korvaa eläinlääkärin ammattitaitoa tai omistajan vastuuta seurata lemmikin vointia. 
