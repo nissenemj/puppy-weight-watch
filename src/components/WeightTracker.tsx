@@ -15,7 +15,8 @@ import WeightChart from './WeightChart'
 import FoodCalculator from './FoodCalculator'
 import PuppyFeeding from './PuppyFeeding'
 import SafetyNewsFeed from './SafetyNewsFeed'
-import HeaderButtons from './HeaderButtons'
+import AppLogo from './AppLogo'
+import NavigationButtons from './NavigationButtons'
 import DogSelector from './DogSelector'
 import WeightEntryForm from './WeightEntryForm'
 import WeightEntryList from './WeightEntryList'
@@ -103,7 +104,7 @@ const WeightTracker = ({ user, onSignOut }: WeightTrackerProps) => {
         <div className="max-w-6xl mx-auto">
           {/* Top row: Logo and user info */}
           <div className="flex items-center justify-between p-4 pb-2">
-            <HeaderButtons showLogo={true} />
+            <AppLogo />
             
             <div className="flex items-center gap-4">
               <DogSelector
@@ -120,7 +121,7 @@ const WeightTracker = ({ user, onSignOut }: WeightTrackerProps) => {
           
           {/* Bottom row: Navigation buttons */}
           <div className="px-4 pb-4">
-            <HeaderButtons />
+            <NavigationButtons />
           </div>
         </div>
       </header>
