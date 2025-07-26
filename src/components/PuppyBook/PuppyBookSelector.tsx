@@ -50,8 +50,10 @@ export default function PuppyBookSelector({ user, selectedBookId, onBookSelect }
   const { toast } = useToast();
 
   useEffect(() => {
-    loadBooks();
-  }, [user.id]);
+    if (user?.id) {
+      loadBooks();
+    }
+  }, [user?.id]);
 
   const loadBooks = async () => {
     try {
@@ -76,8 +78,8 @@ export default function PuppyBookSelector({ user, selectedBookId, onBookSelect }
 
       setBooks((data as any) || []);
       
-      // Auto-select first book if none selected
-      if (data && data.length > 0 && !selectedBookId) {
+      // Auto-select first book if none selected AND no book is currently selected
+      if (data && data.length > 0 && !selectedBookId && !books.some(b => b.id === selectedBookId)) {
         onBookSelect(data[0].id, data[0] as any);
       }
     } catch (error) {
