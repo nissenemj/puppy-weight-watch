@@ -121,6 +121,7 @@ export default function PuppyWeightTracker() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <WeightEntryForm 
                   userId={user.id} 
+                  dogId="placeholder" // TODO: Add dog selection to PuppyWeightTracker
                   previousWeights={weightEntries}
                 />
                 <WeightEntryList 

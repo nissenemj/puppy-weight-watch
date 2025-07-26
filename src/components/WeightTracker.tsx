@@ -16,15 +16,21 @@ import FoodCalculator from './FoodCalculator'
 import PuppyFeeding from './PuppyFeeding'
 import SafetyNewsFeed from './SafetyNewsFeed'
 import HeaderButtons from './HeaderButtons'
+import DogSelector from './DogSelector'
+import WeightEntryForm from './WeightEntryForm'
+import WeightEntryList from './WeightEntryList'
+import { useWeightEntries } from '@/hooks/useWeightEntries'
 import { Scale, TrendingUp, Calculator, Utensils, Bell, RefreshCw, LogOut } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-interface WeightEntry {
+interface Dog {
   id: string
-  user_id: string
-  date: string
-  weight: number
-  created_at: string
+  name: string
+  breed?: string
+  weight_kg?: number
+  age_years?: number
+  activity_level?: string
+  health_conditions?: string[]
 }
 
 interface WeightTrackerProps {
@@ -33,16 +39,21 @@ interface WeightTrackerProps {
 }
 
 const WeightTracker = ({ user, onSignOut }: WeightTrackerProps) => {
-  const [currentWeight, setCurrentWeight] = useState('')
-  const [entries, setEntries] = useState<WeightEntry[]>([])
+  const [selectedDog, setSelectedDog] = useState<Dog | null>(null)
   const [activeTab, setActiveTab] = useState('weight-tracking')
   const { toast } = useToast()
   const isMobile = useIsMobile()
 
+  // Get weight entries for selected dog
+  const { data: entries = [], refetch: refetchEntries } = useWeightEntries(
+    user.id, 
+    selectedDog?.id
+  )
+
   // Pull to refresh hook
   const { containerRef, isRefreshing, pullDistance, shouldShowIndicator } = usePullToRefresh({
     onRefresh: async () => {
-      await fetchWeightEntries()
+      await refetchEntries()
       toast({
         title: "Päivitetty!",
         description: "Tiedot on päivitetty",
@@ -51,93 +62,13 @@ const WeightTracker = ({ user, onSignOut }: WeightTrackerProps) => {
     disabled: false
   })
 
-  useEffect(() => {
-    fetchWeightEntries()
-  }, [user])
-
-  const fetchWeightEntries = async () => {
-    const { data, error } = await supabase
-      .from('weight_entries')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('date', { ascending: true })
-
-    if (error) {
-      console.error('Error fetching weight entries:', error)
-      toast({
-        title: "Virhe",
-        description: "Painotietojen hakeminen epäonnistui",
-        variant: "destructive",
-      })
-    } else if (data) {
-      setEntries(data)
-    }
+  const handleDogSelect = (dogId: string, dog: Dog) => {
+    setSelectedDog(dog)
   }
 
   const handleSignOut = async () => {
     await supabase.auth.signOut()
-    setEntries([])
     onSignOut()
-  }
-
-  const addWeightEntry = async () => {
-    if (!currentWeight || !user) return
-
-    const today = new Date().toISOString().split('T')[0]
-    
-    // Check if entry for today already exists
-    const existingEntry = entries.find(entry => entry.date === today)
-    
-    const weightData = {
-      user_id: user.id,
-      date: today,
-      weight: parseFloat(currentWeight),
-    }
-
-    if (existingEntry) {
-      // Update existing entry
-      const { error } = await supabase
-        .from('weight_entries')
-        .update({ weight: parseFloat(currentWeight) })
-        .eq('id', existingEntry.id)
-
-      if (error) {
-        console.error('Error updating weight entry:', error)
-        toast({
-          title: "Virhe",
-          description: "Painon päivittäminen epäonnistui",
-          variant: "destructive",
-        })
-      } else {
-        toast({
-          title: "Paino päivitetty!",
-          description: `Tämän päivän paino päivitetty: ${currentWeight} kg`,
-        })
-        fetchWeightEntries()
-      }
-    } else {
-      // Add new entry
-      const { error } = await supabase
-        .from('weight_entries')
-        .insert([weightData])
-
-      if (error) {
-        console.error('Error inserting weight entry:', error)
-        toast({
-          title: "Virhe",
-          description: "Painon lisääminen epäonnistui",
-          variant: "destructive",
-        })
-      } else {
-        toast({
-          title: "Paino lisätty!",
-          description: `Uusi painomerkintä: ${currentWeight} kg`,
-        })
-        fetchWeightEntries()
-      }
-    }
-    
-    setCurrentWeight('')
   }
 
   const getLatestWeight = () => {
@@ -170,22 +101,21 @@ const WeightTracker = ({ user, onSignOut }: WeightTrackerProps) => {
       {/* Navigation Header */}
       <header className="bg-white/90 backdrop-blur-md border-b border-gray-200/50 p-4 sticky top-0 z-40">
         <div className="flex items-center justify-between max-w-6xl mx-auto">
-          <HeaderButtons showLogo={true} logoText="Painonseuranta" />
+          <HeaderButtons 
+            showLogo={true} 
+            logoText="Painonseuranta"
+          />
           
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
+            <DogSelector
+              user={user}
+              selectedDogId={selectedDog?.id}
+              onDogSelect={handleDogSelect}
+            />
             <div className="hidden sm:block text-right">
               <p className="text-sm font-medium text-gray-900">Tervetuloa</p>
               <p className="text-xs text-gray-600">{user.email}</p>
             </div>
-            <Button 
-              onClick={handleSignOut}
-              variant="outline"
-              size="sm"
-              className="text-gray-600 hover:text-gray-900 flex items-center gap-2"
-            >
-              <LogOut className="h-4 w-4" />
-              <span className="hidden sm:inline">Kirjaudu ulos</span>
-            </Button>
           </div>
         </div>
       </header>
@@ -304,60 +234,29 @@ const WeightTracker = ({ user, onSignOut }: WeightTrackerProps) => {
               </Card>
             </div>
 
-            {/* Weight Entry Form */}
-            <Card className="bg-white/70 backdrop-blur-sm border-0 shadow-xl">
-              <CardHeader>
-                <CardTitle className="text-xl sm:text-2xl text-foreground flex items-center gap-2">
-                  <Scale className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
-                  Lisää painomerkintä
-                </CardTitle>
-                <CardDescription className="text-sm sm:text-base">
-                  Syötä pennun tämän päivän paino kilogrammoina
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4 sm:space-y-6">
-                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                  <div className="flex-1">
-                    <Label htmlFor="weight" className="text-sm sm:text-base font-medium mb-2 block">Paino (kg)</Label>
-                    <Input
-                      id="weight"
-                      type="number"
-                      step="0.1"
-                      value={currentWeight}
-                      onChange={(e) => setCurrentWeight(e.target.value)}
-                      placeholder="esim. 5.2"
-                      className="h-12 sm:h-14 text-base sm:text-lg rounded-xl border-2 focus:border-primary focus:ring-primary"
-                    />
-                  </div>
-                  <Button 
-                    onClick={addWeightEntry}
-                    size="mobile"
-                    className="h-12 sm:h-14 px-6 sm:px-8 rounded-xl bg-gradient-cool hover:opacity-90 transition-all duration-200 hover:scale-105 shadow-lg sm:self-end"
-                  >
-                    Lisää
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Recent entries */}
-            {entries.length > 0 && (
-              <Card className="bg-white/70 backdrop-blur-sm border-0 shadow-xl">
-                <CardHeader>
-                  <CardTitle className="text-lg sm:text-xl text-foreground">Viimeisimmät merkinnät</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    {entries.slice(-5).reverse().map((entry) => (
-                      <div key={entry.id} className="flex justify-between items-center p-2 sm:p-3 bg-white/50 rounded-lg">
-                        <span className="text-sm sm:text-base text-gray-600">{entry.date}</span>
-                        <span className="text-sm sm:text-base font-semibold text-foreground">{entry.weight} kg</span>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+            {/* Weight Entry Form and List */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {selectedDog ? (
+                <WeightEntryForm 
+                  userId={user.id} 
+                  dogId={selectedDog.id}
+                  previousWeights={entries} 
+                />
+              ) : (
+                <Card className="bg-white/70 backdrop-blur-sm border-0 shadow-xl">
+                  <CardContent className="p-8 text-center">
+                    <p className="text-muted-foreground">Valitse ensin koira lisätäksesi painomerkintöjä</p>
+                  </CardContent>
+                </Card>
+              )}
+              
+              {selectedDog && entries.length > 0 && (
+                <WeightEntryList 
+                  entries={entries} 
+                  userId={user.id} 
+                />
+              )}
+            </div>
           </TabsContent>
 
           <TabsContent value="growth-chart" className="animate-fade-in">

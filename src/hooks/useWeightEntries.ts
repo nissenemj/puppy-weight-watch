@@ -4,19 +4,19 @@ import { WeightService, type WeightEntry } from '@/services/weightService'
 import { toast } from 'sonner'
 import { validateWeightChange } from '@/lib/validationSchemas'
 
-export const useWeightEntries = (userId: string) => {
+export const useWeightEntries = (userId: string, dogId?: string) => {
   return useQuery({
-    queryKey: ['weightEntries', userId],
-    queryFn: () => WeightService.getWeightEntries(userId),
+    queryKey: ['weightEntries', userId, dogId],
+    queryFn: () => WeightService.getWeightEntries(userId, dogId),
     enabled: !!userId,
     staleTime: 1000 * 60 * 5, // 5 minutes
   })
 }
 
-export const useLatestWeightEntry = (userId: string) => {
+export const useLatestWeightEntry = (userId: string, dogId?: string) => {
   return useQuery({
-    queryKey: ['latestWeightEntry', userId],
-    queryFn: () => WeightService.getLatestWeightEntry(userId),
+    queryKey: ['latestWeightEntry', userId, dogId],
+    queryFn: () => WeightService.getLatestWeightEntry(userId, dogId),
     enabled: !!userId,
     staleTime: 1000 * 60 * 5, // 5 minutes
   })
@@ -26,10 +26,11 @@ export const useAddWeightEntry = () => {
   const queryClient = useQueryClient()
   
   return useMutation({
-    mutationFn: async ({ weight, date, userId, previousWeights }: {
+    mutationFn: async ({ weight, date, userId, dogId, previousWeights }: {
       weight: number
       date: string
       userId: string
+      dogId: string
       previousWeights: WeightEntry[]
     }) => {
       // Validate weight change
@@ -39,8 +40,8 @@ export const useAddWeightEntry = () => {
         toast.warning(validation.warning)
       }
 
-      // Check if entry already exists for this date
-      const existingEntry = await WeightService.checkExistingEntry(userId, date)
+      // Check if entry already exists for this date and dog
+      const existingEntry = await WeightService.checkExistingEntry(userId, date, dogId)
       
       if (existingEntry) {
         // Update existing entry
@@ -50,7 +51,8 @@ export const useAddWeightEntry = () => {
         return await WeightService.addWeightEntry({
           weight,
           date,
-          user_id: userId
+          user_id: userId,
+          dog_id: dogId
         })
       }
     },

@@ -10,10 +10,11 @@ import type { WeightEntry } from '@/services/weightService'
 
 interface WeightEntryFormProps {
   userId: string
+  dogId: string
   previousWeights: WeightEntry[]
 }
 
-export default function WeightEntryForm({ userId, previousWeights }: WeightEntryFormProps) {
+export default function WeightEntryForm({ userId, dogId, previousWeights }: WeightEntryFormProps) {
   const [weight, setWeight] = useState('')
   const [date, setDate] = useState(new Date().toISOString().split('T')[0])
   const [errors, setErrors] = useState<{ weight?: string; date?: string }>({})
@@ -54,6 +55,7 @@ export default function WeightEntryForm({ userId, previousWeights }: WeightEntry
         weight: parseFloat(weight),
         date,
         userId,
+        dogId,
         previousWeights
       })
       

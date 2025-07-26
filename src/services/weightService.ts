@@ -8,6 +8,7 @@ export interface WeightEntry {
   weight: number
   date: string
   user_id?: string
+  dog_id?: string
   created_at?: string
 }
 
@@ -24,7 +25,8 @@ export class WeightService {
       .insert([{
         weight: validatedEntry.weight,
         date: validatedEntry.date,
-        user_id: entry.user_id
+        user_id: entry.user_id,
+        dog_id: entry.dog_id
       }])
       .select()
       .single()
@@ -71,12 +73,17 @@ export class WeightService {
     }
   }
 
-  static async getWeightEntries(userId: string): Promise<WeightEntry[]> {
-    const { data, error } = await supabase
+  static async getWeightEntries(userId: string, dogId?: string): Promise<WeightEntry[]> {
+    let query = supabase
       .from('weight_entries')
       .select('*')
       .eq('user_id', userId)
-      .order('date', { ascending: true })
+
+    if (dogId) {
+      query = query.eq('dog_id', dogId)
+    }
+
+    const { data, error } = await query.order('date', { ascending: true })
 
     if (error) {
       console.error('Error fetching weight entries:', error)
@@ -86,11 +93,17 @@ export class WeightService {
     return data || []
   }
 
-  static async getLatestWeightEntry(userId: string): Promise<WeightEntry | null> {
-    const { data, error } = await supabase
+  static async getLatestWeightEntry(userId: string, dogId?: string): Promise<WeightEntry | null> {
+    let query = supabase
       .from('weight_entries')
       .select('*')
       .eq('user_id', userId)
+
+    if (dogId) {
+      query = query.eq('dog_id', dogId)
+    }
+
+    const { data, error } = await query
       .order('date', { ascending: false })
       .limit(1)
       .maybeSingle()
@@ -103,13 +116,18 @@ export class WeightService {
     return data
   }
 
-  static async checkExistingEntry(userId: string, date: string): Promise<WeightEntry | null> {
-    const { data, error } = await supabase
+  static async checkExistingEntry(userId: string, date: string, dogId?: string): Promise<WeightEntry | null> {
+    let query = supabase
       .from('weight_entries')
       .select('*')
       .eq('user_id', userId)
       .eq('date', date)
-      .maybeSingle()
+
+    if (dogId) {
+      query = query.eq('dog_id', dogId)
+    }
+
+    const { data, error } = await query.maybeSingle()
 
     if (error) {
       console.error('Error checking existing entry:', error)

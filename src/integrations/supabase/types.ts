@@ -819,6 +819,7 @@ export type Database = {
           birth_date: string | null
           cover_image_url: string | null
           created_at: string | null
+          dog_id: string | null
           id: string
           owner_id: string
           privacy_settings: Json | null
@@ -831,6 +832,7 @@ export type Database = {
           birth_date?: string | null
           cover_image_url?: string | null
           created_at?: string | null
+          dog_id?: string | null
           id?: string
           owner_id: string
           privacy_settings?: Json | null
@@ -843,6 +845,7 @@ export type Database = {
           birth_date?: string | null
           cover_image_url?: string | null
           created_at?: string | null
+          dog_id?: string | null
           id?: string
           owner_id?: string
           privacy_settings?: Json | null
@@ -851,7 +854,15 @@ export type Database = {
           title?: string
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "puppy_books_dog_id_fkey"
+            columns: ["dog_id"]
+            isOneToOne: false
+            referencedRelation: "dogs"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       puppy_milestones: {
         Row: {
@@ -1002,6 +1013,7 @@ export type Database = {
         Row: {
           created_at: string | null
           date: string
+          dog_id: string | null
           id: string
           user_id: string | null
           weight: number
@@ -1009,6 +1021,7 @@ export type Database = {
         Insert: {
           created_at?: string | null
           date: string
+          dog_id?: string | null
           id?: string
           user_id?: string | null
           weight: number
@@ -1016,11 +1029,20 @@ export type Database = {
         Update: {
           created_at?: string | null
           date?: string
+          dog_id?: string | null
           id?: string
           user_id?: string | null
           weight?: number
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "weight_entries_dog_id_fkey"
+            columns: ["dog_id"]
+            isOneToOne: false
+            referencedRelation: "dogs"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
