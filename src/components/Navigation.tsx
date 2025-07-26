@@ -1,35 +1,35 @@
 
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { 
-  Calculator, 
   Info, 
   Scale, 
   Dog, 
   ShieldCheck,
   Menu,
   X,
-  Book,
   MoreHorizontal,
   Moon,
-  Sun
+  Sun,
+  UtensilsCrossed,
+  Database,
+  Book,
+  Calculator
 } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
+import HeaderButtons from './HeaderButtons'
 
 const Navigation = () => {
   const location = useLocation()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isDark, setIsDark] = useState(false)
-  const [showMoreMenu, setShowMoreMenu] = useState(false)
-  const [hiddenItems, setHiddenItems] = useState<number[]>([])
-  const navRef = useRef<HTMLUListElement>(null)
-  const moreRef = useRef<HTMLLIElement>(null)
   
   const isActive = (path: string) => {
     if (path === '/') return location.pathname === '/'
@@ -46,53 +46,46 @@ const Navigation = () => {
     </a>
   )
 
-  // Main navigation items
-  const navItems = [
-    { href: '/', icon: Scale, label: 'Painonseuranta' },
-    { href: '/calculator', icon: Calculator, label: 'Laskuri' },
-    { href: '/puppy-book', icon: Book, label: 'Pentukirja' },
-    { href: '/info', icon: Info, label: 'Oppaat' },
-    { href: '/info/puppy-guide', icon: Dog, label: 'Penturuokinta' },
-    { href: '/info/safety', icon: ShieldCheck, label: 'Turvallisuus' },
-    { href: '/info/food-types', icon: Dog, label: 'Ruokatyypit' }
+  // Additional features navigation items (excluding main buttons)
+  const additionalNavItems = [
+    { href: '/', icon: Scale, label: 'Painonseuranta', description: 'Seuraa pennun kasvua' },
+    { 
+      href: '/info', 
+      icon: Info, 
+      label: 'Oppaat', 
+      description: 'Hyödyllistä tietoa',
+      group: 'Tietosivu'
+    },
+    { 
+      href: '/info/puppy-guide', 
+      icon: Dog, 
+      label: 'Penturuokinta', 
+      description: 'Ruokintaohjeet',
+      group: 'Tietosivu'
+    },
+    { 
+      href: '/info/safety', 
+      icon: ShieldCheck, 
+      label: 'Turvallisuus', 
+      description: 'Turvallisuusvinkkejä',
+      group: 'Tietosivu'
+    },
+    { 
+      href: '/info/food-types', 
+      icon: UtensilsCrossed, 
+      label: 'Ruokatyypit', 
+      description: 'Ruokatietokanta',
+      group: 'Tietosivu'
+    },
+    { 
+      href: '/info/feeding-data', 
+      icon: Database, 
+      label: 'Ruokinta-tiedot', 
+      description: 'Ruokintasuositukset',
+      group: 'Tietosivu'
+    }
   ]
 
-  // Priority+ navigation logic
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth <= 768 || !navRef.current || !moreRef.current) return
-      
-      const nav = navRef.current
-      const more = moreRef.current
-      const items = Array.from(nav.children).filter(child => 
-        !child.classList.contains('more-menu')
-      ) as HTMLElement[]
-      
-      // Reset
-      setHiddenItems([])
-      setShowMoreMenu(false)
-      
-      const availableWidth = nav.clientWidth - more.offsetWidth - 40
-      let totalWidth = 0
-      const hidden: number[] = []
-      
-      for (let i = 0; i < items.length; i++) {
-        totalWidth += items[i].offsetWidth
-        if (totalWidth > availableWidth) {
-          hidden.push(i)
-        }
-      }
-      
-      if (hidden.length > 0) {
-        setHiddenItems(hidden)
-        setShowMoreMenu(true)
-      }
-    }
-
-    handleResize()
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
 
   // Dark mode toggle
   useEffect(() => {
@@ -130,9 +123,8 @@ const Navigation = () => {
     setIsMobileMenuOpen(false)
   }
 
-  const NavLink = ({ item, index, className = "" }: { 
-    item: typeof navItems[0], 
-    index: number, 
+  const NavLink = ({ item, className = "" }: { 
+    item: typeof additionalNavItems[0], 
     className?: string 
   }) => {
     const active = isActive(item.href)
@@ -152,7 +144,12 @@ const Navigation = () => {
         onClick={closeMobileMenu}
       >
         <item.icon className="mr-2 h-4 w-4" />
-        {item.label}
+        <div className="flex flex-col items-start">
+          <span>{item.label}</span>
+          {item.description && (
+            <span className="text-xs text-muted-foreground">{item.description}</span>
+          )}
+        </div>
         {active && (
           <span className="absolute bottom-0 left-2 right-2 h-0.5 bg-primary rounded-full" />
         )}
@@ -174,60 +171,76 @@ const Navigation = () => {
             <span className="hidden sm:inline-block">Pentulaskuri</span>
           </Link>
 
-          {/* Desktop Navigation */}
+          {/* Main Action Buttons (Center) */}
+          <HeaderButtons />
+
+          {/* Additional Features Navigator (Desktop) */}
           <nav 
-            className="hidden md:flex flex-1 justify-center" 
-            aria-label="Päänavigaatio"
+            className="hidden md:flex" 
+            aria-label="Lisäominaisuudet"
           >
-            <ul 
-              ref={navRef}
-              className="flex items-center gap-1 max-w-4xl overflow-hidden"
-            >
-              {navItems.map((item, index) => (
-                <li 
-                  key={item.href}
-                  className={hiddenItems.includes(index) ? 'hidden' : ''}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  className="px-4 py-2 font-medium"
+                  aria-label="Avaa lisäominaisuudet"
+                  aria-haspopup="true"
                 >
-                  <NavLink item={item} index={index} />
-                </li>
-              ))}
-              
-              {/* More menu for Priority+ */}
-              <li 
-                ref={moreRef}
-                className={`more-menu ${showMoreMenu ? 'block' : 'hidden'}`}
+                  <MoreHorizontal className="h-4 w-4 mr-2" />
+                  Lisäominaisuudet
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent 
+                align="end"
+                className="min-w-72 bg-background/95 backdrop-blur-lg z-[100] border-border/50"
+                sideOffset={8}
               >
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button 
-                      variant="ghost" 
-                      size="sm"
-                      className="px-4 py-3"
-                      aria-label="Lisää vaihtoehtoja"
+                {/* Group items */}
+                <div className="px-2 py-1.5">
+                  <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                    Painonseuranta
+                  </div>
+                  <DropdownMenuItem asChild>
+                    <Link 
+                      to="/"
+                      className="flex items-start gap-3 p-3 rounded-md"
                     >
-                      <MoreHorizontal className="h-4 w-4 mr-2" />
-                      Lisää
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent 
-                    align="end"
-                    className="min-w-48 bg-background/95 backdrop-blur-lg z-[100]"
-                  >
-                    {hiddenItems.map(index => (
-                      <DropdownMenuItem key={navItems[index].href} asChild>
+                      <Scale className="h-4 w-4 mt-0.5 text-primary" />
+                      <div>
+                        <div className="font-medium">Painonseuranta</div>
+                        <div className="text-xs text-muted-foreground">Seuraa pennun kasvua</div>
+                      </div>
+                    </Link>
+                  </DropdownMenuItem>
+                </div>
+                
+                <DropdownMenuSeparator />
+                
+                <div className="px-2 py-1.5">
+                  <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                    Tietosivut
+                  </div>
+                  {additionalNavItems
+                    .filter(item => item.group === 'Tietosivu')
+                    .map(item => (
+                      <DropdownMenuItem key={item.href} asChild>
                         <Link 
-                          to={navItems[index].href}
-                          className="flex items-center w-full"
+                          to={item.href}
+                          className="flex items-start gap-3 p-3 rounded-md"
                         >
-                          {React.createElement(navItems[index].icon, { className: "mr-2 h-4 w-4" })}
-                          {navItems[index].label}
+                          <item.icon className="h-4 w-4 mt-0.5 text-primary" />
+                          <div>
+                            <div className="font-medium">{item.label}</div>
+                            <div className="text-xs text-muted-foreground">{item.description}</div>
+                          </div>
                         </Link>
                       </DropdownMenuItem>
                     ))}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </li>
-            </ul>
+                </div>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </nav>
 
           {/* Theme Toggle & Mobile Menu */}
@@ -303,20 +316,62 @@ const Navigation = () => {
             </Button>
           </div>
           
-          {/* Mobile navigation items */}
-          <nav 
-            className="px-6 py-4 space-y-2"
-            aria-label="Mobiilinavigaatio"
-          >
-            {navItems.map((item, index) => (
-              <NavLink 
-                key={item.href}
-                item={item} 
-                index={index}
-                className="w-full justify-start text-base py-4 hover:translate-x-1"
-              />
-            ))}
-          </nav>
+           {/* Mobile navigation items */}
+           <nav 
+             className="px-6 py-4 space-y-3"
+             aria-label="Mobiilinavigaatio"
+           >
+             {/* Main features first */}
+             <div className="space-y-2">
+               <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+                 Pääominaisuudet
+               </div>
+               <Link
+                 to="/puppy-book"
+                 className={`
+                   flex items-center gap-3 px-4 py-4 rounded-lg font-medium transition-all duration-200
+                   ${isActive('/puppy-book') 
+                     ? 'text-primary bg-primary/10 font-semibold' 
+                     : 'text-foreground hover:bg-accent/50'
+                   }
+                 `}
+                 onClick={closeMobileMenu}
+                 aria-current={isActive('/puppy-book') ? 'page' : undefined}
+               >
+                 <Book className="h-5 w-5" />
+                 Pentukirja
+               </Link>
+               <Link
+                 to="/calculator"
+                 className={`
+                   flex items-center gap-3 px-4 py-4 rounded-lg font-medium transition-all duration-200
+                   ${isActive('/calculator') 
+                     ? 'text-primary bg-primary/10 font-semibold' 
+                     : 'text-foreground hover:bg-accent/50'
+                   }
+                 `}
+                 onClick={closeMobileMenu}
+                 aria-current={isActive('/calculator') ? 'page' : undefined}
+               >
+                 <Calculator className="h-5 w-5" />
+                 Pentulaskuri
+               </Link>
+             </div>
+
+             {/* Additional features */}
+             <div className="space-y-2 pt-4 border-t border-border/30">
+               <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+                 Lisäominaisuudet
+               </div>
+               {additionalNavItems.map((item) => (
+                 <NavLink 
+                   key={item.href}
+                   item={item} 
+                   className="w-full justify-start text-base py-3 px-4 hover:translate-x-1"
+                 />
+               ))}
+             </div>
+           </nav>
         </div>
       </div>
       
