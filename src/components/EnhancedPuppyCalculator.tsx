@@ -14,7 +14,9 @@ import {
   Dog, 
   Shield, 
   Heart,
-  Activity
+  Activity,
+  Clock,
+  Sparkles
 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
 import { toast } from 'sonner'
@@ -82,10 +84,23 @@ export default function EnhancedPuppyCalculator() {
   const [activityLevel, setActivityLevel] = useState([1.0])
   const [result, setResult] = useState<CalculationResult | null>(null)
   const [loading, setLoading] = useState(false)
+  const [user, setUser] = useState<any>(null)
+  const [isAdmin, setIsAdmin] = useState(false)
 
   useEffect(() => {
+    checkUser()
     fetchDogFoods()
   }, [])
+
+  const checkUser = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      setUser(user)
+      setIsAdmin(user?.email === 'nissenemj@gmail.com')
+    } catch (error) {
+      console.error('Error checking user:', error)
+    }
+  }
 
   const fetchDogFoods = async () => {
     try {
@@ -514,6 +529,90 @@ export default function EnhancedPuppyCalculator() {
     )
   }
 
+  // Show "Coming Soon" for non-admin users
+  if (!isAdmin) {
+    return (
+      <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6 px-4 sm:px-6">
+        <Card className="overflow-hidden">
+          <div className="bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 p-6 sm:p-8">
+            <div className="text-center space-y-4">
+              <div className="mx-auto w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center">
+                <Sparkles className="h-8 w-8 text-primary" />
+              </div>
+              <div>
+                <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-2">
+                  Dynaaminen ruokalaskuri
+                </h3>
+                <p className="text-muted-foreground text-sm sm:text-base">
+                  Tarkka ruokamäärälaskuri pennulle
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <CardContent className="p-6 sm:p-8 space-y-6">
+            <div className="text-center space-y-4">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-100 text-amber-800 rounded-full text-sm font-medium">
+                <Clock className="h-4 w-4" />
+                Tulossa pian
+              </div>
+              
+              <div className="space-y-3">
+                <h4 className="text-lg font-semibold text-foreground">
+                  Parhaimmillaan ruokinta on tarkkaa tiedettä
+                </h4>
+                <p className="text-muted-foreground text-sm sm:text-base max-w-2xl mx-auto">
+                  Kehitämme parhaillaan tarkkaa ruokalaskuria, joka huomioi pennun rodun, iän, painon ja 
+                  aktiivisuustason. Laskuri tulee sisältämään laajan valikoiman eri ruokamerkkejä ja 
+                  niiden virallisia annostelutaulukoita.
+                </p>
+              </div>
+              
+              <div className="grid gap-4 sm:grid-cols-3 mt-8">
+                <div className="text-center p-4 bg-muted/30 rounded-lg">
+                  <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <Dog className="h-5 w-5 text-primary" />
+                  </div>
+                  <h5 className="font-medium text-sm">Rotukohtainen laskenta</h5>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Huomioi eri rotujen kasvutarpeet
+                  </p>
+                </div>
+                
+                <div className="text-center p-4 bg-muted/30 rounded-lg">
+                  <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <Scale className="h-5 w-5 text-primary" />
+                  </div>
+                  <h5 className="font-medium text-sm">Tarkka annostelu</h5>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Perustuu valmistajien ohjeisiin
+                  </p>
+                </div>
+                
+                <div className="text-center p-4 bg-muted/30 rounded-lg">
+                  <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <Activity className="h-5 w-5 text-primary" />
+                  </div>
+                  <h5 className="font-medium text-sm">Aktiivisuushuomio</h5>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Säätää annosta elämäntavan mukaan
+                  </p>
+                </div>
+              </div>
+              
+              <div className="pt-4">
+                <p className="text-sm text-muted-foreground">
+                  Odotettavissa <span className="font-medium text-foreground">tammikuun 2025</span> aikana
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  // Admin view - show full calculator
   return (
     <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6 px-4 sm:px-6">
       <Card>
@@ -521,6 +620,7 @@ export default function EnhancedPuppyCalculator() {
           <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
             <Dog className="h-5 w-5 sm:h-6 sm:w-6" />
             Dynaaminen penturuokintalaskuri
+            <Badge variant="secondary" className="text-xs">Admin</Badge>
           </CardTitle>
           <CardDescription className="text-sm sm:text-base">
             Valitse ruoka ja sovellus pyytää automaattisesti tarvittavat tiedot
