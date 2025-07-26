@@ -88,19 +88,19 @@ const PuppyProfileEditor: React.FC<PuppyProfileEditorProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[500px] max-w-[95vw] bg-white text-gray-900 p-8">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Settings className="w-5 h-5 text-primary" />
+          <DialogTitle className="flex items-center gap-3 text-gray-900 text-xl font-semibold">
+            <Settings className="w-6 h-6 text-gray-700" />
             Muokkaa pennun tietoja
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-6 py-4">
+        <div className="space-y-8 py-6">
           {/* Profile Image Section */}
           <div>
-            <Label className="flex items-center gap-2 text-sm font-medium mb-3">
-              <ImageIcon className="w-4 h-4" />
+            <Label className="flex items-center gap-3 text-gray-900 font-semibold mb-4 text-base">
+              <ImageIcon className="w-5 h-5 text-gray-700" />
               Pennun kuva
             </Label>
             <ImageUploader
@@ -112,8 +112,8 @@ const PuppyProfileEditor: React.FC<PuppyProfileEditorProps> = ({
 
           {/* Puppy Name */}
           <div>
-            <Label htmlFor="puppy-name" className="flex items-center gap-2 text-sm font-medium mb-2">
-              <Type className="w-4 h-4" />
+            <Label htmlFor="puppy-name" className="flex items-center gap-3 text-gray-900 font-semibold mb-3 text-base">
+              <Type className="w-5 h-5 text-gray-700" />
               Pennun nimi *
             </Label>
             <Input
@@ -121,14 +121,14 @@ const PuppyProfileEditor: React.FC<PuppyProfileEditorProps> = ({
               value={puppyName}
               onChange={(e) => setPuppyName(e.target.value)}
               placeholder="Syötä pennun nimi..."
-              className="w-full"
+              className="w-full py-3 px-4 text-gray-900 bg-white border-2 border-gray-300 focus:border-primary text-base"
             />
           </div>
 
           {/* Birth Date */}
           <div>
-            <Label htmlFor="birth-date" className="flex items-center gap-2 text-sm font-medium mb-2">
-              <Calendar className="w-4 h-4" />
+            <Label htmlFor="birth-date" className="flex items-center gap-3 text-gray-900 font-semibold mb-3 text-base">
+              <Calendar className="w-5 h-5 text-gray-700" />
               Syntymäaika
             </Label>
             <Input
@@ -136,19 +136,28 @@ const PuppyProfileEditor: React.FC<PuppyProfileEditorProps> = ({
               type="date"
               value={birthDate}
               onChange={(e) => setBirthDate(e.target.value)}
-              className="w-full"
+              className="w-full py-3 px-4 text-gray-900 bg-white border-2 border-gray-300 focus:border-primary text-base"
             />
           </div>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex justify-end gap-3 pt-4">
-          <Button variant="outline" onClick={onClose} disabled={isLoading}>
-            <X className="w-4 h-4 mr-2" />
+        <div className="flex flex-col sm:flex-row justify-end gap-4 pt-6">
+          <Button 
+            variant="outline" 
+            onClick={onClose} 
+            disabled={isLoading}
+            className="py-3 px-6 text-base font-medium bg-white text-gray-700 border-2 border-gray-300 hover:bg-gray-50 hover:text-gray-900"
+          >
+            <X className="w-5 h-5 mr-2" />
             Peruuta
           </Button>
-          <Button onClick={handleSave} disabled={isLoading}>
-            <Save className="w-4 h-4 mr-2" />
+          <Button 
+            onClick={handleSave} 
+            disabled={isLoading}
+            className="py-3 px-6 text-base font-medium bg-primary text-white hover:bg-primary/90"
+          >
+            <Save className="w-5 h-5 mr-2" />
             {isLoading ? 'Tallennetaan...' : 'Tallenna'}
           </Button>
         </div>
