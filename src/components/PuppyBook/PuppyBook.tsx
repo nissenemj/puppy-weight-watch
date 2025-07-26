@@ -16,7 +16,9 @@ import {
   PenTool,
   Sparkles,
   Star,
-  Users
+  Users,
+  Trophy,
+  Target
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -26,6 +28,10 @@ import Timeline from './Timeline';
 import Milestones from './Milestones';
 import MemoryGallery from './MemoryGallery';
 import CommunityFeed from './CommunityFeed';
+import Leaderboard from './Leaderboard';
+import WeeklyChallenges from './WeeklyChallenges';
+import UserSpotlight from './UserSpotlight';
+import AnimatedHeader from './AnimatedHeader';
 import FloatingActionButton from './FloatingActionButton';
 import ShareDialog from './ShareDialog';
 import SettingsDialog from './SettingsDialog';
@@ -257,12 +263,11 @@ const PuppyBook: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-gradient-mint-light/20 via-gradient-peach-light/20 to-gradient-sky/20">
       <Navigation />
-      <PuppyBookHeader 
-        book={book} 
-        onShareClick={() => setShowShareDialog(true)}
-        onSettingsClick={() => setShowSettingsDialog(true)}
+      <AnimatedHeader 
+        title="Pentu kasvaa – seuraa matkaa!"
+        subtitle="Tallenna ainutlaatuisia hetkiä ja jaa iloa yhteisön kanssa ✨"
       />
       <PuppyBookNavigation 
         activeSection={activeSection} 
@@ -337,6 +342,39 @@ const PuppyBook: React.FC = () => {
               transition={{ duration: 0.3 }}
             >
               <CommunityFeed />
+            </motion.div>
+          )}
+          {activeSection === 'leaderboard' && (
+            <motion.div
+              key="leaderboard"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Leaderboard />
+            </motion.div>
+          )}
+          {activeSection === 'challenges' && (
+            <motion.div
+              key="challenges"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <WeeklyChallenges />
+            </motion.div>
+          )}
+          {activeSection === 'spotlight' && (
+            <motion.div
+              key="spotlight"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <UserSpotlight />
             </motion.div>
           )}
         </AnimatePresence>

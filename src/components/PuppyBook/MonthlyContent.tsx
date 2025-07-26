@@ -447,6 +447,26 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
   const milestones = getMonthlyMilestones(monthNumber);
   const healthGuidelines = getHealthGuidelines(monthNumber);
 
+  // Fun facts for each month
+  const getFunFact = (month: number) => {
+    const facts = {
+      0: "💡 Tiesitkö? Pennut syntyvät sokaina ja kuuroina, mutta niiden hajuaisti toimii heti!",
+      1: "🧠 Tiesitkö? 8 viikon iässä pennun aivot ovat kehittyneet 80% aikuisen koiran aivoista!",
+      2: "🐕 Tiesitkö? Golden Retrieverit oppivat 'istu'-komennon keskimäärin 20% nopeammin kuin muut rodut!",
+      3: "🦴 Tiesitkö? 12-16 viikon iässä pennut vaihtavat kaikki 28 maitohammastaan 42 pysyvään hampaaseen!",
+      4: "🏃 Tiesitkö? 16 viikon iässä pentu voi juosta jo lyhyitä matkoja - ei liikaa, kasvulevyt ovat vielä pehmeät!",
+      5: "📏 Tiesitkö? 5 kuukauden iässä pentu on saavuttanut noin 75% lopullisesta koostaan!",
+      6: "🎯 Tiesitkö? Puolivuotiaana pentu pystyy jo keskittymään koulutukseen 15-20 minuuttia kerrallaan!",
+      7: "🌍 Tiesitkö? 7 kuukauden iässä pentu tunnistaa yli 100 erilaista sanaa ja elettä!",
+      8: "💪 Tiesitkö? 8 kuukauden iässä pentu on saavuttanut lähes täyden fyysisen koordinaationsa!",
+      9: "🧘 Tiesitkö? 9 kuukauden iässä pentu alkaa rauhoittua ja stressinsietokyky paranee huomattavasti!",
+      10: "🎉 Tiesitkö? 10 kuukauden iässä pentu on saavuttanut 90% lopullisesta älykkyyspotentiaalistaan!",
+      11: "🌟 Tiesitkö? 11 kuukauden iässä pentu alkaa näyttää jo aikuisen persoonallisuutensa piirteitä!",
+      12: "🎂 Tiesitkö? Vuoden iässä pentu muuttuu virallisesti nuoreksi aikuiseksi koiraksi!"
+    };
+    return facts[month as keyof typeof facts] || "💫 Tiesitkö? Joka päivä pennun kanssa on uusi oppimisseikkailu!";
+  };
+
   return (
     <div className="bg-white rounded-3xl shadow-lg p-6 mb-6">
       <motion.div
@@ -462,8 +482,8 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
             </span>
           )}
         </h2>
-        <p className="text-gray-600">
-            {monthNumber === 0 && "Pennun elämä alkaa - ensimmäiset viikot ovat täynnä kasvua ja oppimista"}
+        <p className="text-gray-600 mb-3">
+          {monthNumber === 0 && "Pennun elämä alkaa - ensimmäiset viikot ovat täynnä kasvua ja oppimista"}
           {monthNumber === 1 && "Aktiivinen kasvu ja ensimmäiset sosiaaliset kokemukset"}
           {monthNumber === 2 && "Sosiaalistaminen ja peruskomentoja"}
           {monthNumber === 3 && "Itsenäistyminen ja hihnakävely"}
@@ -478,6 +498,18 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
             </span>
           )}
         </p>
+        
+        {/* Fun fact */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.3 }}
+          className="bg-gradient-to-r from-chart-joy/10 to-chart-energy/10 p-4 rounded-xl border-l-4 border-chart-joy"
+        >
+          <p className="text-sm font-medium text-chart-energy">
+            {getFunFact(monthNumber)}
+          </p>
+        </motion.div>
       </motion.div>
 
       {/* Tab Navigation */}
