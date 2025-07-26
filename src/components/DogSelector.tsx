@@ -138,11 +138,11 @@ export default function DogSelector({ user, selectedDogId, onDogSelect }: DogSel
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className="text-muted-foreground">Lisää uusi koira</DialogTitle>
+            <DialogTitle className="text-gray-900 dark:text-white">Lisää uusi koira</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <Label htmlFor="dogName" className="text-muted-foreground">Nimi *</Label>
+              <Label htmlFor="dogName" className="text-gray-900 dark:text-white">Nimi *</Label>
               <Input
                 id="dogName"
                 value={newDogName}
@@ -151,7 +151,7 @@ export default function DogSelector({ user, selectedDogId, onDogSelect }: DogSel
               />
             </div>
             <div>
-              <Label htmlFor="dogBreed" className="text-muted-foreground">Rotu</Label>
+              <Label htmlFor="dogBreed" className="text-gray-900 dark:text-white">Rotu</Label>
               <Input
                 id="dogBreed"
                 value={newDogBreed}
