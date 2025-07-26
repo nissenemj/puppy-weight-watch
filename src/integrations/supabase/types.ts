@@ -786,6 +786,7 @@ export type Database = {
       }
       puppy_books: {
         Row: {
+          birth_date: string | null
           cover_image_url: string | null
           created_at: string | null
           id: string
@@ -797,6 +798,7 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          birth_date?: string | null
           cover_image_url?: string | null
           created_at?: string | null
           id?: string
@@ -808,6 +810,7 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          birth_date?: string | null
           cover_image_url?: string | null
           created_at?: string | null
           id?: string
