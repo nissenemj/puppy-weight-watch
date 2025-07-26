@@ -41,7 +41,8 @@ const PuppyProfileEditor: React.FC<PuppyProfileEditorProps> = ({
     { name: 'Oranssi', value: 'orange', class: 'bg-orange-500' },
     { name: 'Sininen', value: 'blue', class: 'bg-blue-500' },
     { name: 'Vihreä', value: 'green', class: 'bg-green-500' },
-    { name: 'Vaaleanpunainen', value: 'pink', class: 'bg-pink-500' },
+    { name: 'Pinkki', value: 'pink', class: 'bg-pink-500' },
+    { name: 'Vaaleanpunainen', value: 'light-pink', class: 'bg-pink-200' },
     { name: 'Violetti', value: 'purple', class: 'bg-purple-500' },
     { name: 'Punainen', value: 'red', class: 'bg-red-500' }
   ];

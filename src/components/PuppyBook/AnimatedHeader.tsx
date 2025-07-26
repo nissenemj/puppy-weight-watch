@@ -48,6 +48,7 @@ const AnimatedHeader: React.FC<AnimatedHeaderProps> = ({
       blue: 'bg-gradient-to-br from-blue-400 to-blue-600',
       green: 'bg-gradient-to-br from-green-400 to-green-600',
       pink: 'bg-gradient-to-br from-pink-400 to-pink-600',
+      'light-pink': 'bg-gradient-to-br from-pink-200 to-pink-400',
       purple: 'bg-gradient-to-br from-purple-400 to-purple-600',
       red: 'bg-gradient-to-br from-red-400 to-red-600'
     };
