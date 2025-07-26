@@ -11,7 +11,9 @@ import {
   Clock,
   MapPin,
   Plus,
-  Edit
+  Edit,
+  Weight,
+  Pill
 } from 'lucide-react';
 import { calculatePuppyAge, getAgeAppropriateMilestones } from '@/utils/puppyAge';
 import { AddHealthRecordDialog } from './AddHealthRecordDialog';
@@ -55,6 +57,10 @@ interface DatabaseHealthRecord {
   description: string;
   notes: string | null;
   veterinarian: string | null;
+  weight_kg: number | null;
+  time: string | null;
+  medication_name: string | null;
+  dosage: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -684,24 +690,51 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between">
                         <div className="flex-1 space-y-2">
-                          <div className="flex items-center gap-2">
-                            <Badge variant={getTypeBadgeVariant(record.type)}>
-                              {getTypeLabel(record.type)}
-                            </Badge>
-                            <span className="text-sm text-gray-500">
-                              {format(new Date(record.entry_date), 'dd.MM.yyyy', { locale: fi })}
-                            </span>
-                          </div>
-                          <h5 className="font-medium text-gray-900">{record.description}</h5>
-                          {record.veterinarian && (
-                            <p className="text-sm text-gray-600">
-                              Eläinlääkäri: {record.veterinarian}
-                            </p>
-                          )}
-                          {record.notes && (
-                            <p className="text-sm text-gray-600">{record.notes}</p>
-                          )}
-                        </div>
+                           <div className="flex items-center gap-2">
+                             <Badge variant={getTypeBadgeVariant(record.type)}>
+                               {getTypeLabel(record.type)}
+                             </Badge>
+                             <span className="text-sm text-gray-500">
+                               {format(new Date(record.entry_date), 'dd.MM.yyyy', { locale: fi })}
+                               {record.time && ` klo ${record.time.slice(0, 5)}`}
+                             </span>
+                           </div>
+                           <h5 className="font-medium text-gray-900">{record.description}</h5>
+                           
+                           {/* Display medication and dosage */}
+                           {(record.medication_name || record.dosage) && (
+                             <div className="flex items-center gap-4 text-sm text-gray-600">
+                               {record.medication_name && (
+                                 <span className="flex items-center gap-1">
+                                   <Pill className="w-3 h-3" />
+                                   {record.medication_name}
+                                 </span>
+                               )}
+                               {record.dosage && (
+                                 <span className="text-gray-500">
+                                   Annos: {record.dosage}
+                                 </span>
+                               )}
+                             </div>
+                           )}
+                           
+                           {/* Display weight */}
+                           {record.weight_kg && (
+                             <p className="text-sm text-gray-600 flex items-center gap-1">
+                               <Weight className="w-3 h-3" />
+                               Paino: {record.weight_kg} kg
+                             </p>
+                           )}
+                           
+                           {record.veterinarian && (
+                             <p className="text-sm text-gray-600">
+                               Eläinlääkäri: {record.veterinarian}
+                             </p>
+                           )}
+                           {record.notes && (
+                             <p className="text-sm text-gray-600">{record.notes}</p>
+                           )}
+                         </div>
                          <Button variant="ghost" size="sm">
                            <Edit className="w-4 h-4" />
                          </Button>
