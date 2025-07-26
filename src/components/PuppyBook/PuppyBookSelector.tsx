@@ -59,7 +59,7 @@ export default function PuppyBookSelector({ user, selectedBookId, onBookSelect }
         .from('puppy_books')
         .select(`
           *,
-          dogs (
+          dogs!puppy_books_dog_id_fkey (
             id,
             name,
             breed,
@@ -118,7 +118,7 @@ export default function PuppyBookSelector({ user, selectedBookId, onBookSelect }
         })
         .select(`
           *,
-          dogs (
+          dogs!puppy_books_dog_id_fkey (
             id,
             name,
             breed,

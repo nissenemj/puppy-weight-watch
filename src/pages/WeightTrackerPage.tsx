@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { User } from '@supabase/supabase-js'
 import { supabase } from '@/integrations/supabase/client'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import AuthenticationWrapper from '@/components/AuthenticationWrapper'
 import WeightTracker from '@/components/WeightTracker'
 import { useToast } from '@/hooks/use-toast'
@@ -10,6 +10,7 @@ const WeightTrackerPage = () => {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
+  const location = useLocation()
   const { toast } = useToast()
 
   useEffect(() => {
@@ -31,6 +32,11 @@ const WeightTrackerPage = () => {
 
   const checkForOnboarding = async (user: User) => {
     try {
+      // Only redirect if we're on weight-tracker page to avoid infinite loops
+      if (location.pathname !== '/weight-tracker') {
+        return
+      }
+
       // Check if user has puppy books first
       const { data: books, error: booksError } = await supabase
         .from('puppy_books')

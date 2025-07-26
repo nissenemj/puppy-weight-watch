@@ -856,13 +856,6 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "fk_puppy_books_dog_id"
-            columns: ["dog_id"]
-            isOneToOne: false
-            referencedRelation: "dogs"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "puppy_books_dog_id_fkey"
             columns: ["dog_id"]
             isOneToOne: false
