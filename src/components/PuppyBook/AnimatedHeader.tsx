@@ -36,7 +36,7 @@ const AnimatedHeader: React.FC<AnimatedHeaderProps> = ({
   puppyImageUrl
 }) => {
   const puppyAge = birthDate ? calculateAge(birthDate) : null;
-  const placeholderPuppyUrl = "https://images.unsplash.com/photo-1535268647677-300dbf3d78d1?w=200&h=200&fit=crop&crop=face";
+  const placeholderPuppyUrl = "https://images.unsplash.com/photo-1552053831-71594a27632d?w=200&h=200&fit=crop&crop=face"; // Söpö koiranpentu
 
   return (
     <div className="relative bg-gradient-primary min-h-[300px] rounded-b-3xl overflow-hidden">
