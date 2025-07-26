@@ -1,5 +1,4 @@
 import Navigation from '@/components/Navigation'
-import ModernPuppyWeightTracker from '@/components/ModernPuppyWeightTracker'
 import SEO from '@/components/SEO'
 import FAQ from '@/components/FAQ'
 import ImageOptimized from '@/components/ImageOptimized'
@@ -96,7 +95,7 @@ const Index = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <Link to="/" className="block">
+              <Link to="/weight-tracker" className="block">
                 <motion.div 
                   className="bg-primary/10 backdrop-blur-sm rounded-full p-3 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-primary/20 hover:bg-primary/20"
                   whileHover={{ scale: 1.1, rotateY: 5 }}
@@ -203,7 +202,7 @@ const Index = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.7 }}
               >
-                <Link to="/">
+                <Link to="/weight-tracker">
                   <motion.button 
                     className="bg-gradient-primary text-white px-6 py-3 rounded-2xl text-base font-heading font-semibold shadow-playful hover:shadow-lg transform transition-all duration-200 flex items-center gap-2 mx-auto"
                     whileHover={{ scale: 1.05 }}
@@ -318,8 +317,6 @@ const Index = () => {
         </div>
       </section>
 
-      <ModernPuppyWeightTracker />
-      
       <div className="container mx-auto px-4 py-16">
         <FAQ items={faqs} />
       </div>

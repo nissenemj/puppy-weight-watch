@@ -11,12 +11,22 @@ import FoodTypes from "./pages/FoodTypes";
 import PuppyGuide from "./pages/PuppyGuide";
 import SafetyPage from "./pages/SafetyPage";
 import NotFound from "./pages/NotFound";
+import OnboardingPage from "./pages/OnboardingPage";
+import WeightTrackerPage from "./pages/WeightTrackerPage";
 import App from "./App"; // Viral demo page
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Index />,
+  },
+  {
+    path: "/weight-tracker",
+    element: <WeightTrackerPage />,
+  },
+  {
+    path: "/onboarding",
+    element: <OnboardingPage />,
   },
   {
     path: "/calculator",
