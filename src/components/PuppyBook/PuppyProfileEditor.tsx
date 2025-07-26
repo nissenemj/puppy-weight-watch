@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Settings, Save, X, Calendar, Type, Image as ImageIcon, Palette } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -104,16 +104,16 @@ const PuppyProfileEditor: React.FC<PuppyProfileEditorProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px] max-w-[95vw] max-h-[90vh] bg-white text-gray-900 p-0 overflow-hidden flex flex-col">
-        <DialogHeader className="p-8 pb-0">
+      <DialogContent className="sm:max-w-[500px] max-w-[95vw] max-h-[85vh] bg-white text-gray-900">
+        <DialogHeader>
           <DialogTitle className="flex items-center gap-3 text-gray-900 text-xl font-semibold">
             <Settings className="w-6 h-6 text-gray-700" />
             Muokkaa pennun tietoja
           </DialogTitle>
         </DialogHeader>
 
-        <div className="flex-1 overflow-y-auto px-8 py-6">
-          <div className="space-y-8">
+        <div className="overflow-y-auto max-h-[50vh] pr-2">
+          <div className="space-y-6">
             {/* Profile Image Section */}
             <div>
               <Label className="flex items-center gap-3 text-gray-900 font-semibold mb-4 text-base">
@@ -184,13 +184,12 @@ const PuppyProfileEditor: React.FC<PuppyProfileEditorProps> = ({
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row justify-end gap-4 p-8 pt-6 border-t border-gray-200 bg-gray-50">
+        <DialogFooter className="flex flex-col sm:flex-row gap-2 pt-4">
           <Button 
             variant="outline" 
             onClick={onClose} 
             disabled={isLoading}
-            className="py-3 px-6 text-base font-medium bg-white text-gray-700 border-2 border-gray-300 hover:bg-gray-50 hover:text-gray-900"
+            className="py-3 px-6 text-base font-medium"
           >
             <X className="w-5 h-5 mr-2" />
             Peruuta
@@ -198,12 +197,12 @@ const PuppyProfileEditor: React.FC<PuppyProfileEditorProps> = ({
           <Button 
             onClick={handleSave} 
             disabled={isLoading}
-            className="py-3 px-6 text-base font-medium bg-primary text-white hover:bg-primary/90"
+            className="py-3 px-6 text-base font-medium"
           >
             <Save className="w-5 h-5 mr-2" />
             {isLoading ? 'Tallennetaan...' : 'Tallenna'}
           </Button>
-        </div>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
