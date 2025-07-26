@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { FaPaw, FaDog, FaBone, FaHeart, FaChartLine, FaCalculator, FaBook, FaInfoCircle } from 'react-icons/fa'
 import { Bell, TrendingUp, Users, Award } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
 import heroPuppy from '@/assets/hero-puppy.png'
 import growthStages from '@/assets/growth-stages.png'
 
@@ -107,18 +108,32 @@ const Index = () => {
                   </div>
                 </motion.div>
               </Link>
-              <Link to="/info/feeding-data" className="block">
+              <Link to="/puppy-book" className="block">
                 <motion.div 
-                  className="bg-accent/10 backdrop-blur-sm rounded-full p-3 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-accent/20 hover:bg-accent/20"
+                  className="bg-pink-100 backdrop-blur-sm rounded-full p-3 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-pink-200 hover:bg-pink-200"
                   whileHover={{ scale: 1.1, rotateY: -5 }}
                   whileTap={{ scale: 0.9 }}
                 >
                   <div className="text-center">
-                    <FaBone className="text-2xl mb-1 text-accent mx-auto" />
-                    <h3 className="font-heading font-semibold text-xs text-accent">Ruokinta</h3>
+                    <FaBook className="text-2xl mb-1 text-pink-600 mx-auto" />
+                    <h3 className="font-heading font-semibold text-xs text-pink-600">Pentukirja</h3>
                   </div>
                 </motion.div>
               </Link>
+              <div className="block relative">
+                <motion.div 
+                  className="bg-accent/10 backdrop-blur-sm rounded-full p-3 shadow-md transition-all duration-300 cursor-not-allowed border border-accent/20 opacity-70"
+                  whileHover={{ scale: 1.05 }}
+                >
+                  <div className="text-center relative">
+                    <FaBone className="text-2xl mb-1 text-accent mx-auto" />
+                    <h3 className="font-heading font-semibold text-xs text-accent">Ruokinta</h3>
+                    <Badge variant="secondary" className="absolute -top-2 -right-2 text-[8px] px-1 py-0 h-4">
+                      Tulossa
+                    </Badge>
+                  </div>
+                </motion.div>
+              </div>
             </motion.div>
 
             {/* Central Hero Content */}
@@ -215,20 +230,34 @@ const Index = () => {
                   whileTap={{ scale: 0.9 }}
                 >
                   <div className="text-center">
-                    <FaPaw className="text-2xl mb-1 text-primary mx-auto" />
+                    <FaCalculator className="text-2xl mb-1 text-primary mx-auto" />
                     <h3 className="font-heading font-semibold text-xs text-primary">Laskuri</h3>
                   </div>
                 </motion.div>
               </Link>
+              <div className="block relative">
+                <motion.div 
+                  className="bg-accent/10 backdrop-blur-sm rounded-full p-3 shadow-md transition-all duration-300 cursor-not-allowed border border-accent/20 opacity-70"
+                  whileHover={{ scale: 1.05 }}
+                >
+                  <div className="text-center relative">
+                    <FaHeart className="text-2xl mb-1 text-accent mx-auto" />
+                    <h3 className="font-heading font-semibold text-xs text-accent">Terveys</h3>
+                    <Badge variant="secondary" className="absolute -top-2 -right-2 text-[8px] px-1 py-0 h-4">
+                      Tulossa
+                    </Badge>
+                  </div>
+                </motion.div>
+              </div>
               <Link to="/info" className="block">
                 <motion.div 
-                  className="bg-accent/10 backdrop-blur-sm rounded-full p-3 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-accent/20 hover:bg-accent/20"
+                  className="bg-secondary/10 backdrop-blur-sm rounded-full p-3 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-secondary/20 hover:bg-secondary/20"
                   whileHover={{ scale: 1.1, rotateY: 5 }}
                   whileTap={{ scale: 0.9 }}
                 >
                   <div className="text-center">
-                    <FaHeart className="text-2xl mb-1 text-accent mx-auto" />
-                    <h3 className="font-heading font-semibold text-xs text-accent">Tietoa</h3>
+                    <FaInfoCircle className="text-2xl mb-1 text-secondary-foreground mx-auto" />
+                    <h3 className="font-heading font-semibold text-xs text-secondary-foreground">Tietoa</h3>
                   </div>
                 </motion.div>
               </Link>
