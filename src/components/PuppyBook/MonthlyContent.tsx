@@ -500,7 +500,7 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
     const facts = {
       0: "💡 Tiesitkö? Pennut syntyvät sokaina ja kuuroina, mutta niiden hajuaisti toimii heti!",
       1: "🧠 Tiesitkö? 8 viikon iässä pennun aivot ovat kehittyneet 80% aikuisen koiran aivoista!",
-      2: "🐕 Tiesitkö? Golden Retrieverit oppivat 'istu'-komennon keskimäärin 20% nopeammin kuin muut rodut!",
+      2: "🐕 Tiesitkö? Kultainennoutajat oppivat 'istu'-komennon keskimäärin 20% nopeammin kuin muut rodut!",
       3: "🦴 Tiesitkö? 12-16 viikon iässä pennut vaihtavat kaikki 28 maitohammastaan 42 pysyvään hampaaseen!",
       4: "🏃 Tiesitkö? 16 viikon iässä pentu voi juosta jo lyhyitä matkoja - ei liikaa, kasvulevyt ovat vielä pehmeät!",
       5: "📏 Tiesitkö? 5 kuukauden iässä pentu on saavuttanut noin 75% lopullisesta koostaan!",
