@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { AlertTriangle, Calculator, Users, Heart, Shield, MapPin, Zap, Home } from 'lucide-react';
+import { AlertTriangle, Calculator, Users, Heart, Shield, MapPin, Zap, Home, Info } from 'lucide-react';
 import FAQ from '@/components/FAQ';
 import InfoNavigation from '@/components/InfoNavigation';
 import InfoCard from '@/components/InfoCard';
@@ -481,45 +481,165 @@ const SocializationGuide = () => {
                   Ammattilaisen ohjaama pentukurssi on erinomainen tapa tarjota pennulle turvallisia sosiaalisia kokemuksia.
                 </p>
 
+                <div className="bg-primary/5 p-4 rounded-lg mb-4">
+                  <div className="flex items-start gap-2">
+                    <Info className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                    <div>
+                      <h4 className="font-semibold text-primary text-sm mb-1">Vinkki</h4>
+                      <p className="text-sm">
+                        Pentukurssien paikat täyttyvät nopeasti! Kannattaa olla ajoissa liikkeellä ja tutustua 
+                        useampaan vaihtoehtoon ennen valintaa.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm border-collapse border border-border">
                     <thead>
                       <tr className="bg-muted">
                         <th className="border border-border p-2 text-left">Palveluntarjoaja</th>
-                        <th className="border border-border p-2 text-left">Pentukohtaiset kurssit</th>
+                        <th className="border border-border p-2 text-left">Kurssit ja hinta</th>
                         <th className="border border-border p-2 text-left">Huomioita</th>
+                        <th className="border border-border p-2 text-left">Linkki</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
+                        <td className="border border-border p-2 font-medium">Musti ja Mirri</td>
+                        <td className="border border-border p-2">
+                          <div>
+                            <div className="font-medium">Pentukurssi (3-10 kk)</div>
+                            <div className="text-xs text-muted-foreground">4 x 60 min, 89€</div>
+                          </div>
+                        </td>
+                        <td className="border border-border p-2">Arjen taitoja rennossa ja turvallisessa ympäristössä</td>
+                        <td className="border border-border p-2">
+                          <a href="https://www.varaaheti.fi/trimmisfi/fi/kuopio_kolmisoppi/courses" 
+                             target="_blank" rel="noopener noreferrer" 
+                             className="text-primary hover:text-primary/80 text-xs underline">
+                            Ajanvaraus
+                          </a>
+                        </td>
+                      </tr>
+                      <tr className="bg-muted/50">
                         <td className="border border-border p-2 font-medium">Pondera</td>
-                        <td className="border border-border p-2">Pentukurssi, Pentujen arkitottelevaisuuskurssi</td>
-                        <td className="border border-border p-2">Kouluttajat tutkinnon suorittaneita eläintenkouluttajia</td>
+                        <td className="border border-border p-2">
+                          <div>
+                            <div className="font-medium">Pentukurssi & arkitottelevaisuus</div>
+                            <div className="text-xs text-muted-foreground">Useita ikävaiheille</div>
+                          </div>
+                        </td>
+                        <td className="border border-border p-2">Tutkinnon suorittaneet eläintenkouluttajat, Kaivotie 23</td>
+                        <td className="border border-border p-2">
+                          <a href="https://www.pondera.fi/tuote-osasto/pentukurssit/" 
+                             target="_blank" rel="noopener noreferrer" 
+                             className="text-primary hover:text-primary/80 text-xs underline">
+                            Kotisivut
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="border border-border p-2 font-medium">Properro</td>
+                        <td className="border border-border p-2">
+                          <div>
+                            <div className="font-medium">ESKARI (yli 3 kk)</div>
+                            <div className="text-xs text-muted-foreground">4 viikkoa, 129€</div>
+                          </div>
+                        </td>
+                        <td className="border border-border p-2">Ryhmässä olemista, arkitaitoja ja hauskoja tehtäviä</td>
+                        <td className="border border-border p-2">
+                          <a href="https://www.properro.net/proeskari" 
+                             target="_blank" rel="noopener noreferrer" 
+                             className="text-primary hover:text-primary/80 text-xs underline">
+                            Ilmoittautuminen
+                          </a>
+                        </td>
                       </tr>
                       <tr className="bg-muted/50">
                         <td className="border border-border p-2 font-medium">KPSH ry</td>
-                        <td className="border border-border p-2">Pentukurssi (arki- ja harrastuskoirille)</td>
-                        <td className="border border-border p-2">Keskittyy mm. motivaatioon, kontaktiin ja hihnakäytökseen</td>
+                        <td className="border border-border p-2">
+                          <div>
+                            <div className="font-medium">Pentukurssi</div>
+                            <div className="text-xs text-muted-foreground">Arki- ja harrastuskoirille</div>
+                          </div>
+                        </td>
+                        <td className="border border-border p-2">Motivaatio, kontakti, hihnakäytös ja arjen haasteet</td>
+                        <td className="border border-border p-2">
+                          <a href="https://www.kpsh.net/harrastuslajit/muu-toiminta/pentukurssit/" 
+                             target="_blank" rel="noopener noreferrer" 
+                             className="text-primary hover:text-primary/80 text-xs underline">
+                            Kurssisivu
+                          </a>
+                        </td>
                       </tr>
                       <tr>
                         <td className="border border-border p-2 font-medium">Tassujen tahtiin</td>
-                        <td className="border border-border p-2">Pentukoulu (2-6 kk), Hoitotoimet helpommiksi -kurssi</td>
-                        <td className="border border-border p-2">Pienryhmät (2 koirakkoa), yksilöllinen opetus</td>
+                        <td className="border border-border p-2">
+                          <div>
+                            <div className="font-medium">Pentukoulu (2-6 kk)</div>
+                            <div className="text-xs text-muted-foreground">Pienryhmät (2 koirakkoa)</div>
+                          </div>
+                        </td>
+                        <td className="border border-border p-2">Yksilöllinen ohjaus, Volttikatu 6 Savilahdessa</td>
+                        <td className="border border-border p-2">
+                          <a href="https://www.tassujentahtiin.fi/kurssit/" 
+                             target="_blank" rel="noopener noreferrer" 
+                             className="text-primary hover:text-primary/80 text-xs underline">
+                            Kurssit
+                          </a>
+                        </td>
                       </tr>
                       <tr className="bg-muted/50">
                         <td className="border border-border p-2 font-medium">Tottis Studio HuiKee</td>
-                        <td className="border border-border p-2">Pentutreffit (12 vk-6 kk), Pentukurssi</td>
-                        <td className="border border-border p-2">Tarjoaa valvottuja pentutreffejä ja kursseja</td>
+                        <td className="border border-border p-2">
+                          <div>
+                            <div className="font-medium">Pentutreffit & kurssit</div>
+                            <div className="text-xs text-muted-foreground">12 vk-8 kk</div>
+                          </div>
+                        </td>
+                        <td className="border border-border p-2">Valvotut pentuleikit, Telkkistentie 6 Kelloniemessä</td>
+                        <td className="border border-border p-2">
+                          <a href="https://www.tottisstudiohuikee.fi/pennut-ja-arkitaidot" 
+                             target="_blank" rel="noopener noreferrer" 
+                             className="text-primary hover:text-primary/80 text-xs underline">
+                            Arkitaidot
+                          </a>
+                        </td>
                       </tr>
                       <tr>
                         <td className="border border-border p-2 font-medium">Koiraurheilukeskus SAVO</td>
-                        <td className="border border-border p-2">Pentujen tehokurssi</td>
-                        <td className="border border-border p-2">Suuri keskus Siilinjärvellä, lähellä Kuopiota</td>
+                        <td className="border border-border p-2">
+                          <div>
+                            <div className="font-medium">Pentujen tehokurssi</div>
+                            <div className="text-xs text-muted-foreground">Arkielämä & harrastusten pohjat</div>
+                          </div>
+                        </td>
+                        <td className="border border-border p-2">Suuri keskus Siilinjärvellä, noin 10 min Kuopiosta</td>
+                        <td className="border border-border p-2">
+                          <a href="https://www.koiraurheilukeskussavo.fi/kurssit-ja-valmennus/" 
+                             target="_blank" rel="noopener noreferrer" 
+                             className="text-primary hover:text-primary/80 text-xs underline">
+                            Kurssit
+                          </a>
+                        </td>
                       </tr>
                       <tr className="bg-muted/50">
                         <td className="border border-border p-2 font-medium">Koirakoulu Kannustava</td>
-                        <td className="border border-border p-2">Yksityistunnit, ryhmäkoulutukset</td>
-                        <td className="border border-border p-2">Toimii koko P-Savon alueella, erikoisosaamisena vireenhallinta</td>
+                        <td className="border border-border p-2">
+                          <div>
+                            <div className="font-medium">Yksityis- & ryhmätunnit</div>
+                            <div className="text-xs text-muted-foreground">Koko P-Savo</div>
+                          </div>
+                        </td>
+                        <td className="border border-border p-2">Erikoisosaaminen vireenhallinnassa ja metsästyskoirissa</td>
+                        <td className="border border-border p-2">
+                          <a href="https://www.koirakoulukannustava.fi" 
+                             target="_blank" rel="noopener noreferrer" 
+                             className="text-primary hover:text-primary/80 text-xs underline">
+                            Kotisivut
+                          </a>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
