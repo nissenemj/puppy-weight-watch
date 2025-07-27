@@ -12,6 +12,8 @@ import { Heart, Clock, MapPin, Trophy, Info, CheckCircle, AlertCircle } from '@/
 import { SocializationDashboard } from './SocializationDashboard';
 import { SocializationCard } from './SocializationCard';
 import { AddExperienceDialog } from './AddExperienceDialog';
+import { WeeklyTasks } from './WeeklyTasks';
+import { BodyLanguageGuide } from './BodyLanguageGuide';
 
 interface SocializationSectionProps {
   bookId: string;
@@ -171,6 +173,13 @@ export const SocializationSection: React.FC<SocializationSectionProps> = ({
     setShowAddDialog(true);
   };
 
+  const handleTaskSelect = (itemId: string) => {
+    const item = items.find(i => i.id === itemId);
+    if (item) {
+      handleAddExperience(item);
+    }
+  };
+
   const handleExperienceAdded = () => {
     loadSocializationData();
     setShowAddDialog(false);
@@ -245,6 +254,11 @@ export const SocializationSection: React.FC<SocializationSectionProps> = ({
         </TabsList>
 
         <TabsContent value="dashboard" className="space-y-6">
+          <WeeklyTasks 
+            bookId={bookId}
+            puppyAge={puppyAge}
+            onTaskSelect={handleTaskSelect}
+          />
           <SocializationDashboard 
             categories={categories}
             progress={progress}
@@ -411,6 +425,10 @@ export const SocializationSection: React.FC<SocializationSectionProps> = ({
                   <li>• <strong>Seuraa kehonkieltä:</strong> Lopeta aina positiiviseen hetkeen</li>
                   <li>• <strong>Lepoa välissä:</strong> Anna pennun käsitellä kokemuksia rauhassa</li>
                 </ul>
+                
+                <div className="mt-4">
+                  <BodyLanguageGuide />
+                </div>
               </div>
             </CardContent>
           </Card>

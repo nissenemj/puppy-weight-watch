@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -53,7 +53,31 @@ export const AddExperienceDialog: React.FC<AddExperienceDialogProps> = ({
   const [treatsGiven, setTreatsGiven] = useState(false);
   const [restAfter, setRestAfter] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [todayExperienceCount, setTodayExperienceCount] = useState(0);
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (open) {
+      checkTodayExperienceCount();
+    }
+  }, [open, bookId]);
+
+  const checkTodayExperienceCount = async () => {
+    try {
+      const today = format(new Date(), 'yyyy-MM-dd');
+      const { data, error } = await supabase
+        .from('socialization_experiences')
+        .select('id')
+        .eq('book_id', bookId)
+        .eq('experience_date', today);
+
+      if (error) throw error;
+      
+      setTodayExperienceCount(data?.length || 0);
+    } catch (error) {
+      console.error('Error checking today experience count:', error);
+    }
+  };
 
   const getReactionColor = (reaction: string) => {
     switch (reaction) {
@@ -103,10 +127,23 @@ export const AddExperienceDialog: React.FC<AddExperienceDialogProps> = ({
 
       if (error) throw error;
 
-      toast({
-        title: 'Kokemus tallennettu!',
-        description: `${item.name} -kokemus on lisätty pentukirjaan`,
-      });
+      // Check if rest reminder should be shown
+      if (todayExperienceCount >= 2 && puppyReaction !== 'fearful') {
+        toast({
+          title: 'Kokemus tallennettu!',
+          description: '💤 Muista antaa pennun levätä ennen seuraavaa harjoitusta',
+        });
+      } else if (puppyReaction === 'fearful') {
+        toast({
+          title: 'Kokemus tallennettu',
+          description: '🛡️ Suositus: Tee lepotauko ja palaa tuttuihin, positiivisiin kokemuksiin',
+        });
+      } else {
+        toast({
+          title: 'Kokemus tallennettu!',
+          description: `${item.name} -kokemus on lisätty pentukirjaan`,
+        });
+      }
 
       onSuccess();
     } catch (error) {
@@ -145,6 +182,25 @@ export const AddExperienceDialog: React.FC<AddExperienceDialogProps> = ({
         </DialogHeader>
 
         <div className="space-y-6">
+          {/* Rest reminder warning */}
+          {todayExperienceCount >= 2 && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-orange-50 border border-orange-200 rounded-lg p-3"
+            >
+              <div className="flex items-center gap-2 text-orange-800">
+                <AlertTriangle className="h-4 w-4" />
+                <span className="text-sm font-medium">
+                  Olet tallentanut jo {todayExperienceCount} kokemusta tänään
+                </span>
+              </div>
+              <p className="text-xs text-orange-700 mt-1">
+                Muista antaa pennun käsitellä kokemuksia rauhassa. Liikaa harjoituksia yhdessä päivässä voi aiheuttaa stressiä.
+              </p>
+            </motion.div>
+          )}
+
           {/* Date and Time */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">

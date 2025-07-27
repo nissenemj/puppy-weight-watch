@@ -929,6 +929,36 @@ export type Database = {
           },
         ]
       }
+      socialization_achievements: {
+        Row: {
+          book_id: string
+          category_id: string
+          created_at: string
+          description: string | null
+          earned_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          book_id: string
+          category_id: string
+          created_at?: string
+          description?: string | null
+          earned_at?: string
+          id?: string
+          name: string
+        }
+        Update: {
+          book_id?: string
+          category_id?: string
+          created_at?: string
+          description?: string | null
+          earned_at?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
       socialization_categories: {
         Row: {
           created_at: string | null
@@ -1128,6 +1158,41 @@ export type Database = {
             columns: ["category_id"]
             isOneToOne: false
             referencedRelation: "socialization_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      socialization_weekly_tasks: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          item_id: string
+          priority: number
+          week_number: number
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          item_id: string
+          priority?: number
+          week_number: number
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          item_id?: string
+          priority?: number
+          week_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "socialization_weekly_tasks_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "socialization_items"
             referencedColumns: ["id"]
           },
         ]

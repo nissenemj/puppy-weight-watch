@@ -160,7 +160,7 @@ export const SocializationDashboard: React.FC<SocializationDashboardProps> = ({
         </motion.div>
       </div>
 
-      {/* Bank Account Visualization */}
+      {/* Enhanced Bank Account Visualization */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -169,34 +169,84 @@ export const SocializationDashboard: React.FC<SocializationDashboardProps> = ({
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <span>Positiiviset kokemukset</span>
-              <Badge variant="outline" className="bg-green-50 text-green-700">
-                +{getPositiveExperiences()}
-              </Badge>
-            </div>
-            <div className="flex justify-between items-center">
-              <span>Negatiiviset kokemukset</span>
-              <Badge variant="outline" className="bg-red-50 text-red-700">
-                -{getNegativeExperiences()}
-              </Badge>
-            </div>
-            <div className="border-t pt-4">
-              <div className="flex justify-between items-center">
-                <span className="font-semibold">Loppusaldo</span>
-                <Badge className={getBankBalance() >= 0 ? 'bg-green-500' : 'bg-red-500'}>
+          <div className="space-y-6">
+            {/* Visual Balance Bar */}
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span>Pankkisaldo</span>
+                <span className={`font-semibold ${getBankBalanceColor()}`}>
                   {getBankBalance() > 0 ? '+' : ''}{getBankBalance()}
-                </Badge>
+                </span>
               </div>
-              <p className="text-sm text-muted-foreground mt-2">
-                {getBankBalance() >= 10 ? 
-                  '🎉 Erinomainen! Pennullasi on vahva sosiaalistamispohja.' :
-                  getBankBalance() >= 5 ?
-                  '👍 Hyvä alku! Jatka positiivisten kokemusten keräämistä.' :
-                  '⚠️ Keskity positiivisiin kokemuksiin ja vältä negatiivisia tilanteita.'
-                }
-              </p>
+              <div className="h-4 bg-muted rounded-full overflow-hidden">
+                <div className="h-full flex">
+                  {/* Positive experiences (green) */}
+                  <div 
+                    className="bg-green-500 transition-all duration-500"
+                    style={{ 
+                      width: `${Math.min((getPositiveExperiences() / Math.max(getTotalExperiences(), 1)) * 100, 100)}%` 
+                    }}
+                  />
+                  {/* Negative experiences (red) */}
+                  <div 
+                    className="bg-red-500 transition-all duration-500"
+                    style={{ 
+                      width: `${Math.min((getNegativeExperiences() / Math.max(getTotalExperiences(), 1)) * 100, 100)}%` 
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+            
+            {/* Detailed breakdown */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="text-center p-3 bg-green-50 rounded-lg">
+                <div className="text-2xl font-bold text-green-600">
+                  +{getPositiveExperiences()}
+                </div>
+                <div className="text-sm text-green-700">Positiiviset</div>
+              </div>
+              <div className="text-center p-3 bg-red-50 rounded-lg">
+                <div className="text-2xl font-bold text-red-600">
+                  -{getNegativeExperiences()}
+                </div>
+                <div className="text-sm text-red-700">Negatiiviset</div>
+              </div>
+            </div>
+            
+            {/* Status message with actionable advice */}
+            <div className="border-t pt-4">
+              <div className={`p-3 rounded-lg ${
+                getBankBalance() >= 10 ? 'bg-green-50 border border-green-200' :
+                getBankBalance() >= 5 ? 'bg-yellow-50 border border-yellow-200' :
+                'bg-red-50 border border-red-200'
+              }`}>
+                <p className={`text-sm font-medium ${
+                  getBankBalance() >= 10 ? 'text-green-800' :
+                  getBankBalance() >= 5 ? 'text-yellow-800' :
+                  'text-red-800'
+                }`}>
+                  {getBankBalance() >= 10 ? 
+                    '🎉 Erinomainen! Pennullasi on vahva sosiaalistamispohja.' :
+                    getBankBalance() >= 5 ?
+                    '👍 Hyvä alku! Jatka positiivisten kokemusten keräämistä.' :
+                    getBankBalance() >= 0 ?
+                    '⚠️ Keskity positiivisiin kokemuksiin ja vältä negatiivisia tilanteita.' :
+                    '🚨 Negatiivinen saldo! Tee lepotauko ja keskity pelkästään positiivisiin kokemuksiin.'
+                  }
+                </p>
+                
+                {/* Actionable tips based on balance */}
+                <div className="mt-2 text-xs opacity-75">
+                  {getBankBalance() < 0 ? (
+                    <>💡 Vinkki: Palaa tuttuihin, positiivisiin kokemuksiin. Vältä uusia haastavia tilanteita.</>
+                  ) : getBankBalance() < 5 ? (
+                    <>💡 Vinkki: Lisää helppojen kohteiden toistoja ennen haastavampien kokeilemista.</>
+                  ) : (
+                    <>💡 Vinkki: Voit rohkeasti kokeilla haastavampia sosiaalistamiskohteita!</>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </CardContent>
