@@ -239,14 +239,14 @@ export const AddHealthRecordDialog: React.FC<AddHealthRecordDialogProps> = ({
                     {date ? format(date, 'dd.MM.yyyy') : 'Valitse päivämäärä'}
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0 bg-background border shadow-lg">
+                <PopoverContent className="w-auto p-0 bg-white dark:bg-gray-800 border shadow-lg">
                   <CalendarComponent
                     mode="single"
                     selected={date}
                     onSelect={setDate}
                     disabled={(date) => date > new Date()}
                     initialFocus
-                    className="pointer-events-auto"
+                    className="pointer-events-auto bg-white dark:bg-gray-800"
                   />
                 </PopoverContent>
               </Popover>

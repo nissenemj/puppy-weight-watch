@@ -212,13 +212,13 @@ export const AddExperienceDialog: React.FC<AddExperienceDialogProps> = ({
                     {format(experienceDate, 'dd.MM.yyyy', { locale: fi })}
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0 bg-background border shadow-lg">
+                <PopoverContent className="w-auto p-0 bg-white dark:bg-gray-800 border shadow-lg">
                   <Calendar
                     mode="single"
                     selected={experienceDate}
                     onSelect={(date) => date && setExperienceDate(date)}
                     initialFocus
-                    className="pointer-events-auto"
+                    className="pointer-events-auto bg-white dark:bg-gray-800"
                   />
                 </PopoverContent>
               </Popover>
