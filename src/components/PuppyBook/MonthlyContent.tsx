@@ -35,6 +35,10 @@ import { SourceBadges } from './SourceBadges';
 import { AlertTriangle } from '@/utils/iconImports';
 import { SocializationSection } from './SocializationSection';
 import { useWeightEntries } from '@/hooks/useWeightEntries';
+import AddMilestoneDialog from './AddMilestoneDialog';
+import { AddExperienceDialog } from './AddExperienceDialog';
+import WeightEntryDialog from './WeightEntryDialog';
+import { Link } from 'react-router-dom';
 
 interface MonthlyContentProps {
   monthNumber: number;
@@ -117,6 +121,12 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
   const [loadingMilestones, setLoadingMilestones] = useState(true);
   const [dogId, setDogId] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
+  
+  // Dialog states
+  const [showAddMilestone, setShowAddMilestone] = useState(false);
+  const [showAddExperience, setShowAddExperience] = useState(false);
+  const [showAddWeight, setShowAddWeight] = useState(false);
+  const [selectedSocializationItem, setSelectedSocializationItem] = useState<any>(null);
   
   const { toast } = useToast();
 
@@ -924,9 +934,27 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
             exit={{ opacity: 0, x: -20 }}
             className="space-y-6"
           >
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">
-              Sosiaalistaminen ja ystävät 👥
-            </h3>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xl font-semibold text-gray-800">
+                Sosiaalistaminen ja ystävät 👥
+              </h3>
+              <Button
+                onClick={() => {
+                  // Create a default socialization item for adding experience
+                  setSelectedSocializationItem({
+                    id: 'custom-social',
+                    name: 'Sosiaalistamiskokemus',
+                    description: 'Kirjaa sosiaalistamiskokemus',
+                    tips: ['Muista olla kärsivällinen', 'Anna nameja positiivisista kokemuksista']
+                  });
+                  setShowAddExperience(true);
+                }}
+                className="bg-green-500 hover:bg-green-600 text-white flex items-center gap-2"
+              >
+                <Plus className="w-4 h-4" />
+                Lisää kokemus
+              </Button>
+            </div>
             
             {/* Kuukausikohtainen sosiaalistamisohje */}
             <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-6 border border-green-200">
@@ -1097,9 +1125,32 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
             exit={{ opacity: 0, x: -20 }}
             className="space-y-6"
           >
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">
-              Painonseuranta 📊
-            </h3>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xl font-semibold text-gray-800">
+                Painonseuranta 📊
+              </h3>
+              <div className="flex gap-2">
+                {userId && dogId && (
+                  <Button
+                    onClick={() => setShowAddWeight(true)}
+                    className="bg-blue-500 hover:bg-blue-600 text-white flex items-center gap-2"
+                  >
+                    <Scale className="w-4 h-4" />
+                    Lisää paino
+                  </Button>
+                )}
+                <Button
+                  asChild
+                  variant="outline"
+                  className="flex items-center gap-2"
+                >
+                  <Link to="/weight-tracker">
+                    <Scale className="w-4 h-4" />
+                    Painonseuranta
+                  </Link>
+                </Button>
+              </div>
+            </div>
             
             {/* Kuukauden painotiedot */}
             {weightEntries && weightEntries.length > 0 ? (
@@ -1283,6 +1334,49 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Add Milestone Dialog */}
+      <AddMilestoneDialog
+        isOpen={showAddMilestone}
+        onClose={() => setShowAddMilestone(false)}
+        bookId={bookId}
+        onMilestoneAdded={loadMilestones}
+      />
+
+      {/* Add Experience Dialog */}
+      {selectedSocializationItem && (
+        <AddExperienceDialog
+          open={showAddExperience}
+          onOpenChange={setShowAddExperience}
+          bookId={bookId}
+          item={selectedSocializationItem}
+          onSuccess={() => {
+            setShowAddExperience(false);
+            setSelectedSocializationItem(null);
+            toast({
+              title: "Onnistui!",
+              description: "Sosiaalistamiskokemus lisätty",
+            });
+          }}
+        />
+      )}
+
+      {/* Weight Entry Dialog */}
+      {userId && dogId && (
+        <WeightEntryDialog
+          isOpen={showAddWeight}
+          onClose={() => setShowAddWeight(false)}
+          userId={userId}
+          dogId={dogId}
+          onSuccess={() => {
+            setShowAddWeight(false);
+            toast({
+              title: "Onnistui!",
+              description: "Painomittaus lisätty",
+            });
+          }}
+        />
+      )}
     </div>
   );
 };
