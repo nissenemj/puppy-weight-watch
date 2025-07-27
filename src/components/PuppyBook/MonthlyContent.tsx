@@ -39,6 +39,7 @@ import AddMilestoneDialog from './AddMilestoneDialog';
 import { AddExperienceDialog } from './AddExperienceDialog';
 import WeightEntryDialog from './WeightEntryDialog';
 import { Link } from 'react-router-dom';
+import FriendsRegistry from './FriendsRegistry';
 
 interface MonthlyContentProps {
   monthNumber: number;
@@ -1101,18 +1102,7 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
             {/* Ystävärekisteri */}
             <div className="bg-purple-50 rounded-xl p-6 border border-purple-100">
               <h4 className="font-semibold text-gray-800 mb-3">Ystävärekisteri 💕</h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <button className="border-2 border-dashed border-purple-300 rounded-xl p-4 text-center text-purple-600 hover:border-purple-400 hover:bg-purple-100 transition-colors">
-                  <Users className="w-6 h-6 mx-auto mb-2" />
-                  <span className="block font-medium text-sm">Lisää koirakaveri</span>
-                  <span className="text-xs">Nimi, rotu, mitä leikittiin</span>
-                </button>
-                <button className="border-2 border-dashed border-purple-300 rounded-xl p-4 text-center text-purple-600 hover:border-purple-400 hover:bg-purple-100 transition-colors">
-                  <Users className="w-6 h-6 mx-auto mb-2" />
-                  <span className="block font-medium text-sm">Lisää ihmisystävä</span>
-                  <span className="text-xs">Kuka, missä tavattiin</span>
-                </button>
-              </div>
+              <FriendsRegistry bookId={bookId} />
             </div>
           </motion.div>
         )}

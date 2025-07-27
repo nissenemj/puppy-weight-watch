@@ -487,6 +487,48 @@ export type Database = {
         }
         Relationships: []
       }
+      friends: {
+        Row: {
+          activities: string[] | null
+          book_id: string
+          breed: string | null
+          created_at: string
+          description: string | null
+          friend_type: string
+          id: string
+          meeting_location: string | null
+          name: string
+          photos: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          activities?: string[] | null
+          book_id: string
+          breed?: string | null
+          created_at?: string
+          description?: string | null
+          friend_type: string
+          id?: string
+          meeting_location?: string | null
+          name: string
+          photos?: string[] | null
+          updated_at?: string
+        }
+        Update: {
+          activities?: string[] | null
+          book_id?: string
+          breed?: string | null
+          created_at?: string
+          description?: string | null
+          friend_type?: string
+          id?: string
+          meeting_location?: string | null
+          name?: string
+          photos?: string[] | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       general_dosage_guidelines: {
         Row: {
           created_at: string
