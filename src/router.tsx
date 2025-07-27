@@ -10,6 +10,7 @@ import FeedingData from "./pages/FeedingData";
 import FoodTypes from "./pages/FoodTypes";
 import PuppyGuide from "./pages/PuppyGuide";
 import SafetyPage from "./pages/SafetyPage";
+import SocializationGuide from "./pages/SocializationGuide";
 import NotFound from "./pages/NotFound";
 import OnboardingPage from "./pages/OnboardingPage";
 import WeightTrackerPage from "./pages/WeightTrackerPage";
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
   {
     path: "/info/puppy-guide",
     element: <PuppyGuide />,
+  },
+  {
+    path: "/info/socialization-guide",
+    element: <SocializationGuide />,
   },
   {
     path: "/info/safety",
