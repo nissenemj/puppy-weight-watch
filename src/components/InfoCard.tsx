@@ -21,8 +21,8 @@ export default function InfoCard({
 }: InfoCardProps) {
   const variantClasses = {
     default: 'bg-card/95 backdrop-blur-sm border-0 shadow-xl rounded-2xl',
-    warm: 'bg-gradient-peach text-white border-0 shadow-xl rounded-2xl',
-    cool: 'bg-gradient-mint text-white border-0 shadow-xl rounded-2xl',
+    warm: 'bg-gradient-peach text-gray-800 border-0 shadow-xl rounded-2xl',
+    cool: 'bg-gradient-mint text-gray-800 border-0 shadow-xl rounded-2xl',
     purple: 'bg-gradient-primary text-white border-0 shadow-xl rounded-2xl',
     accent: 'bg-accent/15 backdrop-blur-sm border-accent/30 shadow-xl rounded-2xl text-card-foreground'
   }
@@ -32,8 +32,10 @@ export default function InfoCard({
       <CardHeader>
         <CardTitle className={cn(
           "text-xl flex items-center gap-2",
-          (variant === 'warm' || variant === 'cool' || variant === 'purple') 
+          variant === 'purple' 
             ? "text-white" 
+            : variant === 'warm' || variant === 'cool'
+            ? "text-gray-800"
             : "text-card-foreground"
         )}>
           {icon}
@@ -41,8 +43,10 @@ export default function InfoCard({
         </CardTitle>
         {description && (
           <CardDescription className={cn(
-            (variant === 'warm' || variant === 'cool' || variant === 'purple') 
+            variant === 'purple' 
               ? "text-white/80" 
+              : variant === 'warm' || variant === 'cool'
+              ? "text-gray-700"
               : "text-muted-foreground"
           )}>
             {description}
