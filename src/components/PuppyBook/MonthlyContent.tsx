@@ -938,24 +938,27 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
                 </div>
                 <div className="flex-1">
                   <h4 className="font-bold text-gray-800 mb-2">
-                    {monthNumber === 0 && "Totuttaminen kotiympäristöön (8-12 viikkoa)"}
-                    {monthNumber === 1 && "Laajempi sosiaalistaminen (12-16 viikkoa)"}
-                    {monthNumber === 2 && "Syventäminen (4-6 kuukautta)"}
-                    {monthNumber >= 3 && "Vahvistaminen ja ylläpito (6+ kuukautta)"}
+                    {monthNumber === 0 && "Totuttaminen kotiympäristöön (0-2 kuukautta)"}
+                    {monthNumber === 1 && "Perussosiaalistaminen (2-3 kuukautta)"}
+                    {monthNumber === 2 && "Perussosiaalistaminen (3-4 kuukautta)"}
+                    {(monthNumber === 3 || monthNumber === 4 || monthNumber === 5) && "Syventäminen (4-6 kuukautta)"}
+                    {monthNumber >= 6 && "Vahvistaminen ja ylläpito (6+ kuukautta)"}
                   </h4>
                   <p className="text-gray-600 text-sm mb-3">
                     {monthNumber === 0 && "Perheeseen kiinnittyminen ja perusäänet. Keskity turvallisiin kokemuksiin kotona."}
                     {monthNumber === 1 && "Ulkoilut ja uudet ympäristöt. Rokotusten jälkeen laajempi sosiaalistaminen."}
-                    {monthNumber === 2 && "Uudet paikat ja pinnat. Monimuotoisia kokemuksia hallitusti."}
-                    {monthNumber >= 3 && "Monimuotoiset tilanteet ja eroahdistuksen ehkäisy. Säännöllinen ylläpito."}
+                    {monthNumber === 2 && "Uudet ihmiset ja äänet. Tutut eläimet valvotusti."}
+                    {(monthNumber === 3 || monthNumber === 4 || monthNumber === 5) && "Uudet paikat ja pinnat. Monimuotoisia kokemuksia hallitusti."}
+                    {monthNumber >= 6 && "Monimuotoiset tilanteet ja eroahdistuksen ehkäisy. Säännöllinen ylläpito."}
                   </p>
                   <div className="flex items-center gap-4 text-xs text-gray-500 mb-4">
                     <div className="flex items-center gap-1">
                       <Clock className="w-3 h-3" />
                       {monthNumber === 0 && "3-5 kertaa/päivä, 5-10 min"}
                       {monthNumber === 1 && "Päivittäin 10-15 min"}
-                      {monthNumber === 2 && "4-5 kertaa/vko, 15-20 min"}
-                      {monthNumber >= 3 && "Päivittäin 20-30 min"}
+                      {monthNumber === 2 && "Päivittäin 15-20 min"}
+                      {(monthNumber === 3 || monthNumber === 4 || monthNumber === 5) && "4-5 kertaa/vko, 15-20 min"}
+                      {monthNumber >= 6 && "Päivittäin 20-30 min"}
                     </div>
                   </div>
                   <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
@@ -964,7 +967,8 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
                       {monthNumber === 0 && "Vältä koirapuistoja ennen rokotuksia. Jos pelkää, lopeta heti."}
                       {monthNumber === 1 && "Valvo kohtaamisia. Valitse rauhalliset koirat."}
                       {monthNumber === 2 && "Tarkkaile väsymystä. Pennut tarvitsevat lepoa."}
-                      {monthNumber >= 3 && "Hormonimuutokset voivat vaikuttaa - ole kärsivällinen."}
+                      {(monthNumber === 3 || monthNumber === 4 || monthNumber === 5) && "Tarkkaile väsymystä. Pennut tarvitsevat lepoa."}
+                      {monthNumber >= 6 && "Hormonimuutokset voivat vaikuttaa - ole kärsivällinen."}
                     </p>
                   </div>
                 </div>
@@ -1022,8 +1026,9 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
                 <p className="text-blue-700 text-sm">
                   {monthNumber === 0 && "1-2 uutta ihmistä, tutut äänet ja pinnat"}
                   {monthNumber === 1 && "2-3 uutta kokemusta, ensimmäiset kontaktit koirien kanssa"}
-                  {monthNumber === 2 && "Uusia paikkoja ja pintoja, eläinkontaktit"}
-                  {monthNumber >= 3 && "Viikoittain uusia haasteita, ylläpito"}
+                  {monthNumber === 2 && "Uusia ihmisiä ja ääniä, tutut eläimet"}
+                  {(monthNumber === 3 || monthNumber === 4 || monthNumber === 5) && "Uusia paikkoja ja pintoja, eläinkontaktit"}
+                  {monthNumber >= 6 && "Viikoittain uusia haasteita, ylläpito"}
                 </p>
               </div>
             </div>
