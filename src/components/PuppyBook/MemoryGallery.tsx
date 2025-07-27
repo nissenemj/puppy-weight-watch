@@ -124,7 +124,7 @@ const MemoryGallery: React.FC<MemoryGalleryProps> = ({ bookId, onRefresh, onAddM
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-3xl font-sans font-bold text-gray-800 flex items-center gap-3">
             <Camera className="w-8 h-8 text-orange-500" />
-            Muistogalleria 📸
+            Muistogalleria
           </h2>
           <div className="flex items-center gap-2">
             {memories.length > 0 && onAddMemory && (

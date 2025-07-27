@@ -200,8 +200,8 @@ const PuppyBook: React.FC = () => {
       if (data) {
         setBook(data);
         toast({
-          title: "Onnistui! 🎉",
-          description: "Pentukirja luotu onnistuneesti! Voit nyt aloittaa pennun tarinan tallentamisen 🐕✨",
+          title: "Onnistui!",
+          description: "Pentukirja luotu onnistuneesti! Voit nyt aloittaa pennun tarinan tallentamisen",
         });
 
         // Luo oletusarvoiset virstanpylväät
@@ -289,7 +289,7 @@ const PuppyBook: React.FC = () => {
       </div>
       <AnimatedHeader 
         title="Pentu kasvaa – seuraa matkaa!"
-        subtitle="Tallenna ainutlaatuisia hetkiä ja jaa iloa yhteisön kanssa ✨"
+        subtitle="Tallenna ainutlaatuisia hetkiä ja jaa iloa yhteisön kanssa"
         puppyName={book.title}
         birthDate={book.birth_date}
         puppyImageUrl={book.cover_image_url}
@@ -562,7 +562,7 @@ const CreateBookPrompt: React.FC<{
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
         >
-          Luo ensimmäinen pentukirja! 🐶
+          Luo ensimmäinen pentukirja!
         </motion.h2>
         <motion.p 
           className="text-gray-600 mb-6 font-body"
@@ -570,7 +570,7 @@ const CreateBookPrompt: React.FC<{
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
-          Valitse koira ja aloita pennun ainutlaatuisen elämäntarinan tallentaminen ✨
+          Valitse koira ja aloita pennun ainutlaatuisen elämäntarinan tallentaminen
         </motion.p>
 
         <div className="mb-6">
@@ -647,7 +647,7 @@ const PuppyBookHeader: React.FC<{
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
             >
-              {book.title} 🐕
+              {book.title}
               <motion.div
                 animate={{ 
                   scale: [1, 1.2, 1],
@@ -659,7 +659,7 @@ const PuppyBookHeader: React.FC<{
                   ease: "easeInOut"
                 }}
               >
-                ❤️
+                <Heart className="w-6 h-6 text-red-400" />
               </motion.div>
             </motion.h1>
             <motion.p 
@@ -668,7 +668,7 @@ const PuppyBookHeader: React.FC<{
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
             >
-              Luotu {new Date(book.created_at).toLocaleDateString('fi-FI')} ✨
+              Luotu {new Date(book.created_at).toLocaleDateString('fi-FI')}
             </motion.p>
           </div>
           
@@ -702,12 +702,12 @@ const PuppyBookNavigation: React.FC<{
   onSectionChange: (section: string) => void;
 }> = ({ activeSection, onSectionChange }) => {
   const sections = [
-    { id: 'monthly', label: 'Kuukaudet', icon: Calendar, emoji: '📅' },
-    { id: 'timeline', label: 'Aikajana', icon: Calendar, emoji: '⏰' },
-    { id: 'milestones', label: 'Virstanpylväät', icon: Award, emoji: '🏆' },
-    { id: 'growth', label: 'Kasvu', icon: Target, emoji: '📊' },
-    { id: 'memories', label: 'Muistot', icon: Heart, emoji: '💖' },
-    { id: 'community', label: 'Yhteisö', icon: Users, emoji: '👥' }
+    { id: 'monthly', label: 'Kuukaudet', icon: Calendar },
+    { id: 'timeline', label: 'Aikajana', icon: Calendar },
+    { id: 'milestones', label: 'Virstanpylväät', icon: Award },
+    { id: 'growth', label: 'Kasvu', icon: Target },
+    { id: 'memories', label: 'Muistot', icon: Heart },
+    { id: 'community', label: 'Yhteisö', icon: Users }
   ];
 
   return (
@@ -738,9 +738,8 @@ const PuppyBookNavigation: React.FC<{
                   repeat: activeSection === section.id ? Infinity : 0,
                   ease: "easeInOut"
                 }}
-                className="text-lg"
               >
-                {section.emoji}
+                <section.icon className="w-5 h-5" />
               </motion.div>
               <span className="font-playful">{section.label}</span>
             </motion.button>

@@ -119,7 +119,7 @@ const Milestones: React.FC<MilestonesProps> = ({ bookId }) => {
           <div>
             <h2 className="text-3xl font-sans font-bold text-gray-800 mb-2 flex items-center gap-3">
               <Award className="w-8 h-8 text-orange-500" />
-              Virstanpylväät 🏆
+              Virstanpylväät
             </h2>
             <p className="text-gray-600">
               Seuraa pennun kehitystä ja juhli saavutuksia
@@ -199,8 +199,9 @@ const Milestones: React.FC<MilestonesProps> = ({ bookId }) => {
                     </span>
                   )}
                   {milestone.completed && milestone.completed_at && (
-                    <span className="text-green-600 font-medium">
-                      ✅ Saavutettu {new Date(milestone.completed_at).toLocaleDateString('fi-FI')}
+                     <span className="text-green-600 font-medium flex items-center gap-1">
+                      <Check className="w-3 h-3" />
+                      Saavutettu {new Date(milestone.completed_at).toLocaleDateString('fi-FI')}
                     </span>
                   )}
                 </div>

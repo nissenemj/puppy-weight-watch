@@ -11,7 +11,9 @@ import {
   Gift,
   Camera,
   Heart,
-  PawPrint
+  PawPrint,
+  MessageCircle,
+  Stethoscope
 } from '@/utils/iconImports';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -40,54 +42,54 @@ interface Challenge {
 
 const WEEKLY_CHALLENGES: Omit<Challenge, 'id' | 'startDate' | 'endDate'>[] = [
   {
-    title: '📸 Viikon valokuvaaja',
+    title: 'Viikon valokuvaaja',
     description: 'Ota 5 kuvaa pennustasi eri tilanteissa',
-    icon: '📸',
+    icon: 'camera',
     category: 'memory',
     target: 5,
     points: 30,
     difficulty: 'easy'
   },
   {
-    title: '❤️ Sydämien saaja',
+    title: 'Sydämien saaja',
     description: 'Saa 10 reaktiota muistoihisi',
-    icon: '❤️',
+    icon: 'heart',
     category: 'social',
     target: 10,
     points: 40,
     difficulty: 'medium'
   },
   {
-    title: '🎯 Virstanpylväsmetsästäjä',
+    title: 'Virstanpylväsmetsästäjä',
     description: 'Saavuta 3 uutta virstanpylvästä',
-    icon: '🎯',
+    icon: 'target',
     category: 'milestone',
     target: 3,
     points: 60,
     difficulty: 'hard'
   },
   {
-    title: '🏥 Terveysvalvoja',
+    title: 'Terveysvalvoja',
     description: 'Tallenna 2 terveystietoa',
-    icon: '🏥',
+    icon: 'stethoscope',
     category: 'health',
     target: 2,
     points: 25,
     difficulty: 'easy'
   },
   {
-    title: '💬 Yhteisön tuki',
+    title: 'Yhteisön tuki',
     description: 'Kommentoi 8 muiden muistoa',
-    icon: '💬',
+    icon: 'messageCircle',
     category: 'community',
     target: 8,
     points: 35,
     difficulty: 'medium'
   },
   {
-    title: '🌟 Jokapäiväinen dokumentoija',
+    title: 'Jokapäiväinen dokumentoija',
     description: 'Lisää muisto joka päivä viikon ajan',
-    icon: '🌟',
+    icon: 'star',
     category: 'memory',
     target: 7,
     points: 80,
@@ -239,6 +241,18 @@ const WeeklyChallenges: React.FC = () => {
     }
   };
 
+  const getChallengeIcon = (iconName: string) => {
+    const iconMap: { [key: string]: React.ReactNode } = {
+      camera: <Camera className="w-6 h-6 text-orange-500" />,
+      heart: <Heart className="w-6 h-6 text-red-500" />,
+      target: <Target className="w-6 h-6 text-blue-500" />,
+      stethoscope: <Stethoscope className="w-6 h-6 text-green-500" />,
+      messageCircle: <MessageCircle className="w-6 h-6 text-purple-500" />,
+      star: <Star className="w-6 h-6 text-yellow-500" />
+    };
+    return iconMap[iconName] || <Star className="w-6 h-6 text-gray-500" />;
+  };
+
   const categories = ['all', 'memory', 'social', 'milestone', 'health', 'community'];
   const categoryLabels = {
     all: 'Kaikki',
@@ -339,7 +353,7 @@ const WeeklyChallenges: React.FC = () => {
 
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center gap-2">
-                        <div className="text-2xl">{challenge.icon}</div>
+                        {getChallengeIcon(challenge.icon)}
                         <div>
                           <h3 className="font-semibold text-sm">{challenge.title}</h3>
                           <div className="flex items-center gap-2 mt-1">

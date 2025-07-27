@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Trophy, Star, Medal, Crown, TrendingUp, Users } from '@/utils/iconImports';
+import { Trophy, Star, Medal, Crown, TrendingUp, Users, Camera, BookOpen, Heart, Target, MessageCircle } from '@/utils/iconImports';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -35,7 +35,7 @@ const ACHIEVEMENTS: Achievement[] = [
     id: 'first_memory',
     title: 'Ensimmäinen muisto',
     description: 'Lisää ensimmäinen muisto pentukirjaan',
-    icon: '📸',
+    icon: 'camera',
     condition: (stats) => stats.total_memories >= 1,
     points: 10
   },
@@ -43,7 +43,7 @@ const ACHIEVEMENTS: Achievement[] = [
     id: 'memory_collector',
     title: 'Muistojen kerääjä',
     description: 'Lisää 10 muistoa',
-    icon: '📚',
+    icon: 'book',
     condition: (stats) => stats.total_memories >= 10,
     points: 50
   },
@@ -51,7 +51,7 @@ const ACHIEVEMENTS: Achievement[] = [
     id: 'social_butterfly',
     title: 'Sosiaalinen perhonen',
     description: 'Saa 25 reaktiota',
-    icon: '🦋',
+    icon: 'heart',
     condition: (stats) => stats.total_reactions >= 25,
     points: 30
   },
@@ -59,7 +59,7 @@ const ACHIEVEMENTS: Achievement[] = [
     id: 'milestone_master',
     title: 'Virstanpylväsmestari',
     description: 'Saavuta 15 virstanpylvästä',
-    icon: '🎯',
+    icon: 'target',
     condition: (stats) => stats.milestones_completed >= 15,
     points: 75
   },
@@ -67,7 +67,7 @@ const ACHIEVEMENTS: Achievement[] = [
     id: 'community_helper',
     title: 'Yhteisön auttaja',
     description: 'Kirjoita 20 kommenttia',
-    icon: '💬',
+    icon: 'messageCircle',
     condition: (stats) => stats.total_comments >= 20,
     points: 40
   },
@@ -75,7 +75,7 @@ const ACHIEVEMENTS: Achievement[] = [
     id: 'top_scorer',
     title: 'Pistekunkku',
     description: 'Saavuta 500 pistettä',
-    icon: '⭐',
+    icon: 'star',
     condition: (stats) => stats.score >= 500,
     points: 100
   }
@@ -234,6 +234,18 @@ const Leaderboard: React.FC = () => {
     return 'text-green-600 bg-green-100';
   };
 
+  const getAchievementIcon = (iconName: string) => {
+    const iconMap: { [key: string]: React.ReactNode } = {
+      camera: <Camera className="w-6 h-6 text-blue-500" />,
+      book: <BookOpen className="w-6 h-6 text-green-500" />,
+      heart: <Heart className="w-6 h-6 text-red-500" />,
+      target: <Target className="w-6 h-6 text-orange-500" />,
+      messageCircle: <MessageCircle className="w-6 h-6 text-purple-500" />,
+      star: <Star className="w-6 h-6 text-yellow-500" />
+    };
+    return iconMap[iconName] || <Star className="w-6 h-6 text-gray-500" />;
+  };
+
   if (loading) {
     return (
       <div className="bg-white rounded-3xl shadow-lg p-6">
@@ -341,7 +353,7 @@ const Leaderboard: React.FC = () => {
                       }`}
                     >
                       <div className="flex items-start gap-3">
-                        <div className="text-2xl">{achievement.icon}</div>
+                        {getAchievementIcon(achievement.icon)}
                         <div className="flex-1">
                           <h3 className="font-semibold flex items-center gap-2">
                             {achievement.title}

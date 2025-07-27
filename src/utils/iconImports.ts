@@ -35,7 +35,6 @@ export {
   Database,
   RefreshCw,
   Calendar,
-  CalendarIcon,
   TrendingUp,
   Target,
   Home,

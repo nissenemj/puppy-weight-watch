@@ -29,7 +29,7 @@ const MonthlyTracker: React.FC<MonthlyTrackerProps> = ({
       <div className="bg-white rounded-2xl p-6 shadow-lg">
         <h2 className="text-2xl font-sans font-bold text-gray-800 mb-6 flex items-center gap-2">
           <Calendar className="w-7 h-7 text-orange-500" />
-          Pennun kuukausiseuranta 📅
+          Pennun kuukausiseuranta
         </h2>
         
         {/* Month Selector */}
