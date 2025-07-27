@@ -74,6 +74,8 @@ const AddMemoryDialog: React.FC<AddMemoryDialogProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    console.log('AddMemoryDialog: Starting submission', { type, bookId, hasFile: !!selectedFile });
+    
     if (type === 'photo' && !selectedFile) {
       toast({
         title: "Virhe",
@@ -95,13 +97,40 @@ const AddMemoryDialog: React.FC<AddMemoryDialogProps> = ({
     setUploading(true);
 
     try {
+      // Check authentication first
+      const { data: user, error: authError } = await supabase.auth.getUser();
+      console.log('AddMemoryDialog: Auth check', { user: user.user?.id, authError });
+      
+      if (authError || !user.user) {
+        throw new Error('Et ole kirjautunut sisään');
+      }
+
+      // Check if book belongs to user
+      const { data: bookCheck, error: bookError } = await supabase
+        .from('puppy_books')
+        .select('owner_id')
+        .eq('id', bookId)
+        .single();
+
+      console.log('AddMemoryDialog: Book check', { bookCheck, bookError });
+
+      if (bookError) {
+        throw new Error('Pentukirjaa ei löydy');
+      }
+
+      if (bookCheck.owner_id !== user.user.id) {
+        throw new Error('Sinulla ei ole oikeutta muokata tätä pentukirjaa');
+      }
+
       let contentUrl = null;
       
       if (selectedFile && type === 'photo') {
+        console.log('AddMemoryDialog: Uploading image', { fileName: selectedFile.name });
         contentUrl = await uploadImage(selectedFile);
         if (!contentUrl) {
           throw new Error('Kuvan lataus epäonnistui');
         }
+        console.log('AddMemoryDialog: Image uploaded', { contentUrl });
       }
 
       const tagsArray = tags
@@ -111,23 +140,34 @@ const AddMemoryDialog: React.FC<AddMemoryDialogProps> = ({
 
       const locationData = location.trim() ? { name: location.trim() } : null;
 
-      const { data: user } = await supabase.auth.getUser();
+      // Map type to correct content_type
+      const contentType = type === 'photo' ? 'image' : 
+                         type === 'milestone' ? 'milestone' :
+                         type === 'event' ? 'event' : 'text';
+
+      const memoryData = {
+        book_id: bookId,
+        content_type: contentType,
+        content_url: contentUrl,
+        caption: caption.trim() || null,
+        tags: tagsArray,
+        location: locationData,
+        created_by: user.user.id,
+      };
+
+      console.log('AddMemoryDialog: Inserting memory', memoryData);
       
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('memories')
-        .insert({
-          book_id: bookId,
-          content_type: type === 'photo' ? 'image' : 'text',
-          content_url: contentUrl,
-          caption: caption.trim() || null,
-          tags: tagsArray,
-          location: locationData,
-          created_by: user.user?.id || null,
-        });
+        .insert(memoryData)
+        .select();
 
       if (error) {
+        console.error('AddMemoryDialog: Database error', error);
         throw error;
       }
+
+      console.log('AddMemoryDialog: Memory inserted successfully', data);
 
       toast({
         title: "Onnistui!",
@@ -143,11 +183,22 @@ const AddMemoryDialog: React.FC<AddMemoryDialogProps> = ({
       
       onMemoryAdded();
       onClose();
-    } catch (error) {
-      console.error('Error adding memory:', error);
+    } catch (error: any) {
+      console.error('AddMemoryDialog: Error adding memory', error);
+      
+      let errorMessage = "Muiston lisääminen epäonnistui";
+      
+      if (error.message) {
+        errorMessage = error.message;
+      } else if (error.code === '42501') {
+        errorMessage = "Sinulla ei ole oikeutta lisätä muistoja tähän pentukirjaan";
+      } else if (error.code === 'PGRST116') {
+        errorMessage = "Pentukirjaa ei löydy tai sinulla ei ole oikeutta siihen";
+      }
+      
       toast({
         title: "Virhe",
-        description: "Muiston lisääminen epäonnistui",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
