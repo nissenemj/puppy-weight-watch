@@ -18,7 +18,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Badge } from '@/components/ui/badge';
-import { CalendarIcon, Clock, MapPin, Heart, AlertTriangle } from 'lucide-react';
+import { CalendarIcon, Clock, MapPin, Heart, AlertTriangle } from '@/utils/iconImports';
 import { format } from 'date-fns';
 import { fi } from 'date-fns/locale';
 

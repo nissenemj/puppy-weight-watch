@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Clock, X } from 'lucide-react';
+import { Clock, X } from '@/utils/iconImports';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 

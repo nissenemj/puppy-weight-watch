@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Award, Check, Plus, Clock } from 'lucide-react';
+import { Award, Check, Plus, Clock } from '@/utils/iconImports';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import AddMilestoneDialog from './AddMilestoneDialog';

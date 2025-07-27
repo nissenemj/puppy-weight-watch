@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { Trophy, TrendingUp, Calendar, Target } from 'lucide-react';
+import { Trophy, TrendingUp, Calendar, Target } from '@/utils/iconImports';
 import { PuppyAgeInfo } from '@/utils/puppyAge';
 
 interface SocializationCategory {

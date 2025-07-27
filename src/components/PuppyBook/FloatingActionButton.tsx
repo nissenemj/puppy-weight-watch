@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Camera, Calendar, Award, Heart, X, Stethoscope } from 'lucide-react';
+import { Plus, Camera, Calendar, Award, Heart, X, Stethoscope } from '@/utils/iconImports';
 import AddMemoryDialog from './AddMemoryDialog';
 import { AddHealthRecordDialog } from './AddHealthRecordDialog';
 

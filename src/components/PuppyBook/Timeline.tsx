@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, Plus, Clock, MapPin, Star, Scale, Activity } from 'lucide-react';
+import { Calendar, Plus, Clock, MapPin, Star, Scale, Activity } from '@/utils/iconImports';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import AddTimelineDialog from './AddTimelineDialog';

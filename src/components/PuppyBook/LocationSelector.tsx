@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MapPin, X, Navigation } from 'lucide-react';
+import { MapPin, X, Navigation } from '@/utils/iconImports';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Heart, MessageCircle, MapPin, Calendar, MoreVertical, Edit2, Trash2, Share2, Sparkles } from 'lucide-react';
+import { Heart, MessageCircle, MapPin, Calendar, MoreVertical, Edit2, Trash2, Share2, Sparkles } from '@/utils/iconImports';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { SocialShareGenerator } from './SocialShareGenerator';

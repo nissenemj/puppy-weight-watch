@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Share2, Copy, Check, Facebook, Twitter, Send, Link2 } from 'lucide-react';
+import { Share2, Copy, Check, Facebook, Twitter, Send, Link2 } from '@/utils/iconImports';
 import {
   Dialog,
   DialogContent,

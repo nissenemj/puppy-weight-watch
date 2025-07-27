@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Calendar } from '@/utils/iconImports';
 import MonthlyContent from './MonthlyContent';
 
 interface MonthlyTrackerProps {

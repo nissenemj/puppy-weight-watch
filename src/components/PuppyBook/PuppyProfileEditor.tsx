@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Settings, Save, X, Calendar, Type, Image as ImageIcon, Palette } from 'lucide-react';
+import { Settings, Save, X, Calendar, Type, ImageIcon, Palette } from '@/utils/iconImports';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Heart, Sparkles, PawPrint, Calendar, Clock, Settings } from 'lucide-react';
+import { Heart, Sparkles, PawPrint, Calendar, Clock, Settings } from '@/utils/iconImports';
 import { format, differenceInWeeks, differenceInDays, parseISO } from 'date-fns';
 import { fi } from 'date-fns/locale';
 

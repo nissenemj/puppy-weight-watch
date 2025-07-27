@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Heart, Clock, MapPin, Trophy, Info, CheckCircle, AlertCircle } from 'lucide-react';
+import { Heart, Clock, MapPin, Trophy, Info, CheckCircle, AlertCircle } from '@/utils/iconImports';
 import { SocializationDashboard } from './SocializationDashboard';
 import { SocializationCard } from './SocializationCard';
 import { AddExperienceDialog } from './AddExperienceDialog';

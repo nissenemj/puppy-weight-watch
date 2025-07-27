@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Trophy, Star, Medal, Crown, TrendingUp, Users } from 'lucide-react';
+import { Trophy, Star, Medal, Crown, TrendingUp, Users } from '@/utils/iconImports';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';

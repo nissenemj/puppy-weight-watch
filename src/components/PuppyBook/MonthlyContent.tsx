@@ -17,7 +17,7 @@ import {
   Scale,
   TrendingUp,
   Activity
-} from 'lucide-react';
+} from '@/utils/iconImports';
 import { calculatePuppyAge, getAgeAppropriateMilestones } from '@/utils/puppyAge';
 import { AddHealthRecordDialog } from './AddHealthRecordDialog';
 import { ImageUploader } from './ImageUploader';
@@ -32,7 +32,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { VeterinaryGuidance } from './VeterinaryGuidance';
 import { SourceBadges } from './SourceBadges';
-import { AlertTriangle } from 'lucide-react';
+import { AlertTriangle } from '@/utils/iconImports';
 import { SocializationSection } from './SocializationSection';
 import { useWeightEntries } from '@/hooks/useWeightEntries';
 

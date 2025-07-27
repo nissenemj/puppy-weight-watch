@@ -14,7 +14,7 @@ import {
   Database,
   Book,
   Calculator
-} from 'lucide-react'
+} from '@/utils/iconImports'
 import {
   DropdownMenu,
   DropdownMenuContent,

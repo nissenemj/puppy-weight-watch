@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Download, Share2, Copy, Camera, Heart, Sparkles, Mountain, PartyPopper } from 'lucide-react';
+import { Download, Share2, Copy, Camera, Heart, Sparkles, Mountain, PartyPopper } from '@/utils/iconImports';
 import { format } from 'date-fns';
 import { fi } from 'date-fns/locale';
 import { useToast } from '@/hooks/use-toast';

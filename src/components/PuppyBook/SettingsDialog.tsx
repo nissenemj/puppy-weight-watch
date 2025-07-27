@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Settings, Save, Trash2, Upload, Palette, Shield, Calendar } from 'lucide-react';
+import { Settings, Save, Trash2, Upload, Palette, Shield, Calendar } from '@/utils/iconImports';
 import {
   Dialog,
   DialogContent,

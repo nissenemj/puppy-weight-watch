@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Scale, TrendingUp, Calendar, Info, ExternalLink } from 'lucide-react';
+import { Scale, TrendingUp, Calendar, Info, ExternalLink } from '@/utils/iconImports';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';

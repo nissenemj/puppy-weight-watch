@@ -12,7 +12,7 @@ import {
   Camera,
   Heart,
   PawPrint
-} from 'lucide-react';
+} from '@/utils/iconImports';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';

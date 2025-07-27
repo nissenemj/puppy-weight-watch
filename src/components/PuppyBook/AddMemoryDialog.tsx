@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Camera, Upload, MapPin, Tag, Type, Image, Heart, Calendar, Award } from 'lucide-react';
+import { X, Camera, Upload, MapPin, Tag, Type, Image, Heart, Calendar, Award } from '@/utils/iconImports';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';

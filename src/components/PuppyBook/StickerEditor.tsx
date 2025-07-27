@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Heart, Star, Smile, Award, Zap, Sparkles, Download, X } from 'lucide-react';
+import { Heart, Star, Smile, Award, Zap, Sparkles, Download, X } from '@/utils/iconImports';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
