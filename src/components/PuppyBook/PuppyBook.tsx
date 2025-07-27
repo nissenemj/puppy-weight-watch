@@ -154,6 +154,17 @@ const PuppyBook: React.FC = () => {
     setBook(bookData);
   };
 
+  // Calculate age-appropriate default month when book changes
+  useEffect(() => {
+    if (book?.birth_date) {
+      const ageBasedMonth = getMonthNumberFromAge(book.birth_date);
+      setSelectedMonth(ageBasedMonth);
+    } else if (book) {
+      // If no birth date, default to month 0
+      setSelectedMonth(0);
+    }
+  }, [book]);
+
   const createBook = async (title: string, birthDate?: string, coverImageUrl?: string) => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
