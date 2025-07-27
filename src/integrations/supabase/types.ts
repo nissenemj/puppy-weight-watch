@@ -929,6 +929,209 @@ export type Database = {
           },
         ]
       }
+      socialization_categories: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          display_order: number | null
+          icon: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          icon?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          icon?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      socialization_experiences: {
+        Row: {
+          book_id: string
+          created_at: string | null
+          created_by: string | null
+          distance_meters: number | null
+          duration_minutes: number | null
+          experience_date: string
+          experience_time: string | null
+          id: string
+          images: string[] | null
+          item_id: string
+          notes: string | null
+          puppy_reaction: string | null
+          rest_after: boolean | null
+          treats_given: boolean | null
+        }
+        Insert: {
+          book_id: string
+          created_at?: string | null
+          created_by?: string | null
+          distance_meters?: number | null
+          duration_minutes?: number | null
+          experience_date: string
+          experience_time?: string | null
+          id?: string
+          images?: string[] | null
+          item_id: string
+          notes?: string | null
+          puppy_reaction?: string | null
+          rest_after?: boolean | null
+          treats_given?: boolean | null
+        }
+        Update: {
+          book_id?: string
+          created_at?: string | null
+          created_by?: string | null
+          distance_meters?: number | null
+          duration_minutes?: number | null
+          experience_date?: string
+          experience_time?: string | null
+          id?: string
+          images?: string[] | null
+          item_id?: string
+          notes?: string | null
+          puppy_reaction?: string | null
+          rest_after?: boolean | null
+          treats_given?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "socialization_experiences_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "puppy_books"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "socialization_experiences_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "socialization_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      socialization_items: {
+        Row: {
+          category_id: string
+          created_at: string | null
+          description: string | null
+          difficulty_level: number | null
+          distance_guidance: string | null
+          duration_minutes: number | null
+          id: string
+          max_age_weeks: number | null
+          min_age_weeks: number | null
+          name: string
+          tips: string[] | null
+          why_important: string | null
+        }
+        Insert: {
+          category_id: string
+          created_at?: string | null
+          description?: string | null
+          difficulty_level?: number | null
+          distance_guidance?: string | null
+          duration_minutes?: number | null
+          id?: string
+          max_age_weeks?: number | null
+          min_age_weeks?: number | null
+          name: string
+          tips?: string[] | null
+          why_important?: string | null
+        }
+        Update: {
+          category_id?: string
+          created_at?: string | null
+          description?: string | null
+          difficulty_level?: number | null
+          distance_guidance?: string | null
+          duration_minutes?: number | null
+          id?: string
+          max_age_weeks?: number | null
+          min_age_weeks?: number | null
+          name?: string
+          tips?: string[] | null
+          why_important?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "socialization_items_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "socialization_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      socialization_progress: {
+        Row: {
+          achievements: string[] | null
+          book_id: string
+          category_id: string
+          created_at: string | null
+          id: string
+          last_activity_date: string | null
+          negative_experiences: number | null
+          positive_experiences: number | null
+          stamp_earned: boolean | null
+          stamp_earned_date: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          achievements?: string[] | null
+          book_id: string
+          category_id: string
+          created_at?: string | null
+          id?: string
+          last_activity_date?: string | null
+          negative_experiences?: number | null
+          positive_experiences?: number | null
+          stamp_earned?: boolean | null
+          stamp_earned_date?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          achievements?: string[] | null
+          book_id?: string
+          category_id?: string
+          created_at?: string | null
+          id?: string
+          last_activity_date?: string | null
+          negative_experiences?: number | null
+          positive_experiences?: number | null
+          stamp_earned?: boolean | null
+          stamp_earned_date?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "socialization_progress_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "puppy_books"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "socialization_progress_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "socialization_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       timeline_entries: {
         Row: {
           book_id: string

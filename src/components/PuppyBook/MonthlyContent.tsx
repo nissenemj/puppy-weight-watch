@@ -33,6 +33,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { VeterinaryGuidance } from './VeterinaryGuidance';
 import { SourceBadges } from './SourceBadges';
 import { AlertTriangle } from 'lucide-react';
+import { SocializationSection } from './SocializationSection';
 import { useWeightEntries } from '@/hooks/useWeightEntries';
 
 interface MonthlyContentProps {
