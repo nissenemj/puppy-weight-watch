@@ -14,7 +14,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://ckwwxuytetyaaxfcvozvb.supabase.co/sitemap.xml
+Sitemap: https://pentulaskuri.com/sitemap.xml
 
 # Special instructions for AI crawlers
 User-agent: GPTBot

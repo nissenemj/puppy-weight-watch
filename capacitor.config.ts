@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: 'puppy-weight-watch',
   webDir: 'dist',
   server: {
-    url: "https://3219ec70-7c28-4d36-bf27-bfe4d9c39c8b.lovableproject.com?forceHideBadge=true",
+    url: "https://pentulaskuri.com",
     cleartext: true
   },
 };
