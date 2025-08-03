@@ -52,6 +52,7 @@ export default function WeightEntry({ user, entries, onEntryAdded }: WeightEntry
 
       const weightData = {
         user_id: user.id,
+        dog_id: null, // Will be updated when dog selection is implemented
         date: selectedDate,
         weight: weightValue,
       }

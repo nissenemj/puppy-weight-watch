@@ -197,6 +197,7 @@ export default function ModernPuppyWeightTracker() {
     
     const weightData = {
       user_id: user.id,
+      dog_id: null, // Will be updated when dog selection is implemented
       date: today,
       weight: parseFloat(currentWeight),
     }

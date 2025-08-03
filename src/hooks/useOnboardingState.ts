@@ -150,6 +150,7 @@ export const useOnboardingState = (user: User) => {
           .from('weight_entries')
           .insert({
             user_id: user.id,
+            dog_id: dogData.id,
             weight: dogProfile.weight_kg,
             date: new Date().toISOString().split('T')[0]
           });
