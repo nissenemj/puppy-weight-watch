@@ -76,7 +76,10 @@ export default function AuthForm({ onAuthSuccess }: AuthFormProps) {
 
       const { error } = await supabase.auth.signUp({
         email: validatedData.email,
-        password: validatedData.password
+        password: validatedData.password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/`
+        }
       })
 
       if (error) {
