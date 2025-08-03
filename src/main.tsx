@@ -5,7 +5,6 @@ import { ThemeProvider } from './contexts/ThemeContext'
 import Router from './router'
 import './index.css'
 import './i18n'
-import { VirtualKeyboardHandler } from './utils/VirtualKeyboardHandler'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -16,8 +15,25 @@ const queryClient = new QueryClient({
   },
 })
 
+// Initialize mobile optimizations
+import { VirtualKeyboardHandler } from './utils/VirtualKeyboardHandler'
+import { initializeCSSOptimizations } from './utils/CSSOptimization'
+import { preloadCriticalResources } from './utils/LazyLoading'
+
+// Initialize critical optimizations immediately
+initializeCSSOptimizations()
+
 // Initialize virtual keyboard handler
-new VirtualKeyboardHandler();
+new VirtualKeyboardHandler()
+
+// Preload critical resources
+preloadCriticalResources()
+
+// Start performance monitoring
+import { PerformanceMonitor } from './utils/LazyLoading'
+const performanceMonitor = PerformanceMonitor.getInstance()
+performanceMonitor.measureCoreWebVitals()
+performanceMonitor.measureStart('app_initialization')
 
 createRoot(document.getElementById("root")!).render(
   <ThemeProvider>
@@ -27,4 +43,7 @@ createRoot(document.getElementById("root")!).render(
       </HelmetProvider>
     </QueryClientProvider>
   </ThemeProvider>
-);
+)
+
+// Mark app initialization complete
+performanceMonitor.measureEnd('app_initialization')
