@@ -16,6 +16,8 @@ import FoodCalculator from './FoodCalculator'
 import PuppyFeeding from './PuppyFeeding'
 import SafetyNewsFeed from './SafetyNewsFeed'
 import OnboardingWizard from '@/features/onboarding/components/OnboardingWizard'
+import DogSelector from '@/components/DogSelector'
+import WeightEntry from '@/features/weight-tracking/components/WeightEntry'
 import { Scale, TrendingUp, Calculator, Utensils, Bell, LogIn, UserPlus, RefreshCw } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -43,6 +45,7 @@ export default function ModernPuppyWeightTracker() {
   const [showOnboarding, setShowOnboarding] = useState(false)
   const [checkingOnboarding, setCheckingOnboarding] = useState(false)
   const [activeTab, setActiveTab] = useState('weight-tracking')
+  const [selectedDog, setSelectedDog] = useState<{ id: string; name: string } | null>(null)
   const { toast } = useToast()
   const isMobile = useIsMobile()
 
@@ -78,10 +81,15 @@ export default function ModernPuppyWeightTracker() {
 
   useEffect(() => {
     if (user) {
-      fetchWeightEntries()
       checkForOnboarding()
     }
   }, [user])
+
+  useEffect(() => {
+    if (user && selectedDog) {
+      fetchWeightEntries()
+    }
+  }, [user, selectedDog])
 
   const checkForOnboarding = async () => {
     if (!user) return
@@ -121,12 +129,13 @@ export default function ModernPuppyWeightTracker() {
   }
 
   const fetchWeightEntries = async () => {
-    if (!user) return
+    if (!user || !selectedDog) return
 
     const { data, error } = await supabase
       .from('weight_entries')
       .select('*')
       .eq('user_id', user.id)
+      .eq('dog_id', selectedDog.id)
       .order('date', { ascending: true })
 
     if (error) {
@@ -195,9 +204,19 @@ export default function ModernPuppyWeightTracker() {
     // Check if entry for today already exists
     const existingEntry = entries.find(entry => entry.date === today)
     
+    // Check if dog is selected
+    if (!selectedDog) {
+      toast({
+        title: "Valitse koira",
+        description: "Valitse ensin koira painon lisäämiseen",
+        variant: "destructive",
+      })
+      return
+    }
+
     const weightData = {
       user_id: user.id,
-      dog_id: null, // Will be updated when dog selection is implemented
+      dog_id: selectedDog.id,
       date: today,
       weight: parseFloat(currentWeight),
     }
@@ -432,6 +451,15 @@ export default function ModernPuppyWeightTracker() {
           </div>
         </div>
 
+        {/* Dog Selector */}
+        <div className="mb-6">
+          <DogSelector 
+            user={user} 
+            selectedDogId={selectedDog?.id} 
+            onDogSelect={(dogId, dog) => setSelectedDog(dog)} 
+          />
+        </div>
+
         <Tabs value={activeTab} onValueChange={setActiveTab} onSwipe={handleTabSwipe} className="space-y-6">
           <TabsList className="grid w-full grid-cols-4 h-16 md:h-14 rounded-2xl bg-white/50 backdrop-blur-sm overflow-x-auto">
             <TabsTrigger 
@@ -477,119 +505,19 @@ export default function ModernPuppyWeightTracker() {
           </TabsList>
 
           <TabsContent value="weight-tracking" className="space-y-6 animate-fade-in">
-            {/* Modern Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Card className="bg-gradient-cool text-white border-0 shadow-xl hover:-translate-y-1 transition-all duration-200 rounded-2xl">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-white/90">Nykyinen paino</CardTitle>
-                  <div className="p-2 bg-white/20 rounded-xl">
-                    <Scale className="h-5 w-5 text-white" />
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-3xl font-bold">{getLatestWeight().toFixed(1)} kg</div>
-                  <p className="text-xs text-white/70 mt-1">
-                    Viimeisin mittaus
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-purple text-white border-0 shadow-xl hover:-translate-y-1 transition-all duration-200 rounded-2xl">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-white/90">Painon muutos</CardTitle>
-                  <div className="p-2 bg-white/20 rounded-xl">
-                    <TrendingUp className="h-5 w-5 text-white" />
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-3xl font-bold">
-                    {getWeightChange() !== null ? (
-                      <>
-                        {getWeightChange()! > 0 ? '+' : ''}{getWeightChange()!.toFixed(1)} kg
-                      </>
-                    ) : (
-                      'N/A'
-                    )}
-                  </div>
-                  <p className="text-xs text-white/70 mt-1">
-                    Edellisestä mittauksesta
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-warm text-white border-0 shadow-xl hover:-translate-y-1 transition-all duration-200 rounded-2xl">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-white/90">Mittauksia</CardTitle>
-                  <div className="p-2 bg-white/20 rounded-xl">
-                    <Badge variant="secondary" className="bg-white/20 text-white border-0">
-                      {entries.length}
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-3xl font-bold">{entries.length}</div>
-                  <p className="text-xs text-white/70 mt-1">
-                    Painomittauksia yhteensä
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Weight Entry Form */}
-            <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
-              <CardHeader>
-                <CardTitle className="text-xl">Lisää painomittaus</CardTitle>
-                <CardDescription className="text-base">
-                  Syötä pentusi tämänhetkinen paino kilogrammoina
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex gap-4">
-                  <div className="flex-1">
-                    <Label htmlFor="weight" className="text-base font-medium">Paino (kg)</Label>
-                    <Input
-                      id="weight"
-                      type="number"
-                      step="0.1"
-                      value={currentWeight}
-                      onChange={(e) => setCurrentWeight(e.target.value)}
-                      placeholder="esim. 3.2"
-                      className="h-12 text-base rounded-xl border-2 focus:border-primary focus:ring-primary mt-2"
-                    />
-                  </div>
-                  <div className="flex items-end">
-                    <Button 
-                      onClick={addWeightEntry} 
-                      disabled={!currentWeight}
-                      size="mobile"
-                      className="rounded-xl bg-gradient-primary hover:opacity-90 transition-all duration-200 hover:scale-105 shadow-lg"
-                    >
-                      Lisää mittaus
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Recent Entries */}
-            {entries.length > 0 && (
+            {selectedDog ? (
+              <WeightEntry 
+                user={user} 
+                entries={entries} 
+                onEntryAdded={fetchWeightEntries}
+                selectedDogId={selectedDog.id}
+              />
+            ) : (
               <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
-                <CardHeader>
-                  <CardTitle className="text-xl">Viimeisimmät mittaukset</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {entries.slice(-5).reverse().map((entry) => (
-                      <div key={entry.id} className="flex justify-between items-center p-4 bg-gradient-to-r from-secondary/20 to-secondary/5 rounded-xl hover:scale-105 transition-all duration-200">
-                        <span className="font-medium text-gray-700">
-                          {new Date(entry.date).toLocaleDateString('fi-FI')}
-                        </span>
-                        <Badge variant="outline" className="bg-white border-primary text-primary font-semibold px-3 py-1">
-                          {entry.weight} kg
-                        </Badge>
-                      </div>
-                    ))}
-                  </div>
+                <CardContent className="text-center py-12">
+                  <Scale className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold text-gray-700 mb-2">Valitse koira</h3>
+                  <p className="text-gray-500">Valitse ensin koira aloittaaksesi painonseurannan</p>
                 </CardContent>
               </Card>
             )}

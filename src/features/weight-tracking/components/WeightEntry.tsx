@@ -21,9 +21,10 @@ interface WeightEntryProps {
   user: User
   entries: WeightEntry[]
   onEntryAdded: () => void
+  selectedDogId?: string
 }
 
-export default function WeightEntry({ user, entries, onEntryAdded }: WeightEntryProps) {
+export default function WeightEntry({ user, entries, onEntryAdded, selectedDogId }: WeightEntryProps) {
   const [currentWeight, setCurrentWeight] = useState('')
   const [selectedDate, setSelectedDate] = useState(() => {
     const today = new Date()
@@ -50,9 +51,19 @@ export default function WeightEntry({ user, entries, onEntryAdded }: WeightEntry
         return
       }
 
+      // Check if dog is selected
+      if (!selectedDogId) {
+        toast({
+          title: "Valitse koira",
+          description: "Valitse ensin koira painon lisäämiseen",
+          variant: "destructive",
+        })
+        return
+      }
+
       const weightData = {
         user_id: user.id,
-        dog_id: null, // Will be updated when dog selection is implemented
+        dog_id: selectedDogId,
         date: selectedDate,
         weight: weightValue,
       }
