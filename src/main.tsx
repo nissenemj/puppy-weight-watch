@@ -5,6 +5,7 @@ import { ThemeProvider } from './contexts/ThemeContext'
 import Router from './router'
 import './index.css'
 import './i18n'
+import { VirtualKeyboardHandler } from './utils/VirtualKeyboardHandler'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -14,6 +15,9 @@ const queryClient = new QueryClient({
     },
   },
 })
+
+// Initialize virtual keyboard handler
+new VirtualKeyboardHandler();
 
 createRoot(document.getElementById("root")!).render(
   <ThemeProvider>

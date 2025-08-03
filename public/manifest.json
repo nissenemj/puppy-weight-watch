@@ -1,0 +1,132 @@
+{
+  "name": "Pentulaskuri - Koiranpennun painon seuranta",
+  "short_name": "Pentulaskuri",
+  "description": "Seuraa koiranpentusi kasvua ja laske sopiva ruokamäärä",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#FF6B35",
+  "background_color": "#FFFFFF",
+  "categories": ["lifestyle", "health", "utilities"],
+  "lang": "fi",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Painonseuranta",
+      "short_name": "Paino",
+      "description": "Syötä pennun paino",
+      "url": "/weight-tracker",
+      "icons": [
+        {
+          "src": "/icons/scale-96x96.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Ruokalaskuri",
+      "short_name": "Ruoka",
+      "description": "Laske ruokamäärä",
+      "url": "/calculator",
+      "icons": [
+        {
+          "src": "/icons/food-96x96.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Pentukirja",
+      "short_name": "Kirja",
+      "description": "Avaa pentukirja",
+      "url": "/puppy-book",
+      "icons": [
+        {
+          "src": "/icons/book-96x96.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/home-mobile.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Etusivu mobiilissa"
+    },
+    {
+      "src": "/screenshots/weight-tracker-mobile.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Painonseuranta mobiilissa"
+    },
+    {
+      "src": "/screenshots/home-desktop.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Etusivu työpöydällä"
+    }
+  ],
+  "features": [
+    "offline",
+    "background-sync",
+    "cross-platform"
+  ],
+  "edge_side_panel": {
+    "preferred_width": 400
+  }
+}
