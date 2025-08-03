@@ -22,7 +22,12 @@ export function LoadingSpinner({ size = "md", className, text }: LoadingSpinnerP
           sizeClasses[size]
         )}
         animate={{ rotate: 360 }}
-        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+        transition={{ 
+          duration: 1, 
+          repeat: Infinity, 
+          ease: "linear",
+          repeatType: "loop"
+        }}
       />
       {text && (
         <motion.p 
@@ -44,13 +49,14 @@ export function PuppyLoadingSpinner({ size = "md", className, text }: LoadingSpi
       <motion.div
         className="relative"
         animate={{ 
-          scale: [1, 1.1, 1],
-          rotate: [0, 5, -5, 0]
+          scale: [1, 1.05, 1],
+          rotate: [0, 2, -2, 0]
         }}
         transition={{ 
-          duration: 2,
+          duration: 1.5,
           repeat: Infinity,
-          ease: "easeInOut"
+          ease: "easeInOut",
+          repeatType: "loop"
         }}
       >
         <div className={cn(

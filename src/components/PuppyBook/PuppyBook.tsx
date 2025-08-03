@@ -729,14 +729,15 @@ const PuppyBookNavigation: React.FC<{
               `}
             >
               <motion.div
+                initial={{ scale: 1, rotate: 0 }}
                 animate={activeSection === section.id ? { 
-                  scale: [1, 1.2, 1],
-                  rotate: [0, 10, -10, 0]
-                } : {}}
+                  scale: [1, 1.1, 1],
+                  rotate: [0, 3, -3, 0]
+                } : { scale: 1, rotate: 0 }}
                 transition={{ 
-                  duration: 2,
-                  repeat: activeSection === section.id ? Infinity : 0,
-                  ease: "easeInOut"
+                  duration: 0.6,
+                  ease: "easeInOut",
+                  repeat: 0
                 }}
               >
                 <section.icon className="w-5 h-5" />
