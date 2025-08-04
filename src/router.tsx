@@ -14,7 +14,7 @@ import SocializationGuide from "./pages/SocializationGuide";
 import NotFound from "./pages/NotFound";
 import OnboardingPage from "./pages/OnboardingPage";
 import WeightTrackerPage from "./pages/WeightTrackerPage";
-import App from "./App"; // Viral demo page
+import ViralDemo from "./pages/ViralDemo";
 
 const router = createBrowserRouter([
   {
@@ -67,7 +67,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/viral-demo",
-    element: <App />,
+    element: <ViralDemo />,
   },
   {
     path: "*",

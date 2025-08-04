@@ -1,8 +1,6 @@
-
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { ThemeProvider } from "@/contexts/ThemeContext";
 import { MobileOptimizations } from '@/components/MobileOptimizations';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { PWAInstallPrompt } from '@/components/PWAInstallPrompt';
@@ -23,7 +21,7 @@ import NotFound from '@/pages/NotFound';
 
 const queryClient = new QueryClient();
 
-const router = createBrowserRouter([
+const viralRouter = createBrowserRouter([
   { path: "/", element: <Index /> },
   { path: "/calculator", element: <Calculator /> },
   { path: "/weight-tracker", element: <WeightTrackerPage /> },
@@ -39,19 +37,17 @@ const router = createBrowserRouter([
   { path: "*", element: <NotFound /> }
 ]);
 
-export default function App() {
+export default function ViralDemo() {
   return (
     <QueryClientProvider client={queryClient}>
       <ErrorBoundary>
-        <ThemeProvider>
-          <TooltipProvider>
-            <MobileOptimizations>
-              <RouterProvider router={router} />
-              <PWAInstallPrompt />
-              <Toaster />
-            </MobileOptimizations>
-          </TooltipProvider>
-        </ThemeProvider>
+        <TooltipProvider>
+          <MobileOptimizations>
+            <RouterProvider router={viralRouter} />
+            <PWAInstallPrompt />
+            <Toaster />
+          </MobileOptimizations>
+        </TooltipProvider>
       </ErrorBoundary>
     </QueryClientProvider>
   );
