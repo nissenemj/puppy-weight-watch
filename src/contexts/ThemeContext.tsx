@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 type Theme = 'light' | 'dark';
 
@@ -29,36 +29,25 @@ const getInitialTheme = (): Theme => {
 };
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Defensive useState with fallback
-  const useState = React.useState;
-  if (!useState) {
-    // Fallback when React hooks are not available
-    console.error('React useState is not available');
-    return <div className="light">{children}</div>;
-  }
-  
   const [theme, setTheme] = useState<Theme>(getInitialTheme);
 
-  const useEffectHook = React.useEffect;
-  if (useEffectHook) {
-    useEffectHook(() => {
-      try {
-        // Apply theme to document root
-        const root = document.documentElement;
-        if (root) {
-          root.classList.remove('light', 'dark');
-          root.classList.add(theme);
-        }
-        
-        // Store preference safely
-        if (typeof localStorage !== 'undefined') {
-          localStorage.setItem('theme', theme);
-        }
-      } catch (error) {
-        console.error('Error applying theme:', error);
+  useEffect(() => {
+    try {
+      // Apply theme to document root
+      const root = document.documentElement;
+      if (root) {
+        root.classList.remove('light', 'dark');
+        root.classList.add(theme);
       }
-    }, [theme]);
-  }
+      
+      // Store preference safely
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('theme', theme);
+      }
+    } catch (error) {
+      console.error('Error applying theme:', error);
+    }
+  }, [theme]);
 
   const toggleTheme = () => {
     setTheme(prev => prev === 'light' ? 'dark' : 'light');
