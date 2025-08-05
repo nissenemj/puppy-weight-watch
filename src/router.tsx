@@ -1,4 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { MobileOptimizations } from '@/components/MobileOptimizations';
+import MobileOptimizationMonitor from '@/components/MobileOptimizationMonitor';
 
 // Pages
 import Index from "./pages/Index";
@@ -76,5 +78,10 @@ const router = createBrowserRouter([
 ]);
 
 export default function Router() {
-  return <RouterProvider router={router} />;
+  return (
+    <MobileOptimizations>
+      <RouterProvider router={router} />
+      <MobileOptimizationMonitor showScoreOnly />
+    </MobileOptimizations>
+  );
 }

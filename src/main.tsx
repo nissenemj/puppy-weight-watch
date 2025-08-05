@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ThemeProvider } from './contexts/ThemeContext'
 import Router from './router'
 import './index.css'
+import { MobileOptimizationChecker } from './utils/mobileOptimizationCheck'
 import './i18n'
 import { ProductionReadiness } from './components/ProductionReadiness'
 
@@ -29,6 +30,22 @@ new VirtualKeyboardHandler()
 
 // Preload critical resources
 preloadCriticalResources()
+
+// Initialize mobile optimization monitoring
+if (process.env.NODE_ENV === 'development') {
+  setTimeout(() => {
+    const report = MobileOptimizationChecker.generateReport()
+    if (!report.isOptimized) {
+      console.group('🔍 Mobile Optimization Issues')
+      console.warn('Score:', report.score + '%')
+      console.warn('Issues:', report.issues)
+      console.warn('Recommendations:', report.recommendations)
+      console.groupEnd()
+    } else {
+      console.log('✅ Mobile optimization: All checks passed!')
+    }
+  }, 2000)
+}
 
 // Register service worker for production
 if ('serviceWorker' in navigator && import.meta.env.PROD) {

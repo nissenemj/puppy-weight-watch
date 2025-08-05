@@ -162,5 +162,32 @@ export default {
 			}
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+		plugins: [
+			require("tailwindcss-animate"),
+			// Mobile optimization utilities
+			function({ addUtilities }: any) {
+				const newUtilities = {
+					'.text-wrap': {
+						'word-wrap': 'break-word',
+						'word-break': 'break-word',
+						'hyphens': 'auto',
+						'overflow-wrap': 'break-word',
+					},
+					'.mobile-container': {
+						'width': '100%',
+						'max-width': '100vw',
+						'padding-left': '1rem',
+						'padding-right': '1rem',
+						'margin-left': 'auto',
+						'margin-right': 'auto',
+						'box-sizing': 'border-box',
+					},
+					'.prevent-overflow': {
+						'overflow-x': 'hidden',
+						'max-width': '100%',
+					},
+				}
+				addUtilities(newUtilities)
+			}
+		],
 } satisfies Config;

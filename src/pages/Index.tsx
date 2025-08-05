@@ -70,7 +70,7 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-grass-gradient">
+    <div className="min-h-screen bg-grass-gradient prevent-overflow">
       <SEO
         title="Pentulaskuri - Koiranpennun Painonseuranta ja Kasvuseuranta"
         description="Seuraa koiranpentusi kasvua ja kehitystä söpöllä ja helppokäyttöisellä sovelluksella. Ilmainen painonseuranta, ruokalaskuri ja annostelutaulukot pentujen kasvattajille."
@@ -85,12 +85,12 @@ const Index = () => {
         {/* Grass pattern background */}
         <div className="absolute inset-0 bg-emerald-50/30 opacity-60"></div>
         
-        <div className="container mx-auto px-4 py-16 relative z-10">
-          <div className="grid lg:grid-cols-5 gap-8 items-center max-w-7xl mx-auto">
+        <div className="mobile-container py-8 md:py-16 relative z-10">
+          <div className="flex flex-col lg:grid lg:grid-cols-5 gap-4 md:gap-8 items-center w-full max-w-7xl mx-auto">
             
             {/* Left Navigation Buttons */}
             <motion.div 
-              className="lg:col-span-1 space-y-3"
+              className="lg:col-span-1 flex lg:flex-col gap-2 lg:space-y-3 lg:gap-0 justify-center w-full lg:w-auto order-2 lg:order-1"
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -137,7 +137,7 @@ const Index = () => {
 
             {/* Central Hero Content */}
             <motion.div 
-              className="lg:col-span-3 text-center"
+              className="lg:col-span-3 text-center w-full order-1 lg:order-2"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
@@ -161,7 +161,7 @@ const Index = () => {
                 <img 
                   src={heroPuppy} 
                   alt="Kultainen noutaja pentu" 
-                  className="mx-auto w-48 h-48 sm:w-64 sm:h-64 lg:w-80 lg:h-80 object-contain drop-shadow-2xl"
+                  className="mx-auto w-32 h-32 sm:w-48 sm:h-48 md:w-64 md:h-64 lg:w-80 lg:h-80 object-contain drop-shadow-2xl"
                 />
                 {/* Floating hearts around puppy */}
                 <motion.div
@@ -178,7 +178,7 @@ const Index = () => {
               
               {/* Hero Text */}
               <motion.h1 
-                className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold mb-4 text-foreground"
+                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-heading font-bold mb-4 text-foreground text-wrap px-2"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
@@ -188,7 +188,7 @@ const Index = () => {
                 </span>
               </motion.h1>
               <motion.p 
-                className="text-base sm:text-lg lg:text-xl text-muted-foreground mb-6 font-body leading-relaxed max-w-2xl mx-auto"
+                className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground mb-6 font-body leading-relaxed max-w-full mx-auto text-wrap px-2"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.5 }}
@@ -217,7 +217,7 @@ const Index = () => {
 
             {/* Right Navigation Buttons */}
             <motion.div 
-              className="lg:col-span-1 space-y-3"
+              className="lg:col-span-1 flex lg:flex-col gap-2 lg:space-y-3 lg:gap-0 justify-center w-full lg:w-auto order-3"
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
@@ -266,58 +266,58 @@ const Index = () => {
       </section>
 
       {/* Feature Cards Section */}
-      <section className="py-16 bg-white/50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl sm:text-3xl font-heading font-bold mb-4 text-foreground">
+      <section className="py-8 md:py-16 bg-white/50">
+        <div className="mobile-container">
+          <div className="text-center mb-8 md:mb-12">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-heading font-bold mb-4 text-foreground text-wrap px-2">
               Kaikki tarvittava pennun hoitoon
             </h2>
-            <p className="text-base text-muted-foreground font-body max-w-2xl mx-auto">
+            <p className="text-sm sm:text-base text-muted-foreground font-body max-w-full mx-auto text-wrap px-2">
               Seuraa kasvua, laske ruokamäärät ja pidä huolta pennun terveydestä
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 w-full max-w-6xl mx-auto">
             {/* Feature Card 1 */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+            <div className="bg-white rounded-2xl p-4 md:p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 w-full">
               <div className="text-center">
-                <div className="text-4xl mb-4">🐕‍🦺</div>
-                <h3 className="font-heading font-semibold text-lg mb-2 text-primary">Kasvuseuranta</h3>
-                <p className="text-sm text-muted-foreground">Seuraa pennun painon ja koon kehitystä helposti</p>
+                <div className="text-2xl md:text-4xl mb-3 md:mb-4">🐕‍🦺</div>
+                <h3 className="font-heading font-semibold text-base md:text-lg mb-2 text-primary text-wrap">Kasvuseuranta</h3>
+                <p className="text-xs md:text-sm text-muted-foreground text-wrap">Seuraa pennun painon ja koon kehitystä helposti</p>
               </div>
             </div>
 
             {/* Feature Card 2 */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+            <div className="bg-white rounded-2xl p-4 md:p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 w-full">
               <div className="text-center">
-                <div className="text-4xl mb-4">🍖</div>
-                <h3 className="font-heading font-semibold text-lg mb-2 text-accent">Ruokamäärät</h3>
-                <p className="text-sm text-muted-foreground">Laske optimaaliset ruokamäärät iän ja painon mukaan</p>
+                <div className="text-2xl md:text-4xl mb-3 md:mb-4">🍖</div>
+                <h3 className="font-heading font-semibold text-base md:text-lg mb-2 text-accent text-wrap">Ruokamäärät</h3>
+                <p className="text-xs md:text-sm text-muted-foreground text-wrap">Laske optimaaliset ruokamäärät iän ja painon mukaan</p>
               </div>
             </div>
 
             {/* Feature Card 3 */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+            <div className="bg-white rounded-2xl p-4 md:p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 w-full">
               <div className="text-center">
-                <div className="text-4xl mb-4">🩺</div>
-                <h3 className="font-heading font-semibold text-lg mb-2 text-primary">Terveys</h3>
-                <p className="text-sm text-muted-foreground">Muistutukset rokotuksista ja terveystarkistuksista</p>
+                <div className="text-2xl md:text-4xl mb-3 md:mb-4">🩺</div>
+                <h3 className="font-heading font-semibold text-base md:text-lg mb-2 text-primary text-wrap">Terveys</h3>
+                <p className="text-xs md:text-sm text-muted-foreground text-wrap">Muistutukset rokotuksista ja terveystarkistuksista</p>
               </div>
             </div>
 
             {/* Feature Card 4 */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+            <div className="bg-white rounded-2xl p-4 md:p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 w-full">
               <div className="text-center">
-                <div className="text-4xl mb-4">📲</div>
-                <h3 className="font-heading font-semibold text-lg mb-2 text-accent">Helppokäyttö</h3>
-                <p className="text-sm text-muted-foreground">Yksinkertainen käyttöliittymä mobiilissa ja tietokoneella</p>
+                <div className="text-2xl md:text-4xl mb-3 md:mb-4">📲</div>
+                <h3 className="font-heading font-semibold text-base md:text-lg mb-2 text-accent text-wrap">Helppokäyttö</h3>
+                <p className="text-xs md:text-sm text-muted-foreground text-wrap">Yksinkertainen käyttöliittymä mobiilissa ja tietokoneella</p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <div className="container mx-auto px-4 py-16">
+      <div className="mobile-container py-8 md:py-16">
         <FAQ items={faqs} />
       </div>
     </div>
