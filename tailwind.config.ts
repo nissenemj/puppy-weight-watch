@@ -186,6 +186,11 @@ export default {
 						'overflow-x': 'hidden',
 						'max-width': '100%',
 					},
+					'.touch-target': {
+						'min-height': '44px',
+						'min-width': '44px',
+						'touch-action': 'manipulation',
+					},
 				}
 				addUtilities(newUtilities)
 			}
