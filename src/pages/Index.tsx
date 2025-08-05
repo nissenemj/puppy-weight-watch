@@ -80,357 +80,188 @@ const Index = () => {
       />
       <Navigation />
       
-      {/* Hero Section - Mobile-First Responsive Design */}
-      <section className="relative min-h-screen flex items-center justify-center bg-grass-gradient overflow-hidden">
-        {/* Grass pattern background */}
-        <div className="absolute inset-0 bg-emerald-50/30 opacity-60"></div>
-        
-        {/* Mobile-optimized container */}
-        <div className="mobile-container py-8 md:py-12 lg:py-16 relative z-10 w-full">
-          {/* Mobile-First Hero Layout */}
-          <div className="flex flex-col items-center w-full max-w-6xl mx-auto space-y-6 lg:space-y-8">
-            
-            {/* Viral/Social Proof Badges - Mobile Priority */}
-            <motion.div 
-              className="flex flex-wrap items-center justify-center gap-2 mb-4"
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <Badge variant="secondary" className="bg-gradient-primary text-white text-xs px-2 py-1 flex items-center gap-1">
-                <TrendingUp className="w-3 h-3" />
-                Trending
-              </Badge>
-              <Badge variant="outline" className="text-xs px-2 py-1 flex items-center gap-1">
-                <Users className="w-3 h-3" />
-                1000+ käyttäjää
-              </Badge>
-              <Badge variant="outline" className="text-xs px-2 py-1 flex items-center gap-1">
-                <Award className="w-3 h-3" />
-                4.8/5 ⭐
-              </Badge>
-            </motion.div>
+{/* Korjattu Hero Section */}
+<motion.section 
+  initial={{ opacity: 0 }} 
+  animate={{ opacity: 1 }} 
+  className="relative overflow-hidden w-full"
+>
+  {/* Background gradient overlay */}
+  <div className="absolute inset-0 bg-gradient-to-br from-purple-600/20 via-pink-500/20 to-blue-600/20"></div>
+  
+  <div className="relative z-10 text-center px-4 py-8 md:px-8 md:py-16 w-full max-w-full">
+    {/* Viral badges - mobiilioptimoidut */}
+    <div className="flex flex-wrap justify-center gap-2 mb-6 w-full">
+      <Badge className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-2 py-1 rounded-full text-xs md:text-sm">
+        <TrendingUp className="w-3 h-3 mr-1" />
+        <span className="hidden sm:inline">Trending #1</span>
+        <span className="sm:hidden">#1</span>
+      </Badge>
+      <Badge className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-2 py-1 rounded-full text-xs md:text-sm">
+        <Users className="w-3 h-3 mr-1" />
+        <span className="hidden sm:inline">50K+ Users</span>
+        <span className="sm:hidden">50K+</span>
+      </Badge>
+    </div>
 
-            {/* Central Hero Content - Always Centered */}
-            <motion.div 
-              className="text-center w-full px-4"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              {/* Large Central Puppy - Responsive Sizing */}
-              <motion.div 
-                className="mb-6 lg:mb-8 relative"
-                initial={{ scale: 0.8, rotate: -5 }}
-                animate={{ scale: 1, rotate: 0 }}
-                transition={{ 
-                  duration: 1,
-                  type: "spring",
-                  stiffness: 100
-                }}
-                whileHover={{ 
-                  scale: 1.05,
-                  rotate: 2,
-                  transition: { duration: 0.3 }
-                }}
-              >
-                <img 
-                  src={heroPuppy} 
-                  alt="Kultainen noutaja pentu" 
-                  className="mx-auto w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 lg:w-64 lg:h-64 object-contain drop-shadow-2xl"
-                />
-                {/* Floating hearts around puppy */}
-                <motion.div
-                  className="absolute inset-0 pointer-events-none"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 1 }}
-                >
-                  <FaHeart className="absolute top-2 left-2 text-pink-400 text-sm animate-bounce" style={{ animationDelay: '0s' }} />
-                  <FaHeart className="absolute top-4 right-4 text-pink-400 text-xs animate-bounce" style={{ animationDelay: '0.5s' }} />
-                  <FaHeart className="absolute bottom-6 left-6 text-pink-400 text-xs animate-bounce" style={{ animationDelay: '1s' }} />
-                </motion.div>
-              </motion.div>
-              
-              {/* Hero Text - Mobile-First Typography */}
-              <motion.h1 
-                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-heading font-bold mb-4 text-foreground leading-tight px-2"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.3 }}
-              >
-                <span className="text-foreground font-semibold">
-                  Pentulaskuri
-                </span>
-              </motion.h1>
-              <motion.p 
-                className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground mb-6 font-body leading-relaxed max-w-2xl mx-auto px-2"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.5 }}
-              >
-                Seuraa koiranpentusi kasvua ja kehitystä helposti 🐾
-              </motion.p>
-              
-              {/* CTA Button - Mobile Optimized */}
-              <motion.div
-                className="mb-8"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.7 }}
-              >
-                <Link to="/weight-tracker">
-                  <motion.button 
-                    className="bg-gradient-primary text-white px-6 py-3 rounded-2xl text-base font-heading font-semibold shadow-playful hover:shadow-lg transform transition-all duration-200 flex items-center gap-2 mx-auto touch-target"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <FaPaw className="text-sm" />
-                    Aloita seuranta
-                  </motion.button>
-                </Link>
-              </motion.div>
-            </motion.div>
+    <motion.div
+      initial={{ scale: 0.8, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      transition={{ duration: 0.8 }}
+      className="relative mb-6 md:mb-8 w-full flex justify-center"
+    >
+      <img
+        src={heroPuppy}
+        alt="Adorable puppy"
+        className="w-32 h-32 md:w-48 md:h-48 lg:w-64 lg:h-64 rounded-full shadow-2xl object-cover"
+      />
+      <div className="absolute -top-2 -right-2 md:-top-4 md:-right-4 bg-yellow-400 text-white p-1 md:p-2 rounded-full animate-bounce">
+        <FaHeart className="w-4 h-4 md:w-6 md:h-6" />
+      </div>
+    </motion.div>
 
-            {/* Navigation Buttons - Below Hero on Mobile, Sides on Desktop */}
-            <div className="w-full">
-              {/* Mobile Navigation - Horizontal Grid */}
-              <motion.div 
-                className="grid grid-cols-2 sm:grid-cols-3 lg:hidden gap-3 max-w-md mx-auto"
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.9 }}
-              >
-                <Link to="/weight-tracker" className="touch-target">
-                  <motion.div 
-                    className="bg-primary/10 backdrop-blur-sm rounded-xl p-3 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-primary/20 hover:bg-primary/20"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <div className="text-center">
-                      <FaDog className="text-xl mb-2 text-primary mx-auto" />
-                      <h3 className="font-heading font-semibold text-xs text-primary">Painonseuranta</h3>
-                    </div>
-                  </motion.div>
-                </Link>
-                <Link to="/puppy-book" className="touch-target">
-                  <motion.div 
-                    className="bg-pink-100 backdrop-blur-sm rounded-xl p-3 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-pink-200 hover:bg-pink-200"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <div className="text-center">
-                      <FaBook className="text-xl mb-2 text-pink-600 mx-auto" />
-                      <h3 className="font-heading font-semibold text-xs text-pink-600">Pentukirja</h3>
-                    </div>
-                  </motion.div>
-                </Link>
-                <Link to="/calculator" className="touch-target">
-                  <motion.div 
-                    className="bg-primary/10 backdrop-blur-sm rounded-xl p-3 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-primary/20 hover:bg-primary/20"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <div className="text-center">
-                      <FaCalculator className="text-xl mb-2 text-primary mx-auto" />
-                      <h3 className="font-heading font-semibold text-xs text-primary">Laskuri</h3>
-                    </div>
-                  </motion.div>
-                </Link>
-                <div className="touch-target relative">
-                  <motion.div 
-                    className="bg-accent/10 backdrop-blur-sm rounded-xl p-3 shadow-md transition-all duration-300 cursor-not-allowed border border-accent/20 opacity-70"
-                    whileHover={{ scale: 1.02 }}
-                  >
-                    <div className="text-center relative">
-                      <FaBone className="text-xl mb-2 text-accent mx-auto" />
-                      <h3 className="font-heading font-semibold text-xs text-accent">Ruokinta</h3>
-                      <Badge variant="secondary" className="absolute -top-1 -right-1 text-[8px] px-1 py-0 h-3">
-                        Tulossa
-                      </Badge>
-                    </div>
-                  </motion.div>
-                </div>
-                <div className="touch-target relative">
-                  <motion.div 
-                    className="bg-accent/10 backdrop-blur-sm rounded-xl p-3 shadow-md transition-all duration-300 cursor-not-allowed border border-accent/20 opacity-70"
-                    whileHover={{ scale: 1.02 }}
-                  >
-                    <div className="text-center relative">
-                      <FaHeart className="text-xl mb-2 text-accent mx-auto" />
-                      <h3 className="font-heading font-semibold text-xs text-accent">Terveys</h3>
-                      <Badge variant="secondary" className="absolute -top-1 -right-1 text-[8px] px-1 py-0 h-3">
-                        Tulossa
-                      </Badge>
-                    </div>
-                  </motion.div>
-                </div>
-                <Link to="/info" className="touch-target">
-                  <motion.div 
-                    className="bg-secondary/10 backdrop-blur-sm rounded-xl p-3 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-secondary/20 hover:bg-secondary/20"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <div className="text-center">
-                      <FaInfoCircle className="text-xl mb-2 text-secondary-foreground mx-auto" />
-                      <h3 className="font-heading font-semibold text-xs text-secondary-foreground">Tietoa</h3>
-                    </div>
-                  </motion.div>
-                </Link>
-              </motion.div>
+    <motion.h1 
+      initial={{ y: 20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ delay: 0.2 }}
+      className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 bg-clip-text text-transparent mb-4 px-2 leading-tight"
+    >
+      Watch Your Puppy Thrive! 📈🐶
+    </motion.h1>
+    
+    <motion.p 
+      initial={{ y: 20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ delay: 0.4 }}
+      className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-700 mb-6 max-w-full mx-auto px-2 leading-relaxed"
+    >
+      Track weight, get AI-powered tips, and join 50,000+ happy puppy parents! 🎉
+    </motion.p>
 
-              {/* Desktop Navigation - Absolute Positioned Sides */}
-              <div className="hidden lg:block absolute inset-0 pointer-events-none">
-                {/* Left Navigation Buttons */}
-                <motion.div 
-                  className="absolute left-8 top-1/2 -translate-y-1/2 flex flex-col space-y-4 pointer-events-auto"
-                  initial={{ opacity: 0, x: -50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
-                >
-                  <Link to="/weight-tracker">
-                    <motion.div 
-                      className="bg-primary/10 backdrop-blur-sm rounded-full p-3 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-primary/20 hover:bg-primary/20"
-                      whileHover={{ scale: 1.1, rotateY: 5 }}
-                      whileTap={{ scale: 0.9 }}
-                    >
-                      <div className="text-center">
-                        <FaDog className="text-2xl mb-1 text-primary mx-auto" />
-                        <h3 className="font-heading font-semibold text-xs text-primary">Painonseuranta</h3>
-                      </div>
-                    </motion.div>
-                  </Link>
-                  <Link to="/puppy-book">
-                    <motion.div 
-                      className="bg-pink-100 backdrop-blur-sm rounded-full p-3 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-pink-200 hover:bg-pink-200"
-                      whileHover={{ scale: 1.1, rotateY: -5 }}
-                      whileTap={{ scale: 0.9 }}
-                    >
-                      <div className="text-center">
-                        <FaBook className="text-2xl mb-1 text-pink-600 mx-auto" />
-                        <h3 className="font-heading font-semibold text-xs text-pink-600">Pentukirja</h3>
-                      </div>
-                    </motion.div>
-                  </Link>
-                  <div className="relative">
-                    <motion.div 
-                      className="bg-accent/10 backdrop-blur-sm rounded-full p-3 shadow-md transition-all duration-300 cursor-not-allowed border border-accent/20 opacity-70"
-                      whileHover={{ scale: 1.05 }}
-                    >
-                      <div className="text-center relative">
-                        <FaBone className="text-2xl mb-1 text-accent mx-auto" />
-                        <h3 className="font-heading font-semibold text-xs text-accent">Ruokinta</h3>
-                        <Badge variant="secondary" className="absolute -top-2 -right-2 text-[8px] px-1 py-0 h-4">
-                          Tulossa
-                        </Badge>
-                      </div>
-                    </motion.div>
-                  </div>
-                </motion.div>
+    <motion.div
+      initial={{ y: 20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ delay: 0.6 }}
+      className="flex flex-col sm:flex-row gap-4 mb-8 w-full max-w-md mx-auto px-2"
+    >
+      <Link to="/weight-tracker" className="w-full sm:w-auto flex-1">
+        <motion.button 
+          className="bg-gradient-to-r from-pink-500 to-purple-600 text-white text-base md:text-xl px-6 py-3 md:px-12 md:py-6 rounded-full shadow-2xl hover:scale-105 transition-all duration-300 w-full sm:w-auto flex items-center justify-center gap-2"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <FaPaw className="w-4 h-4 md:w-6 md:h-6" />
+          <span className="truncate">Start Free Tracking</span>
+        </motion.button>
+      </Link>
+      <motion.button 
+        className="text-base md:text-xl px-4 py-3 md:px-8 md:py-6 rounded-full border-2 border-purple-300 hover:bg-purple-50 transition-all duration-300 w-full sm:w-auto flex items-center justify-center gap-2"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <FaCalculator className="w-4 h-4 md:w-6 md:h-6" />
+        <span className="truncate">Take Quiz</span>
+      </motion.button>
+    </motion.div>
 
-                {/* Right Navigation Buttons */}
-                <motion.div 
-                  className="absolute right-8 top-1/2 -translate-y-1/2 flex flex-col space-y-4 pointer-events-auto"
-                  initial={{ opacity: 0, x: 50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
-                >
-                  <Link to="/calculator">
-                    <motion.div 
-                      className="bg-primary/10 backdrop-blur-sm rounded-full p-3 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-primary/20 hover:bg-primary/20"
-                      whileHover={{ scale: 1.1, rotateY: -5 }}
-                      whileTap={{ scale: 0.9 }}
-                    >
-                      <div className="text-center">
-                        <FaCalculator className="text-2xl mb-1 text-primary mx-auto" />
-                        <h3 className="font-heading font-semibold text-xs text-primary">Laskuri</h3>
-                      </div>
-                    </motion.div>
-                  </Link>
-                  <div className="relative">
-                    <motion.div 
-                      className="bg-accent/10 backdrop-blur-sm rounded-full p-3 shadow-md transition-all duration-300 cursor-not-allowed border border-accent/20 opacity-70"
-                      whileHover={{ scale: 1.05 }}
-                    >
-                      <div className="text-center relative">
-                        <FaHeart className="text-2xl mb-1 text-accent mx-auto" />
-                        <h3 className="font-heading font-semibold text-xs text-accent">Terveys</h3>
-                        <Badge variant="secondary" className="absolute -top-2 -right-2 text-[8px] px-1 py-0 h-4">
-                          Tulossa
-                        </Badge>
-                      </div>
-                    </motion.div>
-                  </div>
-                  <Link to="/info">
-                    <motion.div 
-                      className="bg-secondary/10 backdrop-blur-sm rounded-full p-3 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border border-secondary/20 hover:bg-secondary/20"
-                      whileHover={{ scale: 1.1, rotateY: 5 }}
-                      whileTap={{ scale: 0.9 }}
-                    >
-                      <div className="text-center">
-                        <FaInfoCircle className="text-2xl mb-1 text-secondary-foreground mx-auto" />
-                        <h3 className="font-heading font-semibold text-xs text-secondary-foreground">Tietoa</h3>
-                      </div>
-                    </motion.div>
-                  </Link>
-                </motion.div>
-              </div>
-            </div>
-          </div>
+    <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-8 text-xs sm:text-sm text-gray-600 px-2">
+      <div className="flex items-center gap-2">
+        <div className="flex -space-x-1">
+          {[1,2,3,4,5].map((i) => (
+            <div key={i} className="w-6 h-6 md:w-8 md:h-8 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full border-2 border-white"></div>
+          ))}
         </div>
-      </section>
+        <span className="text-center">50,000+ happy puppy parents</span>
+      </div>
+      <div className="flex items-center gap-1">
+        {[1,2,3,4,5].map((i) => (
+          <div key={i} className="w-3 h-3 md:w-4 md:h-4 text-yellow-400">⭐</div>
+        ))}
+        <span>4.9/5 rating</span>
+      </div>
+    </div>
+  </div>
+</motion.section>
 
-      {/* Feature Cards Section - Mobile Optimized */}
-      <section className="py-8 md:py-12 lg:py-16 bg-white/50">
-        <div className="mobile-container">
-          <div className="text-center mb-6 md:mb-8 lg:mb-12">
-            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-heading font-bold mb-3 md:mb-4 text-foreground leading-tight px-2">
-              Kaikki tarvittava pennun hoitoon
-            </h2>
-            <p className="text-sm sm:text-base md:text-lg text-muted-foreground font-body max-w-2xl mx-auto leading-relaxed px-2">
-              Seuraa kasvua, laske ruokamäärät ja pidä huolta pennun terveydestä
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 w-full max-w-6xl mx-auto px-2">
-            {/* Feature Card 1 */}
-            <div className="bg-white rounded-2xl p-4 md:p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 w-full">
-              <div className="text-center">
-                <div className="text-2xl md:text-4xl mb-3 md:mb-4">🐕‍🦺</div>
-                <h3 className="font-heading font-semibold text-base md:text-lg mb-2 text-primary text-wrap">Kasvuseuranta</h3>
-                <p className="text-xs md:text-sm text-muted-foreground text-wrap">Seuraa pennun painon ja koon kehitystä helposti</p>
-              </div>
-            </div>
+{/* Korjattu Features Grid */}
+<section className="py-8 md:py-16 px-4 w-full max-w-full overflow-hidden">
+  <div className="text-center mb-8 md:mb-12 w-full">
+    <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 mb-4 px-2 leading-tight">
+      Why 50,000+ Puppy Parents Choose Us 🚀
+    </h2>
+    <p className="text-sm sm:text-base md:text-lg text-gray-600 max-w-full mx-auto px-2 leading-relaxed">
+      Join the viral movement of data-driven puppy care
+    </p>
+  </div>
 
-            {/* Feature Card 2 */}
-            <div className="bg-white rounded-2xl p-4 md:p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 w-full">
-              <div className="text-center">
-                <div className="text-2xl md:text-4xl mb-3 md:mb-4">🍖</div>
-                <h3 className="font-heading font-semibold text-base md:text-lg mb-2 text-accent text-wrap">Ruokamäärät</h3>
-                <p className="text-xs md:text-sm text-muted-foreground text-wrap">Laske optimaaliset ruokamäärät iän ja painon mukaan</p>
-              </div>
-            </div>
-
-            {/* Feature Card 3 */}
-            <div className="bg-white rounded-2xl p-4 md:p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 w-full">
-              <div className="text-center">
-                <div className="text-2xl md:text-4xl mb-3 md:mb-4">🩺</div>
-                <h3 className="font-heading font-semibold text-base md:text-lg mb-2 text-primary text-wrap">Terveys</h3>
-                <p className="text-xs md:text-sm text-muted-foreground text-wrap">Muistutukset rokotuksista ja terveystarkistuksista</p>
-              </div>
-            </div>
-
-            {/* Feature Card 4 */}
-            <div className="bg-white rounded-2xl p-4 md:p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 w-full">
-              <div className="text-center">
-                <div className="text-2xl md:text-4xl mb-3 md:mb-4">📲</div>
-                <h3 className="font-heading font-semibold text-base md:text-lg mb-2 text-accent text-wrap">Helppokäyttö</h3>
-                <p className="text-xs md:text-sm text-muted-foreground text-wrap">Yksinkertainen käyttöliittymä mobiilissa ja tietokoneella</p>
-              </div>
-            </div>
-          </div>
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 max-w-full mx-auto">
+    <motion.div whileHover={{ scale: 1.02 }} className="relative w-full">
+      <div className="p-4 md:p-8 rounded-3xl shadow-xl bg-gradient-to-br from-blue-50 to-purple-50 border-2 border-purple-100 w-full">
+        <div className="absolute -top-2 -right-2 md:-top-4 md:-right-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-white p-2 md:p-3 rounded-full">
+          <TrendingUp className="w-4 h-4 md:w-6 md:h-6" />
         </div>
-      </section>
+        <div className="text-center w-full">
+          <div className="text-4xl md:text-6xl mb-4">📈</div>
+          <h3 className="text-lg md:text-xl font-bold mb-3 text-gray-800 leading-tight">AI Growth Tracking</h3>
+          <p className="text-sm md:text-base text-gray-600 mb-4 leading-relaxed">Real-time growth charts with AI-powered insights and health alerts</p>
+          <Link to="/weight-tracker">
+            <motion.button 
+              className="border border-purple-300 text-purple-600 px-4 py-2 rounded-full w-full sm:w-auto hover:bg-purple-50 transition-all duration-300"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Try Demo
+            </motion.button>
+          </Link>
+        </div>
+      </div>
+    </motion.div>
+
+    <motion.div whileHover={{ scale: 1.02 }} className="relative w-full">
+      <div className="p-4 md:p-8 rounded-3xl shadow-xl bg-gradient-to-br from-green-50 to-blue-50 border-2 border-green-100 w-full">
+        <div className="absolute -top-2 -right-2 md:-top-4 md:-right-4 bg-gradient-to-r from-green-400 to-blue-500 text-white p-2 md:p-3 rounded-full">
+          <FaPaw className="w-4 h-4 md:w-6 md:h-6" />
+        </div>
+        <div className="text-center w-full">
+          <div className="text-4xl md:text-6xl mb-4">🍲</div>
+          <h3 className="text-lg md:text-xl font-bold mb-3 text-gray-800 leading-tight">Smart Food Calculator</h3>
+          <p className="text-sm md:text-base text-gray-600 mb-4 leading-relaxed">Personalized feeding recommendations based on breed, age, and growth</p>
+          <Link to="/calculator">
+            <motion.button 
+              className="border border-green-300 text-green-600 px-4 py-2 rounded-full w-full sm:w-auto hover:bg-green-50 transition-all duration-300"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Calculate Now
+            </motion.button>
+          </Link>
+        </div>
+      </div>
+    </motion.div>
+
+    <motion.div whileHover={{ scale: 1.02 }} className="relative w-full md:col-span-2 lg:col-span-1">
+      <div className="p-4 md:p-8 rounded-3xl shadow-xl bg-gradient-to-br from-pink-50 to-purple-50 border-2 border-pink-100 w-full">
+        <div className="absolute -top-2 -right-2 md:-top-4 md:-right-4 bg-gradient-to-r from-pink-400 to-purple-500 text-white p-2 md:p-3 rounded-full">
+          <Users className="w-4 h-4 md:w-6 md:h-6" />
+        </div>
+        <div className="text-center w-full">
+          <div className="text-4xl md:text-6xl mb-4">❤️</div>
+          <h3 className="text-lg md:text-xl font-bold mb-3 text-gray-800 leading-tight">Viral Community</h3>
+          <p className="text-sm md:text-base text-gray-600 mb-4 leading-relaxed">Share your puppy's journey and get support from 50K+ parents</p>
+          <Link to="/puppy-book">
+            <motion.button 
+              className="border border-pink-300 text-pink-600 px-4 py-2 rounded-full w-full sm:w-auto hover:bg-pink-50 transition-all duration-300"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Join Community
+            </motion.button>
+          </Link>
+        </div>
+      </div>
+    </motion.div>
+  </div>
+</section>
 
       <div className="mobile-container py-8 md:py-16">
         <FAQ items={faqs} />
