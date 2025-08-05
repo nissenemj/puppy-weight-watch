@@ -57,10 +57,13 @@ export const useAddWeightEntry = () => {
       }
     },
     onSuccess: (data, variables) => {
-      // Invalidate and refetch weight entries
+      // Invalidate and refetch weight entries with dog-specific keys
+      queryClient.invalidateQueries({ queryKey: ['weightEntries', variables.userId, variables.dogId] })
       queryClient.invalidateQueries({ queryKey: ['weightEntries', variables.userId] })
+      queryClient.invalidateQueries({ queryKey: ['latestWeightEntry', variables.userId, variables.dogId] })
       queryClient.invalidateQueries({ queryKey: ['latestWeightEntry', variables.userId] })
       
+      console.log('Weight entry saved for dog:', variables.dogId)
       toast.success('Painomittaus tallennettu onnistuneesti!')
     },
     onError: (error) => {
