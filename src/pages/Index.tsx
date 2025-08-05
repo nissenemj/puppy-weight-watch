@@ -201,7 +201,7 @@ const Index = () => {
           <TrendingUp className="w-4 h-4 md:w-6 md:h-6" />
         </div>
         <div className="text-center w-full">
-          <div className="text-4xl md:text-6xl mb-4">📈</div>
+          <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl mb-4">📈</div>
           <h3 className="text-lg md:text-xl font-bold mb-3 text-gray-800 leading-tight">AI Growth Tracking</h3>
           <p className="text-sm md:text-base text-gray-600 mb-4 leading-relaxed">Real-time growth charts with AI-powered insights and health alerts</p>
           <Link to="/weight-tracker">
@@ -223,7 +223,7 @@ const Index = () => {
           <FaPaw className="w-4 h-4 md:w-6 md:h-6" />
         </div>
         <div className="text-center w-full">
-          <div className="text-4xl md:text-6xl mb-4">🍲</div>
+          <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl mb-4">🍲</div>
           <h3 className="text-lg md:text-xl font-bold mb-3 text-gray-800 leading-tight">Smart Food Calculator</h3>
           <p className="text-sm md:text-base text-gray-600 mb-4 leading-relaxed">Personalized feeding recommendations based on breed, age, and growth</p>
           <Link to="/calculator">
@@ -245,7 +245,7 @@ const Index = () => {
           <Users className="w-4 h-4 md:w-6 md:h-6" />
         </div>
         <div className="text-center w-full">
-          <div className="text-4xl md:text-6xl mb-4">❤️</div>
+          <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl mb-4">❤️</div>
           <h3 className="text-lg md:text-xl font-bold mb-3 text-gray-800 leading-tight">Viral Community</h3>
           <p className="text-sm md:text-base text-gray-600 mb-4 leading-relaxed">Share your puppy's journey and get support from 50K+ parents</p>
           <Link to="/puppy-book">

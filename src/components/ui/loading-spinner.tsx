@@ -62,7 +62,7 @@ export function PuppyLoadingSpinner({ size = "md", className, text }: LoadingSpi
         <div className={cn(
           "text-4xl",
           size === "sm" && "text-2xl",
-          size === "lg" && "text-6xl"
+          size === "lg" && "text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl"
         )}>
           🐾
         </div>

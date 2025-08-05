@@ -169,7 +169,7 @@ export default function PuppyBookSelector({ user, selectedBookId, onBookSelect }
           if (book) onBookSelect(value, book);
         }}
       >
-        <SelectTrigger className="min-w-[200px]">
+                    <SelectTrigger className="min-w-[150px] sm:min-w-[200px]">
           <SelectValue placeholder="Valitse pentukirja" />
         </SelectTrigger>
         <SelectContent>

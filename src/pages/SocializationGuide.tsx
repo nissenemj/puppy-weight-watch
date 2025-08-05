@@ -46,7 +46,7 @@ const SocializationGuide = () => {
               className="w-32 h-32 sm:w-40 sm:h-40 object-contain"
             />
           </div>
-          <h1 className="text-4xl md:text-6xl font-heading font-bold text-foreground">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-heading font-bold text-foreground">
             🐕 Kattava opas pennun sosiaalistamiseen
           </h1>
           <h2 className="text-2xl md:text-3xl font-semibold text-primary mb-4">

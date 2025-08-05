@@ -365,7 +365,7 @@ export default function FeedingData() {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
           <div className="absolute bottom-8 left-0 right-0 text-center text-white">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4">Annostelutiedot</h1>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4">Annostelutiedot</h1>
             <p className="text-lg sm:text-xl text-white/90 max-w-2xl mx-auto px-4">
               Kattava tietokanta koiranruokien annostelutiedoista
             </p>

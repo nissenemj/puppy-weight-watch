@@ -78,7 +78,7 @@ const PuppyBookLanding: React.FC = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <h1 className="text-5xl lg:text-6xl font-playful font-bold text-gray-800 mb-6">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-playful font-bold text-gray-800 mb-6">
                 Pennun Ensimmäinen Vuosi 🐶
               </h1>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
@@ -153,7 +153,7 @@ const PuppyBookLanding: React.FC = () => {
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-playful font-bold text-gray-800 mb-4">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-playful font-bold text-gray-800 mb-4">
               Miksi pentukirja? ✨
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -196,7 +196,7 @@ const PuppyBookLanding: React.FC = () => {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <h2 className="text-4xl font-playful font-bold text-gray-800 mb-6">
+              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-playful font-bold text-gray-800 mb-6">
                 Seuraa pennun kasvua 📈
               </h2>
               <p className="text-lg text-gray-600 mb-8">
@@ -243,7 +243,7 @@ const PuppyBookLanding: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-4xl font-playful font-bold mb-6">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-playful font-bold mb-6">
               Aloita pennun tarinan kirjoittaminen tänään! 📖
             </h2>
             <p className="text-xl mb-8 max-w-2xl mx-auto opacity-90">

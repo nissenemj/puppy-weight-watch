@@ -114,7 +114,7 @@ const ShareTemplate: React.FC<{
   
   const templateStyles = {
     polaroid: (
-      <div className="w-[300px] h-[300px] bg-white p-4 shadow-xl rounded-lg">
+      <div className="w-full max-w-[300px] h-[300px] bg-white p-4 shadow-xl rounded-lg">
         <div className="bg-gradient-to-br from-amber-50 to-orange-100 h-full rounded-lg p-3 relative border-2 border-amber-200">
           {/* Photo */}
           <div className="w-full h-32 bg-white rounded-lg mb-2 overflow-hidden shadow-lg transform rotate-1">
@@ -146,7 +146,7 @@ const ShareTemplate: React.FC<{
     ),
     
     modern: (
-      <div className="w-[300px] h-[300px] bg-gradient-to-br from-slate-50 to-gray-100 p-0 overflow-hidden rounded-lg">
+      <div className="w-full max-w-[300px] h-[300px] bg-gradient-to-br from-slate-50 to-gray-100 p-0 overflow-hidden rounded-lg">
         {/* Header */}
         <div className="h-8 bg-slate-800 flex items-center justify-between px-3">
           <div className="flex items-center gap-1">
@@ -182,7 +182,7 @@ const ShareTemplate: React.FC<{
     ),
     
     playful: (
-      <div className="w-[300px] h-[300px] bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 p-4 relative overflow-hidden rounded-lg">
+      <div className="w-full max-w-[300px] h-[300px] bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 p-4 relative overflow-hidden rounded-lg">
         {/* Decorative elements */}
         <div className="absolute top-2 right-2 w-8 h-8 bg-pink-200 rounded-full opacity-50"></div>
         <div className="absolute bottom-4 left-4 w-6 h-6 bg-purple-200 rounded-full opacity-50"></div>
@@ -221,7 +221,7 @@ const ShareTemplate: React.FC<{
     ),
     
     adventure: (
-      <div className="w-[300px] h-[300px] bg-gradient-to-br from-green-50 to-emerald-100 p-4 relative rounded-lg">
+      <div className="w-full max-w-[300px] h-[300px] bg-gradient-to-br from-green-50 to-emerald-100 p-4 relative rounded-lg">
         {/* Main content */}
         <div className="relative z-10 h-full flex flex-col">
           {/* Bold title */}
@@ -264,7 +264,7 @@ const ShareTemplate: React.FC<{
     ),
     
     celebration: (
-      <div className="w-[300px] h-[300px] bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-100 p-4 relative overflow-hidden rounded-lg">
+      <div className="w-full max-w-[300px] h-[300px] bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-100 p-4 relative overflow-hidden rounded-lg">
         {/* Elegant decorative elements */}
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-violet-400 to-indigo-400"></div>
         
