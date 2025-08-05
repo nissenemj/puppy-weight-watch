@@ -1,8 +1,8 @@
 {
-  "name": "Pentulaskuri - Koiranpennun painon seuranta",
+  "name": "Pentulaskuri - Koiran Ruokinta & Kasvun Seuranta",
   "short_name": "Pentulaskuri",
-  "description": "Seuraa koiranpentusi kasvua ja laske sopiva ruokamäärä",
-  "start_url": "/",
+  "description": "Ammattimainen työkalu koiran ruokinnan laskemiseen ja kasvun seuraamiseen. Sisältää pentuviikon, sosiaalistamisen ja terveysseurannan.",
+  "start_url": "/?utm_source=pwa",
   "display": "standalone",
   "orientation": "portrait-primary",
   "theme_color": "#FF6B35",

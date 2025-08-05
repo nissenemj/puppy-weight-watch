@@ -1,15 +1,20 @@
-// Service Worker for Puppy Weight Tracker
-const CACHE_NAME = 'puppy-tracker-v1';
-const STATIC_CACHE = 'static-v1';
-const DYNAMIC_CACHE = 'dynamic-v1';
-const IMAGE_CACHE = 'images-v1';
+// Service Worker for Puppy Weight Tracker - Production Enhanced
+const CACHE_NAME = 'puppy-tracker-v2';
+const STATIC_CACHE = 'static-v2';
+const DYNAMIC_CACHE = 'dynamic-v2';
+const IMAGE_CACHE = 'images-v2';
+const API_CACHE = 'api-v2';
 
 // Static assets to cache immediately
 const STATIC_ASSETS = [
   '/',
   '/manifest.json',
   '/static/js/bundle.js',
-  '/static/css/main.css'
+  '/static/css/main.css',
+  '/calculator',
+  '/weight-tracker',
+  '/puppy-book',
+  '/feeding-data'
 ];
 
 // Install event - cache static assets
@@ -41,7 +46,8 @@ self.addEventListener('activate', (event) => {
         cacheNames.map(cacheName => {
           if (cacheName !== STATIC_CACHE && 
               cacheName !== DYNAMIC_CACHE && 
-              cacheName !== IMAGE_CACHE) {
+              cacheName !== IMAGE_CACHE &&
+              cacheName !== API_CACHE) {
             console.log('Deleting old cache:', cacheName);
             return caches.delete(cacheName);
           }

@@ -5,6 +5,7 @@ import { ThemeProvider } from './contexts/ThemeContext'
 import Router from './router'
 import './index.css'
 import './i18n'
+import { ProductionReadiness } from './components/ProductionReadiness'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -29,6 +30,19 @@ new VirtualKeyboardHandler()
 // Preload critical resources
 preloadCriticalResources()
 
+// Register service worker for production
+if ('serviceWorker' in navigator && import.meta.env.PROD) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then((registration) => {
+        console.log('SW registered: ', registration);
+      })
+      .catch((registrationError) => {
+        console.log('SW registration failed: ', registrationError);
+      });
+  });
+}
+
 // Start performance monitoring
 import { PerformanceMonitor } from './utils/LazyLoading'
 const performanceMonitor = PerformanceMonitor.getInstance()
@@ -39,6 +53,7 @@ createRoot(document.getElementById("root")!).render(
   <ThemeProvider>
     <QueryClientProvider client={queryClient}>
       <HelmetProvider>
+        <ProductionReadiness />
         <Router />
       </HelmetProvider>
     </QueryClientProvider>
