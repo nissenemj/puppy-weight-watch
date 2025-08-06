@@ -180,7 +180,47 @@ html, body {
 }
 
 @layer utilities {
-  /* Gradient background utilities with much darker colors for better contrast */
+  /* Modern Hellodani-inspired design utilities */
+  
+  /* Glassmorphism effects */
+  .glass {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+  
+  .glass-dark {
+    background: rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  /* 3D transforms and animations */
+  .float-animation {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .hover-3d {
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  
+  .hover-3d:hover {
+    transform: translateY(-8px) rotateX(5deg);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Organic gradients */
+  .bg-gradient-organic {
+    background: radial-gradient(circle at 30% 70%, #FF6B35 0%, #FFD23F 40%, #4A90E2 100%);
+  }
+  
+  .bg-gradient-hero {
+    background: radial-gradient(ellipse at center top, #FF6B35 0%, #FFD23F 50%, #f8f9ff 100%);
+  }
+  
   .bg-gradient-cool {
     background: linear-gradient(135deg, hsl(var(--chart-health)), hsl(var(--gradient-sky)));
   }
@@ -195,5 +235,107 @@ html, body {
   
   .bg-gradient-primary {
     background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+  }
+  
+  /* Micro-interaction utilities */
+  .btn-delightful {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-delightful::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.4s ease;
+  }
+  
+  .btn-delightful:active::before {
+    width: 300px;
+    height: 300px;
+  }
+  
+  /* Text effects */
+  .text-gradient {
+    background: linear-gradient(135deg, #FF6B35, #FFD23F);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  /* Bento grid layout */
+  .bento-grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-auto-rows: minmax(200px, auto);
+  }
+  
+  .bento-item {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+  }
+  
+  .bento-item:nth-child(1) {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+  
+  .bento-item:nth-child(2) {
+    grid-row: span 2;
+  }
+}
+
+/* Advanced animations */
+@keyframes float {
+  0%, 100% { 
+    transform: translateY(0px) rotateY(0deg); 
+  }
+  50% { 
+    transform: translateY(-20px) rotateY(5deg); 
+  }
+}
+
+@keyframes hologram-pulse {
+  0%, 100% { 
+    opacity: 0.3; 
+    transform: scale(1); 
+  }
+  50% { 
+    opacity: 0.7; 
+    transform: scale(1.05); 
+  }
+}
+
+@keyframes morph-cycle {
+  0% { border-radius: 50%; }
+  25% { border-radius: 20% 50% 30% 40%; }
+  50% { border-radius: 30% 20% 40% 50%; }
+  75% { border-radius: 40% 30% 50% 20%; }
+  100% { border-radius: 50%; }
+}
+
+/* Responsive adjustments for mobile */
+@media (max-width: 768px) {
+  .bento-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .bento-item:nth-child(1) {
+    grid-column: span 1;
+    grid-row: span 1;
+  }
+  
+  .glass {
+    backdrop-filter: blur(10px);
   }
 }

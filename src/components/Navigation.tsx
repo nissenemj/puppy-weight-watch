@@ -1,7 +1,7 @@
-
 import React, { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
+import { motion, AnimatePresence } from 'framer-motion'
 import { 
   Info, 
   Scale, 
@@ -13,339 +13,230 @@ import {
   UtensilsCrossed,
   Database,
   Book,
-  Calculator
+  Calculator,
+  Home,
+  ChartLine,
+  Sparkles
 } from '@/utils/iconImports'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu"
-import HeaderButtons from './HeaderButtons'
 
 const Navigation = () => {
   const location = useLocation()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
   
   const isActive = (path: string) => {
     if (path === '/') return location.pathname === '/'
     return location.pathname.startsWith(path)
   }
 
-  // Skip to content link
-  const SkipLink = () => (
-    <a 
-      href="#main-content"
-      className="skip-link fixed left-[-9999px] top-4 z-[2000] bg-primary text-primary-foreground px-4 py-2 rounded focus:left-4 transition-all duration-300"
-    >
-      Siirry suoraan sisältöön
-    </a>
-  )
-
-  // Additional features navigation items (excluding main buttons)
-  const additionalNavItems = [
-    { href: '/calculator', icon: Calculator, label: 'Pentulaskuri', description: 'Laske ruokamäärät' },
-    { 
-      href: '/info', 
-      icon: Info, 
-      label: 'Oppaat', 
-      description: 'Hyödyllistä tietoa',
-      group: 'Tietosivu'
-    },
-    { 
-      href: '/info/puppy-guide', 
-      icon: Dog, 
-      label: 'Penturuokinta', 
-      description: 'Ruokintaohjeet',
-      group: 'Tietosivu'
-    },
-    { 
-      href: '/info/safety', 
-      icon: ShieldCheck, 
-      label: 'Turvallisuus', 
-      description: 'Turvallisuusvinkkejä',
-      group: 'Tietosivu'
-    },
-    { 
-      href: '/info/food-types', 
-      icon: UtensilsCrossed, 
-      label: 'Ruokatyypit', 
-      description: 'Ruokatietokanta',
-      group: 'Tietosivu'
-    },
-    { 
-      href: '/info/feeding-data', 
-      icon: Database, 
-      label: 'Ruokinta-tiedot', 
-      description: 'Ruokintasuositukset',
-      group: 'Tietosivu'
-    }
-  ]
-
-
-
-  // Mobile menu effect
+  // Handle scroll effect
   useEffect(() => {
-    if (isMobileMenuOpen) {
-      document.body.style.overflow = 'hidden'
-      document.body.classList.add('menu-open')
-    } else {
-      document.body.style.overflow = ''
-      document.body.classList.remove('menu-open')
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 50
+      setScrolled(isScrolled)
     }
-    return () => {
-      document.body.style.overflow = ''
-      document.body.classList.remove('menu-open')
-    }
-  }, [isMobileMenuOpen])
 
-  const closeMobileMenu = () => {
-    setIsMobileMenuOpen(false)
-  }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
-  const NavLink = ({ item, className = "" }: { 
-    item: typeof additionalNavItems[0], 
-    className?: string 
-  }) => {
-    const active = isActive(item.href)
-    return (
-      <Link
-        to={item.href}
-        className={`
-          nav-link relative inline-flex items-center px-4 py-3 text-sm font-medium 
-          transition-all duration-200 rounded-lg hover:scale-105 active:scale-95
-          ${active 
-            ? 'text-primary bg-primary/10 font-semibold' 
-            : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
-          }
-          ${className}
-        `}
-        aria-current={active ? 'page' : undefined}
-        onClick={closeMobileMenu}
-      >
-        <item.icon className="mr-2 h-4 w-4" />
-        <div className="flex flex-col items-start">
-          <span>{item.label}</span>
-          {item.description && (
-            <span className="text-xs text-muted-foreground">{item.description}</span>
-          )}
-        </div>
-        {active && (
-          <span className="absolute bottom-0 left-2 right-2 h-0.5 bg-primary rounded-full" />
-        )}
-      </Link>
-    )
-  }
+  // Navigation items
+  const navItems = [
+    { href: '/', icon: Home, label: 'Koti' },
+    { href: '/weight-tracker', icon: Scale, label: 'Paino' },
+    { href: '/calculator', icon: Calculator, label: 'Laskuri' },
+    { href: '/puppy-book', icon: Book, label: 'Kirja' },
+    { href: '/info', icon: Info, label: 'Info' }
+  ]
 
   return (
     <>
-      <SkipLink />
-      <header className="site-header sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-lg">
-        <div className="container flex h-16 items-center justify-between">
-          {/* Logo */}
-          <Link 
-            to="/" 
-            className="flex items-center space-x-2 font-bold text-lg hover:opacity-80 transition-opacity"
-          >
-            <Dog className="h-6 w-6 text-primary" />
-            <span className="hidden sm:inline-block">Pentulaskuri</span>
-          </Link>
-
-          {/* Main Action Buttons (Center) */}
-          <HeaderButtons />
-
-          {/* Additional Features Navigator (Desktop) */}
-          <nav 
-            className="hidden md:flex" 
-            aria-label="Lisäominaisuudet"
-          >
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  size="sm"
-                  className="px-4 py-2 font-medium"
-                  aria-label="Avaa lisäominaisuudet"
-                  aria-haspopup="true"
-                >
-                  <MoreHorizontal className="h-4 w-4 mr-2" />
-                  Lisäominaisuudet
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent 
-                align="end"
-                className="min-w-72 bg-background/95 backdrop-blur-lg z-[100] border-border/50"
-                sideOffset={8}
-              >
-                {/* Group items */}
-                <div className="px-2 py-1.5">
-                  <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
-                    Laskurit
-                  </div>
-                  <DropdownMenuItem asChild>
-                    <Link 
-                      to="/calculator"
-                      className="flex items-start gap-3 p-3 rounded-md"
-                    >
-                      <Calculator className="h-4 w-4 mt-0.5 text-primary" />
-                      <div>
-                        <div className="font-medium">Pentulaskuri</div>
-                        <div className="text-xs text-muted-foreground">Laske ruokamäärät</div>
-                      </div>
-                    </Link>
-                  </DropdownMenuItem>
-                </div>
-                
-                <DropdownMenuSeparator />
-                
-                <div className="px-2 py-1.5">
-                  <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
-                    Tietosivut
-                  </div>
-                  {additionalNavItems
-                    .filter(item => item.group === 'Tietosivu')
-                    .map(item => (
-                      <DropdownMenuItem key={item.href} asChild>
-                        <Link 
-                          to={item.href}
-                          className="flex items-start gap-3 p-3 rounded-md"
-                        >
-                          <item.icon className="h-4 w-4 mt-0.5 text-primary" />
-                          <div>
-                            <div className="font-medium">{item.label}</div>
-                            <div className="text-xs text-muted-foreground">{item.description}</div>
-                          </div>
-                        </Link>
-                      </DropdownMenuItem>
-                    ))}
-                </div>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </nav>
-
-          {/* Mobile Menu */}
-          <div className="flex items-center gap-2">
-            {/* Mobile Menu Button */}
-            <Button
-              variant="ghost"
-              size="sm"
-              className="p-2 md:hidden"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              aria-label="Avaa navigointivalikko"
-              aria-expanded={isMobileMenuOpen}
-            >
-              {isMobileMenuOpen ? (
-                <X className="h-5 w-5" />
-              ) : (
-                <Menu className="h-5 w-5" />
-              )}
-            </Button>
-          </div>
-        </div>
-      </header>
-
-      {/* Mobile Off-Canvas Menu */}
-      <div 
-        className={`fixed inset-0 z-[60] md:hidden transition-all duration-300 ease-in-out ${
-          isMobileMenuOpen ? 'visible' : 'invisible'
-        }`}
-        aria-hidden={!isMobileMenuOpen}
+      {/* Skip to content link */}
+      <a 
+        href="#main-content"
+        className="skip-link fixed left-[-9999px] top-4 z-[2000] glass px-4 py-2 rounded-xl focus:left-4 transition-all duration-300 text-gray-800 font-medium"
       >
-        {/* Backdrop */}
-        <div 
-          className={`absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${
-            isMobileMenuOpen ? 'opacity-100' : 'opacity-0'
-          }`}
-          onClick={closeMobileMenu}
-        />
-        
-        {/* Off-canvas panel */}
-        <div 
-          className={`absolute left-0 top-0 h-full w-80 bg-background border-r shadow-xl transition-transform duration-300 ease-in-out ${
-            isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}
-        >
-          {/* Mobile menu header */}
-          <div className="flex items-center justify-between px-6 py-4 border-b">
-            <div className="flex items-center gap-2">
-              <Dog className="h-5 w-5 text-primary" />
-              <span className="font-bold text-lg">Pentulaskuri</span>
-            </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={closeMobileMenu}
-              className="p-2"
-              aria-label="Sulje valikko"
-            >
-              <X className="h-5 w-5" />
-            </Button>
-          </div>
-          
-           {/* Mobile navigation items */}
-           <nav 
-             className="px-6 py-4 space-y-3"
-             aria-label="Mobiilinavigaatio"
-           >
-             {/* Main features first */}
-             <div className="space-y-2">
-               <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-                 Pääominaisuudet
-               </div>
-               <Link
-                 to="/puppy-book"
-                 className={`
-                   flex items-center gap-3 px-4 py-4 rounded-lg font-medium transition-all duration-200
-                   ${isActive('/puppy-book') 
-                     ? 'text-primary bg-primary/10 font-semibold' 
-                     : 'text-foreground hover:bg-accent/50'
-                   }
-                 `}
-                 onClick={closeMobileMenu}
-                 aria-current={isActive('/puppy-book') ? 'page' : undefined}
-               >
-                 <Book className="h-5 w-5" />
-                 Pentukirja
-               </Link>
-                <Link
-                  to="/"
-                  className={`
-                    flex items-center gap-3 px-4 py-4 rounded-lg font-medium transition-all duration-200
-                    ${isActive('/') 
-                      ? 'text-primary bg-primary/10 font-semibold' 
-                      : 'text-foreground hover:bg-accent/50'
-                    }
-                  `}
-                  onClick={closeMobileMenu}
-                  aria-current={isActive('/') ? 'page' : undefined}
-                >
-                  <Scale className="h-5 w-5" />
-                  Painonseuranta
-                </Link>
-             </div>
+        Siirry suoraan sisältöön
+      </a>
 
-             {/* Additional features */}
-             <div className="space-y-2 pt-4 border-t border-border/30">
-               <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-                 Lisäominaisuudet
-               </div>
-               {additionalNavItems.map((item) => (
-                 <NavLink 
-                   key={item.href}
-                   item={item} 
-                   className="w-full justify-start text-base py-3 px-4 hover:translate-x-1"
-                 />
-               ))}
-             </div>
-           </nav>
+      {/* Floating Navigation */}
+      <motion.nav
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-500 ${
+          scrolled ? 'top-2 scale-95' : 'top-4'
+        }`}
+      >
+        <div className="glass rounded-full px-2 py-2 shadow-lg">
+          <div className="flex items-center gap-1">
+            {/* Logo */}
+            <Link 
+              to="/" 
+              className="flex items-center gap-2 px-4 py-2 rounded-full hover:bg-white/20 transition-all duration-300"
+            >
+              <motion.div
+                animate={{ rotate: [0, 10, -10, 0] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                className="w-8 h-8 bg-gradient-primary rounded-full flex items-center justify-center"
+              >
+                <Dog className="w-4 h-4 text-white" />
+              </motion.div>
+              <span className="hidden sm:block font-bold text-gray-800">Pentulaskuri</span>
+            </Link>
+
+            <div className="w-px h-6 bg-white/30 mx-2 hidden sm:block"></div>
+
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center gap-1">
+              {navItems.slice(1).map((item) => {
+                const Icon = item.icon
+                return (
+                  <Link
+                    key={item.href}
+                    to={item.href}
+                    className={`relative px-4 py-2 rounded-full font-medium text-sm transition-all duration-300 flex items-center gap-2 hover-3d ${
+                      isActive(item.href)
+                        ? 'bg-gradient-primary text-white shadow-lg'
+                        : 'text-gray-700 hover:bg-white/20'
+                    }`}
+                  >
+                    <Icon className="w-4 h-4" />
+                    <span>{item.label}</span>
+                    
+                    {isActive(item.href) && (
+                      <motion.div
+                        layoutId="activeNavItem"
+                        className="absolute inset-0 bg-gradient-primary rounded-full -z-10"
+                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                      />
+                    )}
+                  </Link>
+                )
+              })}
+            </div>
+
+            {/* Mobile Menu Button */}
+            <div className="md:hidden">
+              <motion.button
+                onClick={() => setIsMobileMenuOpen(true)}
+                className="p-2 rounded-full hover:bg-white/20 transition-all duration-300"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Menu className="w-5 h-5 text-gray-700" />
+              </motion.button>
+            </div>
+          </div>
         </div>
-      </div>
-      
-      {/* Main content wrapper */}
-      <main id="main-content" className="focus:outline-none" tabIndex={-1}>
-        {/* Content will be rendered by routes */}
-      </main>
+      </motion.nav>
+
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100]"
+              onClick={() => setIsMobileMenuOpen(false)}
+            />
+
+            {/* Mobile Menu */}
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="fixed top-0 right-0 h-full w-80 max-w-[90vw] glass-dark z-[101] p-6"
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-gradient-primary rounded-full flex items-center justify-center">
+                    <Dog className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-white text-lg">Pentulaskuri</h3>
+                    <p className="text-white/70 text-sm">Koiran kasvun seuranta</p>
+                  </div>
+                </div>
+                
+                <motion.button
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="p-2 rounded-full hover:bg-white/10 transition-all duration-300"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <X className="w-5 h-5 text-white" />
+                </motion.button>
+              </div>
+
+              {/* Navigation Items */}
+              <div className="space-y-2">
+                {navItems.map((item, index) => {
+                  const Icon = item.icon
+                  return (
+                    <motion.div
+                      key={item.href}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      <Link
+                        to={item.href}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className={`w-full flex items-center gap-4 p-4 rounded-2xl font-medium transition-all duration-300 ${
+                          isActive(item.href)
+                            ? 'bg-gradient-primary text-white shadow-lg'
+                            : 'text-white/80 hover:bg-white/10'
+                        }`}
+                      >
+                        <Icon className="w-5 h-5" />
+                        <span className="text-lg">{item.label}</span>
+                        
+                        {isActive(item.href) && (
+                          <motion.div
+                            className="ml-auto flex items-center gap-1"
+                            animate={{ scale: [1, 1.2, 1] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                          >
+                            <Sparkles className="w-4 h-4" />
+                          </motion.div>
+                        )}
+                      </Link>
+                    </motion.div>
+                  )
+                })}
+              </div>
+
+              {/* Footer */}
+              <div className="absolute bottom-6 left-6 right-6">
+                <div className="glass-dark rounded-2xl p-4 text-center">
+                  <p className="text-white/70 text-sm">
+                    Modernilla designilla
+                  </p>
+                  <p className="text-white font-medium">
+                    Hellodani.co-inspiraatio
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Mobile body lock */}
+      {isMobileMenuOpen && (
+        <style jsx>{`
+          body {
+            overflow: hidden;
+          }
+        `}</style>
+      )}
     </>
   )
 }
