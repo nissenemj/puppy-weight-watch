@@ -1,3 +1,4 @@
+import React from 'react'
 import Navigation from '@/components/Navigation'
 import SEO from '@/components/SEO'
 import FAQ from '@/components/FAQ'
@@ -236,9 +237,6 @@ const Index = () => {
         <span>Yli 10,000 tyytyväistä käyttäjää</span>
       </div>
     </motion.div>
-  </div>
-</motion.section>
-    </div>
   </div>
 </motion.section>
 
