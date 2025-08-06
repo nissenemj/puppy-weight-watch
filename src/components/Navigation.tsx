@@ -15,9 +15,9 @@ import {
   Book,
   Calculator,
   Home,
-  ChartLine,
-  Sparkles
+  ChartLine
 } from '@/utils/iconImports'
+import { Sparkles } from 'lucide-react'
 
 const Navigation = () => {
   const location = useLocation()

@@ -6,7 +6,7 @@ import { createWebApplicationSchema, createWeightTrackingSchema, createFAQSchema
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { FaPaw, FaDog, FaBone, FaHeart, FaChartLine, FaCalculator, FaBook, FaInfoCircle } from 'react-icons/fa'
-import { Bell, TrendingUp, Users, Award } from 'lucide-react'
+import { Bell, TrendingUp, Users, Award, ChartLine } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import heroPuppy from '@/assets/hero-puppy.png'
 import growthStages from '@/assets/growth-stages.png'
