@@ -15,7 +15,7 @@ import {
   Book,
   Calculator,
   Home,
-  ChartLine
+  TrendingUp
 } from '@/utils/iconImports'
 import { Sparkles } from 'lucide-react'
 
@@ -231,7 +231,7 @@ const Navigation = () => {
 
       {/* Mobile body lock */}
       {isMobileMenuOpen && (
-        <style jsx>{`
+        <style>{`
           body {
             overflow: hidden;
           }
