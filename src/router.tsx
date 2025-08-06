@@ -1,5 +1,4 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { MobileOptimizations } from '@/components/MobileOptimizations';
 import MobileOptimizationMonitor from '@/components/MobileOptimizationMonitor';
 
 // Pages
@@ -79,9 +78,9 @@ const router = createBrowserRouter([
 
 export default function Router() {
   return (
-    <MobileOptimizations>
+    <>
       <RouterProvider router={router} />
       <MobileOptimizationMonitor showScoreOnly />
-    </MobileOptimizations>
+    </>
   );
 }
