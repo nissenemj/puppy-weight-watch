@@ -7,7 +7,7 @@ import { createWebApplicationSchema, createWeightTrackingSchema, createFAQSchema
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { FaPaw, FaDog, FaBone, FaHeart, FaChartLine, FaCalculator, FaBook, FaInfoCircle } from 'react-icons/fa'
-import { Bell, TrendingUp, Users, Award, ChartLine } from 'lucide-react'
+import { Bell, TrendingUp, Users, Award, ChartLine, Calculator } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import heroPuppy from '@/assets/hero-puppy.png'
 import growthStages from '@/assets/growth-stages.png'
@@ -428,10 +428,6 @@ const Index = () => {
     </div>
   </div>
 </section>
-      </div>
-    </motion.div>
-  </div>
-</section>
 
 {/* Modern FAQ Section */}
 <section className="py-20 px-4 bg-gray-50/50">
@@ -507,7 +503,7 @@ const Index = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.98 }}
           >
-            <Calculator className="w-6 h-6" />
+            <FaCalculator className="w-6 h-6" />
             Kokeile ruokalaskuria
           </motion.button>
         </Link>
