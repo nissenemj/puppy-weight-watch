@@ -1,6 +1,5 @@
 import React from 'react'
 import Navigation from '@/components/Navigation'
-import HeaderButtons from '@/components/HeaderButtons'
 import EnhancedPuppyCalculator from '@/components/EnhancedPuppyCalculator'
 import SEO from '@/components/SEO'
 import FAQ from '@/components/FAQ'
@@ -57,18 +56,14 @@ const Calculator = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background page-with-navigation">
       <SEO
         title="Pentulaskuri - Ruokamäärä"
         description="Laske koiranpentusi optimaalinen päivittäinen ruokamäärä. Huomioi rodun, iän, painon ja aktiivisuuden. Käytä virallisia annostelutaulukoita."
         keywords="pentulaskuri, ruokalaskuri, koiranpennun ruokinta, annostelu, ruokamäärä, penturuoka"
         structuredData={structuredData}
       />
-      <div className="bg-white/90 backdrop-blur-md border-b border-gray-200/50 p-4 sticky top-0 z-40">
-        <div className="max-w-6xl mx-auto">
-          <HeaderButtons showLogo={true} logoText="Pentulaskuri" />
-        </div>
-      </div>
+      <Navigation />
       
       <div className="container mx-auto px-4 py-8">
         <Breadcrumb items={breadcrumbItems} />

@@ -1,7 +1,7 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { format } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 import type { WeightEntry } from '@/services/weightService'
 
 interface WeightChartProps {
@@ -10,6 +10,7 @@ interface WeightChartProps {
 
 interface ChartDataPoint {
   date: string
+  timestamp: number
   dateFormatted: string
   actualWeight: number
   avgGrowthLine: number
@@ -50,15 +51,18 @@ export default function WeightChart({ weightData }: WeightChartProps) {
   
   console.log('Weekly growth calculated:', weeklyGrowth)
   
-  // Create chart data with predictions
+  // Create chart data with proper time scale
   const chartData: ChartDataPoint[] = sortedData.map((entry, index) => {
     const baseWeight = sortedData[0].weight
-    const daysFromStart = (new Date(entry.date).getTime() - new Date(sortedData[0].date).getTime()) / (1000 * 60 * 60 * 24)
+    const entryDate = parseISO(entry.date)
+    const startDate = parseISO(sortedData[0].date)
+    const daysFromStart = (entryDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
     const avgWeight = baseWeight + (weeklyGrowth * daysFromStart / 7)
     
     return {
       date: entry.date,
-      dateFormatted: format(new Date(entry.date), 'dd.MM'),
+      timestamp: entryDate.getTime(),
+      dateFormatted: format(entryDate, 'dd.MM'),
       actualWeight: entry.weight,
       avgGrowthLine: Math.round(avgWeight * 100) / 100
     }
@@ -105,7 +109,11 @@ export default function WeightChart({ weightData }: WeightChartProps) {
             >
               <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
               <XAxis 
-                dataKey="dateFormatted" 
+                dataKey="timestamp" 
+                type="number"
+                scale="time"
+                domain={['dataMin', 'dataMax']}
+                tickFormatter={(value) => format(new Date(value), 'dd.MM')}
                 fontSize={12}
                 tickMargin={8}
               />
@@ -115,7 +123,7 @@ export default function WeightChart({ weightData }: WeightChartProps) {
                 tickFormatter={(value) => `${value} kg`}
               />
               <Tooltip 
-                labelFormatter={(label) => `Päivämäärä: ${label}`}
+                labelFormatter={(label) => `Päivämäärä: ${format(new Date(Number(label)), 'dd.MM.yyyy')}`}
                 formatter={(value: number, name: string) => [
                   `${value} kg`, 
                   name === 'actualWeight' ? 'Mitattu paino' : 'Keskikasvu'

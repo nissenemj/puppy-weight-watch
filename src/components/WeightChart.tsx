@@ -10,6 +10,7 @@ interface WeightChartProps {
 
 interface ChartDataPoint {
   date: string
+  timestamp: number
   dateFormatted: string
   actualWeight?: number
   avgGrowthLine?: number
@@ -57,6 +58,7 @@ export default function WeightChart({ weightData }: WeightChartProps) {
       const date = parseISO(entry.date)
       chartData.push({
         date: entry.date,
+        timestamp: date.getTime(),
         dateFormatted: format(date, 'dd.MM', { locale: fi }),
         actualWeight: entry.weight,
         avgGrowthLine: firstEntry.weight + (weeklyGrowth * ((date.getTime() - firstDate.getTime()) / (1000 * 60 * 60 * 24 * 7)))
@@ -74,7 +76,7 @@ export default function WeightChart({ weightData }: WeightChartProps) {
     if (active && payload && payload.length) {
       return (
         <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
-          <p className="font-medium">{`${label}`}</p>
+          <p className="font-medium">{`Päivämäärä: ${format(new Date(Number(label)), 'dd.MM.yyyy', { locale: fi })}`}</p>
           {payload.map((entry: any, index: number) => (
             <p key={index} style={{ color: entry.color }} className="text-sm">
               {entry.dataKey === 'actualWeight' && `Mitattu paino: ${entry.value?.toFixed(1)} kg`}
@@ -95,7 +97,11 @@ export default function WeightChart({ weightData }: WeightChartProps) {
         <LineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
           <XAxis 
-            dataKey="dateFormatted" 
+            dataKey="timestamp" 
+            type="number"
+            scale="time"
+            domain={['dataMin', 'dataMax']}
+            tickFormatter={(value) => format(new Date(value), 'dd.MM', { locale: fi })}
             stroke="#666"
             fontSize={12}
           />

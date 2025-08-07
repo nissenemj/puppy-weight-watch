@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Search, Filter, Database, AlertCircle, Plus, Edit, Save, X, Trash2, RefreshCw } from 'lucide-react'
-import InfoNavigation from '@/components/InfoNavigation'
+import Navigation from '@/components/Navigation'
 import DosageImagesSection from '@/components/DosageImagesSection'
 import GeneralDosageSection from '@/components/GeneralDosageSection'
 import FoodAnalysisView from '@/components/FoodAnalysisView'
@@ -339,8 +339,8 @@ export default function FeedingData() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 pt-14">
-        <InfoNavigation />
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 page-with-navigation">
+        <Navigation />
         <div className="container mx-auto px-4 py-8">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
@@ -352,8 +352,8 @@ export default function FeedingData() {
   }
 
   return (
-    <div className="min-h-screen bg-background pt-14 w-full overflow-x-hidden">
-      <InfoNavigation />
+    <div className="min-h-screen bg-background page-with-navigation w-full overflow-x-hidden">
+      <Navigation />
       
       <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-full min-w-0">
         {/* Hero Section - Jumbo */}

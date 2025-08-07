@@ -1,11 +1,11 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'app.lovable.3219ec707c284d36bf27bfe4d9c39c8b',
+  appId: 'com.pentulaskuri.app',
   appName: 'Pentulaskuri',
   webDir: 'dist',
   server: {
-    url: 'https://3219ec70-7c28-4d36-bf27-bfe4d9c39c8b.lovableproject.com?forceHideBadge=true',
+    url: 'http://localhost:8082',
     cleartext: true
   },
   plugins: {

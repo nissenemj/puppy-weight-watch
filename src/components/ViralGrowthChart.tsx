@@ -168,7 +168,7 @@ export const ViralGrowthChart: React.FC<ViralGrowthChartProps> = ({
             Share Your Puppy's Progress! 🚀
           </motion.button>
           <p className="text-gray-600 text-sm">
-            Join 10,000+ puppy parents tracking their fur babies' growth! 💕
+            Seuraa koirasi kasvua helposti ammattimaisilla työkaluilla! 💕
           </p>
         </div>
       </Card>

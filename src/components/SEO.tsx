@@ -15,7 +15,7 @@ const SEO: React.FC<SEOProps> = ({
   title = 'Koiranpennun Painonseuranta',
   description = 'Seuraa koiranpentusi kasvua ja kehitystä helposti. Laskuri ruokamäärille, painoseuranta ja annostelutaulukot.',
   keywords = 'koiranpentu, painonseuranta, ruokalaskuri, pentulaskuri, koiran kasvu, ruokinta, annostelu',
-  image = 'https://lovable.dev/opengraph-image-p98pqg.png',
+  image = '/icons/icon-512x512.png',
   url = window.location.href,
   type = 'website',
   structuredData

@@ -3,6 +3,8 @@ import Navigation from '@/components/Navigation'
 import SEO from '@/components/SEO'
 import FAQ from '@/components/FAQ'
 import ImageOptimized from '@/components/ImageOptimized'
+import ContactForm from '@/components/ContactForm'
+import MobileOptimizationWrapper from '@/components/MobileOptimizationWrapper'
 import { createWebApplicationSchema, createWeightTrackingSchema, createFAQSchema } from '@/utils/structuredData'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -71,8 +73,9 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-hero prevent-overflow relative overflow-hidden">
-      <SEO
+    <MobileOptimizationWrapper>
+      <div className="min-h-screen bg-gradient-hero prevent-overflow mobile-optimized relative overflow-hidden">
+        <SEO
         title="Pentulaskuri - Koiran Kasvun & Ruokinnan Seuranta"
         description="Moderni ja helppokäyttöinen sovellus koiran kasvun seuraamiseen. Seuraa painoa, ruokintaa ja kehitystä ammattimaisilla työkaluilla. Ilmainen käyttö."
         keywords="pentulaskuri, koiranpentu, painonseuranta, koiran kasvu, ruokinta, annostelu, kasvukäyrä, pentu-sovellus, moderni"
@@ -93,25 +96,9 @@ const Index = () => {
 <motion.section 
   initial={{ opacity: 0 }} 
   animate={{ opacity: 1 }} 
-  className="relative min-h-screen flex items-center justify-center px-4 py-20"
+  className="relative min-h-screen flex items-center justify-center px-4 pt-24 sm:pt-32 pb-20"
 >
   <div className="container mx-auto text-center relative z-10">
-    {/* Floating status badges */}
-    <motion.div
-      initial={{ y: -20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ delay: 0.1 }}
-      className="flex flex-wrap justify-center gap-3 mb-8"
-    >
-      <div className="glass rounded-full px-4 py-2 flex items-center gap-2">
-        <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-        <span className="text-sm font-medium text-gray-700">Yli 10,000 käyttäjää</span>
-      </div>
-      <div className="glass rounded-full px-4 py-2 flex items-center gap-2">
-        <Award className="w-4 h-4 text-orange-500" />
-        <span className="text-sm font-medium text-gray-700">Suomen suosituin</span>
-      </div>
-    </motion.div>
 
     {/* 3D Hero Image with holographic elements */}
     <motion.div
@@ -169,7 +156,7 @@ const Index = () => {
     >
       <span className="text-gradient">Koirasi kasvu</span>
       <br />
-      <span className="text-gray-800">ammattimaisesti</span>
+      <span className="text-gray-900">ammattimaisesti</span>
     </motion.h1>
     
     {/* Subtitle */}
@@ -177,7 +164,7 @@ const Index = () => {
       initial={{ y: 20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ delay: 0.6 }}
-      className="text-lg sm:text-xl md:text-2xl text-gray-600 mb-10 max-w-3xl mx-auto leading-relaxed"
+      className="text-lg sm:text-xl md:text-2xl text-gray-700 mb-10 max-w-3xl mx-auto leading-relaxed"
     >
       Seuraa pennun kasvua, ruokintaa ja kehitystä modernilla sovelluksella. 
       <br className="hidden sm:block" />
@@ -193,7 +180,7 @@ const Index = () => {
     >
       <Link to="/weight-tracker">
         <motion.button 
-          className="btn-delightful bg-gradient-primary text-white px-8 py-4 rounded-2xl font-semibold text-lg shadow-xl hover-3d flex items-center gap-3"
+          className="btn-delightful bg-gradient-primary text-white px-8 py-4 rounded-2xl font-semibold text-lg shadow-xl hover-3d flex items-center gap-3 mobile-touch-target mobile-font-size"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.98 }}
         >
@@ -204,7 +191,7 @@ const Index = () => {
       
       <Link to="/calculator">
         <motion.button 
-          className="glass px-8 py-4 rounded-2xl font-semibold text-lg hover-3d flex items-center gap-3 text-gray-700"
+          className="glass px-8 py-4 rounded-2xl font-semibold text-lg hover-3d flex items-center gap-3 text-gray-700 mobile-touch-target mobile-font-size"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.98 }}
         >
@@ -222,19 +209,8 @@ const Index = () => {
       className="flex flex-col sm:flex-row items-center justify-center gap-6 text-gray-600"
     >
       <div className="flex items-center gap-2">
-        <div className="flex">
-          {[1,2,3,4,5].map((i) => (
-            <div key={i} className="text-yellow-400 text-xl">★</div>
-          ))}
-        </div>
-        <span className="font-medium">4.9/5 tähteä</span>
-      </div>
-      
-      <div className="w-px h-6 bg-gray-300 hidden sm:block"></div>
-      
-      <div className="flex items-center gap-2">
-        <Users className="w-5 h-5 text-gray-500" />
-        <span>Yli 10,000 tyytyväistä käyttäjää</span>
+        <TrendingUp className="w-5 h-5 text-green-500" />
+        <span>Täysin ilmainen käyttö</span>
       </div>
     </motion.div>
   </div>
@@ -403,26 +379,23 @@ const Index = () => {
             transition={{ duration: 3, repeat: Infinity }}
             className="text-6xl mb-4"
           >
-            🎉
+            🎯
           </motion.div>
           
-          <h3 className="text-2xl font-bold mb-2">Yli 10,000</h3>
-          <p className="text-white/90 mb-4">tyytyväistä käyttäjää</p>
+          <h3 className="text-2xl font-bold mb-2">Luotettava</h3>
+          <p className="text-white/90 mb-4">ja helppokäyttöinen</p>
           
           <div className="flex justify-center gap-1 mb-2">
-            {[1,2,3,4,5].map((i) => (
-              <motion.div
-                key={i}
-                animate={{ scale: [1, 1.2, 1] }}
-                transition={{ duration: 2, repeat: Infinity, delay: i * 0.2 }}
-                className="text-yellow-300 text-xl"
-              >
-                ★
-              </motion.div>
-            ))}
+            <motion.div
+              animate={{ scale: [1, 1.2, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="text-green-400 text-2xl"
+            >
+              ✓
+            </motion.div>
           </div>
           
-          <p className="text-white/90 text-sm">4.9/5 keskiarvo</p>
+          <p className="text-white/90 text-sm">Täysin ilmainen</p>
         </div>
       </motion.div>
     </div>
@@ -482,7 +455,7 @@ const Index = () => {
       </h2>
       
       <p className="text-xl text-white/90 mb-10 max-w-3xl mx-auto">
-        Liity yli 10,000 tyytyväisen käyttäjän joukkoon ja anna koirallesi paras mahdollinen alku elämään
+        Anna koirallesi paras mahdollinen alku elämään ammattimaisilla seurantatyökaluilla
       </p>
       
       <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
@@ -510,24 +483,6 @@ const Index = () => {
       </div>
       
       <div className="flex flex-col sm:flex-row items-center justify-center gap-8 text-white/80">
-        <div className="flex items-center gap-2">
-          <div className="flex">
-            {[1,2,3,4,5].map((i) => (
-              <motion.div
-                key={i}
-                animate={{ scale: [1, 1.2, 1] }}
-                transition={{ duration: 2, repeat: Infinity, delay: i * 0.2 }}
-                className="text-yellow-300 text-2xl"
-              >
-                ★
-              </motion.div>
-            ))}
-          </div>
-          <span className="font-semibold text-lg">4.9/5 tähteä</span>
-        </div>
-        
-        <div className="w-px h-8 bg-white/30 hidden sm:block"></div>
-        
         <div className="flex items-center gap-3">
           <motion.div
             animate={{ scale: [1, 1.1, 1] }}
@@ -545,7 +500,126 @@ const Index = () => {
   <div className="absolute bottom-10 right-10 w-32 h-32 bg-yellow-300/20 rounded-full blur-2xl float-animation"></div>
   <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-blue-400/20 rounded-full blur-lg animate-bounce"></div>
 </section>
+
+{/* MODERNI FOOTER */}
+<footer className="bg-gradient-to-br from-gray-900 via-purple-900 to-pink-900 text-white relative overflow-hidden">
+  {/* Taustakuvio */}
+  <div className="absolute inset-0 opacity-10">
+    <div className="absolute top-10 left-10 text-6xl">🐕</div>
+    <div className="absolute top-20 right-20 text-4xl">🦴</div>
+    <div className="absolute bottom-20 left-20 text-5xl">🎾</div>
+    <div className="absolute bottom-10 right-10 text-3xl">❤️</div>
+  </div>
+
+  <div className="relative z-10 max-w-7xl mx-auto px-4 py-12">
+    {/* Pääsisältö */}
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+      
+      {/* Yhteydenottolomake */}
+      <div className="lg:col-span-1">
+        <ContactForm onSubmit={(data) => {
+          console.log('Lomakedata:', data);
+        }} />
+      </div>
+
+      {/* Pikanavigointi */}
+      <div className="lg:col-span-1">
+        <h3 className="text-2xl font-bold mb-6 flex items-center">
+          <span className="text-2xl mr-2">🧭</span>
+          Pikanavigointi
+        </h3>
+        
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <h4 className="font-semibold mb-3 text-pink-300">Työkalut</h4>
+            <ul className="space-y-2 text-sm">
+              <li><Link to="/weight-tracker" className="hover:text-pink-300 transition-colors flex items-center"><span className="mr-2">📊</span>Painonseuranta</Link></li>
+              <li><Link to="/calculator" className="hover:text-pink-300 transition-colors flex items-center"><span className="mr-2">🍖</span>Ruokalaskuri</Link></li>
+              <li><a href="#growth-chart" className="hover:text-pink-300 transition-colors flex items-center"><span className="mr-2">📈</span>Kasvukäyrä</a></li>
+              <li><Link to="/puppy-book" className="hover:text-pink-300 transition-colors flex items-center"><span className="mr-2">📚</span>Pentukirja</Link></li>
+            </ul>
+          </div>
+          
+          <div>
+            <h4 className="font-semibold mb-3 text-pink-300">Tietoa</h4>
+            <ul className="space-y-2 text-sm">
+              <li><Link to="/info" className="hover:text-pink-300 transition-colors flex items-center"><span className="mr-2">ℹ️</span>Tietoa sovelluksesta</Link></li>
+              <li><a href="#faq" className="hover:text-pink-300 transition-colors flex items-center"><span className="mr-2">❓</span>Usein kysyttyä</a></li>
+              <li><a href="#privacy" className="hover:text-pink-300 transition-colors flex items-center"><span className="mr-2">🔒</span>Tietosuoja</a></li>
+              <li><a href="#terms" className="hover:text-pink-300 transition-colors flex items-center"><span className="mr-2">📋</span>Käyttöehdot</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      {/* Sosiaalinen media ja yhteisö */}
+      <div className="lg:col-span-1">
+        <h3 className="text-2xl font-bold mb-6 flex items-center">
+          <span className="text-2xl mr-2">🌟</span>
+          Yhteisö
+        </h3>
+        
+        <p className="text-white/80 mb-6 leading-relaxed">
+          Liity koiraharrastajien yhteisöön! Jaa kokemuksiasi ja saa tukea muilta pentujen vanhemmilta.
+        </p>
+        
+        {/* Sosiaalisen median linkit */}
+        <div className="flex flex-wrap gap-3 mb-6">
+          <a href="https://instagram.com" className="bg-gradient-to-r from-pink-500 to-red-500 p-3 rounded-full hover:scale-110 transition-transform">
+            <span className="text-xl">📸</span>
+          </a>
+          <a href="https://tiktok.com" className="bg-gradient-to-r from-black to-red-500 p-3 rounded-full hover:scale-110 transition-transform">
+            <span className="text-xl">🎵</span>
+          </a>
+          <a href="https://facebook.com" className="bg-gradient-to-r from-blue-600 to-blue-700 p-3 rounded-full hover:scale-110 transition-transform">
+            <span className="text-xl">👥</span>
+          </a>
+          <a href="https://youtube.com" className="bg-gradient-to-r from-red-500 to-red-600 p-3 rounded-full hover:scale-110 transition-transform">
+            <span className="text-xl">📺</span>
+          </a>
+        </div>
+        
+        {/* Tilastot */}
+        <div className="bg-white/10 backdrop-blur-lg rounded-xl p-4 border border-white/20">
+          <div className="grid grid-cols-2 gap-4 text-center">
+            <div>
+              <div className="text-2xl font-bold text-pink-300">Ilmainen</div>
+              <div className="text-xs text-white/70">Aina ilmainen käyttö</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-purple-300">Luotettava</div>
+              <div className="text-xs text-white/70">Ammattilaisille</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+
+    {/* Alaosa - Copyright ja legal */}
+    <div className="border-t border-white/20 pt-8">
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="flex items-center space-x-4">
+          <div className="text-3xl">🐕</div>
+          <div>
+            <div className="font-bold text-lg">Pentulaskuri.com</div>
+            <div className="text-white/70 text-sm">Pentukoiran kasvun seuranta</div>
+          </div>
+        </div>
+        
+        <div className="text-center md:text-right">
+          <p className="text-white/70 text-sm mb-2">
+            © 2024 Pentulaskuri.com. Kaikki oikeudet pidätetään.
+          </p>
+          <p className="text-white/50 text-xs">
+            Tehty ❤️:llä pentukoirien hyvinvoinnin edistämiseksi
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+      </div>
+    </MobileOptimizationWrapper>
   )
 }
 

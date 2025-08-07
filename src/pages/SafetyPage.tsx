@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
 import { ArrowLeft, Shield, FileText, AlertTriangle } from 'lucide-react'
-import InfoNavigation from '@/components/InfoNavigation'
+import Navigation from '@/components/Navigation'
 import InfoCard from '@/components/InfoCard'
 import InfoSection from '@/components/InfoSection'
 import BackToTopButton from '@/components/BackToTopButton'
@@ -13,8 +13,8 @@ import heroImage from '@/assets/welcome-illustration.png'
 
 export default function SafetyPage() {
   return (
-    <div className="min-h-screen bg-background pt-14 w-full overflow-x-hidden">
-      <InfoNavigation />
+    <div className="min-h-screen bg-background page-with-navigation w-full overflow-x-hidden">
+      <Navigation />
       <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-full min-w-0">
         {/* Hero Section */}
         <div className="text-center mb-12">

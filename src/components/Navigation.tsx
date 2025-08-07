@@ -64,11 +64,11 @@ const Navigation = () => {
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.2 }}
-        className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-500 ${
+        className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-[100] transition-all duration-500 mobile-optimized mobile-touch-target ${
           scrolled ? 'top-2 scale-95' : 'top-4'
         }`}
       >
-        <div className="glass rounded-full px-2 py-2 shadow-lg">
+        <div className="relative bg-white/95 backdrop-blur-xl rounded-full px-2 py-2 shadow-lg border border-white/30" style={{ background: 'rgba(255, 255, 255, 0.95)' }}>
           <div className="flex items-center gap-1">
             {/* Logo */}
             <Link 
@@ -141,7 +141,7 @@ const Navigation = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100]"
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[150]"
               onClick={() => setIsMobileMenuOpen(false)}
             />
 
@@ -151,7 +151,7 @@ const Navigation = () => {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="fixed top-0 right-0 h-full w-80 max-w-[90vw] glass-dark z-[101] p-6"
+              className="fixed top-0 right-0 h-full w-80 max-w-[90vw] bg-white/95 backdrop-blur-xl border-l border-white/30 z-[151] p-6"
             >
               {/* Header */}
               <div className="flex items-center justify-between mb-8">
@@ -160,18 +160,18 @@ const Navigation = () => {
                     <Dog className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-white text-lg">Pentulaskuri</h3>
-                    <p className="text-white/70 text-sm">Koiran kasvun seuranta</p>
+                    <h3 className="font-bold text-gray-800 text-lg">Pentulaskuri</h3>
+                    <p className="text-gray-600 text-sm">Koiran kasvun seuranta</p>
                   </div>
                 </div>
                 
                 <motion.button
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="p-2 rounded-full hover:bg-white/10 transition-all duration-300"
+                  className="p-2 rounded-full hover:bg-gray-100 transition-all duration-300"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <X className="w-5 h-5 text-white" />
+                  <X className="w-5 h-5 text-gray-700" />
                 </motion.button>
               </div>
 
@@ -192,7 +192,7 @@ const Navigation = () => {
                         className={`w-full flex items-center gap-4 p-4 rounded-2xl font-medium transition-all duration-300 ${
                           isActive(item.href)
                             ? 'bg-gradient-primary text-white shadow-lg'
-                            : 'text-white/80 hover:bg-white/10'
+                            : 'text-gray-700 hover:bg-gray-100'
                         }`}
                       >
                         <Icon className="w-5 h-5" />
@@ -215,11 +215,11 @@ const Navigation = () => {
 
               {/* Footer */}
               <div className="absolute bottom-6 left-6 right-6">
-                <div className="glass-dark rounded-2xl p-4 text-center">
-                  <p className="text-white/70 text-sm">
+                <div className="bg-gray-50 rounded-2xl p-4 text-center">
+                  <p className="text-gray-600 text-sm">
                     Modernilla designilla
                   </p>
-                  <p className="text-white font-medium">
+                  <p className="text-gray-800 font-medium">
                     Hellodani.co-inspiraatio
                   </p>
                 </div>

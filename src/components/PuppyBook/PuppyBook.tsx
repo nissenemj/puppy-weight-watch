@@ -24,7 +24,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import Navigation from '@/components/Navigation';
 import AppLogo from '@/components/AppLogo';
-import NavigationButtons from '@/components/NavigationButtons';
+// Navigation is now handled by the main Navigation component
 import MonthlyTracker from './MonthlyTracker';
 import Timeline from './Timeline';
 import Milestones from './Milestones';
@@ -271,20 +271,16 @@ const PuppyBook: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gradient-mint-light/20 via-gradient-peach-light/20 to-gradient-sky/20">
-      <div className="bg-white/90 backdrop-blur-md border-b border-gray-200/50 p-4 sticky top-0 z-40">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex items-center justify-between">
-            <AppLogo logoText="Pentukirja" />
-            <div className="flex items-center gap-4">
-              <PuppyBookSelector
-                user={user}
-                selectedBookId={selectedBookId}
-                onBookSelect={handleBookSelect}
-              />
-              <NavigationButtons />
-            </div>
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-gradient-mint-light/20 via-gradient-peach-light/20 to-gradient-sky/20 page-with-navigation">
+      <Navigation />
+      
+      <div className="max-w-6xl mx-auto px-4 pt-4">
+        <div className="flex items-center justify-center mb-6">
+          <PuppyBookSelector
+            user={user}
+            selectedBookId={selectedBookId}
+            onBookSelect={handleBookSelect}
+          />
         </div>
       </div>
       <AnimatedHeader 

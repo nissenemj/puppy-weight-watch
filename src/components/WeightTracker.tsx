@@ -16,7 +16,7 @@ import FoodCalculator from './FoodCalculator'
 import PuppyFeeding from './PuppyFeeding'
 import SafetyNewsFeed from './SafetyNewsFeed'
 import AppLogo from './AppLogo'
-import NavigationButtons from './NavigationButtons'
+import Navigation from './Navigation'
 import DogSelector from './DogSelector'
 import WeightEntryForm from './WeightEntryForm'
 import WeightEntryList from './WeightEntryList'
@@ -40,6 +40,13 @@ interface WeightTrackerProps {
   onSignOut: () => void
   hasBooks?: boolean
 }
+
+const navItems = [
+  { href: '/', label: 'Koti', icon: Scale },
+  { href: '/weight-tracker', label: 'Paino', icon: TrendingUp },
+  { href: '/calculator', label: 'Laskuri', icon: Calculator },
+  { href: '/puppy-book', label: 'Kirja', icon: BookOpen },
+]
 
 const WeightTracker = ({ user, onSignOut, hasBooks = false }: WeightTrackerProps) => {
   const [selectedDog, setSelectedDog] = useState<Dog | null>(null)
@@ -97,12 +104,18 @@ const WeightTracker = ({ user, onSignOut, hasBooks = false }: WeightTrackerProps
     }
   }
 
+  const isActive = (href: string) => {
+    const currentPath = window.location.pathname
+    if (href === '/') return currentPath === '/'
+    return currentPath.startsWith(href)
+  }
+
   return (
     <div 
       className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-25 to-purple-50 relative"
     >
       {/* Navigation Header */}
-      <header className="bg-white/90 backdrop-blur-md border-b border-gray-200/50 sticky top-0 z-40">
+      <header className="bg-white/90 backdrop-blur-md border-b border-gray-200/50 sticky top-0 z-50">
         <div className="max-w-6xl mx-auto">
           {/* Top row: Logo and user info */}
           <div className="flex items-center justify-between p-4 pb-2">
@@ -123,7 +136,27 @@ const WeightTracker = ({ user, onSignOut, hasBooks = false }: WeightTrackerProps
           
           {/* Bottom row: Navigation buttons */}
           <div className="px-4 pb-4">
-            <NavigationButtons />
+            <div className="flex items-center justify-center">
+              <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm rounded-full px-4 py-2 shadow-sm border border-gray-200/50">
+                {navItems.slice(1).map((item) => {
+                  const Icon = item.icon
+                  return (
+                    <Link
+                      key={item.href}
+                      to={item.href}
+                      className={`relative px-3 py-1.5 rounded-full font-medium text-sm transition-all duration-300 flex items-center gap-1.5 ${
+                        isActive(item.href)
+                          ? 'bg-gradient-primary text-white shadow-sm'
+                          : 'text-gray-700 hover:bg-gray-100'
+                      }`}
+                    >
+                      <Icon className="w-4 h-4" />
+                      <span className="hidden sm:block">{item.label}</span>
+                    </Link>
+                  )
+                })}
+              </div>
+            </div>
           </div>
         </div>
       </header>

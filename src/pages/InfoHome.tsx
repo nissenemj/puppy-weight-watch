@@ -42,7 +42,7 @@ export default function InfoHome() {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 page-with-navigation">
       <SEO
         title="Tietopankki - Penturuoka-opas"
         description="Laaja katsaus koiranpentujen ruokintaan ja ravitsemukseen. Kuiva-, märkä- ja raakaruokien analyysi, annostelutiedot ja turvallisuusohjeet."
@@ -50,28 +50,88 @@ export default function InfoHome() {
         type="article"
         structuredData={structuredData}
       />
-      <div className="bg-white/90 backdrop-blur-md border-b border-gray-200/50 p-4 sticky top-0 z-40">
-        <div className="max-w-6xl mx-auto">
-          <HeaderButtons showLogo={true} logoText="Tietopankki" />
+      <Navigation />
+      
+      {/* Dribbble-inspired Hero Header */}
+      <div className="relative overflow-hidden bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.3)_0%,transparent_50%)]"></div>
+          <div className="absolute bottom-0 right-0 w-full h-full bg-[radial-gradient(circle_at_70%_80%,rgba(255,255,255,0.2)_0%,transparent_50%)]"></div>
+        </div>
+        
+        <div className="relative max-w-7xl mx-auto px-4 py-20 sm:py-32">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left Content */}
+            <div className="text-white">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium mb-6">
+                <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                Reaaliaikainen tietopankki
+              </div>
+              
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 leading-tight">
+                Penturuoka-
+                <span className="block text-transparent bg-gradient-to-r from-yellow-300 to-orange-200 bg-clip-text">
+                  opas
+                </span>
+              </h1>
+              
+              <p className="text-xl sm:text-2xl text-white/90 mb-8 leading-relaxed">
+                Laaja katsaus Suomessa myytäviin koiranpentujen ruokiin ja niiden annosteluun 
+                <span className="font-semibold">ohjelmistokehityksen näkökulmasta</span>
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Button size="lg" className="bg-white text-gray-900 hover:bg-white/90 px-8 py-4 text-lg font-semibold rounded-2xl">
+                  Aloita tutkiminen
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="lg" 
+                  className="text-white border-white/30 hover:bg-white/10 px-8 py-4 text-lg rounded-2xl"
+                >
+                  Katso demovideoita
+                </Button>
+              </div>
+              
+              {/* Stats */}
+              <div className="grid grid-cols-3 gap-6 mt-12 pt-8 border-t border-white/20">
+                <div>
+                  <div className="text-3xl font-bold text-white">500+</div>
+                  <div className="text-white/80 text-sm">Tutkittua ruokaa</div>
+                </div>
+                <div>
+                  <div className="text-3xl font-bold text-white">15k+</div>
+                  <div className="text-white/80 text-sm">Datapistettä</div>
+                </div>
+                <div>
+                  <div className="text-3xl font-bold text-white">98%</div>
+                  <div className="text-white/80 text-sm">Tarkkuus</div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Right Visual */}
+            <div className="relative">
+              <div className="relative z-10">
+                <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20">
+                  <img 
+                    src={heroImage} 
+                    alt="Penturuoka-opas dashboard" 
+                    className="w-full h-auto object-contain rounded-2xl"
+                  />
+                </div>
+              </div>
+              
+              {/* Floating Elements */}
+              <div className="absolute -top-4 -right-4 w-20 h-20 bg-yellow-400 rounded-full opacity-20 animate-pulse"></div>
+              <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-pink-400 rounded-full opacity-10 animate-bounce"></div>
+            </div>
+          </div>
         </div>
       </div>
-      <div className="container mx-auto px-4 py-8">
-        {/* Hero Section */}
-        <div className="text-center mb-12">
-          <div className="flex justify-center mb-6">
-            <img 
-              src={heroImage} 
-              alt="Penturuoka-opas" 
-              className="w-32 h-32 sm:w-40 sm:h-40 object-contain"
-            />
-          </div>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-foreground mb-4">
-            🐕 Penturuoka-opas
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Laaja katsaus Suomessa myytäviin koiranpentujen ruokiin ja niiden annosteluun ohjelmistokehityksen näkökulmasta
-          </p>
-        </div>
+
+      <div className="container mx-auto px-4 py-16">
 
         {/* Introduction Card */}
         <Card className="mb-8 bg-card/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
