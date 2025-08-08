@@ -17,7 +17,7 @@ const Card = React.forwardRef<
       {
         'default': "border border-[var(--color-border)] shadow-md hover:shadow-lg hover-lift",
         'elevated': "shadow-xl hover:shadow-2xl border-0 hover-lift",
-        'glass': "glass border border-[var(--glass-border)] hover:shadow-lg hover-lift",
+        'glass': "glass border border-[var(--color-border)] hover:shadow-lg hover-lift",
         'minimal': "border-0 shadow-none hover:shadow-md hover-lift"
       }[variant],
       className

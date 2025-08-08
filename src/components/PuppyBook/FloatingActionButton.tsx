@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Camera, Calendar, Award, Heart, X, Stethoscope } from '@/utils/iconImports';
 import AddMemoryDialog from './AddMemoryDialog';
@@ -44,6 +44,27 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
   const [dialogOpen, setDialogOpen] = useState(showDialog);
   const [healthDialogOpen, setHealthDialogOpen] = useState(false);
   const [dialogType, setDialogType] = useState<'photo' | 'text' | 'event' | 'milestone'>('photo');
+  const [menuPosition, setMenuPosition] = useState<'right' | 'left'>('right');
+  const menuRef = useRef<HTMLDivElement>(null);
+  const fabRef = useRef<HTMLDivElement>(null);
+
+  // Check menu position to prevent overflow
+  useEffect(() => {
+    if (isOpen && menuRef.current && fabRef.current) {
+      const menuRect = menuRef.current.getBoundingClientRect();
+      const fabRect = fabRef.current.getBoundingClientRect();
+      const windowWidth = window.innerWidth;
+      
+      // Check if menu would overflow to the right
+      const wouldOverflowRight = fabRect.right + menuRect.width > windowWidth;
+      
+      if (wouldOverflowRight) {
+        setMenuPosition('left');
+      } else {
+        setMenuPosition('right');
+      }
+    }
+  }, [isOpen]);
 
   // Update dialog state when external showDialog changes
   React.useEffect(() => {
@@ -104,16 +125,19 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
         <div />
       </AddHealthRecordDialog>
       
-      <div className="fixed bottom-6 right-6 z-50">
+      <div ref={fabRef} className="fixed bottom-6 right-6 z-50">
         <div className="relative">
         {/* Action Buttons */}
         <AnimatePresence>
           {isOpen && (
             <motion.div
+              ref={menuRef}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute bottom-16 right-0 space-y-3"
+              className={`absolute bottom-16 space-y-3 max-w-[200px] ${
+                menuPosition === 'right' ? 'right-0' : 'left-0'
+              }`}
             >
               {actions.map((action, index) => (
                 <motion.div
@@ -122,14 +146,18 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
                   animate={{ y: 0, opacity: 1 }}
                   exit={{ y: 20, opacity: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="flex items-center gap-3"
+                  className={`flex items-center gap-3 ${
+                    menuPosition === 'left' ? 'flex-row-reverse' : ''
+                  }`}
                 >
                   <motion.span
-                    initial={{ opacity: 0, x: 10 }}
+                    initial={{ opacity: 0, x: menuPosition === 'right' ? 10 : -10 }}
                     animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 10 }}
+                    exit={{ opacity: 0, x: menuPosition === 'right' ? 10 : -10 }}
                     transition={{ delay: index * 0.1 + 0.1 }}
-                    className="bg-gray-800 text-white px-3 py-1 rounded-lg text-sm font-medium whitespace-nowrap"
+                    className={`bg-gray-800 text-white px-3 py-1 rounded-lg text-sm font-medium break-words min-w-0 ${
+                      menuPosition === 'left' ? 'text-left' : 'text-right'
+                    }`}
                   >
                     {action.label}
                   </motion.span>
