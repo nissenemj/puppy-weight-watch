@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { useVirtualKeyboard } from '@/hooks/useVirtualKeyboard';
 import { cn } from '@/lib/utils';
 
 interface MobileOptimizationsProps {
@@ -12,7 +11,6 @@ interface MobileOptimizationsProps {
  * Handles virtual keyboard, touch gestures, and mobile-specific optimizations
  */
 export function MobileOptimizations({ children, className }: MobileOptimizationsProps) {
-  const { isKeyboardOpen, keyboardHeight } = useVirtualKeyboard();
 
   useEffect(() => {
     // Enhanced mobile optimization CSS injection
@@ -108,13 +106,8 @@ export function MobileOptimizations({ children, className }: MobileOptimizations
     <div 
       className={cn(
         'mobile-optimized-container min-h-screen w-full max-w-full overflow-x-hidden prevent-overflow',
-        isKeyboardOpen && 'keyboard-open',
         className
       )}
-      style={{
-        paddingBottom: isKeyboardOpen ? `${keyboardHeight}px` : undefined,
-        transition: 'padding-bottom 0.3s ease-in-out'
-      }}
     >
       {children}
     </div>
