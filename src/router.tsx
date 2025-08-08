@@ -16,6 +16,7 @@ import NotFound from "./pages/NotFound";
 import OnboardingPage from "./pages/OnboardingPage";
 import WeightTrackerPage from "./pages/WeightTrackerPage";
 import ViralDemo from "./pages/ViralDemo";
+import DesignSystemDemo from "./components/DesignSystemDemo";
 
 const router = createBrowserRouter([
   {
@@ -69,6 +70,10 @@ const router = createBrowserRouter([
   {
     path: "/viral-demo",
     element: <ViralDemo />,
+  },
+  {
+    path: "/design-system",
+    element: <DesignSystemDemo />,
   },
   {
     path: "*",

@@ -4,6 +4,11 @@ import { supabase } from '@/integrations/supabase/client'
 import { useNavigate, useLocation } from 'react-router-dom'
 import AuthenticationWrapper from '@/components/AuthenticationWrapper'
 import WeightTracker from '@/components/WeightTracker'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { PageLayout, Container, Section } from '@/components/ui/Layout'
+import { Dog, RefreshCw, Plus } from 'lucide-react'
+import { motion } from 'framer-motion'
 import { useToast } from '@/hooks/use-toast'
 
 const WeightTrackerPage = () => {
@@ -118,12 +123,26 @@ const WeightTrackerPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-25 to-purple-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-gray-600">Ladataan...</p>
-        </div>
-      </div>
+      <PageLayout variant="default">
+        <Section className="min-h-screen flex items-center justify-center">
+          <Container size="sm" padding="lg">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-center"
+            >
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                className="w-16 h-16 mx-auto mb-6"
+              >
+                <div className="w-16 h-16 border-4 border-[var(--color-accent-200)] border-t-[var(--color-accent)] rounded-full"></div>
+              </motion.div>
+              <p className="text-body-lg text-muted">Ladataan...</p>
+            </motion.div>
+          </Container>
+        </Section>
+      </PageLayout>
     )
   }
 
@@ -133,12 +152,26 @@ const WeightTrackerPage = () => {
 
   if (checkingData) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-25 to-purple-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-gray-600">Tarkistetaan tietoja...</p>
-        </div>
-      </div>
+      <PageLayout variant="default">
+        <Section className="min-h-screen flex items-center justify-center">
+          <Container size="sm" padding="lg">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-center"
+            >
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                className="w-16 h-16 mx-auto mb-6"
+              >
+                <div className="w-16 h-16 border-4 border-[var(--color-accent-200)] border-t-[var(--color-accent)] rounded-full"></div>
+              </motion.div>
+              <p className="text-body-lg text-muted">Tarkistetaan tietoja...</p>
+            </motion.div>
+          </Container>
+        </Section>
+      </PageLayout>
     )
   }
 

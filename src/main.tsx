@@ -4,8 +4,12 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ThemeProvider } from './contexts/ThemeContext'
 import Router from './router'
 import './index.css'
-import { MobileOptimizationChecker } from './utils/mobileOptimizationCheck'
 import './i18n'
+
+// Initialize mobile optimizations
+import { VirtualKeyboardHandler } from './utils/VirtualKeyboardHandler'
+import { initializeCSSOptimizations } from './utils/CSSOptimization'
+import { MobileOptimizationChecker } from './utils/mobileOptimizationCheck'
 import { ProductionReadiness } from './components/ProductionReadiness'
 
 const queryClient = new QueryClient({
@@ -17,19 +21,11 @@ const queryClient = new QueryClient({
   },
 })
 
-// Initialize mobile optimizations
-import { VirtualKeyboardHandler } from './utils/VirtualKeyboardHandler'
-import { initializeCSSOptimizations } from './utils/CSSOptimization'
-import { preloadCriticalResources } from './utils/LazyLoading'
-
 // Initialize critical optimizations immediately
 initializeCSSOptimizations()
 
 // Initialize virtual keyboard handler
 new VirtualKeyboardHandler()
-
-// Preload critical resources
-preloadCriticalResources()
 
 // Initialize mobile optimization monitoring
 if (process.env.NODE_ENV === 'development') {

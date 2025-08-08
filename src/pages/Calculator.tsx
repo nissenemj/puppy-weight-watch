@@ -1,9 +1,15 @@
 import React from 'react'
 import Navigation from '@/components/Navigation'
+import Footer from '@/components/Footer'
 import EnhancedPuppyCalculator from '@/components/EnhancedPuppyCalculator'
 import SEO from '@/components/SEO'
 import FAQ from '@/components/FAQ'
 import Breadcrumb from '@/components/Breadcrumb'
+import { PageLayout, Container, Section } from '@/components/ui/Layout'
+import { Badge } from '@/components/ui/badge'
+import { Calculator, Sparkles, TrendingUp } from 'lucide-react'
+import { motion } from 'framer-motion'
+import { entranceAnimations } from '@/animations'
 import { createCalculatorSchema, createFAQSchema, createBreadcrumbSchema } from '@/utils/structuredData'
 
 const Calculator = () => {
@@ -56,42 +62,95 @@ const Calculator = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background page-with-navigation">
+    <PageLayout variant="default" animated>
       <SEO
         title="Pentulaskuri - Ruokamäärä"
         description="Laske koiranpentusi optimaalinen päivittäinen ruokamäärä. Huomioi rodun, iän, painon ja aktiivisuuden. Käytä virallisia annostelutaulukoita."
         keywords="pentulaskuri, ruokalaskuri, koiranpennun ruokinta, annostelu, ruokamäärä, penturuoka"
         structuredData={structuredData}
       />
-      <Navigation />
       
-      <div className="container mx-auto px-4 py-8">
-        <Breadcrumb items={breadcrumbItems} />
+      {/* Hero Section */}
+      <Section className="pt-24 pb-12 bg-gradient-to-b from-[var(--color-surface-alt)] to-[var(--color-surface)]">
+        <Container size="lg" padding="lg">
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={entranceAnimations.staggerContainer}
+            className="text-center"
+          >
+            <motion.div variants={entranceAnimations.staggerChild} className="mb-6">
+              <Badge className="bg-[var(--color-accent-50)] text-[var(--color-accent)] border-[var(--color-accent-200)] mb-4">
+                <Calculator className="w-4 h-4 mr-2" />
+                Tarkka laskenta
+              </Badge>
+            </motion.div>
+
+            <motion.h1 
+              variants={entranceAnimations.staggerChild}
+              className="text-display-1 mb-6"
+            >
+              Pentulaskuri
+              <br />
+              <span className="text-accent">Ruokamäärät</span>
+            </motion.h1>
+            
+            <motion.p 
+              variants={entranceAnimations.staggerChild}
+              className="text-body-xl text-muted max-w-3xl mx-auto mb-8"
+            >
+              Laske koiranpentusi optimaalinen päivittäinen ruokamäärä huomioiden rodun, iän, 
+              painon ja aktiivisuustason. Käytä virallisia annostelutaulukoita.
+            </motion.p>
+
+            <motion.div 
+              variants={entranceAnimations.staggerChild}
+              className="flex items-center justify-center gap-6 text-body-sm text-muted"
+            >
+              <div className="flex items-center gap-2">
+                <TrendingUp className="w-4 h-4 text-accent" />
+                <span>Tarkat tulokset</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-accent" />
+                <span>Ammattimaiset suositukset</span>
+              </div>
+            </motion.div>
+          </motion.div>
+        </Container>
+      </Section>
+
+      {/* Breadcrumb */}
+      <Section className="py-4 border-b border-[var(--color-border)]">
+        <Container size="lg" padding="lg">
+          <Breadcrumb items={breadcrumbItems} />
+        </Container>
+      </Section>
+      
+      {/* Calculator Section */}
+      <Section className="py-16">
+        <Container size="lg" padding="lg">
+          <EnhancedPuppyCalculator />
+        </Container>
+      </Section>
         
-        <header className="text-center mb-8">
-          <h1 className="text-4xl font-heading font-bold text-foreground mb-4">
-            Pentulaskuri
-          </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Laske koiranpentusi optimaalinen päivittäinen ruokamäärä huomioiden rodun, iän, painon ja aktiivisuustason.
-          </p>
-        </header>
-        
-        <EnhancedPuppyCalculator />
-        
-        <section className="mt-16 max-w-4xl mx-auto">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-heading font-bold text-foreground mb-4">
-              Usein kysytyt kysymykset
-            </h2>
-            <p className="text-muted-foreground">
+      {/* FAQ Section */}
+      <Section className="py-20 bg-[var(--color-surface-alt)]">
+        <Container size="lg" padding="lg">
+          <div className="text-center mb-16">
+            <h2 className="text-h1 mb-6">Usein kysytyt kysymykset</h2>
+            <p className="text-body-lg text-muted max-w-2xl mx-auto">
               Kattava opas koiranpennun ruokintaan ja ruokamäärien laskentaan
             </p>
           </div>
-          <FAQ items={faqs} title="" />
-        </section>
-      </div>
-    </div>
+          <FAQ items={faqs} />
+        </Container>
+      </Section>
+
+      {/* Footer */}
+      <Footer />
+      
+    </PageLayout>
   )
 }
 

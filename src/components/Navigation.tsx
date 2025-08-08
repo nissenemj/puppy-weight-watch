@@ -18,6 +18,7 @@ import {
   TrendingUp
 } from '@/utils/iconImports'
 import { Sparkles } from 'lucide-react'
+import { componentAnimations, hoverAnimations } from '@/animations'
 
 const Navigation = () => {
   const location = useLocation()
@@ -68,22 +69,27 @@ const Navigation = () => {
           scrolled ? 'top-2 scale-95' : 'top-4'
         }`}
       >
-        <div className="relative bg-white/95 backdrop-blur-xl rounded-full px-2 py-2 shadow-lg border border-white/30" style={{ background: 'rgba(255, 255, 255, 0.95)' }}>
-          <div className="flex items-center gap-1">
+        <div className="glass rounded-2xl px-3 py-3 shadow-xl border border-[var(--glass-border)]">
+          <div className="flex items-center gap-2">
             {/* Logo */}
-            <Link 
-              to="/" 
-              className="flex items-center gap-2 px-4 py-2 rounded-full hover:bg-white/20 transition-all duration-300"
+            <motion.div
+              whileHover={hoverAnimations.scale.whileHover}
+              whileTap={hoverAnimations.scale.whileTap}
             >
-              <motion.div
-                animate={{ rotate: [0, 10, -10, 0] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                className="w-8 h-8 bg-gradient-primary rounded-full flex items-center justify-center"
+              <Link 
+                to="/" 
+                className="flex items-center gap-3 px-4 py-2 rounded-xl hover:bg-white/20 transition-all duration-200"
               >
-                <Dog className="w-4 h-4 text-white" />
-              </motion.div>
-              <span className="hidden sm:block font-bold text-gray-800">Pentulaskuri</span>
-            </Link>
+                <motion.div
+                  animate={{ rotate: [0, 5, -5, 0] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                  className="w-10 h-10 bg-[var(--color-accent)] rounded-xl flex items-center justify-center shadow-md"
+                >
+                  <Dog className="w-5 h-5 text-white" />
+                </motion.div>
+                <span className="hidden sm:block text-h6 font-semibold text-[var(--color-text)]">Pentulaskuri</span>
+              </Link>
+            </motion.div>
 
             <div className="w-px h-6 bg-white/30 mx-2 hidden sm:block"></div>
 
@@ -91,41 +97,47 @@ const Navigation = () => {
             <div className="hidden md:flex items-center gap-1">
               {navItems.slice(1).map((item) => {
                 const Icon = item.icon
+                const isItemActive = isActive(item.href)
                 return (
-                  <Link
+                  <motion.div
                     key={item.href}
-                    to={item.href}
-                    className={`relative px-4 py-2 rounded-full font-medium text-sm transition-all duration-300 flex items-center gap-2 hover-3d ${
-                      isActive(item.href)
-                        ? 'bg-gradient-primary text-white shadow-lg'
-                        : 'text-gray-700 hover:bg-white/20'
-                    }`}
+                    whileHover={hoverAnimations.lift.whileHover}
+                    whileTap={hoverAnimations.lift.whileTap}
                   >
-                    <Icon className="w-4 h-4" />
-                    <span>{item.label}</span>
-                    
-                    {isActive(item.href) && (
-                      <motion.div
-                        layoutId="activeNavItem"
-                        className="absolute inset-0 bg-gradient-primary rounded-full -z-10"
-                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                      />
-                    )}
-                  </Link>
+                    <Link
+                      to={item.href}
+                      className={`relative px-4 py-3 rounded-xl font-medium text-sm transition-all duration-200 flex items-center gap-2 ${
+                        isItemActive
+                          ? 'bg-[var(--color-accent)] text-white shadow-lg'
+                          : 'text-[var(--color-text)] hover:bg-white/20'
+                      }`}
+                    >
+                      <Icon className="w-4 h-4" />
+                      <span className="text-body-sm font-medium">{item.label}</span>
+                      
+                      {isItemActive && (
+                        <motion.div
+                          layoutId="activeNavItem"
+                          className="absolute inset-0 bg-[var(--color-accent)] rounded-xl -z-10"
+                          transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                        />
+                      )}
+                    </Link>
+                  </motion.div>
                 )
               })}
             </div>
 
             {/* Mobile Menu Button */}
             <div className="md:hidden">
-              <motion.button
+              <Button
+                variant="ghost"
+                size="icon"
                 onClick={() => setIsMobileMenuOpen(true)}
-                className="p-2 rounded-full hover:bg-white/20 transition-all duration-300"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
+                className="rounded-xl"
               >
-                <Menu className="w-5 h-5 text-gray-700" />
-              </motion.button>
+                <Menu className="w-5 h-5" />
+              </Button>
             </div>
           </div>
         </div>
