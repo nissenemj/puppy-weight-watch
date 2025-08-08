@@ -1,5 +1,4 @@
 import React from 'react'
-import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import SEO from '@/components/SEO'
 import FAQ from '@/components/FAQ'
@@ -28,6 +27,7 @@ import {
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { entranceAnimations, hoverAnimations, componentAnimations } from '@/animations'
+import { MobileOptimizedLayout } from '@/components/MobileOptimizedLayout'
 
 // Import new hero illustrations
 import heroMainIllustration from '@/assets/hero-main-illustration.png'
@@ -110,6 +110,7 @@ const Index = () => {
   ];
 
   return (
+    <MobileOptimizedLayout>
     <PageLayout variant="default" animated>
       <SEO
         title="Pentulaskuri - Koiran Kasvun & Ruokinnan Seuranta"
@@ -435,6 +436,7 @@ const Index = () => {
       <Footer />
       
     </PageLayout>
+    </MobileOptimizedLayout>
   )
 }
 

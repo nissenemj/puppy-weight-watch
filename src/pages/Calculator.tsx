@@ -1,11 +1,11 @@
 import React from 'react'
-import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import EnhancedPuppyCalculator from '@/components/EnhancedPuppyCalculator'
 import SEO from '@/components/SEO'
 import FAQ from '@/components/FAQ'
 import Breadcrumb from '@/components/Breadcrumb'
 import { PageLayout, Container, Section } from '@/components/ui/Layout'
+import { MobileOptimizedLayout } from '@/components/MobileOptimizedLayout'
 import { Badge } from '@/components/ui/badge'
 import { Calculator, Sparkles, TrendingUp } from 'lucide-react'
 import { motion } from 'framer-motion'
@@ -62,6 +62,7 @@ const Calculator = () => {
   ];
 
   return (
+    <MobileOptimizedLayout>
     <PageLayout variant="default" animated>
       <SEO
         title="Pentulaskuri - Ruokamäärä"
@@ -151,6 +152,7 @@ const Calculator = () => {
       <Footer />
       
     </PageLayout>
+    </MobileOptimizedLayout>
   )
 }
 

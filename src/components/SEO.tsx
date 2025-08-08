@@ -33,8 +33,7 @@ const SEO: React.FC<SEOProps> = ({
       <meta name="language" content="fi" />
       <meta name="revisit-after" content="7 days" />
       
-      {/* Viewport and mobile optimization */}
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      {/* Mobile optimization */}
       <meta name="theme-color" content="#FF6B35" />
       
       {/* Open Graph tags */}

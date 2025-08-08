@@ -1,4 +1,5 @@
 import React from 'react';
+import { MobileOptimizedLayout } from '@/components/MobileOptimizedLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
@@ -34,6 +35,7 @@ const SocializationGuide = () => {
   ];
 
   return (
+    <MobileOptimizedLayout>
     <div className="min-h-screen bg-background page-with-navigation w-full overflow-x-hidden">
       <Navigation />
       <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-full min-w-0 space-y-8">
@@ -771,6 +773,7 @@ const SocializationGuide = () => {
       </div>
       <BackToTopButton />
     </div>
+    </MobileOptimizedLayout>
   );
 };
 

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { cn } from '@/lib/utils';
 
 interface MobileOptimizationsProps {
@@ -11,101 +11,11 @@ interface MobileOptimizationsProps {
  * Handles virtual keyboard, touch gestures, and mobile-specific optimizations
  */
 export function MobileOptimizations({ children, className }: MobileOptimizationsProps) {
-
-  useEffect(() => {
-    // Enhanced mobile optimization CSS injection
-    const style = document.createElement('style');
-    style.id = 'mobile-optimization-styles';
-    style.textContent = `
-      /* Critical: Prevent horizontal scrolling */
-      html, body {
-        overflow-x: hidden !important;
-        max-width: 100vw !important;
-        position: relative !important;
-      }
-      
-      /* Enhanced text wrapping */
-      h1, h2, h3, h4, h5, h6, p, span, div {
-        word-wrap: break-word !important;
-        word-break: break-word !important;
-        hyphens: auto !important;
-        overflow-wrap: break-word !important;
-      }
-      
-      /* Prevent zoom on input focus (iOS) */
-      input, textarea, select {
-        font-size: 16px !important;
-        transform-origin: left top !important;
-      }
-      
-      /* Better touch targets */
-      button, a, input, select, textarea {
-        min-height: 44px !important;
-        min-width: 44px !important;
-      }
-      
-      /* Mobile layout fixes */
-      @media (max-width: 768px) {
-        .lg\\:grid-cols-5 {
-          grid-template-columns: 1fr !important;
-        }
-        
-        .grid {
-          grid-template-columns: 1fr !important;
-        }
-        
-        .flex {
-          flex-wrap: wrap !important;
-        }
-        
-        img {
-          max-width: 100% !important;
-          height: auto !important;
-        }
-        
-        .container {
-          padding-left: 1rem !important;
-          padding-right: 1rem !important;
-        }
-      }
-    `;
-    
-    // Only add if not already present
-    if (!document.getElementById('mobile-optimization-styles')) {
-      document.head.appendChild(style);
-    }
-
-    // Prevent double-tap zoom on iOS
-    let lastTouchEnd = 0;
-    const handleTouchEnd = (e: TouchEvent) => {
-      const now = Date.now();
-      if (now - lastTouchEnd <= 300) {
-        e.preventDefault();
-      }
-      lastTouchEnd = now;
-    };
-
-    document.addEventListener('touchend', handleTouchEnd, { passive: false });
-
-    // Prevent pinch zoom
-    const handleTouchMove = (e: TouchEvent) => {
-      if (e.touches.length > 1) {
-        e.preventDefault();
-      }
-    };
-
-    document.addEventListener('touchmove', handleTouchMove, { passive: false });
-
-    return () => {
-      document.removeEventListener('touchend', handleTouchEnd);
-      document.removeEventListener('touchmove', handleTouchMove);
-    };
-  }, []);
-
+  // Keep component lightweight; globals live in index.css
   return (
     <div 
       className={cn(
-        'mobile-optimized-container min-h-screen w-full max-w-full overflow-x-hidden prevent-overflow',
+        'min-h-screen w-full max-w-full overflow-x-hidden',
         className
       )}
     >

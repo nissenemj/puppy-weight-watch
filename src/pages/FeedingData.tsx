@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect, useMemo } from 'react'
+import { MobileOptimizedLayout } from '@/components/MobileOptimizedLayout'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -352,6 +353,7 @@ export default function FeedingData() {
   }
 
   return (
+    <MobileOptimizedLayout>
     <div className="min-h-screen bg-background page-with-navigation w-full overflow-x-hidden">
       <Navigation />
       
@@ -398,7 +400,7 @@ export default function FeedingData() {
 
         {/* Main Content Tabs */}
         <Tabs defaultValue="food-list" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4">
             <TabsTrigger value="food-list">Ruokalista</TabsTrigger>
             <TabsTrigger value="analysis">Analyysi</TabsTrigger>
             <TabsTrigger value="dosage-images">Annostelukuvat</TabsTrigger>
@@ -582,217 +584,6 @@ export default function FeedingData() {
           )}
         </div>
 
-        {/* Legacy food items (keeping existing structure for unenhanced foods) */}
-        <div style={{ display: 'none' }}>
-          {filteredFoods.map((food) => (
-            <Card key={food.id} className="bg-card/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
-              <CardHeader>
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
-                  <div className="flex-1">
-                    {editingFood?.id === food.id ? (
-                      <div className="space-y-4">
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 min-w-0">
-                          <div>
-                            <Label>Tuotteen nimi</Label>
-                            <Input
-                              value={editingFood.name}
-                              onChange={(e) => setEditingFood(prev => prev ? { ...prev, name: e.target.value } : null)}
-                            />
-                          </div>
-                          <div>
-                            <Label>Valmistaja</Label>
-                            <Input
-                              value={editingFood.manufacturer}
-                              onChange={(e) => setEditingFood(prev => prev ? { ...prev, manufacturer: e.target.value } : null)}
-                            />
-                          </div>
-                          <div>
-                            <Label>Tuotekoodi</Label>
-                            <Input
-                              value={editingFood.product_code}
-                              onChange={(e) => setEditingFood(prev => prev ? { ...prev, product_code: e.target.value } : null)}
-                            />
-                          </div>
-                          <div>
-                            <Label>Ruokatyyppi</Label>
-                            <Select value={editingFood.food_type} onValueChange={(value: "Kuiva" | "Märkä" | "Raaka") => setEditingFood(prev => prev ? { ...prev, food_type: value } : null)}>
-                              <SelectTrigger>
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="Kuiva">Kuiva</SelectItem>
-                                <SelectItem value="Märkä">Märkä</SelectItem>
-                                <SelectItem value="Raaka">Raaka</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          <div>
-                            <Label>Ravitsemustyyppi</Label>
-                            <Select value={editingFood.nutrition_type} onValueChange={(value: "Täysravinto" | "Täydennysravinto" | "Täysravinto/Täydennysravinto") => setEditingFood(prev => prev ? { ...prev, nutrition_type: value } : null)}>
-                              <SelectTrigger>
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="Täysravinto">Täysravinto</SelectItem>
-                                <SelectItem value="Täydennysravinto">Täydennysravinto</SelectItem>
-                                <SelectItem value="Täysravinto/Täydennysravinto">Täysravinto/Täydennysravinto</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          <div>
-                            <Label>Annostelumenetelmä</Label>
-                            <Select value={editingFood.dosage_method} onValueChange={(value: "Nykyinen_Paino" | "Odotettu_Aikuispaino_Ja_Ikä" | "Prosentti_Nykyisestä_Painosta" | "Kokoluokka" | "Ei_Tietoa") => setEditingFood(prev => prev ? { ...prev, dosage_method: value } : null)}>
-                              <SelectTrigger>
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="Odotettu_Aikuispaino_Ja_Ikä">Odotettu aikuispaino + ikä</SelectItem>
-                                <SelectItem value="Nykyinen_Paino">Nykyinen paino</SelectItem>
-                                <SelectItem value="Prosentti_Nykyisestä_Painosta">Prosentti nykyisestä painosta</SelectItem>
-                                <SelectItem value="Kokoluokka">Kokoluokka</SelectItem>
-                                <SelectItem value="Ei_Tietoa">Ei tietoa</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          <div className="lg:col-span-2">
-                            <Label>Huomiot</Label>
-                            <Textarea
-                              value={editingFood.notes || ''}
-                              onChange={(e) => setEditingFood(prev => prev ? { ...prev, notes: e.target.value } : null)}
-                              className="w-full"
-                            />
-                          </div>
-                        </div>
-                        <div className="flex flex-col sm:flex-row gap-2">
-                          <Button size="sm" onClick={() => updateFood(editingFood)}>
-                            <Save className="h-4 w-4 mr-1" />
-                            Tallenna
-                          </Button>
-                          <Button size="sm" variant="outline" onClick={() => setEditingFood(null)}>
-                            <X className="h-4 w-4 mr-1" />
-                            Peruuta
-                          </Button>
-                        </div>
-                      </div>
-                    ) : (
-                      <>
-                        <CardTitle className="text-lg">{food.name}</CardTitle>
-                        <CardDescription className="text-base">
-                          {food.manufacturer} • {food.food_type}
-                        </CardDescription>
-                      </>
-                    )}
-                  </div>
-                  {editingFood?.id !== food.id && (
-                    <div className="flex flex-col sm:flex-row gap-2">
-                      <Badge className={getNutritionTypeBadgeColor(food.nutrition_type)}>
-                        {food.nutrition_type}
-                      </Badge>
-                      <Badge variant="outline">
-                        {getDosageMethodDescription(food.dosage_method)}
-                      </Badge>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setEditingFood(food)}
-                      >
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => deleteFood(food.id)}
-                        className="text-destructive hover:text-destructive"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              </CardHeader>
-              
-              <CardContent>
-                {food.notes && (
-                  <div className="mb-4 p-3 bg-blue-50 rounded-lg">
-                    <p className="text-sm text-blue-800">{food.notes}</p>
-                  </div>
-                )}
-                
-                {food.feeding_guidelines && food.feeding_guidelines.length > 0 ? (
-                  <div className="min-w-0">
-                    <h4 className="font-semibold mb-3">Annosteluohjeet:</h4>
-                    <div className="overflow-x-auto mobile-table-scroll w-full">
-                      <table className="w-full text-sm min-w-full">
-                        <thead>
-                          <tr className="border-b">
-                            {food.dosage_method === 'Odotettu_Aikuispaino_Ja_Ikä' && (
-                              <>
-                                <th className="text-left p-2">Aikuispaino (kg)</th>
-                                <th className="text-left p-2">Ikä (kk)</th>
-                              </>
-                            )}
-                            {food.dosage_method === 'Nykyinen_Paino' && (
-                              <th className="text-left p-2">Nykypaino (kg)</th>
-                            )}
-                            {food.dosage_method === 'Kokoluokka' && (
-                              <th className="text-left p-2">Kokoluokka</th>
-                            )}
-                            <th className="text-left p-2">Päiväannos (g)</th>
-                            {food.feeding_guidelines.some(g => g.calculation_formula) && (
-                              <th className="text-left p-2">Laskentakaava</th>
-                            )}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {food.feeding_guidelines.map((guideline, index) => (
-                            <tr key={index} className="border-b">
-                              {food.dosage_method === 'Odotettu_Aikuispaino_Ja_Ikä' && (
-                                <>
-                                  <td className="p-2">{guideline.adult_weight_kg}</td>
-                                  <td className="p-2">{guideline.age_months}</td>
-                                </>
-                              )}
-                              {food.dosage_method === 'Nykyinen_Paino' && (
-                                <td className="p-2">{guideline.current_weight_kg}</td>
-                              )}
-                              {food.dosage_method === 'Kokoluokka' && (
-                                <td className="p-2">{guideline.size_category}</td>
-                              )}
-                              <td className="p-2">
-                                {guideline.daily_amount_min === guideline.daily_amount_max 
-                                  ? guideline.daily_amount_min 
-                                  : `${guideline.daily_amount_min}-${guideline.daily_amount_max}`}
-                              </td>
-                              {guideline.calculation_formula && (
-                                <td className="p-2 text-xs font-mono">
-                                  {guideline.calculation_formula}
-                                </td>
-                              )}
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                ) : food.dosage_method === 'Ei_Tietoa' ? (
-                  <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
-                    <AlertCircle className="h-4 w-4 text-gray-500" />
-                    <p className="text-sm text-gray-600">
-                      Annostelutaulukkoa ei ole saatavilla digitaalisessa muodossa. 
-                      Tarkista annostus tuotepakkauksesta.
-                    </p>
-                  </div>
-                ) : (
-                  <div className="p-3 bg-yellow-50 rounded-lg">
-                    <p className="text-sm text-yellow-800">
-                      Annosteluohjeita ei ole vielä tallennettu tietokantaan.
-                    </p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          ))}
-        </div>
 
         {filteredFoods.length === 0 && dogFoods.length > 0 && (
           <Card className="bg-white/80 backdrop-blur-sm">
@@ -825,5 +616,6 @@ export default function FeedingData() {
         <BackToTopButton />
       </div>
     </div>
+    </MobileOptimizedLayout>
   )
 }

@@ -212,7 +212,7 @@ const WeightTracker = ({ user, onSignOut, hasBooks = false }: WeightTrackerProps
         )}
 
         <Tabs value={activeTab} onValueChange={setActiveTab} onSwipe={handleTabSwipe} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 h-16 md:h-14 rounded-2xl bg-white/50 backdrop-blur-sm overflow-x-auto">
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 h-16 md:h-14 rounded-2xl bg-white/50 backdrop-blur-sm overflow-x-auto">
             <TabsTrigger 
               value="weight-tracking" 
               className={cn(

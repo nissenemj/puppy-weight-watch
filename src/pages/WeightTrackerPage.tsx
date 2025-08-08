@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client'
 import { useNavigate, useLocation } from 'react-router-dom'
 import AuthenticationWrapper from '@/components/AuthenticationWrapper'
 import WeightTracker from '@/components/WeightTracker'
+import { MobileOptimizedLayout } from '@/components/MobileOptimizedLayout'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { PageLayout, Container, Section } from '@/components/ui/Layout'
@@ -209,7 +210,11 @@ const WeightTrackerPage = () => {
     )
   }
 
-  return <WeightTracker user={user} onSignOut={handleSignOut} hasBooks={hasBooks} />
+  return (
+    <MobileOptimizedLayout>
+      <WeightTracker user={user} onSignOut={handleSignOut} hasBooks={hasBooks} />
+    </MobileOptimizedLayout>
+  )
 }
 
 export default WeightTrackerPage

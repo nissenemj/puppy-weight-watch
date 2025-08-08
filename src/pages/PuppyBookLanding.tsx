@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 import SEO from '@/components/SEO';
+import { MobileOptimizedLayout } from '@/components/MobileOptimizedLayout';
 import heroIllustration from '@/assets/hero-illustration.png';
 import puppyWaveGif from '@/assets/puppy-wave-gif.png';
 import growthStages from '@/assets/growth-stages.png';
@@ -60,6 +61,7 @@ const PuppyBookLanding: React.FC = () => {
   ];
 
   return (
+    <MobileOptimizedLayout>
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 page-with-navigation">
       <SEO 
         title="Pentukirja - Tallenna pennun ensimmäinen vuosi"
@@ -264,6 +266,7 @@ const PuppyBookLanding: React.FC = () => {
         </div>
       </section>
     </div>
+    </MobileOptimizedLayout>
   );
 };
 

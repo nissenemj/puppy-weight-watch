@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import OnboardingWizard from '@/features/onboarding/components/OnboardingWizard'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import { useToast } from '@/hooks/use-toast'
+import { MobileOptimizedLayout } from '@/components/MobileOptimizedLayout'
 
 const OnboardingPage = () => {
   const [user, setUser] = useState<User | null>(null)
@@ -48,9 +49,11 @@ const OnboardingPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5">
-        <LoadingSpinner size="lg" />
-      </div>
+      <MobileOptimizedLayout>
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5">
+          <LoadingSpinner size="lg" />
+        </div>
+      </MobileOptimizedLayout>
     )
   }
 
@@ -58,7 +61,11 @@ const OnboardingPage = () => {
     return null // Will redirect
   }
 
-  return <OnboardingWizard user={user} onComplete={handleOnboardingComplete} />
+  return (
+    <MobileOptimizedLayout>
+      <OnboardingWizard user={user} onComplete={handleOnboardingComplete} />
+    </MobileOptimizedLayout>
+  )
 }
 
 export default OnboardingPage

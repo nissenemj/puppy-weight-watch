@@ -1,11 +1,11 @@
 
 import React from 'react'
+import { MobileOptimizedLayout } from '@/components/MobileOptimizedLayout'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
 import { BookOpen, Database, AlertTriangle } from 'lucide-react'
 import Navigation from '@/components/Navigation'
-import HeaderButtons from '@/components/HeaderButtons'
 import SEO from '@/components/SEO'
 import FAQ from '@/components/FAQ'
 import { createArticleSchema, createFAQSchema, createBreadcrumbSchema } from '@/utils/structuredData'
@@ -42,6 +42,7 @@ export default function InfoHome() {
   ];
 
   return (
+    <MobileOptimizedLayout>
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 page-with-navigation">
       <SEO
         title="Tietopankki - Penturuoka-opas"
@@ -255,5 +256,6 @@ export default function InfoHome() {
         </div>
       </div>
     </div>
+    </MobileOptimizedLayout>
   )
 }

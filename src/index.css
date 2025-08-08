@@ -25,111 +25,36 @@ html, body {
   box-sizing: border-box;
 }
 
-/* Mobile-specific fixes */
+/* Safe area utilities for devices with display cutouts */
+.safe-area-padding-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Mobile-safe defaults (scoped and minimal) */
 @media (max-width: 768px) {
-  /* Force text wrapping */
+  /* Text wrapping */
   h1, h2, h3, h4, h5, h6, p, span, div, a, button {
-    word-wrap: break-word !important;
-    word-break: break-word !important;
-    hyphens: auto !important;
-    overflow-wrap: break-word !important;
+    word-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+    overflow-wrap: break-word;
   }
-  
-  /* Fix all grid layouts */
-  .grid, .lg\\:grid-cols-2, .lg\\:grid-cols-3, .lg\\:grid-cols-4, .lg\\:grid-cols-5,
-  .md\\:grid-cols-2, .md\\:grid-cols-3, .sm\\:grid-cols-2, .grid-cols-2, .grid-cols-3 {
-    grid-template-columns: 1fr !important;
-    gap: 1rem !important;
-  }
-  
-  /* Fix flex layouts */
-  .flex-row, .sm\\:flex-row, .md\\:flex-row, .lg\\:flex-row {
-    flex-direction: column !important;
-    gap: 1rem !important;
-  }
-  
-  /* Fix containers and max widths */
-  .container, .max-w-7xl, .max-w-6xl, .max-w-5xl, .max-w-4xl, .max-w-3xl, .max-w-2xl, .max-w-xl {
-    max-width: 100% !important;
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-  }
-  
-  /* Fix all images and media */
+
+  /* Media scaling */
   img, video, iframe, svg, canvas {
-    max-width: 100% !important;
-    height: auto !important;
-    width: auto !important;
+    max-width: 100%;
+    height: auto;
   }
-  
-  /* Fix buttons and interactive elements - minimum touch target 44px */
+
+  /* Touch targets and inputs */
   button, a, input[type="button"], input[type="submit"], .btn {
-    min-height: 44px !important;
-    min-width: 44px !important;
-    padding: 0.75rem 1rem !important;
-    font-size: 16px !important; /* Prevent zoom on iOS */
+    min-height: 44px;
+    min-width: 44px;
   }
-  
-  /* Fix form inputs */
+
   input, textarea, select {
-    font-size: 16px !important; /* Prevent zoom on iOS */
-    min-height: 44px !important;
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-  
-  /* Fix text sizes */
-  h1 { font-size: 2rem !important; line-height: 1.2 !important; }
-  h2 { font-size: 1.75rem !important; line-height: 1.3 !important; }
-  h3 { font-size: 1.5rem !important; line-height: 1.4 !important; }
-  h4 { font-size: 1.25rem !important; line-height: 1.4 !important; }
-  h5, h6 { font-size: 1rem !important; line-height: 1.5 !important; }
-  p, span, div { font-size: 14px !important; line-height: 1.5 !important; }
-  
-  /* Fix spacing */
-  .gap-8, .gap-6, .gap-4 { gap: 1rem !important; }
-  .py-16, .py-20 { padding-top: 2rem !important; padding-bottom: 2rem !important; }
-  .px-16, .px-20 { padding-left: 1rem !important; padding-right: 1rem !important; }
-  .p-8 { padding: 1rem !important; }
-  .m-8 { margin: 1rem !important; }
-  
-  /* Fix widths */
-  .w-1\\/2, .w-1\\/3, .w-1\\/4, .w-2\\/3, .w-3\\/4 {
-    width: 100% !important;
-  }
-  
-  /* Fix visibility classes */
-  .hidden.sm\\:block, .hidden.md\\:block, .hidden.lg\\:block {
-    display: none !important;
-  }
-  
-  .block.sm\\:hidden, .block.md\\:hidden, .block.lg\\:hidden {
-    display: block !important;
-  }
-  
-  /* Fix overflow */
-  .overflow-x-auto, .overflow-scroll {
-    overflow-x: hidden !important;
-  }
-  
-  /* Fix tables */
-  table {
-    display: block !important;
-    overflow-x: auto !important;
-    white-space: nowrap !important;
-  }
-  
-  /* Fix navigation */
-  nav ul {
-    flex-direction: column !important;
-    gap: 0.5rem !important;
-  }
-  
-  nav li {
-    width: 100% !important;
-    text-align: center !important;
+    font-size: 16px; /* Prevent zoom on iOS */
+    min-height: 44px;
   }
 }
 
