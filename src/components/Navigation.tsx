@@ -69,7 +69,7 @@ const Navigation = () => {
           scrolled ? 'top-2 scale-95' : 'top-4'
         }`}
       >
-        <div className="glass rounded-2xl px-3 py-3 shadow-xl border border-[var(--glass-border)]">
+        <div className="glass-nav rounded-2xl px-3 py-3 shadow-xl">
           <div className="flex items-center gap-2">
             {/* Logo */}
             <motion.div
@@ -91,7 +91,7 @@ const Navigation = () => {
               </Link>
             </motion.div>
 
-            <div className="w-px h-6 bg-white/30 mx-2 hidden sm:block"></div>
+            <div className="w-px h-6 bg-gray-300 mx-2 hidden sm:block"></div>
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-1">
@@ -109,7 +109,7 @@ const Navigation = () => {
                       className={`relative px-4 py-3 rounded-xl font-medium text-sm transition-all duration-200 flex items-center gap-2 ${
                         isItemActive
                           ? 'bg-[var(--color-accent)] text-white shadow-lg'
-                          : 'text-[var(--color-text)] hover:bg-white/20'
+                          : 'text-[var(--color-text)] hover:bg-gray-100'
                       }`}
                     >
                       <Icon className="w-4 h-4" />
