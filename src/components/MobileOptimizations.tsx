@@ -30,7 +30,7 @@ export function MobileOptimizations({ children, className }: MobileOptimizations
 export function useIsMobileDevice() {
   const [isMobile, setIsMobile] = React.useState(false);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const checkMobile = () => {
       const userAgent = navigator.userAgent;
       const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);

@@ -34,17 +34,18 @@ const inputVariants = cva(
 )
 
 export interface InputProps
-  extends React.ComponentProps<"input">,
+  extends Omit<React.ComponentProps<"input">, "size">,
     VariantProps<typeof inputVariants> {
   icon?: React.ReactNode
   suffix?: React.ReactNode
   label?: string
   helperText?: string
   errorText?: string
+  htmlSize?: number
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, variant, size, state, icon, suffix, label, helperText, errorText, type, ...props }, ref) => {
+  ({ className, variant, size, state, icon, suffix, label, helperText, errorText, htmlSize, type, ...props }, ref) => {
     const finalState = errorText ? "error" : state
 
     return (
@@ -64,6 +65,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           
           <input
             type={type}
+            size={htmlSize}
             className={cn(
               inputVariants({ variant, size, state: finalState }),
               icon && "pl-10",

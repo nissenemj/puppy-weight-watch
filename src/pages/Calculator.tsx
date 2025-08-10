@@ -7,7 +7,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 import { PageLayout, Container, Section } from '@/components/ui/Layout'
 import { MobileOptimizedLayout } from '@/components/MobileOptimizedLayout'
 import { Badge } from '@/components/ui/badge'
-import { Calculator, Sparkles, TrendingUp } from 'lucide-react'
+import { Calculator as CalculatorIcon, Sparkles, TrendingUp } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { entranceAnimations } from '@/animations'
 import { createCalculatorSchema, createFAQSchema, createBreadcrumbSchema } from '@/utils/structuredData'
@@ -82,7 +82,7 @@ const Calculator = () => {
           >
             <motion.div variants={entranceAnimations.staggerChild} className="mb-6">
               <Badge className="bg-[var(--color-accent-50)] text-[var(--color-accent)] border-[var(--color-accent-200)] mb-4">
-                <Calculator className="w-4 h-4 mr-2" />
+                <CalculatorIcon className="w-4 h-4 mr-2" />
                 Tarkka laskenta
               </Badge>
             </motion.div>
