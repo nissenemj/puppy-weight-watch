@@ -12,6 +12,7 @@ import { initializeCSSOptimizations } from './utils/CSSOptimization'
 import { MobileOptimizationChecker } from './utils/mobileOptimizationCheck'
 import { ProductionReadiness } from './components/ProductionReadiness'
 import MobileOptimizationMonitor from './components/MobileOptimizationMonitor'
+import { ErrorBoundary } from './components/ErrorBoundary'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -64,17 +65,19 @@ performanceMonitor.measureCoreWebVitals()
 performanceMonitor.measureStart('app_initialization')
 
 createRoot(document.getElementById("root")!).render(
-  <ThemeProvider>
-    <QueryClientProvider client={queryClient}>
-      <HelmetProvider>
-        <ProductionReadiness />
-        {import.meta.env.DEV && (
-          <MobileOptimizationMonitor showScoreOnly />
-        )}
-        <Router />
-      </HelmetProvider>
-    </QueryClientProvider>
-  </ThemeProvider>
+  <ErrorBoundary>
+    <ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <HelmetProvider>
+          <ProductionReadiness />
+          {import.meta.env.DEV && (
+            <MobileOptimizationMonitor showScoreOnly />
+          )}
+          <Router />
+        </HelmetProvider>
+      </QueryClientProvider>
+    </ThemeProvider>
+  </ErrorBoundary>
 )
 
 // Mark app initialization complete

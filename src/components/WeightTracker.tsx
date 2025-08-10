@@ -16,7 +16,7 @@ import FoodCalculator from './FoodCalculator'
 import PuppyFeeding from './PuppyFeeding'
 import SafetyNewsFeed from './SafetyNewsFeed'
 import AppLogo from './AppLogo'
-import Navigation from './Navigation'
+
 import DogSelector from './DogSelector'
 import WeightEntryForm from './WeightEntryForm'
 import WeightEntryList from './WeightEntryList'
