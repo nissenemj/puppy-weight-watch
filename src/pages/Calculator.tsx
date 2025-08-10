@@ -11,6 +11,9 @@ import { Calculator as CalculatorIcon, Sparkles, TrendingUp } from 'lucide-react
 import { motion } from 'framer-motion'
 import { entranceAnimations } from '@/animations'
 import { createCalculatorSchema, createFAQSchema, createBreadcrumbSchema } from '@/utils/structuredData'
+import ScrollPanBackground from '@/components/ScrollPanBackground'
+import StickyHorizontalGallery from '@/components/StickyHorizontalGallery'
+import CountUp from '@/components/CountUp'
 
 const Calculator = () => {
   const faqs = [
@@ -71,43 +74,36 @@ const Calculator = () => {
         structuredData={structuredData}
       />
       
-      {/* Hero Section */}
-      <Section className="pt-24 pb-12 bg-gradient-to-b from-[var(--color-surface-alt)] to-[var(--color-surface)]">
-        <Container size="lg" padding="lg">
+      {/* Hero Section with pan background */}
+      <ScrollPanBackground
+        src={import.meta.env.BASE_URL + 'assets/hero-illustration.png'}
+        alt=""
+        panX={60}
+        panY={30}
+        zoom={1.06}
+        minHeightClass="min-h-[70svh]"
+      >
+        <div className="container mx-auto px-4 text-center">
           <motion.div
             initial="hidden"
             animate="visible"
             variants={entranceAnimations.staggerContainer}
-            className="text-center"
           >
-            <motion.div variants={entranceAnimations.staggerChild} className="mb-6">
-              <Badge className="bg-[var(--color-accent-50)] text-[var(--color-accent)] border-[var(--color-accent-200)] mb-4">
+            <motion.div variants={entranceAnimations.staggerChild} className="mb-4 flex justify-center">
+              <Badge className="bg-[var(--color-accent-50)] text-[var(--color-accent)] border-[var(--color-accent-200)]">
                 <CalculatorIcon className="w-4 h-4 mr-2" />
                 Tarkka laskenta
               </Badge>
             </motion.div>
-
-            <motion.h1 
-              variants={entranceAnimations.staggerChild}
-              className="text-display-1 mb-6"
-            >
+            <motion.h1 variants={entranceAnimations.staggerChild} className="text-display-1 mb-4">
               Pentulaskuri
               <br />
               <span className="text-accent">Ruokamäärät</span>
             </motion.h1>
-            
-            <motion.p 
-              variants={entranceAnimations.staggerChild}
-              className="text-body-xl text-muted max-w-3xl mx-auto mb-8"
-            >
-              Laske koiranpentusi optimaalinen päivittäinen ruokamäärä huomioiden rodun, iän, 
-              painon ja aktiivisuustason. Käytä virallisia annostelutaulukoita.
+            <motion.p variants={entranceAnimations.staggerChild} className="text-body-xl text-muted max-w-3xl mx-auto">
+              Laske koiranpentusi optimaalinen päivittäinen ruokamäärä huomioiden rodun, iän, painon ja aktiivisuustason.
             </motion.p>
-
-            <motion.div 
-              variants={entranceAnimations.staggerChild}
-              className="flex items-center justify-center gap-6 text-body-sm text-muted"
-            >
+            <motion.div variants={entranceAnimations.staggerChild} className="mt-6 flex items-center justify-center gap-6 text-body-sm text-muted">
               <div className="flex items-center gap-2">
                 <TrendingUp className="w-4 h-4 text-accent" />
                 <span>Tarkat tulokset</span>
@@ -118,7 +114,19 @@ const Calculator = () => {
               </div>
             </motion.div>
           </motion.div>
-        </Container>
+        </div>
+      </ScrollPanBackground>
+
+      {/* How it works: sticky horizontal steps */}
+      <Section className="py-12">
+        <StickyHorizontalGallery
+          items={[
+            { id: '1', content: (<div><h3 className="text-h2 mb-2">1. Rotu & ikä</h3><p className="text-muted">Valitse rotu tai sekarotu ja ikä viikoissa.</p></div>) },
+            { id: '2', content: (<div><h3 className="text-h2 mb-2">2. Paino</h3><p className="text-muted">Syötä ajantasainen paino ja aktiivisuustaso.</p></div>) },
+            { id: '3', content: (<div><h3 className="text-h2 mb-2">3. Kasvukäyrä</h3><p className="text-muted">Saat yksilöllisen kasvukäyrän ja vertailun.</p></div>) },
+            { id: '4', content: (<div><h3 className="text-h2 mb-2">4. Ruokamäärä</h3><p className="text-muted">Näet päivittäisen ruokasuosituksen ja jaon aterioihin.</p></div>) },
+          ]}
+        />
       </Section>
 
       {/* Breadcrumb */}
@@ -128,9 +136,23 @@ const Calculator = () => {
         </Container>
       </Section>
       
-      {/* Calculator Section */}
+      {/* Calculator Section + trust stats */}
       <Section className="py-16">
         <Container size="lg" padding="lg">
+          <div className="grid gap-8 md:grid-cols-3 text-center mb-12">
+            <div>
+              <p className="text-5xl font-semibold"><CountUp to={12000} suffix="+" /></p>
+              <p className="mt-2 text-muted">laskentaa/kk</p>
+            </div>
+            <div>
+              <p className="text-5xl font-semibold"><CountUp to={86} suffix="%" /></p>
+              <p className="mt-2 text-muted">hyödyksi koettu</p>
+            </div>
+            <div>
+              <p className="text-5xl font-semibold"><CountUp to={250} suffix="+" /></p>
+              <p className="mt-2 text-muted">rotupohjaa</p>
+            </div>
+          </div>
           <EnhancedPuppyCalculator />
         </Container>
       </Section>
