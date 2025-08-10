@@ -27,6 +27,7 @@ import {
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { entranceAnimations, hoverAnimations, componentAnimations } from '@/animations'
+import ScrollPanBackground from '@/components/ScrollPanBackground'
 import { MobileOptimizedLayout } from '@/components/MobileOptimizedLayout'
 
 // Import new hero illustrations
@@ -119,6 +120,30 @@ const Index = () => {
         structuredData={structuredData}
         url={window.location.origin}
       />
+
+      {/* Pan Hero Section */}
+      <section className="pb-4">
+        <ScrollPanBackground src={heroMainIllustration} alt="" panX={40} panY={20} zoom={1.04} minHeightClass="min-h-[50svh]">
+          <div className="container mx-auto px-4 text-center">
+            <motion.div initial="hidden" animate="visible" variants={entranceAnimations.staggerContainer}>
+              <motion.div variants={entranceAnimations.staggerChild} className="mb-4">
+                <Badge className="bg-[var(--color-accent-50)] text-[var(--color-accent)] border-[var(--color-accent-200)]">
+                  <Sparkles className="w-4 h-4 mr-2" /> Uusi ja moderni
+                </Badge>
+              </motion.div>
+              <motion.h1 variants={entranceAnimations.staggerChild} className="text-display-1 mb-2 text-white drop-shadow">
+                Pennun kasvu
+                <br />
+                <span className="text-accent">ammattimaisesti</span>
+              </motion.h1>
+              <motion.p variants={entranceAnimations.staggerChild} className="text-body-xl text-white/90 max-w-3xl mx-auto">
+                Seuraa kasvua, ruokintaa ja kehitystä – ilmaiseksi.
+              </motion.p>
+            </motion.div>
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+        </ScrollPanBackground>
+      </section>
 
       {/* Hero Section */}
       <Section className="pt-24 pb-16">

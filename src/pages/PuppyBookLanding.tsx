@@ -14,6 +14,7 @@ import {
 import Navigation from '@/components/Navigation';
 import SEO from '@/components/SEO';
 import { MobileOptimizedLayout } from '@/components/MobileOptimizedLayout';
+import ScrollPanBackground from '@/components/ScrollPanBackground';
 import heroIllustration from '@/assets/hero-illustration.png';
 import puppyWaveGif from '@/assets/puppy-wave-gif.png';
 import growthStages from '@/assets/growth-stages.png';
@@ -71,57 +72,52 @@ const PuppyBookLanding: React.FC = () => {
       
       <Navigation />
       
-      {/* Hero Section */}
-      <section className="relative py-8 overflow-hidden">
-        <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-playful font-bold text-gray-800 mb-6">
-                Pennun Ensimmäinen Vuosi 🐶
-              </h1>
-              <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                Luo ainutlaatuinen muistokirja pennustasi. Tallenna virstanpylväitä, 
-                muistoja ja seuraa kasvua henkilökohtaisessa pentukirjassa.
-              </p>
-              
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link to="/puppy-book">
+      {/* Hero Section with pan background */}
+      <section className="relative py-8 overflow-hidden rounded-2xl">
+        <ScrollPanBackground src={heroIllustration} alt="" panX={40} panY={20} zoom={1.04} minHeightClass="min-h-[50svh]">
+          <div className="container mx-auto px-4">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6 }}
+              >
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-playful font-bold text-white mb-6 drop-shadow">
+                  Pennun Ensimmäinen Vuosi 🐶
+                </h1>
+                <p className="text-xl text-white/90 mb-8 leading-relaxed">
+                  Luo ainutlaatuinen muistokirja pennustasi. Tallenna virstanpylväitä, 
+                  muistoja ja seuraa kasvua henkilökohtaisessa pentukirjassa.
+                </p>
+                
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Link to="/puppy-book">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="bg-white text-orange-600 px-8 py-4 rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all flex items-center gap-2"
+                    >
+                      Aloita pentukirja
+                      <ArrowRight className="w-5 h-5" />
+                    </motion.button>
+                  </Link>
+                  
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="bg-gradient-to-r from-orange-500 to-pink-500 text-white px-8 py-4 rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all flex items-center gap-2"
+                    className="border-2 border-white/80 text-white px-8 py-4 rounded-2xl font-semibold text-lg hover:bg-white/10 transition-all"
                   >
-                    Aloita pentukirja
-                    <ArrowRight className="w-5 h-5" />
+                    Katso esimerkkiä
                   </motion.button>
-                </Link>
-                
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="border-2 border-orange-300 text-orange-600 px-8 py-4 rounded-2xl font-semibold text-lg hover:bg-orange-50 transition-all"
-                >
-                  Katso esimerkkiä
-                </motion.button>
-              </div>
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="relative"
-            >
-              <div className="relative">
-                <img 
-                  src={heroIllustration}
-                  alt="Pentukirja hero"
-                  className="w-full h-auto rounded-3xl shadow-2xl"
-                />
+                </div>
+              </motion.div>
+              
+              <motion.div
+                initial={{ opacity: 0, x: 30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="relative"
+              >
                 <motion.div
                   className="absolute -bottom-4 -right-4 bg-white rounded-2xl p-4 shadow-lg"
                   animate={{ 
@@ -140,10 +136,11 @@ const PuppyBookLanding: React.FC = () => {
                     className="w-20 h-20 rounded-xl"
                   />
                 </motion.div>
-              </div>
-            </motion.div>
+              </motion.div>
+            </div>
           </div>
-        </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+        </ScrollPanBackground>
       </section>
 
       {/* Features Section */}
