@@ -11,6 +11,7 @@ import InfoSection from '@/components/InfoSection'
 import BackToTopButton from '@/components/BackToTopButton'
 import SafetyNewsFeed from '@/components/SafetyNewsFeed'
 import heroImage from '@/assets/welcome-illustration.png'
+import ScrollPanBackground from '@/components/ScrollPanBackground'
 
 export default function SafetyPage() {
   return (
@@ -18,21 +19,19 @@ export default function SafetyPage() {
     <div className="min-h-screen bg-background page-with-navigation w-full overflow-x-hidden">
       <Navigation />
       <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-full min-w-0">
-        {/* Hero Section */}
-        <div className="text-center mb-12">
-          <div className="flex justify-center mb-6">
-            <img 
-              src={heroImage} 
-              alt="Turvallisuus-opas" 
-              className="w-32 h-32 sm:w-40 sm:h-40 object-contain"
-            />
-          </div>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-foreground mb-4">
-            🛡️ Turvallisuus ja suositukset
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Tärkeät turvallisuusohjeet ja ajankohtaiset uutiset koiranruokinnasta
-          </p>
+        {/* Hero Section with pan background */}
+        <div className="rounded-2xl overflow-hidden mb-12">
+          <ScrollPanBackground src={heroImage} alt="" panX={25} panY={15} zoom={1.03} minHeightClass="h-60 sm:h-72 md:h-80">
+            <div className="text-center">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-3 drop-shadow">
+                🛡️ Turvallisuus ja suositukset
+              </h1>
+              <p className="text-lg sm:text-xl text-white/90 max-w-3xl mx-auto">
+                Tärkeät turvallisuusohjeet ja ajankohtaiset uutiset koiranruokinnasta
+              </p>
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+          </ScrollPanBackground>
         </div>
 
         {/* News Feed */}

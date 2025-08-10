@@ -22,6 +22,7 @@ import { supabase } from '@/integrations/supabase/client'
 import { toast } from 'sonner'
 import BackToTopButton from '@/components/BackToTopButton'
 import heroImage from '@/assets/welcome-illustration.png'
+import ScrollPanBackground from '@/components/ScrollPanBackground'
 
 export default function FeedingData() {
   const [dogFoods, setDogFoods] = useState<DogFood[]>([])
@@ -358,20 +359,17 @@ export default function FeedingData() {
       <Navigation />
       
       <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-full min-w-0">
-        {/* Hero Section - Jumbo */}
-        <div className="relative w-full h-96 sm:h-[500px] lg:h-[600px] mb-12 overflow-hidden rounded-2xl">
-          <img 
-            src={heroImage} 
-            alt="Annostelutiedot" 
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-          <div className="absolute bottom-8 left-0 right-0 text-center text-white">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4">Annostelutiedot</h1>
-            <p className="text-lg sm:text-xl text-white/90 max-w-2xl mx-auto px-4">
-              Kattava tietokanta koiranruokien annostelutiedoista
-            </p>
-          </div>
+        {/* Hero Section - Pan background */}
+        <div className="mb-12 rounded-2xl overflow-hidden">
+          <ScrollPanBackground src={heroImage} alt="" panX={40} panY={20} zoom={1.04} minHeightClass="h-96 sm:h-[500px] lg:h-[600px]">
+            <div className="absolute bottom-8 left-0 right-0 text-center text-white">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4">Annostelutiedot</h1>
+              <p className="text-lg sm:text-xl text-white/90 max-w-2xl mx-auto px-4">
+                Kattava tietokanta koiranruokien annostelutiedoista
+              </p>
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+          </ScrollPanBackground>
         </div>
 
         {dogFoods.length === 0 && (

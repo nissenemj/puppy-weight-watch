@@ -13,6 +13,7 @@ import BackToTopButton from '@/components/BackToTopButton';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import heroImage from '@/assets/welcome-illustration.png';
+import ScrollPanBackground from '@/components/ScrollPanBackground';
 
 const PuppyGuide = () => {
   return (
@@ -20,28 +21,19 @@ const PuppyGuide = () => {
     <div className="min-h-screen bg-background page-with-navigation w-full overflow-x-hidden">
       <Navigation />
       <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-full min-w-0 space-y-8">
-      {/* Hero Section */}
-      <div className="text-center space-y-4 mb-12">
-        <div className="flex justify-center mb-6">
-          <img 
-            src={heroImage} 
-            alt="Pennun ruokintaopas" 
-            className="w-32 h-32 sm:w-40 sm:h-40 object-contain"
-          />
-        </div>
-        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-heading font-bold text-foreground">
-          🐕 Kattava opas pennun ruokintaan
-        </h1>
-        <h2 className="text-2xl md:text-3xl font-semibold text-primary mb-4">
-          Selviydy, menesty ja kasvata terve aikuinen
-        </h2>
-        <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-          Onneksi olkoon uudesta perheenjäsenestä! Ensimmäiset kuukaudet ovat ratkaisevan tärkeitä, 
-          ja oikeanlainen ruokinta on paras investointi, jonka voit koirasi tulevaisuuteen tehdä.
-        </p>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Tämä opas antaa sinulle kaikki työkalut pennun ruokintaviidakossa navigointiin – niin iloissa kuin haasteissakin.
-        </p>
+      {/* Hero Section with pan background */}
+      <div className="rounded-2xl overflow-hidden mb-12">
+        <ScrollPanBackground src={heroImage} alt="" panX={30} panY={20} zoom={1.04} minHeightClass="h-60 sm:h-72 md:h-80">
+          <div className="text-center space-y-3">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-heading font-bold text-white drop-shadow">
+              🐕 Kattava opas pennun ruokintaan
+            </h1>
+            <h2 className="text-2xl md:text-3xl font-semibold text-white/95">
+              Selviydy, menesty ja kasvata terve aikuinen
+            </h2>
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+        </ScrollPanBackground>
       </div>
 
       <InfoCard
