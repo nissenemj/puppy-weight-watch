@@ -18,7 +18,7 @@ export const MobileOptimizationMonitor: React.FC<MobileOptimizationMonitorProps>
 
   useEffect(() => {
     // Only show in development unless explicitly enabled for production
-    const isDevelopment = process.env.NODE_ENV === 'development';
+    const isDevelopment = import.meta.env.DEV;
     if (!isDevelopment && !showInProduction) return;
 
     const checkOptimization = () => {

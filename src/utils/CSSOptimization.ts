@@ -151,7 +151,7 @@ export class CSSOptimizer {
     });
 
     // Log unused classes in development
-    if (process.env.NODE_ENV === 'development') {
+    if (import.meta.env.DEV) {
       console.log('Used CSS classes:', usedClasses.size);
     }
   }
@@ -266,7 +266,7 @@ export function initializeCSSOptimizations(): void {
   ]);
 
   // Monitor performance in development
-  if (process.env.NODE_ENV === 'development') {
+  if (import.meta.env.DEV) {
     CSSOptimizer.monitorCSSPerformance();
   }
 }

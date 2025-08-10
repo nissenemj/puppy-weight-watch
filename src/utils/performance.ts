@@ -55,7 +55,7 @@ export const measurePerformance = <T extends (...args: any[]) => any>(
     const result = fn(...args);
     const end = performance.now();
     
-    if (process.env.NODE_ENV === 'development') {
+    if (import.meta.env.DEV) {
       console.log(`${name} took ${end - start}ms`);
     }
     

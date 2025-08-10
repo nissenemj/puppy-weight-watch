@@ -13,6 +13,7 @@ import { MobileOptimizationChecker } from './utils/mobileOptimizationCheck'
 import { ProductionReadiness } from './components/ProductionReadiness'
 import MobileOptimizationMonitor from './components/MobileOptimizationMonitor'
 import { ErrorBoundary } from './components/ErrorBoundary'
+import ScrollProgressBar from './components/ScrollProgressBar'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -30,7 +31,7 @@ initializeCSSOptimizations()
 new VirtualKeyboardHandler()
 
 // Initialize mobile optimization monitoring
-if (process.env.NODE_ENV === 'development') {
+if (import.meta.env.DEV) {
   setTimeout(() => {
     const report = MobileOptimizationChecker.generateReport()
     if (!report.isOptimized) {
@@ -45,10 +46,11 @@ if (process.env.NODE_ENV === 'development') {
   }, 2000)
 }
 
-// Register service worker for production
+// Register service worker for production (respect base path)
 if ('serviceWorker' in navigator && import.meta.env.PROD) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
+    const swUrl = new URL('sw.js', import.meta.env.BASE_URL).toString()
+    navigator.serviceWorker.register(swUrl)
       .then((registration) => {
         console.log('SW registered: ', registration);
       })
@@ -66,6 +68,7 @@ performanceMonitor.measureStart('app_initialization')
 
 createRoot(document.getElementById("root")!).render(
   <ErrorBoundary>
+    <ScrollProgressBar />
     <ThemeProvider>
       <QueryClientProvider client={queryClient}>
         <HelmetProvider>
