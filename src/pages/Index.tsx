@@ -27,6 +27,8 @@ import {
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { entranceAnimations, hoverAnimations, componentAnimations } from '@/animations'
+import StickyHorizontalGallery from '@/components/StickyHorizontalGallery'
+import CountUp from '@/components/CountUp'
 import ScrollPanBackground from '@/components/ScrollPanBackground'
 import { MobileOptimizedLayout } from '@/components/MobileOptimizedLayout'
 
@@ -104,10 +106,10 @@ const Index = () => {
   ];
 
   const stats = [
-    { value: "10k+", label: "Tyytyväistä käyttäjää" },
-    { value: "50k+", label: "Seurattua mittausta" },
-    { value: "98%", label: "Tyytyväisyysprosentti" },
-    { value: "24/7", label: "Käytettävyys" }
+    { numeric: 10000, suffix: "+", label: "Tyytyväistä käyttäjää" },
+    { numeric: 50000, suffix: "+", label: "Seurattua mittausta" },
+    { numeric: 98, suffix: "%", label: "Tyytyväisyysprosentti" },
+    { text: "24/7", label: "Käytettävyys" }
   ];
 
   return (
@@ -144,6 +146,18 @@ const Index = () => {
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
         </ScrollPanBackground>
       </section>
+
+      {/* How it works: sticky horizontal steps */}
+      <Section className="py-12">
+        <StickyHorizontalGallery
+          items={[
+            { id: 'h1', content: (<div><h3 className="text-h2 mb-2">1. Luo profiili</h3><p className="text-muted">Aloita nopeasti ilman rekisteröintiä – tallenna myöhemmin.</p></div>) },
+            { id: 'h2', content: (<div><h3 className="text-h2 mb-2">2. Seuraa painoa</h3><p className="text-muted">Lisää viikoittaiset merkinnät ja katso kehitys graafeina.</p></div>) },
+            { id: 'h3', content: (<div><h3 className="text-h2 mb-2">3. Laske ruokamäärä</h3><p className="text-muted">Saat suositukset iän, rodun ja aktiivisuuden mukaan.</p></div>) },
+            { id: 'h4', content: (<div><h3 className="text-h2 mb-2">4. Tutustu oppaaseen</h3><p className="text-muted">Tietopankki ja turvallisuusvinkit yhden napin takana.</p></div>) },
+          ]}
+        />
+      </Section>
 
       {/* Hero Section */}
       <Section className="pt-24 pb-16">
@@ -339,7 +353,11 @@ const Index = () => {
                 className="text-center"
               >
                 <div className="text-display-3 font-bold text-accent mb-2">
-                  {stat.value}
+                  {stat.text ? (
+                    stat.text
+                  ) : (
+                    <CountUp to={stat.numeric!} suffix={stat.suffix as string} />
+                  )}
                 </div>
                 <div className="text-body-sm text-muted">
                   {stat.label}
