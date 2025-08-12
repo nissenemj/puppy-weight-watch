@@ -43,7 +43,7 @@ export default function InfoHome() {
 
   return (
     <MobileOptimizedLayout>
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 page-with-navigation">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 page-with-navigation no-horizontal-scroll mobile-text-wrap responsive-media">
       <SEO
         title="Tietopankki - Penturuoka-opas"
         description="Laaja katsaus koiranpentujen ruokintaan ja ravitsemukseen. Kuiva-, märkä- ja raakaruokien analyysi, annostelutiedot ja turvallisuusohjeet."
@@ -54,7 +54,7 @@ export default function InfoHome() {
       <Navigation />
       
       {/* Dribbble-inspired Hero Header */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600">
+      <div className="relative overflow-hidden bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 mobile-text-wrap responsive-media">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-20">
           <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.3)_0%,transparent_50%)]"></div>
@@ -62,7 +62,7 @@ export default function InfoHome() {
         </div>
         
         <div className="relative max-w-7xl mx-auto px-4 py-20 sm:py-32">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="grid lg:grid-cols-2 gap-12 items-center mobile-grid-1">
             {/* Left Content */}
             <div className="text-white">
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium mb-6">
