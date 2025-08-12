@@ -1,5 +1,5 @@
 import React, { ReactNode, useMemo, useRef } from 'react'
-import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion'
+import { motion, useScroll, useTransform, useReducedMotion, useMotionTemplate } from 'framer-motion'
 
 interface Item {
   id: string
@@ -28,7 +28,7 @@ export default function StickyHorizontalGallery({
   // Track width: number of slides * 100vw
   const total = items.length
   const x = useTransform(scrollYProgress, [0, 1], [0, -(total - 1) * 100])
-
+  const xVW = useMotionTemplate`${x}vw`
   if (reduceMotion) {
     return (
       <section className={`relative w-full ${className}`}>
@@ -48,7 +48,7 @@ export default function StickyHorizontalGallery({
       <div className={`sticky top-16 ${heightClassName} overflow-hidden`}>
         <motion.div
           className="flex w-[100vw]"
-          style={{ x: x.to(v => `${v}vw`) }}
+          style={{ x: xVW }}
         >
           {items.map(item => (
             <div key={item.id} className="min-w-[100vw] px-4">
