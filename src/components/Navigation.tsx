@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useInRouterContext } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
@@ -20,7 +20,7 @@ import {
 import { Sparkles } from 'lucide-react'
 import { componentAnimations, hoverAnimations } from '@/animations'
 
-const Navigation = () => {
+const NavigationWithRouter = () => {
   const location = useLocation()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
@@ -65,92 +65,92 @@ const Navigation = () => {
         <motion.nav
           role="navigation"
           aria-label="Päänavigointi"
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-        className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-[100] transition-all duration-500 mobile-optimized mobile-touch-target ${
-          scrolled ? 'top-2 scale-95' : 'top-4'
-        }`}
+          initial={{ y: -100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-[100] transition-all duration-500 mobile-optimized mobile-touch-target ${
+            scrolled ? 'top-2 scale-95' : 'top-4'
+          }`}
         >
-        <div className="glass-nav rounded-2xl px-3 py-3 shadow-xl">
-          <div className="flex items-center gap-2">
-            {/* Logo */}
-            <motion.div
-              whileHover={hoverAnimations.scale.whileHover}
-              whileTap={hoverAnimations.scale.whileTap}
-            >
-              <Link 
-                to="/" 
+          <div className="glass-nav rounded-2xl px-3 py-3 shadow-xl">
+            <div className="flex items-center gap-2">
+              {/* Logo */}
+              <motion.div
+                whileHover={hoverAnimations.scale.whileHover}
+                whileTap={hoverAnimations.scale.whileTap}
+              >
+                <Link 
+                  to="/" 
                   className="flex items-center gap-3 px-4 py-2 rounded-xl hover:bg-white/20 transition-all duration-200"
                   aria-current={isActive('/') ? 'page' : undefined}
-              >
-                <motion.div
-                  animate={{ rotate: [0, 5, -5, 0] }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                  className="w-10 h-10 bg-[var(--color-accent)] rounded-xl flex items-center justify-center shadow-md"
                 >
-                  <Dog className="w-5 h-5 text-white" />
-                </motion.div>
-                <span className="hidden sm:block text-h6 font-semibold text-[var(--color-text)]">Pentulaskuri</span>
-              </Link>
-            </motion.div>
-
-            <div className="w-px h-6 bg-gray-300 mx-2 hidden sm:block"></div>
-
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-1">
-              {navItems.slice(1).map((item) => {
-                const Icon = item.icon
-                const isItemActive = isActive(item.href)
-                return (
                   <motion.div
-                    key={item.href}
-                    whileHover={hoverAnimations.lift.whileHover}
-                    whileTap={hoverAnimations.lift.whileTap}
+                    animate={{ rotate: [0, 5, -5, 0] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                    className="w-10 h-10 bg-[var(--color-accent)] rounded-xl flex items-center justify-center shadow-md"
                   >
-                    <Link
-                      to={item.href}
-                      className={`relative px-4 py-3 rounded-xl font-medium text-sm transition-all duration-200 flex items-center gap-2 ${
-                        isItemActive
-                          ? 'bg-[var(--color-accent)] text-white shadow-lg'
-                          : 'text-[var(--color-text)] hover:bg-gray-100'
-                      }`}
-                      aria-current={isItemActive ? 'page' : undefined}
-                      aria-label={`${item.label} - siirry sivulle`}
-                    >
-                      <Icon className="w-4 h-4" />
-                      <span className="text-body-sm font-medium">{item.label}</span>
-                      
-                      {isItemActive && (
-                        <motion.div
-                          layoutId="activeNavItem"
-                          className="absolute inset-0 bg-[var(--color-accent)] rounded-xl -z-10"
-                          transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                        />
-                      )}
-                    </Link>
+                    <Dog className="w-5 h-5 text-white" />
                   </motion.div>
-                )
-              })}
-            </div>
+                  <span className="hidden sm:block text-h6 font-semibold text-[var(--color-text)]">Pentulaskuri</span>
+                </Link>
+              </motion.div>
 
-            {/* Mobile Menu Button */}
-            <div className="md:hidden">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsMobileMenuOpen(true)}
-                className="rounded-xl"
-                aria-haspopup="dialog"
-                aria-expanded={isMobileMenuOpen}
-                aria-controls="mobile-menu-panel"
-                aria-label="Avaa valikko"
-              >
-                <Menu className="w-5 h-5" />
-              </Button>
+              <div className="w-px h-6 bg-gray-300 mx-2 hidden sm:block"></div>
+
+              {/* Desktop Navigation */}
+              <div className="hidden md:flex items-center gap-1">
+                {navItems.slice(1).map((item) => {
+                  const Icon = item.icon
+                  const isItemActive = isActive(item.href)
+                  return (
+                    <motion.div
+                      key={item.href}
+                      whileHover={hoverAnimations.lift.whileHover}
+                      whileTap={hoverAnimations.lift.whileTap}
+                    >
+                      <Link
+                        to={item.href}
+                        className={`relative px-4 py-3 rounded-xl font-medium text-sm transition-all duration-200 flex items-center gap-2 ${
+                          isItemActive
+                            ? 'bg-[var(--color-accent)] text-white shadow-lg'
+                            : 'text-[var(--color-text)] hover:bg-gray-100'
+                        }`}
+                        aria-current={isItemActive ? 'page' : undefined}
+                        aria-label={`${item.label} - siirry sivulle`}
+                      >
+                        <Icon className="w-4 h-4" />
+                        <span className="text-body-sm font-medium">{item.label}</span>
+                        
+                        {isItemActive && (
+                          <motion.div
+                            layoutId="activeNavItem"
+                            className="absolute inset-0 bg-[var(--color-accent)] rounded-xl -z-10"
+                            transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                          />
+                        )}
+                      </Link>
+                    </motion.div>
+                  )
+                })}
+              </div>
+
+              {/* Mobile Menu Button */}
+              <div className="md:hidden">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsMobileMenuOpen(true)}
+                  className="rounded-xl"
+                  aria-haspopup="dialog"
+                  aria-expanded={isMobileMenuOpen}
+                  aria-controls="mobile-menu-panel"
+                  aria-label="Avaa valikko"
+                >
+                  <Menu className="w-5 h-5" />
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
         </motion.nav>
       </header>
 
@@ -271,4 +271,67 @@ const Navigation = () => {
   )
 }
 
-export default Navigation
+const NavigationStatic: React.FC = () => {
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50)
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  return (
+    <>
+      <header role="banner" aria-label="Sivun ylätunniste">
+        <a 
+          href="#main-content"
+          className="skip-link fixed left-[-9999px] top-4 z-[2000] glass px-4 py-2 rounded-xl focus:left-4 transition-all duration-300 text-gray-800 font-medium"
+        >
+          Siirry suoraan sisältöön
+        </a>
+        <motion.nav
+          role="navigation"
+          aria-label="Päänavigointi"
+          initial={{ y: -100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-[100] transition-all duration-500 mobile-optimized mobile-touch-target ${
+            scrolled ? 'top-2 scale-95' : 'top-4'
+          }`}
+        >
+          <div className="glass-nav rounded-2xl px-3 py-3 shadow-xl">
+            <div className="flex items-center gap-2">
+              <motion.div
+                whileHover={hoverAnimations.scale.whileHover}
+                whileTap={hoverAnimations.scale.whileTap}
+              >
+                <a 
+                  href="/"
+                  className="flex items-center gap-3 px-4 py-2 rounded-xl hover:bg-white/20 transition-all duration-200"
+                >
+                  <motion.div
+                    animate={{ rotate: [0, 5, -5, 0] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                    className="w-10 h-10 bg-[var(--color-accent)] rounded-xl flex items-center justify-center shadow-md"
+                  >
+                    <Dog className="w-5 h-5 text-white" />
+                  </motion.div>
+                  <span className="hidden sm:block text-h6 font-semibold text-[var(--color-text)]">Pentulaskuri</span>
+                </a>
+              </motion.div>
+            </div>
+          </div>
+        </motion.nav>
+      </header>
+    </>
+  )
+}
+
+const NavigationWrapper: React.FC = () => {
+  const inRouter = useInRouterContext()
+  return inRouter ? <NavigationWithRouter /> : <NavigationStatic />
+}
+
+export default NavigationWrapper
