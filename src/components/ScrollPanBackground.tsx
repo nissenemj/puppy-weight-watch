@@ -30,9 +30,11 @@ export default function ScrollPanBackground({
 }: ScrollPanBackgroundProps) {
   const sectionRef = useRef<HTMLDivElement | null>(null)
   const reduceMotion = useReducedMotion()
+  const [isMounted, setIsMounted] = useState(false)
+  useEffect(() => setIsMounted(true), [])
   const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start end', 'end start']
+    target: isMounted ? sectionRef : undefined,
+    offset: ['start end', 'end start'],
   })
 
   // Compute transforms: from -half pan to +half pan; scale from 1 to zoom

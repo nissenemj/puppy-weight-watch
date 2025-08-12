@@ -1,4 +1,4 @@
-import React, { ReactNode, useMemo, useRef } from 'react'
+import React, { ReactNode, useMemo, useRef, useEffect, useState } from 'react'
 import { motion, useScroll, useTransform, useReducedMotion, useMotionTemplate } from 'framer-motion'
 
 interface Item {
@@ -23,7 +23,11 @@ export default function StickyHorizontalGallery({
 }: StickyHorizontalGalleryProps) {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const reduceMotion = useReducedMotion()
-  const { scrollYProgress } = useScroll({ target: containerRef })
+  const [isMounted, setIsMounted] = useState(false)
+  useEffect(() => setIsMounted(true), [])
+  const { scrollYProgress } = useScroll({
+    target: reduceMotion || !isMounted ? undefined : containerRef,
+  })
 
   // Track width: number of slides * 100vw
   const total = items.length
