@@ -3,6 +3,7 @@
 @import './styles/design-system.css';
 @import './styles/typography.css'; 
 @import './styles/animations.css';
+@import './styles/mobile-optimizations.css';
 
 /* Legacy font imports - will be replaced by design system fonts */
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap");
@@ -23,6 +24,15 @@ html, body {
 
 *, *::before, *::after {
   box-sizing: border-box;
+}
+
+/* Ensure containers don't overflow viewport */
+.container, .max-w-6xl, .max-w-4xl, .max-w-2xl {
+  max-width: 100% !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 
 /* Safe area utilities for devices with display cutouts */
@@ -55,6 +65,46 @@ html, body {
   input, textarea, select {
     font-size: 16px; /* Prevent zoom on iOS */
     min-height: 44px;
+  }
+
+  /* Ensure flex items wrap on small screens */
+  .flex {
+    flex-wrap: wrap !important;
+  }
+
+  /* Simplify grids to one column on small screens */
+  .grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Ensure cards and gradient blocks are full width on mobile */
+  .card, .bg-white, .bg-gradient-to-br {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* Buttons should not overflow and should wrap text */
+  button, .btn {
+    width: 100% !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+    word-wrap: break-word !important;
+  }
+
+  /* Inputs should fill available width */
+  input, textarea, select {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Images should never overflow and keep aspect ratio */
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
   }
 }
 
@@ -540,3 +590,5 @@ header {
     backdrop-filter: blur(8px);
   }
 }
+
+/* (moved) mobile utilities imported at top to satisfy CSS import ordering */

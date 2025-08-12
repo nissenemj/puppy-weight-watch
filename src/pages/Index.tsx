@@ -124,7 +124,7 @@ const Index = () => {
       />
 
       {/* Pan Hero Section */}
-      <section className="pb-4">
+      <section className="pb-4 no-horizontal-scroll mobile-text-wrap responsive-media">
         <ScrollPanBackground src={heroMainIllustration} alt="" panX={40} panY={20} zoom={1.04} minHeightClass="min-h-[50svh]">
           <div className="container mx-auto px-4 text-center">
             <motion.div initial="hidden" animate="visible" variants={entranceAnimations.staggerContainer}>
@@ -160,7 +160,7 @@ const Index = () => {
       </Section>
 
       {/* Hero Section */}
-      <Section className="pt-24 pb-16">
+      <Section className="pt-24 pb-16 mobile-text-wrap responsive-media no-horizontal-scroll">
         <Container size="xl" padding="lg">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             
@@ -200,7 +200,7 @@ const Index = () => {
 
               <motion.div
                 variants={entranceAnimations.staggerChild}
-                className="flex flex-col sm:flex-row gap-4 mb-8"
+                className="flex flex-col sm:flex-row gap-4 mb-8 mobile-button"
               >
                 <Link to="/weight-tracker">
                   <Button size="lg" className="w-full sm:w-auto">
@@ -235,7 +235,7 @@ const Index = () => {
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="relative"
+              className="relative overflow-hidden"
             >
               <div className="relative">
                 <img 
@@ -284,7 +284,7 @@ const Index = () => {
       </Section>
 
       {/* Features Section */}
-      <Section className="py-20 bg-[var(--color-surface-alt)]">
+      <Section className="py-20 bg-[var(--color-surface-alt)] mobile-text-wrap responsive-media no-horizontal-scroll">
         <Container size="xl" padding="lg">
           <div className="text-center mb-16">
             <h2 className="text-h1 mb-6">
@@ -333,7 +333,7 @@ const Index = () => {
       </Section>
 
       {/* Stats Section */}
-      <Section className="py-20">
+      <Section className="py-20 mobile-text-wrap responsive-media no-horizontal-scroll">
         <Container size="xl" padding="lg">
           <div className="text-center mb-12">
             <h2 className="text-h2 mb-4">Luotettu ratkaisu</h2>
@@ -342,7 +342,7 @@ const Index = () => {
             </p>
           </div>
           
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mobile-grid-1">
             {stats.map((stat, index) => (
               <motion.div
                 key={index}
@@ -369,7 +369,7 @@ const Index = () => {
       </Section>
 
       {/* Growth Chart Section */}
-      <Section className="py-20 bg-[var(--color-surface-alt)]">
+      <Section className="py-20 bg-[var(--color-surface-alt)] mobile-text-wrap responsive-media no-horizontal-scroll">
         <Container size="xl" padding="lg">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             
@@ -413,7 +413,7 @@ const Index = () => {
               </Stack>
 
               <Link to="/weight-tracker">
-                <Button size="lg">
+                <Button size="lg" className="w-full sm:w-auto">
                   Aloita seuranta
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
@@ -439,7 +439,7 @@ const Index = () => {
       </Section>
 
       {/* CTA Section */}
-      <Section className="py-20 bg-gradient-to-r from-[var(--color-accent)] to-[var(--color-secondary)] text-white">
+      <Section className="py-20 bg-gradient-to-r from-[var(--color-accent)] to-[var(--color-secondary)] text-white mobile-text-wrap responsive-media no-horizontal-scroll">
         <Container size="lg" padding="lg">
           <div className="text-center">
             <h2 className="text-h1 mb-6">
@@ -450,7 +450,7 @@ const Index = () => {
               Täysin ilmainen - ei piilokustannuksia.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mobile-button">
               <Link to="/weight-tracker">
                 <Button 
                   size="xl" 

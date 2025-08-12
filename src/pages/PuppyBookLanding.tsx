@@ -63,7 +63,7 @@ const PuppyBookLanding: React.FC = () => {
 
   return (
     <MobileOptimizedLayout>
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 page-with-navigation">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 page-with-navigation no-horizontal-scroll mobile-text-wrap responsive-media">
       <SEO 
         title="Pentukirja - Tallenna pennun ensimmäinen vuosi"
         description="Digitaalinen pentukirja pennun ensimmäisen vuoden dokumentointiin. Virstanpylväät, muistot, ystävät ja kasvu yhdessä paikassa."
@@ -73,7 +73,7 @@ const PuppyBookLanding: React.FC = () => {
       <Navigation />
       
       {/* Hero Section with pan background */}
-      <section className="relative py-8 overflow-hidden rounded-2xl">
+      <section className="relative py-8 overflow-hidden rounded-2xl mobile-text-wrap responsive-media no-horizontal-scroll">
         <ScrollPanBackground src={heroIllustration} alt="" panX={40} panY={20} zoom={1.04} minHeightClass="min-h-[50svh]">
           <div className="container mx-auto px-4">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -90,7 +90,7 @@ const PuppyBookLanding: React.FC = () => {
                   muistoja ja seuraa kasvua henkilökohtaisessa pentukirjassa.
                 </p>
                 
-                <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex flex-col sm:flex-row gap-4 mobile-button">
                   <Link to="/puppy-book">
                     <motion.button
                       whileHover={{ scale: 1.05 }}
@@ -144,8 +144,8 @@ const PuppyBookLanding: React.FC = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-white/30">
-        <div className="container mx-auto px-4">
+      <section className="py-20 bg-white/30 mobile-text-wrap responsive-media no-horizontal-scroll">
+        <div className="container mx-auto px-4 mobile-grid-1">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -187,7 +187,7 @@ const PuppyBookLanding: React.FC = () => {
       </section>
 
       {/* Growth Stages Section */}
-      <section className="py-20">
+      <section className="py-20 mobile-text-wrap responsive-media no-horizontal-scroll">
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <motion.div
@@ -235,8 +235,8 @@ const PuppyBookLanding: React.FC = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-orange-500 to-pink-500 text-white">
-        <div className="container mx-auto px-4 text-center">
+      <section className="py-20 bg-gradient-to-r from-orange-500 to-pink-500 text-white mobile-text-wrap responsive-media no-horizontal-scroll">
+        <div className="container mx-auto px-4 text-center mobile-button">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}

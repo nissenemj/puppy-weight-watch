@@ -260,10 +260,13 @@ export function initializeCSSOptimizations(): void {
   FontOptimizer.enableFontDisplaySwap();
   
   // Preload critical fonts
-  FontOptimizer.preloadFonts([
-    '/fonts/inter-v12-latin-regular.woff2',
-    '/fonts/inter-v12-latin-600.woff2'
-  ]);
+  // Preload critical fonts only if served locally; otherwise rely on Google Fonts
+  if (import.meta.env.VITE_PRELOAD_LOCAL_FONTS === 'true') {
+    FontOptimizer.preloadFonts([
+      '/fonts/inter-v12-latin-regular.woff2',
+      '/fonts/inter-v12-latin-600.woff2'
+    ]);
+  }
 
   // Monitor performance in development
   if (import.meta.env.DEV) {

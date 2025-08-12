@@ -66,7 +66,7 @@ const Calculator = () => {
 
   return (
     <MobileOptimizedLayout>
-    <PageLayout variant="default" animated>
+    <PageLayout variant="default" animated className="no-horizontal-scroll mobile-text-wrap responsive-media">
       <SEO
         title="Pentulaskuri - Ruokamäärä"
         description="Laske koiranpentusi optimaalinen päivittäinen ruokamäärä. Huomioi rodun, iän, painon ja aktiivisuuden. Käytä virallisia annostelutaulukoita."
@@ -103,7 +103,7 @@ const Calculator = () => {
             <motion.p variants={entranceAnimations.staggerChild} className="text-body-xl text-muted max-w-3xl mx-auto">
               Laske koiranpentusi optimaalinen päivittäinen ruokamäärä huomioiden rodun, iän, painon ja aktiivisuustason.
             </motion.p>
-            <motion.div variants={entranceAnimations.staggerChild} className="mt-6 flex items-center justify-center gap-6 text-body-sm text-muted">
+            <motion.div variants={entranceAnimations.staggerChild} className="mt-6 flex items-center justify-center gap-6 text-body-sm text-muted mobile-flex-wrap">
               <div className="flex items-center gap-2">
                 <TrendingUp className="w-4 h-4 text-accent" />
                 <span>Tarkat tulokset</span>

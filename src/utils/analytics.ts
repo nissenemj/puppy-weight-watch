@@ -18,7 +18,8 @@ class Analytics {
   private userId?: string;
 
   constructor() {
-    this.isEnabled = typeof window !== 'undefined' && import.meta.env.PROD;
+    // Enable analytics only when explicitly allowed in production builds
+    this.isEnabled = typeof window !== 'undefined' && import.meta.env.PROD && import.meta.env.VITE_ENABLE_ANALYTICS === 'true';
   }
 
   // Initialize analytics with user context
@@ -92,12 +93,12 @@ class Analytics {
     // Use sendBeacon for reliability
     if (navigator.sendBeacon) {
       navigator.sendBeacon(
-        `/api/analytics/${type}`,
+        `${import.meta.env.VITE_ANALYTICS_BASE_URL || '/api/analytics'}/${type}`,
         JSON.stringify(payload)
       );
     } else {
       // Fallback to fetch
-      fetch(`/api/analytics/${type}`, {
+      fetch(`${import.meta.env.VITE_ANALYTICS_BASE_URL || '/api/analytics'}/${type}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)

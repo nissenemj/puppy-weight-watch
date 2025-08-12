@@ -10,19 +10,32 @@ export default {
 	],
 	prefix: "",
 	theme: {
-        container: {
-            center: true,
-            padding: {
-                DEFAULT: '1rem',
-                sm: '1rem',
-                md: '1.25rem',
-                lg: '1.5rem',
-                xl: '2rem',
-            },
-            screens: {
-                '2xl': '1400px'
-            }
-        },
+			container: {
+				center: true,
+				padding: {
+					DEFAULT: '1rem',
+					sm: '1.5rem',
+					lg: '2rem',
+					xl: '2rem',
+					'2xl': '2rem',
+				},
+				screens: {
+					sm: '640px',
+					md: '768px',
+					lg: '1024px',
+					xl: '1280px',
+					'2xl': '1400px'
+				}
+			},
+
+			screens: {
+				'xs': '320px',
+				'sm': '640px',
+				'md': '768px',
+				'lg': '1024px',
+				'xl': '1280px',
+				'2xl': '1536px',
+			},
 		extend: {
 			fontFamily: {
 				'heading': ['Poppins', 'system-ui', '-apple-system', 'sans-serif'],
@@ -196,6 +209,26 @@ export default {
 						'min-height': '44px',
 						'min-width': '44px',
 						'touch-action': 'manipulation',
+					},
+					'.no-scrollbar': {
+						'-ms-overflow-style': 'none',
+						'scrollbar-width': 'none',
+					},
+					'.no-scrollbar::-webkit-scrollbar': {
+						'display': 'none',
+					},
+					'.safe-area': {
+						'padding-top': 'env(safe-area-inset-top)',
+						'padding-bottom': 'env(safe-area-inset-bottom)',
+						'padding-left': 'env(safe-area-inset-left)',
+						'padding-right': 'env(safe-area-inset-right)',
+					},
+					'.mobile-full': {
+						'width': '100vw',
+						'margin-left': 'calc(-50vw + 50%)',
+						'margin-right': 'calc(-50vw + 50%)',
+						'padding-left': '1rem',
+						'padding-right': '1rem',
 					},
 				}
 				addUtilities(newUtilities)
