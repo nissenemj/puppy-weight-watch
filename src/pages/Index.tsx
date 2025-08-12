@@ -125,7 +125,7 @@ const Index = () => {
 
       {/* Pan Hero Section */}
       <section className="pb-4 no-horizontal-scroll mobile-text-wrap responsive-media">
-        <ScrollPanBackground src={heroMainIllustration} alt="" panX={40} panY={20} zoom={1.04} minHeightClass="min-h-[50svh]">
+        <ScrollPanBackground src={heroMainIllustration} alt="Kuvitus: pentu kasvukäyrän ja datan edessä" panX={40} panY={20} zoom={1.04} minHeightClass="min-h-[50svh]">
           <div className="container mx-auto px-4 text-center">
             <motion.div initial="hidden" animate="visible" variants={entranceAnimations.staggerContainer}>
               <motion.div variants={entranceAnimations.staggerChild} className="mb-4">
@@ -149,6 +149,7 @@ const Index = () => {
 
       {/* How it works: sticky horizontal steps */}
       <Section className="py-12">
+        <h2 className="sr-only">Miten palvelu toimii</h2>
         <StickyHorizontalGallery
           items={[
             { id: 'h1', content: (<div><h3 className="text-h2 mb-2">1. Luo profiili</h3><p className="text-muted">Aloita nopeasti ilman rekisteröintiä – tallenna myöhemmin.</p></div>) },
@@ -202,14 +203,14 @@ const Index = () => {
                 variants={entranceAnimations.staggerChild}
                 className="flex flex-col sm:flex-row gap-4 mb-8 mobile-button"
               >
-                <Link to="/weight-tracker">
+                <Link to="/weight-tracker" aria-label="Aloita pennun painonseuranta – siirry painonseurantasivulle">
                   <Button size="lg" className="w-full sm:w-auto">
                     <Scale className="w-5 h-5 mr-2" />
                     Aloita seuranta
                   </Button>
                 </Link>
                 
-                <Link to="/calculator">
+                <Link to="/calculator" aria-label="Avaa pentulaskuri – laske ruokamäärät">
                   <Button variant="outline" size="lg" className="w-full sm:w-auto">
                     <Calculator className="w-5 h-5 mr-2" />
                     Ruokalaskuri

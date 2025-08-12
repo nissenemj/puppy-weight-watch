@@ -52,23 +52,26 @@ const Navigation = () => {
 
   return (
     <>
-      {/* Skip to content link */}
-      <a 
-        href="#main-content"
-        className="skip-link fixed left-[-9999px] top-4 z-[2000] glass px-4 py-2 rounded-xl focus:left-4 transition-all duration-300 text-gray-800 font-medium"
-      >
-        Siirry suoraan sisältöön
-      </a>
+      <header role="banner" aria-label="Sivun ylätunniste">
+        {/* Skip to content link */}
+        <a 
+          href="#main-content"
+          className="skip-link fixed left-[-9999px] top-4 z-[2000] glass px-4 py-2 rounded-xl focus:left-4 transition-all duration-300 text-gray-800 font-medium"
+        >
+          Siirry suoraan sisältöön
+        </a>
 
-      {/* Floating Navigation */}
-      <motion.nav
+        {/* Floating Navigation */}
+        <motion.nav
+          role="navigation"
+          aria-label="Päänavigointi"
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.2 }}
         className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-[100] transition-all duration-500 mobile-optimized mobile-touch-target ${
           scrolled ? 'top-2 scale-95' : 'top-4'
         }`}
-      >
+        >
         <div className="glass-nav rounded-2xl px-3 py-3 shadow-xl">
           <div className="flex items-center gap-2">
             {/* Logo */}
@@ -78,7 +81,8 @@ const Navigation = () => {
             >
               <Link 
                 to="/" 
-                className="flex items-center gap-3 px-4 py-2 rounded-xl hover:bg-white/20 transition-all duration-200"
+                  className="flex items-center gap-3 px-4 py-2 rounded-xl hover:bg-white/20 transition-all duration-200"
+                  aria-current={isActive('/') ? 'page' : undefined}
               >
                 <motion.div
                   animate={{ rotate: [0, 5, -5, 0] }}
@@ -111,6 +115,8 @@ const Navigation = () => {
                           ? 'bg-[var(--color-accent)] text-white shadow-lg'
                           : 'text-[var(--color-text)] hover:bg-gray-100'
                       }`}
+                      aria-current={isItemActive ? 'page' : undefined}
+                      aria-label={`${item.label} - siirry sivulle`}
                     >
                       <Icon className="w-4 h-4" />
                       <span className="text-body-sm font-medium">{item.label}</span>
@@ -135,13 +141,18 @@ const Navigation = () => {
                 size="icon"
                 onClick={() => setIsMobileMenuOpen(true)}
                 className="rounded-xl"
+                aria-haspopup="dialog"
+                aria-expanded={isMobileMenuOpen}
+                aria-controls="mobile-menu-panel"
+                aria-label="Avaa valikko"
               >
                 <Menu className="w-5 h-5" />
               </Button>
             </div>
           </div>
         </div>
-      </motion.nav>
+        </motion.nav>
+      </header>
 
       {/* Mobile Menu Overlay */}
       <AnimatePresence>
@@ -164,6 +175,10 @@ const Navigation = () => {
               exit={{ x: '100%' }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
               className="fixed top-0 right-0 h-full w-80 max-w-[90vw] bg-white/95 backdrop-blur-xl border-l border-white/30 z-[151] p-6"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="mobile-menu-title"
+              id="mobile-menu-panel"
             >
               {/* Header */}
               <div className="flex items-center justify-between mb-8">
@@ -172,7 +187,7 @@ const Navigation = () => {
                     <Dog className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-gray-800 text-lg">Pentulaskuri</h3>
+                    <h3 id="mobile-menu-title" className="font-bold text-gray-800 text-lg">Pentulaskuri</h3>
                     <p className="text-gray-600 text-sm">Koiran kasvun seuranta</p>
                   </div>
                 </div>
@@ -182,6 +197,7 @@ const Navigation = () => {
                   className="p-2 rounded-full hover:bg-gray-100 transition-all duration-300"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
+                  aria-label="Sulje valikko"
                 >
                   <X className="w-5 h-5 text-gray-700" />
                 </motion.button>
@@ -206,6 +222,8 @@ const Navigation = () => {
                             ? 'bg-gradient-primary text-white shadow-lg'
                             : 'text-gray-700 hover:bg-gray-100'
                         }`}
+                        aria-current={isActive(item.href) ? 'page' : undefined}
+                        aria-label={`${item.label} - siirry sivulle`}
                       >
                         <Icon className="w-5 h-5" />
                         <span className="text-lg">{item.label}</span>

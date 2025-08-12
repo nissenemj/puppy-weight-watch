@@ -23,11 +23,12 @@ export default function StickyHorizontalGallery({
 }: StickyHorizontalGalleryProps) {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const reduceMotion = useReducedMotion()
-  const [isMounted, setIsMounted] = useState(false)
-  useEffect(() => setIsMounted(true), [])
-  const { scrollYProgress } = useScroll({
-    target: reduceMotion || !isMounted ? undefined : containerRef,
-  })
+  // Work around Framer Motion hydration timing: set target after client mount
+  const [scrollOptions, setScrollOptions] = useState<any>(undefined)
+  useEffect(() => {
+    setScrollOptions({ target: containerRef })
+  }, [])
+  const { scrollYProgress } = useScroll(scrollOptions)
 
   // Track width: number of slides * 100vw
   const total = items.length

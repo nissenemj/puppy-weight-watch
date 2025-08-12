@@ -21,9 +21,9 @@ export function MobileOptimizedLayout({
   return (
     <div className={`min-h-screen bg-background ${className}`}>
       {/* Main content with safe area padding */}
-      <div className="pb-20 pt-4 px-4 sm:px-6 lg:px-8">
+      <main id="main-content" role="main" aria-label="Pääsisältö" tabIndex={-1} className="pb-20 pt-4 px-4 sm:px-6 lg:px-8">
         {children}
-      </div>
+      </main>
       
       {/* Floating Action Button for mobile */}
       {showFloatingAction && (
@@ -42,7 +42,7 @@ export function MobileOptimizedLayout({
       )}
       
       {/* Bottom safe area for devices with home indicators */}
-      <div className="h-8 bg-background" />
+      <footer role="contentinfo" aria-label="Alatunniste" className="h-8 bg-background" />
     </div>
   )
 }
