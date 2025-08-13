@@ -152,12 +152,20 @@ const Index = () => {
         <h2 className="sr-only">Miten palvelu toimii</h2>
         <StickyHorizontalGallery
           items={[
-            { id: 'h1', content: (<div><h3 className="text-h2 mb-2">1. Luo profiili</h3><p className="text-muted">Aloita nopeasti ilman rekisteröintiä – tallenna myöhemmin.</p></div>) },
-            { id: 'h2', content: (<div><h3 className="text-h2 mb-2">2. Seuraa painoa</h3><p className="text-muted">Lisää viikoittaiset merkinnät ja katso kehitys graafeina.</p></div>) },
-            { id: 'h3', content: (<div><h3 className="text-h2 mb-2">3. Laske ruokamäärä</h3><p className="text-muted">Saat suositukset iän, rodun ja aktiivisuuden mukaan.</p></div>) },
-            { id: 'h4', content: (<div><h3 className="text-h2 mb-2">4. Tutustu oppaaseen</h3><p className="text-muted">Tietopankki ja turvallisuusvinkit yhden napin takana.</p></div>) },
+            { id: 'h1', content: (<div><h3 className="text-h2 mb-2">1. Aloita (profiili valinnainen)</h3><p className="text-muted">Voit seurata heti ilman rekisteröintiä – tallenna myöhemmin, jos haluat.</p></div>) },
+            { id: 'h2', content: (<div><h3 className="text-h2 mb-2">2. Lisää paino viikoittain</h3><p className="text-muted">Syötä mittaus 10 sekunnissa. Näet muutoksen ja trendin yhdellä vilkaisulla.</p></div>) },
+            { id: 'h3', content: (<div><h3 className="text-h2 mb-2">3. Laske ruokamäärä</h3><p className="text-muted">Suositus pennun iän, rodun ja aktiivisuuden mukaan. Päivitä helposti.</p></div>) },
+            { id: 'h4', content: (<div><h3 className="text-h2 mb-2">4. Opas ja vinkit</h3><p className="text-muted">Selkeät ohjeet ruokintaan, sosiaalistamiseen ja turvallisuuteen.</p></div>) },
           ]}
         />
+
+        <div className="mt-8 text-center">
+          <Link to="/weight-tracker" aria-label="Aloita seuranta – siirry painonseurantaan">
+            <Button size="lg" className="min-w-[220px]">
+              Aloita seuranta – 1 min
+            </Button>
+          </Link>
+        </div>
       </Section>
 
       {/* Hero Section */}

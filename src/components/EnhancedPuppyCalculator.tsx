@@ -639,7 +639,6 @@ export default function EnhancedPuppyCalculator() {
           <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
             <Dog className="h-5 w-5 sm:h-6 sm:w-6" />
             Dynaaminen penturuokintalaskuri
-            <Badge variant="secondary" className="text-xs">Admin</Badge>
           </CardTitle>
           <CardDescription className="text-sm sm:text-base">
             Valitse ruoka ja sovellus pyytää automaattisesti tarvittavat tiedot
