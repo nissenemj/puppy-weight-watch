@@ -119,10 +119,10 @@ export default function DogSelector({ user, selectedDogId, onDogSelect }: DogSel
           if (dog) onDogSelect(value, dog)
         }}
       >
-                    <SelectTrigger className="min-w-[140px] sm:min-w-[180px]">
+        <SelectTrigger className="min-w-[140px] sm:min-w-[180px]">
           <SelectValue placeholder="Valitse koira" />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="z-[1300]">
           {dogs.map((dog) => (
             <SelectItem key={dog.id} value={dog.id}>
               <div className="flex flex-col">

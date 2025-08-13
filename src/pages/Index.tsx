@@ -169,7 +169,7 @@ const Index = () => {
       </Section>
 
       {/* Hero Section */}
-      <Section className="pt-24 pb-16 mobile-text-wrap responsive-media no-horizontal-scroll">
+      <Section className="pt-24 pb-16 mobile-text-wrap responsive-media no-horizontal-scroll mobile-grid-1">
         <Container size="xl" padding="lg">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             
@@ -250,7 +250,7 @@ const Index = () => {
                 <img 
                   src={heroMainIllustration}
                   alt="Pentulaskuri hero illustration"
-                  className="w-full h-auto rounded-3xl shadow-2xl"
+                  className="w-full h-auto rounded-3xl shadow-2xl object-cover"
                 />
                 
                 {/* Floating stats */}
