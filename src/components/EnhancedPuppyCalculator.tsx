@@ -89,6 +89,20 @@ export default function EnhancedPuppyCalculator() {
   const [showErrors, setShowErrors] = useState(false)
   const [inputErrors, setInputErrors] = useState<{ currentWeight?: string; adultWeight?: string; ageMonths?: string }>({})
 
+  const getStep = () => {
+    if (!selectedFood) return 1
+    if (selectedFood && !result) return 2
+    return 3
+  }
+
+  const areRequiredInputsFilled = () => {
+    const required = getRequiredInputs()
+    const hasCurrent = !required.includes('currentWeight') || !!currentWeight
+    const hasAdult = !required.includes('adultWeight') || !!adultWeight
+    const hasAge = !required.includes('ageMonths') || !!ageMonths
+    return hasCurrent && hasAdult && hasAge
+  }
+
   useEffect(() => {
     checkUser()
     fetchDogFoods()
@@ -634,6 +648,19 @@ export default function EnhancedPuppyCalculator() {
   // Admin view - show full calculator
   return (
     <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6 px-4 sm:px-6">
+      {/* Step indicator */}
+      <div className="space-y-2">
+        <div className="w-full h-2 bg-muted rounded-full overflow-hidden" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={getStep() * 33}>
+          <div className="h-full bg-[var(--color-accent)] transition-all" style={{ width: `${getStep() * (100/3)}%` }} />
+        </div>
+        <div className="flex justify-center gap-2 text-xs text-muted-foreground">
+          <span className={getStep() === 1 ? 'font-medium text-foreground' : ''}>1) Valitse ruoka</span>
+          <span>→</span>
+          <span className={getStep() === 2 ? 'font-medium text-foreground' : ''}>2) Syötä tiedot</span>
+          <span>→</span>
+          <span className={getStep() === 3 ? 'font-medium text-foreground' : ''}>3) Tulokset</span>
+        </div>
+      </div>
       <Card>
         <CardHeader className="p-4 sm:p-6">
           <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
@@ -691,7 +718,7 @@ export default function EnhancedPuppyCalculator() {
 
               <Button 
                 onClick={calculateFeeding} 
-                disabled={loading || !selectedFood}
+                disabled={loading || !selectedFood || !areRequiredInputsFilled()}
                 className="w-full min-h-[44px] text-sm sm:text-base"
               >
                 {loading ? 'Lasketaan...' : 'Laske ruokamäärä'}
