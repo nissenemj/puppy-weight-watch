@@ -91,26 +91,14 @@ export default defineConfig(({ mode }) => ({
     },
   },
   optimizeDeps: {
-    // Force re-bundling in dev to ensure React is served as proper ESM with named exports
-    force: true,
+    // Let Vite handle React automatically - include only non-core libraries
     include: [
-      // Core
-      'react',
-      'react-dom',
-      'react/jsx-runtime',
-      'react/jsx-dev-runtime',
-      // App libs
       'react-router-dom',
       '@tanstack/react-query',
       '@supabase/supabase-js',
       'react-helmet-async',
       'lucide-react',
       'framer-motion',
-    ],
-    // Ensure CJS interop is available where needed
-    needsInterop: [
-      'react',
-      'react-dom',
     ],
   },
 }));
