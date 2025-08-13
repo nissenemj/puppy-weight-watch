@@ -115,7 +115,7 @@ const WeightTracker = ({ user, onSignOut, hasBooks = false }: WeightTrackerProps
       className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-25 to-purple-50 relative"
     >
       {/* Navigation Header */}
-      <header className="bg-white/90 backdrop-blur-md border-b border-gray-200/50 sticky top-0 z-50">
+      <header className="bg-white/90 backdrop-blur-md border-b border-gray-200/50 sticky top-0 z-[1000]">
         <div className="max-w-6xl mx-auto">
           {/* Top row: Logo and user info */}
           <div className="flex items-center justify-between p-4 pb-2">
