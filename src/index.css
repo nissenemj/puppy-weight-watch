@@ -210,6 +210,7 @@ html, body {
   --z-dropdown: 1000;
   --z-sticky: 1020;
   --z-fixed: 1030;
+  --z-portal: 1100;
   --z-modal-backdrop: 1040;
   --z-modal: 1050;
   --z-popover: 1060;
@@ -524,6 +525,19 @@ header {
   z-index: var(--z-sticky);
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
+}
+
+/* Sticky header offset for anchored scroll */
+html { scroll-padding-top: 80px; }
+h1, h2, h3, h4, h5, h6 { scroll-margin-top: 80px; }
+
+/* Mobile typography clamps and wrapping */
+@media (max-width: 640px) {
+  h1 { font-size: clamp(28px, 6vw, 48px); line-height: 1.2; }
+  h2 { font-size: clamp(22px, 4.5vw, 36px); line-height: 1.25; }
+  p, li, span, a { font-size: clamp(15px, 2.5vw, 18px); line-height: 1.6; }
+  * { overflow-wrap: anywhere; hyphens: auto; }
+  .flex > * { min-width: 0; }
 }
 
 .sticky {
