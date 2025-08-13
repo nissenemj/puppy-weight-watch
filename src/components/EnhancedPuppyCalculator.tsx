@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -88,6 +88,7 @@ export default function EnhancedPuppyCalculator() {
   const [isAdmin, setIsAdmin] = useState(false)
   const [showErrors, setShowErrors] = useState(false)
   const [inputErrors, setInputErrors] = useState<{ currentWeight?: string; adultWeight?: string; ageMonths?: string }>({})
+  const inputsRef = useRef<HTMLDivElement | null>(null)
 
   const getStep = () => {
     if (!selectedFood) return 1
@@ -101,6 +102,27 @@ export default function EnhancedPuppyCalculator() {
     const hasAdult = !required.includes('adultWeight') || !!adultWeight
     const hasAge = !required.includes('ageMonths') || !!ageMonths
     return hasCurrent && hasAdult && hasAge
+  }
+
+  const handleNextFromSelect = () => {
+    inputsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
+  const handlePrevFromInputs = () => {
+    setSelectedFood(null)
+    setResult(null)
+  }
+
+  const handleNewCalculation = () => {
+    setSelectedFood(null)
+    setCurrentWeight('')
+    setAdultWeight('')
+    setAgeMonths('')
+    setActivityLevel([1.0])
+    setResult(null)
+    setInputErrors({})
+    setShowErrors(false)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   useEffect(() => {
@@ -704,6 +726,12 @@ export default function EnhancedPuppyCalculator() {
             </Select>
           </div>
 
+          <div className="flex justify-end pt-2">
+            <Button onClick={handleNextFromSelect} disabled={!selectedFood} className="min-h-[44px] sm:w-auto">
+              Seuraava
+            </Button>
+          </div>
+
           {selectedFood && (
             <div className="space-y-4">
               <Alert>
@@ -714,15 +742,25 @@ export default function EnhancedPuppyCalculator() {
                 </AlertDescription>
               </Alert>
 
-              {renderInputs()}
-
-              <Button 
-                onClick={calculateFeeding} 
-                disabled={loading || !selectedFood || !areRequiredInputsFilled()}
-                className="w-full min-h-[44px] text-sm sm:text-base"
-              >
-                {loading ? 'Lasketaan...' : 'Laske ruokamäärä'}
-              </Button>
+              <div ref={inputsRef}>
+                {renderInputs()}
+              </div>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Button 
+                  variant="outline"
+                  onClick={handlePrevFromInputs}
+                  className="min-h-[44px] sm:w-auto"
+                >
+                  Edellinen
+                </Button>
+                <Button 
+                  onClick={calculateFeeding} 
+                  disabled={loading || !selectedFood || !areRequiredInputsFilled()}
+                  className="min-h-[44px] sm:flex-1"
+                >
+                  {loading ? 'Lasketaan...' : 'Seuraava'}
+                </Button>
+              </div>
             </div>
           )}
         </CardContent>
@@ -795,6 +833,13 @@ export default function EnhancedPuppyCalculator() {
             </Alert>
           </CardContent>
         </Card>
+      )}
+
+      {result && (
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Button variant="outline" onClick={() => setResult(null)} className="min-h-[44px] sm:w-auto">Muokkaa tietoja</Button>
+          <Button variant="secondary" onClick={handleNewCalculation} className="min-h-[44px] sm:w-auto">Uusi laskenta</Button>
+        </div>
       )}
     </div>
   )
