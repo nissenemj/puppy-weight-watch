@@ -1,3 +1,4 @@
+
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
@@ -90,12 +91,27 @@ export default defineConfig(({ mode }) => ({
     },
   },
   optimizeDeps: {
+    // Force re-bundling in dev to ensure React is served as proper ESM with named exports
+    force: true,
     include: [
+      // Core
       'react',
       'react-dom',
+      'react/jsx-runtime',
+      'react/jsx-dev-runtime',
       'react-router-dom',
       '@tanstack/react-query',
       '@supabase/supabase-js',
+
+      // Offenders in the error logs and their peers
+      'react-helmet-async',
+      'lucide-react',
+      'framer-motion',
+    ],
+    // Ensure CJS interop is available where needed
+    needsInterop: [
+      'react',
+      'react-dom',
     ],
   },
 }));
