@@ -86,6 +86,8 @@ export default function EnhancedPuppyCalculator() {
   const [loading, setLoading] = useState(false)
   const [user, setUser] = useState<any>(null)
   const [isAdmin, setIsAdmin] = useState(false)
+  const [showErrors, setShowErrors] = useState(false)
+  const [inputErrors, setInputErrors] = useState<{ currentWeight?: string; adultWeight?: string; ageMonths?: string }>({})
 
   useEffect(() => {
     checkUser()
@@ -228,22 +230,24 @@ export default function EnhancedPuppyCalculator() {
         return
       }
       
-      // Validate required inputs
-      const validationErrors = []
+      // Validate required inputs (inline + summary)
+      const fieldErrors: { currentWeight?: string; adultWeight?: string; ageMonths?: string } = {}
       if (requiredInputs.includes('currentWeight') && !currentWeight) {
-        validationErrors.push('Syötä pennun nykyinen paino')
+        fieldErrors.currentWeight = 'Syötä pennun nykyinen paino'
       }
       if (requiredInputs.includes('adultWeight') && !adultWeight) {
-        validationErrors.push('Syötä odotettu aikuispaino')
+        fieldErrors.adultWeight = 'Syötä odotettu aikuispaino'
       }
       if (requiredInputs.includes('ageMonths') && !ageMonths) {
-        validationErrors.push('Syötä pennun ikä kuukausina')
+        fieldErrors.ageMonths = 'Syötä pennun ikä kuukausina'
       }
-      
-      if (validationErrors.length > 0) {
+      setInputErrors(fieldErrors)
+      setShowErrors(Object.keys(fieldErrors).length > 0)
+
+      if (Object.keys(fieldErrors).length > 0) {
         setResult({
           amount: null,
-          warning: validationErrors.join(', '),
+          warning: Object.values(fieldErrors).join(', '),
           disclaimers: [DISCLAIMERS.general]
         })
         setLoading(false)
@@ -466,8 +470,13 @@ export default function EnhancedPuppyCalculator() {
               value={currentWeight}
               onChange={(e) => setCurrentWeight(e.target.value)}
               placeholder="esim. 3.5"
-              className="min-h-[44px] text-sm sm:text-base"
+              aria-invalid={showErrors && !!inputErrors.currentWeight}
+              aria-describedby={showErrors && inputErrors.currentWeight ? 'err-currentWeight' : undefined}
+              className={`min-h-[44px] text-sm sm:text-base ${showErrors && inputErrors.currentWeight ? 'border-red-400' : ''}`}
             />
+            {showErrors && inputErrors.currentWeight && (
+              <p id="err-currentWeight" className="text-xs text-red-500">{inputErrors.currentWeight}</p>
+            )}
           </div>
         )}
         
@@ -481,8 +490,13 @@ export default function EnhancedPuppyCalculator() {
               value={adultWeight}
               onChange={(e) => setAdultWeight(e.target.value)}
               placeholder="esim. 15"
-              className="min-h-[44px] text-sm sm:text-base"
+              aria-invalid={showErrors && !!inputErrors.adultWeight}
+              aria-describedby={showErrors && inputErrors.adultWeight ? 'err-adultWeight' : undefined}
+              className={`min-h-[44px] text-sm sm:text-base ${showErrors && inputErrors.adultWeight ? 'border-red-400' : ''}`}
             />
+            {showErrors && inputErrors.adultWeight && (
+              <p id="err-adultWeight" className="text-xs text-red-500">{inputErrors.adultWeight}</p>
+            )}
           </div>
         )}
         
@@ -496,8 +510,13 @@ export default function EnhancedPuppyCalculator() {
               value={ageMonths}
               onChange={(e) => setAgeMonths(e.target.value)}
               placeholder="esim. 4"
-              className="min-h-[44px] text-sm sm:text-base"
+              aria-invalid={showErrors && !!inputErrors.ageMonths}
+              aria-describedby={showErrors && inputErrors.ageMonths ? 'err-ageMonths' : undefined}
+              className={`min-h-[44px] text-sm sm:text-base ${showErrors && inputErrors.ageMonths ? 'border-red-400' : ''}`}
             />
+            {showErrors && inputErrors.ageMonths && (
+              <p id="err-ageMonths" className="text-xs text-red-500">{inputErrors.ageMonths}</p>
+            )}
           </div>
         )}
         
