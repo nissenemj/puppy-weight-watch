@@ -91,9 +91,15 @@ export default defineConfig(({ mode }) => ({
     },
   },
   optimizeDeps: {
-    // Rely on Vite's defaults for React to avoid interop issues.
-    // Prebundle only non-core libraries that benefit from it.
+    // Force re-bundling in dev to ensure React is served as proper ESM with named exports
+    force: true,
     include: [
+      // Core
+      'react',
+      'react-dom',
+      'react/jsx-runtime',
+      'react/jsx-dev-runtime',
+      // App libs
       'react-router-dom',
       '@tanstack/react-query',
       '@supabase/supabase-js',
@@ -101,6 +107,10 @@ export default defineConfig(({ mode }) => ({
       'lucide-react',
       'framer-motion',
     ],
-    // Removed `force` and `needsInterop` for React to prevent null default interop problems.
+    // Ensure CJS interop is available where needed
+    needsInterop: [
+      'react',
+      'react-dom',
+    ],
   },
 }));
