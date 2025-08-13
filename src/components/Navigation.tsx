@@ -117,7 +117,7 @@ const NavigationWithRouter = () => {
             scrolled ? 'top-2 scale-95' : 'top-4'
           }`}
         >
-          <div className="glass-nav rounded-2xl px-3 py-3 shadow-xl">
+          <div className={`glass-nav rounded-2xl px-3 py-3 ${scrolled ? 'shadow-md' : 'shadow-xl'}`}>
             <div className="flex items-center gap-2">
               {/* Logo */}
               <motion.div

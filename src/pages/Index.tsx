@@ -139,7 +139,7 @@ const Index = () => {
                 <span className="text-accent">ammattimaisesti</span>
               </motion.h1>
               <motion.p variants={entranceAnimations.staggerChild} className="text-body-xl text-white/90 max-w-3xl mx-auto">
-                Seuraa kasvua, ruokintaa ja kehitystä – ilmaiseksi.
+                Seuraa kasvua, ruokintaa ja kehitystä – ilmaiseksi. Aloita minuutissa.
               </motion.p>
             </motion.div>
           </div>
@@ -206,7 +206,7 @@ const Index = () => {
                 <Link to="/weight-tracker" aria-label="Aloita pennun painonseuranta – siirry painonseurantasivulle">
                   <Button size="lg" className="w-full sm:w-auto">
                     <Scale className="w-5 h-5 mr-2" />
-                    Aloita seuranta
+                    Aloita nyt – 1 min
                   </Button>
                 </Link>
                 
