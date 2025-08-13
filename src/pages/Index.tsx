@@ -293,7 +293,7 @@ const Index = () => {
       </Section>
 
       {/* Features Section */}
-      <Section className="py-20 bg-[var(--color-surface-alt)] mobile-text-wrap responsive-media no-horizontal-scroll">
+      <Section className="py-20 bg-[var(--color-surface-alt)] mobile-text-wrap responsive-media no-horizontal-scroll mobile-grid-1">
         <Container size="xl" padding="lg">
           <div className="text-center mb-16">
             <h2 className="text-h1 mb-6">
@@ -323,7 +323,7 @@ const Index = () => {
                       <CardTitle className="group-hover:text-accent transition-colors">
                         {feature.title}
                       </CardTitle>
-                      <CardDescription>
+                      <CardDescription style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                         {feature.description}
                       </CardDescription>
                     </CardHeader>
@@ -378,7 +378,7 @@ const Index = () => {
       </Section>
 
       {/* Growth Chart Section */}
-      <Section className="py-20 bg-[var(--color-surface-alt)] mobile-text-wrap responsive-media no-horizontal-scroll">
+      <Section className="py-20 bg-[var(--color-surface-alt)] mobile-text-wrap responsive-media no-horizontal-scroll mobile-grid-1">
         <Container size="xl" padding="lg">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             
