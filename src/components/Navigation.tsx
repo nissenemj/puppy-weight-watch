@@ -142,46 +142,6 @@ const NavigationWithRouter = () => {
 
               <div className="w-px h-6 bg-gray-300 mx-2 hidden sm:block"></div>
 
-              {/* Desktop Navigation */}
-              <div className="hidden md:flex items-center gap-1">
-                {navItems.slice(1).map((item) => {
-                  const Icon = item.icon
-                  const isItemActive = isActive(item.href)
-                  return (
-                  <motion.div
-                    animate={{ rotate: [0, 5, -5, 0] }}
-                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                    className="w-10 h-10 bg-[var(--color-accent)] rounded-xl flex items-center justify-center shadow-md"
-                  >
-<<<<<<< HEAD
-                    <Dog className="w-5 h-5 text-white" />
-=======
-                    <Link
-                      to={item.href}
-                      className={`relative px-4 py-3 rounded-xl font-medium text-sm transition-all duration-200 flex items-center gap-2 ${
-                        isItemActive
-                          ? 'bg-[var(--color-accent)] text-white shadow-lg'
-                          : 'text-[var(--color-text)] hover:bg-gray-100'
-                      }`}
-                      aria-current={isItemActive ? 'page' : undefined}
-                      aria-label={`${item.label} - siirry sivulle`}
-                    >
-                      <Icon className="w-4 h-4" aria-hidden="true" />
-                      <span className="text-body-sm font-medium">{item.label}</span>
-                      
-                      {isItemActive && (
-                        <motion.div
-                          layoutId="activeNavItem"
-                          className="absolute inset-0 bg-[var(--color-accent)] rounded-xl -z-10"
-                          transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                        />
-                      )}
-                    </Link>
->>>>>>> e03592d (a11y: focus trap + initial focus for mobile menu; skip-link styles; hide decorative icons from AT)
-                  </motion.div>
-                  <span className="hidden sm:block text-h6 font-semibold text-[var(--color-text)]">Pentulaskuri</span>
-                </Link>
-              </motion.div>
 
               <div className="w-px h-6 bg-gray-300 mx-2 hidden sm:block"></div>
 
