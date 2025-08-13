@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 
 interface ContactFormProps {
@@ -13,9 +13,36 @@ export default function ContactForm({ onSubmit }: ContactFormProps) {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [errors, setErrors] = useState<{ name?: string; email?: string; message?: string }>({});
+
+  const nameRef = useRef<HTMLInputElement | null>(null);
+  const emailRef = useRef<HTMLInputElement | null>(null);
+  const messageRef = useRef<HTMLTextAreaElement | null>(null);
+  const successRef = useRef<HTMLDivElement | null>(null);
+
+  const validate = () => {
+    const newErrors: { name?: string; email?: string; message?: string } = {};
+    if (!formData.name.trim()) newErrors.name = 'Nimi on pakollinen';
+    if (!formData.email.trim()) {
+      newErrors.email = 'Sähköpostiosoite on pakollinen';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Anna kelvollinen sähköpostiosoite';
+    }
+    if (!formData.message.trim()) newErrors.message = 'Viesti on pakollinen';
+    setErrors(newErrors);
+    return newErrors;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const v = validate();
+    if (Object.keys(v).length > 0) {
+      // Siirrä fokus ensimmäiseen virheeseen
+      if (v.name) nameRef.current?.focus();
+      else if (v.email) emailRef.current?.focus();
+      else if (v.message) messageRef.current?.focus();
+      return;
+    }
     setIsSubmitting(true);
     
     // Simuloi lähetys
@@ -32,6 +59,7 @@ export default function ContactForm({ onSubmit }: ContactFormProps) {
     setTimeout(() => {
       setIsSubmitted(false);
       setFormData({ name: '', email: '', message: '' });
+      setErrors({});
     }, 3000);
   };
 
@@ -48,6 +76,9 @@ export default function ContactForm({ onSubmit }: ContactFormProps) {
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         className="bg-gradient-to-r from-green-400 to-blue-500 rounded-2xl p-8 text-white text-center"
+        role="status"
+        aria-live="polite"
+        ref={successRef}
       >
         <div className="text-6xl mb-4">🎉</div>
         <h3 className="text-2xl font-bold mb-2">Kiitos viestistäsi!</h3>
@@ -67,45 +98,68 @@ export default function ContactForm({ onSubmit }: ContactFormProps) {
         Ota yhteyttä
       </h3>
       
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4" noValidate>
         <div>
+          <label htmlFor="contact-name" className="sr-only">Nimi</label>
           <input
+            id="contact-name"
+            ref={nameRef}
             type="text"
             name="name"
             placeholder="Nimesi"
+            autoComplete="name"
             value={formData.name}
             onChange={handleChange}
-            required
-            className="w-full px-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent transition-all"
+            aria-invalid={!!errors.name}
+            aria-describedby={errors.name ? 'contact-name-error' : undefined}
+            className={`w-full px-4 py-3 rounded-lg bg-white/20 border text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent transition-all ${errors.name ? 'border-red-400' : 'border-white/30'}`}
           />
+          {errors.name && (
+            <p id="contact-name-error" className="mt-2 text-sm text-red-200" role="alert">{errors.name}</p>
+          )}
         </div>
         
         <div>
+          <label htmlFor="contact-email" className="sr-only">Sähköposti</label>
           <input
+            id="contact-email"
+            ref={emailRef}
             type="email"
             name="email"
             placeholder="Sähköpostiosoitteesi"
+            autoComplete="email"
             value={formData.email}
             onChange={handleChange}
-            required
-            className="w-full px-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent transition-all"
+            aria-invalid={!!errors.email}
+            aria-describedby={errors.email ? 'contact-email-error' : undefined}
+            className={`w-full px-4 py-3 rounded-lg bg-white/20 border text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent transition-all ${errors.email ? 'border-red-400' : 'border-white/30'}`}
           />
+          {errors.email && (
+            <p id="contact-email-error" className="mt-2 text-sm text-red-200" role="alert">{errors.email}</p>
+          )}
         </div>
         
         <div>
+          <label htmlFor="contact-message" className="sr-only">Viesti</label>
           <textarea
+            id="contact-message"
+            ref={messageRef}
             name="message"
             placeholder="Viestisi meille..."
             rows={4}
             value={formData.message}
             onChange={handleChange}
-            required
-            className="w-full px-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent transition-all resize-none"
+            aria-invalid={!!errors.message}
+            aria-describedby={errors.message ? 'contact-message-error' : undefined}
+            className={`w-full px-4 py-3 rounded-lg bg-white/20 border text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent transition-all resize-none ${errors.message ? 'border-red-400' : 'border-white/30'}`}
           />
+          {errors.message && (
+            <p id="contact-message-error" className="mt-2 text-sm text-red-200" role="alert">{errors.message}</p>
+          )}
         </div>
         
         {/* Honeypot spam-suojaus */}
-        <input type="text" name="honeypot" style={{display: 'none'}} />
+        <input type="text" name="honeypot" style={{display: 'none'}} tabIndex={-1} aria-hidden="true" autoComplete="off" />
         
         <button
           type="submit"
