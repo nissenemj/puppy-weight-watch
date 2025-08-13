@@ -26,7 +26,12 @@ export default function StickyHorizontalGallery({
   // Work around Framer Motion hydration timing: set target after client mount
   const [scrollOptions, setScrollOptions] = useState<any>(undefined)
   useEffect(() => {
-    setScrollOptions({ target: containerRef })
+    const raf = requestAnimationFrame(() => {
+      if (containerRef.current) {
+        setScrollOptions({ target: containerRef })
+      }
+    })
+    return () => cancelAnimationFrame(raf)
   }, [])
   const { scrollYProgress } = useScroll(scrollOptions)
 

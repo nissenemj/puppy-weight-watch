@@ -33,7 +33,12 @@ export default function ScrollPanBackground({
   // Defer useScroll binding until after mount to avoid hydration issues
   const [scrollOptions, setScrollOptions] = useState<any>(undefined)
   useEffect(() => {
-    setScrollOptions({ target: sectionRef, offset: ['start end', 'end start'] })
+    const raf = requestAnimationFrame(() => {
+      if (sectionRef.current) {
+        setScrollOptions({ target: sectionRef, offset: ['start end', 'end start'] })
+      }
+    })
+    return () => cancelAnimationFrame(raf)
   }, [])
   const { scrollYProgress } = useScroll(scrollOptions)
 
