@@ -106,6 +106,16 @@
   --z-popover: 1060;
   --z-tooltip: 1070;
   --z-toast: 1080;
+
+  /* ===== MODERN CARD EFFECTS ===== */
+  --shadow-3xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --backdrop-blur: blur(16px);
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  
+  /* Enhanced gradients for modern cards */
+  --gradient-modern: linear-gradient(135deg, hsl(var(--color-primary)) 0%, hsl(var(--color-accent)) 100%);
+  --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
 }
 
 /* ===== UTILITY CLASSES ===== */
@@ -154,6 +164,25 @@
 .shadow-lg { box-shadow: var(--shadow-lg); }
 .shadow-xl { box-shadow: var(--shadow-xl); }
 .shadow-2xl { box-shadow: var(--shadow-2xl); }
+.shadow-3xl { box-shadow: var(--shadow-3xl); }
+
+/* ===== MODERN CARD UTILITIES ===== */
+.glass-effect {
+  background: var(--glass-bg);
+  backdrop-filter: var(--backdrop-blur);
+  border: 1px solid var(--glass-border);
+}
+
+.modern-card {
+  background: var(--gradient-modern);
+  transform: translateY(0);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modern-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--shadow-3xl);
+}
 
 /* ===== BORDER RADIUS ===== */
 .rounded-sm { border-radius: var(--radius-sm); }

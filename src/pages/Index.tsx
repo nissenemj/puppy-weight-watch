@@ -170,8 +170,8 @@ const Index = () => {
 
       {/* Hero Section */}
       <Section className="pt-24 pb-16 mobile-text-wrap responsive-media no-horizontal-scroll mobile-grid-1">
-        <Container size="xl" padding="lg">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <Container size="full" padding="lg">
+          <div className="grid lg:grid-cols-2 gap-12 items-center max-w-7xl mx-auto px-4">
             
             {/* Left Content */}
             <motion.div
@@ -294,8 +294,8 @@ const Index = () => {
 
       {/* Features Section */}
       <Section className="py-20 bg-[var(--color-surface-alt)] mobile-text-wrap responsive-media no-horizontal-scroll mobile-grid-1">
-        <Container size="xl" padding="lg">
-          <div className="text-center mb-16">
+        <Container size="full" padding="lg">
+          <div className="text-center mb-16 max-w-4xl mx-auto px-4">
             <h2 className="text-h1 mb-6">
               Kaikki mitä tarvitset
               <br />
@@ -306,29 +306,36 @@ const Index = () => {
             </p>
           </div>
 
-          <CardGrid cols={2} gap="lg" stagger>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto px-4">
             {features.map((feature, index) => {
               const Icon = feature.icon
+              const variants = ['gradient', 'glass', 'modern', 'elevated']
+              const variant = variants[index % variants.length]
+              
               return (
                 <Link key={index} to={feature.href}>
-                  <Card variant={index === 0 ? "elevated" : "default"} className="h-full group cursor-pointer">
+                  <Card variant={variant as any} className="h-full group cursor-pointer">
                     <CardHeader>
                       <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-4 ${
-                        index === 0 ? 'bg-accent' : 'bg-[var(--color-primary-100)]'
+                        index === 0 ? 'bg-white/20' : 'bg-[var(--color-primary-100)]'
                       }`}>
                         <Icon className={`w-7 h-7 ${
                           index === 0 ? 'text-white' : 'text-[var(--color-primary)]'
                         }`} />
                       </div>
-                      <CardTitle className="group-hover:text-accent transition-colors">
+                      <CardTitle className={`group-hover:text-accent transition-colors ${
+                        index === 0 ? 'text-white' : ''
+                      }`}>
                         {feature.title}
                       </CardTitle>
-                      <CardDescription style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                      <CardDescription className={index === 0 ? 'text-white/80' : ''} style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                         {feature.description}
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <div className="flex items-center gap-2 text-accent font-medium group-hover:gap-3 transition-all">
+                      <div className={`flex items-center gap-2 font-medium group-hover:gap-3 transition-all ${
+                        index === 0 ? 'text-white' : 'text-accent'
+                      }`}>
                         <span>Tutustu</span>
                         <ArrowRight className="w-4 h-4" />
                       </div>
@@ -337,42 +344,52 @@ const Index = () => {
                 </Link>
               )
             })}
-          </CardGrid>
+          </div>
         </Container>
       </Section>
 
       {/* Stats Section */}
       <Section className="py-20 mobile-text-wrap responsive-media no-horizontal-scroll">
-        <Container size="xl" padding="lg">
-          <div className="text-center mb-12">
+        <Container size="full" padding="lg">
+          <div className="text-center mb-12 max-w-4xl mx-auto px-4">
             <h2 className="text-h2 mb-4">Luotettu ratkaisu</h2>
             <p className="text-body-lg text-muted">
               Tuhannet koiranomistajat luottavat meihin päivittäin
             </p>
           </div>
           
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mobile-grid-1">
-            {stats.map((stat, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="text-center"
-              >
-                <div className="text-display-3 font-bold text-accent mb-2">
-                  {stat.text ? (
-                    stat.text
-                  ) : (
-                    <CountUp to={stat.numeric!} suffix={stat.suffix as string} />
-                  )}
-                </div>
-                <div className="text-body-sm text-muted">
-                  {stat.label}
-                </div>
-              </motion.div>
-            ))}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-6xl mx-auto px-4">
+            {stats.map((stat, index) => {
+              const variants = ['modern', 'glass', 'elevated', 'gradient']
+              const variant = variants[index % variants.length]
+              
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                >
+                  <Card variant={variant as any} className="text-center p-8 h-full">
+                    <div className={`text-display-3 font-bold mb-2 ${
+                      variant === 'gradient' ? 'text-white' : 'text-accent'
+                    }`}>
+                      {stat.text ? (
+                        stat.text
+                      ) : (
+                        <CountUp to={stat.numeric!} suffix={stat.suffix as string} />
+                      )}
+                    </div>
+                    <div className={`text-body-sm ${
+                      variant === 'gradient' ? 'text-white/80' : 'text-muted'
+                    }`}>
+                      {stat.label}
+                    </div>
+                  </Card>
+                </motion.div>
+              )
+            })}
           </div>
         </Container>
       </Section>

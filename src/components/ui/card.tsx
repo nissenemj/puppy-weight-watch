@@ -5,20 +5,22 @@ import { cn } from "@/lib/utils"
 const Card = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & {
-    variant?: 'default' | 'elevated' | 'glass' | 'minimal';
+    variant?: 'default' | 'elevated' | 'glass' | 'minimal' | 'gradient' | 'modern';
   }
 >(({ className, variant = 'default', ...props }, ref) => (
   <div
     ref={ref}
     className={cn(
       // Base styles
-      "rounded-2xl bg-[var(--color-surface)] text-[var(--color-text)] transition-all duration-200 overflow-hidden",
+      "rounded-2xl transition-all duration-300 overflow-hidden group",
       // Variants
       {
-        'default': "border border-[var(--color-border)] shadow-md hover:shadow-lg hover-lift",
-        'elevated': "shadow-xl hover:shadow-2xl border-0 hover-lift",
-        'glass': "glass border border-[var(--color-border)] hover:shadow-lg hover-lift",
-        'minimal': "border-0 shadow-none hover:shadow-md hover-lift"
+        'default': "bg-card text-card-foreground border border-border shadow-md hover:shadow-lg transform hover:-translate-y-1",
+        'elevated': "bg-card text-card-foreground shadow-2xl hover:shadow-3xl border-0 transform hover:-translate-y-2 hover:scale-105",
+        'glass': "bg-white/10 backdrop-blur-md border border-white/20 text-foreground hover:bg-white/20 hover:shadow-2xl transform hover:-translate-y-1",
+        'minimal': "bg-card text-card-foreground border-0 shadow-none hover:shadow-lg transform hover:-translate-y-1",
+        'gradient': "bg-gradient-primary text-primary-foreground border-0 shadow-xl hover:shadow-2xl transform hover:-translate-y-2 hover:scale-105",
+        'modern': "bg-card/80 backdrop-blur-sm text-card-foreground border border-border/50 shadow-lg hover:shadow-xl hover:bg-card transform hover:-translate-y-1 hover:border-primary/30"
       }[variant],
       className
     )}
