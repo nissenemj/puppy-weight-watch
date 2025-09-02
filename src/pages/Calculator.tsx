@@ -85,7 +85,7 @@ const Calculator = () => {
         minHeightClass="min-h-[70svh]"
         className="w-full"
       >
-        <div className="w-full px-4 text-center">
+        <div className="w-full text-center">
           <motion.div
             initial="hidden"
             animate="visible"
@@ -133,14 +133,14 @@ const Calculator = () => {
 
       {/* Breadcrumb - FULL WIDTH */}
       <div className="w-full py-4 border-b border-[var(--color-border)]">
-        <div className="max-w-6xl mx-auto px-4">
+        <div className="w-full">
           <Breadcrumb items={breadcrumbItems} />
         </div>
       </div>
       
       {/* Calculator Section - FULL WIDTH */}
       <div className="w-full py-16">
-        <div className="max-w-6xl mx-auto px-4">
+        <div className="w-full">
           <div className="grid gap-8 md:grid-cols-3 text-center mb-12">
             <div>
               <p className="text-5xl font-semibold"><CountUp to={12000} suffix="+" /></p>
@@ -161,7 +161,7 @@ const Calculator = () => {
         
       {/* FAQ Section - FULL WIDTH */}
       <div className="w-full py-20 bg-[var(--color-surface-alt)]">
-        <div className="max-w-6xl mx-auto px-4">
+        <div className="w-full">
           <div className="text-center mb-16">
             <h2 className="text-h1 mb-6">Usein kysytyt kysymykset</h2>
             <p className="text-body-lg text-muted max-w-2xl mx-auto">
