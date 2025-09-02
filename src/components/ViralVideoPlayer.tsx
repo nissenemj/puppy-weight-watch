@@ -31,7 +31,7 @@ export const ViralVideoPlayer: React.FC<ViralVideoPlayerProps> = ({
     >
       <Card className="overflow-hidden shadow-lg rounded-2xl">
         <div className="relative">
-          <div className="w-full h-[300px] bg-muted rounded-lg flex items-center justify-center">
+          <div className="w-full h-48 sm:h-64 md:h-80 bg-muted rounded-lg flex items-center justify-center">
             <div className="text-center">
               <div className="text-lg font-semibold mb-2">Video Player</div>
               <div className="text-sm text-muted-foreground">{videoUrl}</div>

@@ -37,51 +37,106 @@ export default defineConfig(({ mode }) => ({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          // Vendor chunks for better caching
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'ui-vendor': [
-            '@radix-ui/react-dialog',
-            '@radix-ui/react-dropdown-menu',
-            '@radix-ui/react-select',
-            '@radix-ui/react-tabs',
-            '@radix-ui/react-toast',
-            '@radix-ui/react-tooltip',
-            '@radix-ui/react-slot',
-            '@radix-ui/react-label',
-            '@radix-ui/react-checkbox',
-            '@radix-ui/react-radio-group',
-            '@radix-ui/react-switch',
-            '@radix-ui/react-slider',
-            '@radix-ui/react-progress',
-            '@radix-ui/react-scroll-area',
-            '@radix-ui/react-separator',
-            '@radix-ui/react-accordion',
-            '@radix-ui/react-alert-dialog',
-            '@radix-ui/react-aspect-ratio',
-            '@radix-ui/react-avatar',
-            '@radix-ui/react-collapsible',
+        manualChunks(id) {
+          // Vendor libraries
+          if (id.includes('node_modules')) {
+            // Core React chunk (keep small for initial load)
+            if (id.includes('react') && !id.includes('router') && !id.includes('query') && !id.includes('hook-form')) {
+              return 'react-core';
+            }
             
-            '@radix-ui/react-context-menu',
-            '@radix-ui/react-hover-card',
-            '@radix-ui/react-menubar',
-            '@radix-ui/react-navigation-menu',
-            '@radix-ui/react-popover',
+            // Router (loaded when needed)
+            if (id.includes('react-router')) {
+              return 'router-vendor';
+            }
             
-            '@radix-ui/react-toggle',
-            '@radix-ui/react-toggle-group',
-          ],
-          'icons-vendor': ['lucide-react', 'react-icons'],
-          'animation-vendor': ['framer-motion'],
-          'chart-vendor': ['recharts'],
-          'form-vendor': ['react-hook-form', '@hookform/resolvers', 'zod'],
-          'utils-vendor': ['clsx', 'class-variance-authority', 'tailwind-merge', 'date-fns'],
-          'supabase-vendor': ['@supabase/supabase-js'],
-          'query-vendor': ['@tanstack/react-query'],
+            // UI components (split by usage frequency)
+            if (id.includes('@radix-ui/react-dialog') || 
+                id.includes('@radix-ui/react-toast') || 
+                id.includes('@radix-ui/react-slot') ||
+                id.includes('@radix-ui/react-label')) {
+              return 'ui-core-vendor'; // Essential UI
+            }
+            
+            if (id.includes('@radix-ui')) {
+              return 'ui-extended-vendor'; // Extended UI components
+            }
+            
+            // Charts (heavy, load when needed)
+            if (id.includes('recharts')) {
+              return 'chart-vendor';
+            }
+            
+            // Animations (load when needed) 
+            if (id.includes('framer-motion')) {
+              return 'animation-vendor';
+            }
+            
+            // Forms (used on specific pages)
+            if (id.includes('react-hook-form') || id.includes('@hookform') || id.includes('zod')) {
+              return 'form-vendor';
+            }
+            
+            // Database
+            if (id.includes('@supabase') || id.includes('@tanstack/react-query')) {
+              return 'data-vendor';
+            }
+            
+            // Icons (load when needed)
+            if (id.includes('lucide-react') || id.includes('react-icons')) {
+              return 'icons-vendor';
+            }
+            
+            // Utilities (essential)
+            if (id.includes('clsx') || id.includes('class-variance-authority') || id.includes('tailwind-merge')) {
+              return 'utils-vendor';
+            }
+            
+            // Date utilities (specific pages)
+            if (id.includes('date-fns')) {
+              return 'date-vendor';
+            }
+            
+            // Large libraries that can be lazy loaded
+            if (id.includes('html-to-image') || id.includes('tesseract') || id.includes('react-player')) {
+              return 'heavy-vendor';
+            }
+            
+            // Everything else
+            return 'vendor';
+          }
+          
+          // Application code splitting by feature
+          if (id.includes('/src/')) {
+            // PuppyBook feature (large, can be lazy loaded)
+            if (id.includes('/PuppyBook/') || id.includes('PuppyBook')) {
+              return 'feature-puppybook';
+            }
+            
+            // Weight tracking (core feature)
+            if (id.includes('weight-tracking') || id.includes('WeightTracker') || id.includes('WeightChart')) {
+              return 'feature-weight';
+            }
+            
+            // Food calculator (important feature)
+            if (id.includes('FoodCalculator') || id.includes('food-calculation')) {
+              return 'feature-calculator';
+            }
+            
+            // Admin/management features (rarely used)
+            if (id.includes('/admin/') || id.includes('Admin')) {
+              return 'feature-admin';
+            }
+            
+            // UI components (shared)
+            if (id.includes('/ui/') || id.includes('/components/ui/')) {
+              return 'app-ui';
+            }
+          }
         },
       },
     },
-    chunkSizeWarningLimit: 1000,
+    chunkSizeWarningLimit: 500, // Lower limit to enforce smaller chunks
     minify: 'terser',
     terserOptions: {
       compress: {

@@ -13,10 +13,10 @@ const inputVariants = cva(
         outline: "bg-transparent border-2 border-[var(--color-accent-200)] text-[var(--color-text)] focus-visible:ring-[var(--color-accent)] focus-visible:border-[var(--color-accent)] hover:border-[var(--color-accent-300)]"
       },
       size: {
-        sm: "h-9 px-3 py-2 text-sm rounded-lg",
-        default: "h-11 px-4 py-2 text-body rounded-xl",
-        lg: "h-12 px-4 py-3 text-body-lg rounded-xl",
-        xl: "h-14 px-6 py-4 text-body-lg rounded-2xl"
+        sm: "h-11 px-3 py-2 text-sm rounded-lg min-h-[44px]",
+        default: "h-11 px-4 py-2 text-body rounded-xl min-h-[44px]",
+        lg: "h-12 px-4 py-3 text-body-lg rounded-xl min-h-[44px]",
+        xl: "h-14 px-6 py-4 text-body-lg rounded-2xl min-h-[44px]"
       },
       state: {
         default: "",

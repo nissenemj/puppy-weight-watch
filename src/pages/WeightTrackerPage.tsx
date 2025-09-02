@@ -3,6 +3,7 @@ import { User } from '@supabase/supabase-js'
 import { supabase } from '@/integrations/supabase/client'
 import { useNavigate, useLocation } from 'react-router-dom'
 import AuthenticationWrapper from '@/components/AuthenticationWrapper'
+import Navigation from '@/components/Navigation'
 import ModernPuppyWeightTracker from '@/components/ModernPuppyWeightTracker'
 import { MobileOptimizedLayout } from '@/components/MobileOptimizedLayout'
 import { Button } from '@/components/ui/button'
@@ -179,8 +180,8 @@ const WeightTrackerPage = () => {
   // Show helpful message if user doesn't have dogs
   if (!hasDogs) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-25 to-purple-50 flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-6 text-center">
+      <div className="min-h-screen bg-gradient-primary flex items-center justify-center p-4 mobile-text-wrap mobile-container-safe">
+        <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-6 text-center mobile-card-safe">
           <h2 className="text-xl font-semibold mb-4 text-gray-800">
             Painonseuranta edellyttää koiran lisäämistä
           </h2>
@@ -212,6 +213,7 @@ const WeightTrackerPage = () => {
 
   return (
     <MobileOptimizedLayout>
+      <Navigation />
       <ModernPuppyWeightTracker user={user} onSignOut={handleSignOut} hasBooks={hasBooks} />
     </MobileOptimizedLayout>
   )

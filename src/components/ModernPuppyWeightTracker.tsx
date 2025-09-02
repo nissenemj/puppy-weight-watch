@@ -284,7 +284,7 @@ export default function ModernPuppyWeightTracker() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-100 via-pink-50 to-purple-100 p-4 relative overflow-hidden">
+      <div className="min-h-screen bg-gradient-primary p-4 relative overflow-hidden">
         {/* Background decorations */}
         <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-warm rounded-full blur-3xl opacity-20 animate-bounce-gentle"></div>
         <div className="absolute bottom-20 right-10 w-40 h-40 bg-gradient-cool rounded-full blur-3xl opacity-20 animate-bounce-gentle" style={{ animationDelay: '1s' }}></div>
@@ -381,7 +381,7 @@ export default function ModernPuppyWeightTracker() {
   // Show loading state while checking for onboarding
   if (checkingOnboarding) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-25 to-purple-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-primary flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
           <p className="text-gray-600">Ladataan...</p>
@@ -404,7 +404,7 @@ export default function ModernPuppyWeightTracker() {
   return (
     <div 
       ref={containerRef}
-      className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-25 to-purple-50 relative"
+      className="min-h-screen bg-gradient-primary relative"
       style={{
         transform: shouldShowIndicator ? `translateY(${Math.min(pullDistance * 0.5, 40)}px)` : 'none',
         transition: shouldShowIndicator ? 'none' : 'transform 0.2s ease-out'

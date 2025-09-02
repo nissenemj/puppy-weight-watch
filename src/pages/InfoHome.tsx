@@ -43,7 +43,7 @@ export default function InfoHome() {
 
   return (
     <MobileOptimizedLayout>
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 page-with-navigation no-horizontal-scroll mobile-text-wrap responsive-media">
+    <div className="min-h-screen bg-gradient-soft page-with-navigation no-horizontal-scroll mobile-text-wrap responsive-media full-width-section">
       <SEO
         title="Tietopankki - Penturuoka-opas"
         description="Laaja katsaus koiranpentujen ruokintaan ja ravitsemukseen. Kuiva-, märkä- ja raakaruokien analyysi, annostelutiedot ja turvallisuusohjeet."
@@ -54,7 +54,7 @@ export default function InfoHome() {
       <Navigation />
       
       {/* Dribbble-inspired Hero Header */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 mobile-text-wrap responsive-media">
+      <div className="relative overflow-hidden bg-gradient-warm mobile-text-wrap responsive-media">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-20">
           <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.3)_0%,transparent_50%)]"></div>
@@ -132,7 +132,7 @@ export default function InfoHome() {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-16">
+      <div className="full-width-content py-16">
 
         {/* Introduction Card */}
         <Card className="mb-8 bg-card/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl">

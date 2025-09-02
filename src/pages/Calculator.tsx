@@ -1,5 +1,6 @@
 import React from 'react'
 import Footer from '@/components/Footer'
+import Navigation from '@/components/Navigation'
 import AdvancedFoodCalculator from '@/components/AdvancedFoodCalculator'
 import SEO from '@/components/SEO'
 import FAQ from '@/components/FAQ'
@@ -14,7 +15,6 @@ import { createCalculatorSchema, createFAQSchema, createBreadcrumbSchema } from 
 import ScrollPanBackground from '@/components/ScrollPanBackground'
 import StickyHorizontalGallery from '@/components/StickyHorizontalGallery'
 import CountUp from '@/components/CountUp'
-import heroIllustration from '@/assets/hero-illustration.png'
 
 const Calculator = () => {
   const faqs = [
@@ -67,7 +67,12 @@ const Calculator = () => {
 
   return (
     <MobileOptimizedLayout>
-    <PageLayout variant="full-width" animated className="no-horizontal-scroll mobile-text-wrap responsive-media">
+      <Navigation />
+    <PageLayout variant="default" animated className="no-horizontal-scroll mobile-text-wrap responsive-media">
+      {/* Skip to main content link */}
+      <a href="#calculator-main" className="skip-link focus-enhanced">
+        Siirry pääsisältöön
+      </a>
       <SEO
         title="Pentulaskuri - Ruokamäärä"
         description="Laske koiranpentusi optimaalinen päivittäinen ruokamäärä. Huomioi rodun, iän, painon ja aktiivisuuden. Käytä virallisia annostelutaulukoita."
@@ -75,24 +80,23 @@ const Calculator = () => {
         structuredData={structuredData}
       />
       
-      {/* Hero Section with pan background - FULL WIDTH */}
+      {/* Hero Section with pan background */}
       <ScrollPanBackground
-        src={heroIllustration}
-        alt="Koiranpentu ja laskentataulukko - pentulaskurin kuva"
+        src={import.meta.env.BASE_URL + 'assets/hero-illustration.png'}
+        alt=""
         panX={60}
         panY={30}
         zoom={1.06}
         minHeightClass="min-h-[70svh]"
-        className="w-full"
       >
-        <div className="w-full text-center">
+        <div className="hero-content text-center">
           <motion.div
             initial="hidden"
             animate="visible"
             variants={entranceAnimations.staggerContainer}
           >
             <motion.div variants={entranceAnimations.staggerChild} className="mb-4 flex justify-center">
-              <Badge className="bg-[var(--color-accent-50)] text-[var(--color-accent)] border-[var(--color-accent-200)]">
+              <Badge className="bg-[var(--color-primary-100)] text-[var(--color-primary-600)] border-[var(--color-primary-300)]">
                 <CalculatorIcon className="w-4 h-4 mr-2" />
                 Tarkka laskenta
               </Badge>
@@ -100,7 +104,7 @@ const Calculator = () => {
             <motion.h1 variants={entranceAnimations.staggerChild} className="text-display-1 mb-4">
               Pentulaskuri
               <br />
-              <span className="text-accent">Ruokamäärät</span>
+              <span className="text-[var(--color-primary-500)]">Ruokamäärät</span>
             </motion.h1>
             <motion.p variants={entranceAnimations.staggerChild} className="text-body-xl text-muted max-w-3xl mx-auto">
               Laske koiranpentusi optimaalinen päivittäinen ruokamäärä huomioiden rodun, iän, painon ja aktiivisuustason.
@@ -119,8 +123,8 @@ const Calculator = () => {
         </div>
       </ScrollPanBackground>
 
-      {/* How it works: FULL WIDTH */}
-      <div className="w-full py-12">
+      {/* How it works: sticky horizontal steps */}
+      <Section className="full-width-section py-12">
         <StickyHorizontalGallery
           items={[
             { id: '1', content: (<div><h3 className="text-h2 mb-2">1. Rotu & ikä</h3><p className="text-muted">Valitse rotu tai sekarotu ja ikä viikoissa.</p></div>) },
@@ -129,39 +133,39 @@ const Calculator = () => {
             { id: '4', content: (<div><h3 className="text-h2 mb-2">4. Ruokamäärä</h3><p className="text-muted">Näet päivittäisen ruokasuosituksen ja jaon aterioihin.</p></div>) },
           ]}
         />
-      </div>
+      </Section>
 
-      {/* Breadcrumb - FULL WIDTH */}
-      <div className="w-full py-4 border-b border-[var(--color-border)]">
-        <div className="w-full">
+      {/* Breadcrumb */}
+      <Section className="full-width-section py-4 border-b border-[var(--color-border)]">
+        <div className="full-width-content py-16">
           <Breadcrumb items={breadcrumbItems} />
         </div>
-      </div>
+      </Section>
       
-      {/* Calculator Section - FULL WIDTH */}
-      <div className="w-full py-16">
-        <div className="w-full">
-          <div className="grid gap-8 md:grid-cols-3 text-center mb-12">
+      {/* Calculator Section + trust stats */}
+      <Section className="full-width-section py-16 mobile-text-wrap mobile-container-safe" role="main" id="calculator-main">
+        <div className="full-width-content py-16">
+          <div className="grid gap-8 md:grid-cols-3 text-center mb-12 mobile-grid-1">
             <div>
-              <p className="text-5xl font-semibold"><CountUp to={12000} suffix="+" /></p>
+              <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold"><CountUp to={12000} suffix="+" /></p>
               <p className="mt-2 text-muted">laskentaa/kk</p>
             </div>
             <div>
-              <p className="text-5xl font-semibold"><CountUp to={86} suffix="%" /></p>
+              <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold"><CountUp to={86} suffix="%" /></p>
               <p className="mt-2 text-muted">hyödyksi koettu</p>
             </div>
             <div>
-              <p className="text-5xl font-semibold"><CountUp to={250} suffix="+" /></p>
+              <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold"><CountUp to={250} suffix="+" /></p>
               <p className="mt-2 text-muted">rotupohjaa</p>
             </div>
           </div>
           <AdvancedFoodCalculator />
         </div>
-      </div>
+      </Section>
         
-      {/* FAQ Section - FULL WIDTH */}
-      <div className="w-full py-20 bg-[var(--color-surface-alt)]">
-        <div className="w-full">
+      {/* FAQ Section */}
+      <Section className="full-width-section py-20 bg-[var(--color-surface-alt)]">
+        <div className="full-width-content py-16">
           <div className="text-center mb-16">
             <h2 className="text-h1 mb-6">Usein kysytyt kysymykset</h2>
             <p className="text-body-lg text-muted max-w-2xl mx-auto">
@@ -170,9 +174,9 @@ const Calculator = () => {
           </div>
           <FAQ items={faqs} />
         </div>
-      </div>
+      </Section>
 
-      {/* Footer - FULL WIDTH */}
+      {/* Footer */}
       <Footer />
       
     </PageLayout>

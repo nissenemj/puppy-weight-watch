@@ -2,14 +2,14 @@
   "name": "Pentulaskuri - Koiran Ruokinta & Kasvun Seuranta",
   "short_name": "Pentulaskuri",
   "description": "Ammattimainen työkalu koiran ruokinnan laskemiseen ja kasvun seuraamiseen. Sisältää pentuviikon, sosiaalistamisen ja terveysseurannan.",
-  "start_url": "/?utm_source=pwa",
+  "start_url": "/puppy-weight-watch/?utm_source=pwa",
   "display": "standalone",
   "orientation": "portrait-primary",
   "theme_color": "#FF6B35",
   "background_color": "#FFFFFF",
   "categories": ["lifestyle", "health", "utilities"],
   "lang": "fi",
-  "scope": "/",
+  "scope": "/puppy-weight-watch/",
   "icons": [
     {
       "src": "/icons/icon-72x72.png",
@@ -65,7 +65,7 @@
       "name": "Painonseuranta",
       "short_name": "Paino",
       "description": "Syötä pennun paino",
-      "url": "/weight-tracker",
+      "url": "/puppy-weight-watch/weight-tracker",
       "icons": [
         {
           "src": "/icons/scale-96x96.png",
@@ -77,7 +77,7 @@
       "name": "Ruokalaskuri",
       "short_name": "Ruoka",
       "description": "Laske ruokamäärä",
-      "url": "/calculator",
+      "url": "/puppy-weight-watch/calculator",
       "icons": [
         {
           "src": "/icons/food-96x96.png",
@@ -89,7 +89,7 @@
       "name": "Pentukirja",
       "short_name": "Kirja",
       "description": "Avaa pentukirja",
-      "url": "/puppy-book",
+      "url": "/puppy-weight-watch/puppy-book",
       "icons": [
         {
           "src": "/icons/book-96x96.png",

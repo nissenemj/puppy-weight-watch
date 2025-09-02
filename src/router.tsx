@@ -1,72 +1,124 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { lazy, Suspense } from "react";
 import MobileOptimizationMonitor from '@/components/MobileOptimizationMonitor';
 
-// Pages
+// Critical pages - load immediately
 import Index from "./pages/Index";
-import Calculator from "./pages/Calculator";
-import PuppyBook from "./pages/PuppyBook";
-import PuppyBookLanding from "./pages/PuppyBookLanding";
-import InfoHome from "./pages/InfoHome";
-import FeedingData from "./pages/FeedingData";
-import FoodTypes from "./pages/FoodTypes";
-import PuppyGuide from "./pages/PuppyGuide";
-import SafetyPage from "./pages/SafetyPage";
-import SocializationGuide from "./pages/SocializationGuide";
 import NotFound from "./pages/NotFound";
-import OnboardingPage from "./pages/OnboardingPage";
-import WeightTrackerPage from "./pages/WeightTrackerPage";
-// Demo imports removed for production
+
+// Lazy load pages - simplified structure
+const Calculator = lazy(() => import("./pages/Calculator"));
+const WeightTrackerPage = lazy(() => import("./pages/WeightTrackerPage"));
+const OnboardingPage = lazy(() => import("./pages/OnboardingPage"));
+const PuppyBook = lazy(() => import("./pages/PuppyBook"));
+const PuppyBookLanding = lazy(() => import("./pages/PuppyBookLanding"));
+
+// New consolidated guides structure
+const Guides = lazy(() => import("./pages/Guides"));
+const PuppyGuide = lazy(() => import("./pages/PuppyGuide"));
+const SafetyPage = lazy(() => import("./pages/SafetyPage"));
+const SocializationGuide = lazy(() => import("./pages/SocializationGuide"));
+
+// Legacy support - will redirect to new structure
+const InfoHome = lazy(() => import("./pages/InfoHome"));
+const FeedingData = lazy(() => import("./pages/FeedingData"));
+const FoodTypes = lazy(() => import("./pages/FoodTypes"));
+
+// Loading component
+const PageLoader = () => (
+  <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-pink-25 to-purple-50">
+    <div className="text-center">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
+      <p className="text-muted-foreground">Ladataan...</p>
+    </div>
+  </div>
+);
+
+// Wrap lazy components with Suspense
+const withSuspense = (Component: React.ComponentType) => (
+  <Suspense fallback={<PageLoader />}>
+    <Component />
+  </Suspense>
+);
 
 const router = createBrowserRouter([
+  // Main pages - simplified 5-category structure
   {
     path: "/",
     element: <Index />,
   },
   {
     path: "/weight-tracker",
-    element: <WeightTrackerPage />,
+    element: withSuspense(WeightTrackerPage),
   },
   {
-    path: "/onboarding",
-    element: <OnboardingPage />,
+    path: "/calculator", 
+    element: withSuspense(Calculator),
   },
   {
-    path: "/calculator",
-    element: <Calculator />,
+    path: "/guides",
+    element: withSuspense(Guides),
   },
   {
     path: "/puppy-book",
-    element: <PuppyBook />,
+    element: withSuspense(PuppyBook),
+  },
+  
+  // Secondary pages
+  {
+    path: "/onboarding",
+    element: withSuspense(OnboardingPage),
   },
   {
     path: "/puppy-book-landing",
-    element: <PuppyBookLanding />,
+    element: withSuspense(PuppyBookLanding),
+  },
+  
+  // Guide sub-pages - new organized structure
+  {
+    path: "/guides/puppy-guide",
+    element: withSuspense(PuppyGuide),
   },
   {
+    path: "/guides/socialization", 
+    element: withSuspense(SocializationGuide),
+  },
+  {
+    path: "/guides/safety",
+    element: withSuspense(SafetyPage),
+  },
+  {
+    path: "/guides/feeding",
+    element: withSuspense(FeedingData), // Repurpose as feeding guide
+  },
+  
+  // Legacy redirects - maintain backward compatibility
+  {
     path: "/info",
-    element: <InfoHome />,
+    element: withSuspense(InfoHome),
   },
   {
     path: "/info/feeding-data",
-    element: <FeedingData />,
+    element: withSuspense(FeedingData),
   },
   {
-    path: "/info/food-types",
-    element: <FoodTypes />,
+    path: "/info/food-types", 
+    element: withSuspense(FoodTypes),
   },
   {
     path: "/info/puppy-guide",
-    element: <PuppyGuide />,
+    element: withSuspense(PuppyGuide),
   },
   {
     path: "/info/socialization-guide",
-    element: <SocializationGuide />,
+    element: withSuspense(SocializationGuide),
   },
   {
     path: "/info/safety",
-    element: <SafetyPage />,
+    element: withSuspense(SafetyPage),
   },
-  // Demo routes removed for production
+  
+  // 404 page
   {
     path: "*",
     element: <NotFound />,

@@ -38,13 +38,13 @@ export default {
 			},
 		extend: {
 			fontFamily: {
-				// Claude-inspired typography
+				// Anthropic-inspired typography for pentulaskuri
 				'sans': ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-				'serif': ['IBM Plex Serif', 'Georgia', 'Times New Roman', 'serif'],
-				'heading': ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-				'body': ['Inter', 'system-ui', '-apple-system', 'sans-serif'], 
-				'display': ['IBM Plex Serif', 'Georgia', 'serif'], // For elegant headings
-				'caption': ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+				'serif': ['Source Serif Pro', 'Georgia', 'Cambria', 'Times New Roman', 'serif'],
+				'heading': ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+				'body': ['Source Serif Pro', 'Georgia', 'Cambria', 'Times New Roman', 'serif'], 
+				'display': ['Source Serif Pro', 'Georgia', 'serif'], // For elegant headings
+				'mono': ['SF Mono', 'Monaco', 'Cascadia Code', 'monospace'],
 				// Legacy fonts (keeping for compatibility)
 				'poppins': ['Poppins', 'sans-serif'],
 				'quicksand': ['Quicksand', 'sans-serif'],
@@ -94,33 +94,75 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Claude-inspired neutral colors
-				'surface-warm': 'hsl(var(--color-surface-warm))',
-				'text-primary': 'hsl(var(--color-text))',
-				'text-muted': 'hsl(var(--color-text-muted))',
-				'text-light': 'hsl(var(--color-text-light))',
+				// Anthropic-inspired warm color system
+				'warm': {
+					'50': 'var(--color-neutral-50)',
+					'100': 'var(--color-neutral-100)',
+					'200': 'var(--color-neutral-200)',
+					'300': 'var(--color-neutral-300)',
+					'400': 'var(--color-neutral-400)',
+					'500': 'var(--color-neutral-500)',
+					'600': 'var(--color-neutral-600)',
+					'700': 'var(--color-neutral-700)',
+					'800': 'var(--color-neutral-800)',
+					'900': 'var(--color-neutral-900)',
+				},
+				'terracotta': {
+					'100': 'var(--color-primary-100)',
+					'200': 'var(--color-primary-200)',
+					'300': 'var(--color-primary-300)',
+					'400': 'var(--color-primary-400)',
+					'500': 'var(--color-primary-500)',
+					'600': 'var(--color-primary-600)',
+					'700': 'var(--color-primary-700)',
+					'800': 'var(--color-primary-800)',
+					'900': 'var(--color-primary-900)',
+				},
+				'trust': {
+					'100': 'var(--color-secondary-100)',
+					'200': 'var(--color-secondary-200)',
+					'300': 'var(--color-secondary-300)',
+					'400': 'var(--color-secondary-400)',
+					'500': 'var(--color-secondary-500)',
+					'600': 'var(--color-secondary-600)',
+					'700': 'var(--color-secondary-700)',
+					'800': 'var(--color-secondary-800)',
+					'900': 'var(--color-secondary-900)',
+				},
+				'health': {
+					'100': 'var(--color-tertiary-100)',
+					'200': 'var(--color-tertiary-200)',
+					'300': 'var(--color-tertiary-300)',
+					'400': 'var(--color-tertiary-400)',
+					'500': 'var(--color-tertiary-500)',
+					'600': 'var(--color-tertiary-600)',
+					'700': 'var(--color-tertiary-700)',
+					'800': 'var(--color-tertiary-800)',
+					'900': 'var(--color-tertiary-900)',
+				},
 				
-				// Elegant gradients (minimal, sophisticated)
-				'gradient-warm': 'linear-gradient(135deg, hsl(30, 15%, 96%), hsl(30, 15%, 94%))',
-				'gradient-navy': 'linear-gradient(135deg, hsl(223, 47%, 23%), hsl(223, 47%, 35%))',
-				'gradient-terracotta': 'linear-gradient(135deg, hsl(15, 65%, 60%), hsl(15, 65%, 52%))',
+				// Semantic color mappings
+				'surface-warm': 'var(--color-surface-warm)',
+				'text-primary': 'var(--color-text-primary)',
+				'text-muted': 'var(--color-text-secondary)',
+				'text-light': 'var(--color-text-tertiary)',
 				
 				// Data visualization (refined, professional)
-				'chart-primary': 'hsl(223, 47%, 35%)',
-				'chart-accent': 'hsl(15, 65%, 60%)',
-				'chart-secondary': 'hsl(30, 20%, 85%)',
-				'chart-success': 'hsl(142, 76%, 36%)',
-				'chart-warning': 'hsl(38, 92%, 50%)'
+				'chart-primary': 'var(--color-primary-600)',
+				'chart-accent': 'var(--color-primary-500)',
+				'chart-secondary': 'var(--color-secondary-500)',
+				'chart-success': 'var(--color-success)',
+				'chart-warning': 'var(--color-warning)'
 			},
 			backgroundImage: {
-				// Claude-inspired minimal gradients
-				'gradient-warm': 'linear-gradient(135deg, hsl(30, 15%, 96%), hsl(30, 15%, 94%))',
-				'gradient-navy': 'linear-gradient(135deg, hsl(223, 47%, 23%), hsl(223, 47%, 35%))',
-				'gradient-terracotta': 'linear-gradient(135deg, hsl(15, 65%, 60%), hsl(15, 65%, 52%))',
-				'gradient-primary': 'linear-gradient(135deg, hsl(var(--primary)), hsl(223, 47%, 35%))',
-				'gradient-accent': 'linear-gradient(135deg, hsl(var(--accent)), hsl(15, 65%, 52%))',
-				'gradient-subtle': 'linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)))',
-				'gradient-surface': 'linear-gradient(135deg, hsl(0, 0%, 100%), hsl(30, 15%, 96%))',
+				// Anthropic-inspired minimal gradients
+				'gradient-warm': 'linear-gradient(135deg, var(--color-neutral-50), var(--color-neutral-100))',
+				'gradient-terracotta': 'linear-gradient(135deg, var(--color-primary-500), var(--color-primary-600))',
+				'gradient-trust': 'linear-gradient(135deg, var(--color-secondary-500), var(--color-secondary-600))',
+				'gradient-primary': 'linear-gradient(135deg, var(--color-primary-400), var(--color-primary-600))',
+				'gradient-accent': 'linear-gradient(135deg, var(--color-primary-500), var(--color-primary-700))',
+				'gradient-subtle': 'linear-gradient(180deg, var(--color-background-primary), var(--color-background-secondary))',
+				'gradient-surface': 'linear-gradient(135deg, var(--color-neutral-00), var(--color-neutral-50))',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

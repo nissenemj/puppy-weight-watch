@@ -56,7 +56,7 @@ const AnimatedHeader: React.FC<AnimatedHeaderProps> = ({
   };
 
   return (
-    <div className={`relative ${getGradientClass(bannerColor)} min-h-[300px] rounded-b-3xl overflow-hidden`}>
+    <div className={`relative ${getGradientClass(bannerColor)} min-h-48 sm:min-h-64 md:min-h-80 rounded-b-3xl overflow-hidden`}>
       {/* Background decorations */}
       <div className="absolute inset-0 overflow-hidden">
         <motion.div

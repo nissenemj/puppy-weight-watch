@@ -101,7 +101,7 @@ const NavigationWithRouter = () => {
         {/* Skip to content link */}
         <a 
           href="#main-content"
-          className="skip-link fixed left-[-9999px] top-4 z-[2000] glass px-4 py-2 rounded-xl focus:left-4 transition-all duration-300 text-gray-800 font-medium"
+          className="skip-link fixed left-[-9999px] top-4 z-[300] glass px-4 py-2 rounded-xl focus:left-4 transition-all duration-300 text-gray-800 font-medium"
         >
           Siirry suoraan sisältöön
         </a>
@@ -113,7 +113,7 @@ const NavigationWithRouter = () => {
           initial={{ y: -100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-[100] transition-all duration-500 mobile-optimized mobile-touch-target ${
+          className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-[1000] transition-all duration-500 mobile-optimized mobile-touch-target ${
             scrolled ? 'top-2 scale-95' : 'top-4'
           }`}
         >
@@ -212,7 +212,7 @@ const NavigationWithRouter = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[150]"
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[250]"
               onClick={() => setIsMobileMenuOpen(false)}
             />
 
@@ -222,7 +222,7 @@ const NavigationWithRouter = () => {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="fixed top-0 right-0 h-full w-80 max-w-[90vw] bg-white/95 backdrop-blur-xl border-l border-white/30 z-[151] p-6"
+              className="fixed top-0 right-0 h-full w-80 max-w-[90vw] bg-white/95 backdrop-blur-xl border-l border-white/30 z-[251] p-6"
               role="dialog"
               aria-modal="true"
               aria-labelledby="mobile-menu-title"
@@ -337,7 +337,7 @@ const NavigationStatic: React.FC = () => {
       <header role="banner" aria-label="Sivun ylätunniste">
         <a 
           href="#main-content"
-          className="skip-link fixed left-[-9999px] top-4 z-[2000] glass px-4 py-2 rounded-xl focus:left-4 transition-all duration-300 text-gray-800 font-medium"
+          className="skip-link fixed left-[-9999px] top-4 z-[300] glass px-4 py-2 rounded-xl focus:left-4 transition-all duration-300 text-gray-800 font-medium"
         >
           Siirry suoraan sisältöön
         </a>
@@ -347,7 +347,7 @@ const NavigationStatic: React.FC = () => {
           initial={{ y: -100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-[100] transition-all duration-500 mobile-optimized mobile-touch-target ${
+          className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-[1000] transition-all duration-500 mobile-optimized mobile-touch-target ${
             scrolled ? 'top-2 scale-95' : 'top-4'
           }`}
         >

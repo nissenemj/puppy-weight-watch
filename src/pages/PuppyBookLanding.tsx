@@ -64,7 +64,7 @@ const PuppyBookLanding: React.FC = () => {
 
   return (
     <MobileOptimizedLayout>
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 page-with-navigation no-horizontal-scroll mobile-text-wrap responsive-media mobile-container-safe mobile-safe-margin">
+    <div className="min-h-screen bg-gradient-soft page-with-navigation no-horizontal-scroll mobile-text-wrap responsive-media mobile-container-safe mobile-safe-margin">
       {/* Skip to main content link for screen readers */}
       <a 
         href="#main-content" 
@@ -81,9 +81,9 @@ const PuppyBookLanding: React.FC = () => {
       <Navigation />
       
       {/* Hero Section with pan background */}
-      <section className="relative py-8 overflow-hidden rounded-2xl mobile-text-wrap responsive-media no-horizontal-scroll">
-        <ScrollPanBackground src={heroIllustration} alt="Pentukuvakirja - koiranpentuja leikkimässä ja kasvamassa" panX={40} panY={20} zoom={1.04} minHeightClass="min-h-[50svh]">
-          <div className="container mx-auto px-4">
+      <section className="full-width-section relative py-8 overflow-hidden rounded-2xl mobile-text-wrap responsive-media no-horizontal-scroll mobile-container-safe mobile-flex-safe" role="banner" aria-label="Pääbanneri - pentukirja">
+        <ScrollPanBackground src={heroIllustration} alt="" panX={40} panY={20} zoom={1.04} minHeightClass="min-h-[50svh]" className="no-horizontal-scroll">
+          <div className="hero-content mobile-grid-1">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <motion.div
                 initial={{ opacity: 0, x: -30 }}
@@ -152,8 +152,8 @@ const PuppyBookLanding: React.FC = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-white/30 mobile-text-wrap responsive-media no-horizontal-scroll mobile-container-safe mobile-card-safe" role="region" aria-labelledby="features-heading" id="main-content">
-        <div className="container mx-auto px-4 mobile-grid-1">
+      <section className="full-width-section py-20 bg-white/30 mobile-text-wrap responsive-media no-horizontal-scroll mobile-container-safe mobile-card-safe" role="region" aria-labelledby="features-heading" id="main-content">
+        <div className="full-width-content mobile-grid-1">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -195,8 +195,8 @@ const PuppyBookLanding: React.FC = () => {
       </section>
 
       {/* Growth Stages Section */}
-      <section className="py-20 mobile-text-wrap responsive-media no-horizontal-scroll mobile-container-safe mobile-flex-safe" role="region" aria-labelledby="growth-stages-heading">
-        <div className="container mx-auto px-4">
+      <section className="full-width-section py-20 mobile-text-wrap responsive-media no-horizontal-scroll mobile-container-safe mobile-flex-safe" role="region" aria-labelledby="growth-stages-heading">
+        <div className="full-width-content">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <motion.div
               initial={{ opacity: 0, x: -30 }}
@@ -243,8 +243,8 @@ const PuppyBookLanding: React.FC = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-orange-500 to-pink-500 text-white mobile-text-wrap responsive-media no-horizontal-scroll mobile-container-safe mobile-text-container" role="region" aria-labelledby="cta-heading">
-        <div className="container mx-auto px-4 text-center mobile-button mobile-container-safe mobile-text-container">
+      <section className="full-width-section py-20 bg-gradient-warm text-white mobile-text-wrap responsive-media no-horizontal-scroll mobile-container-safe mobile-text-container" role="region" aria-labelledby="cta-heading">
+        <div className="content-narrow text-center mobile-button mobile-container-safe mobile-text-container">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}

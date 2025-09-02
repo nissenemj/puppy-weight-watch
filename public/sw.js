@@ -7,12 +7,14 @@ const API_CACHE = 'api-v3';
 
 // Static assets to cache immediately
 const STATIC_ASSETS = [
-  '/',
-  '/manifest.json',
-  '/calculator',
-  '/weight-tracker',
-  '/puppy-book',
-  '/feeding-data'
+  '/puppy-weight-watch/',
+  '/puppy-weight-watch/manifest.json',
+  '/puppy-weight-watch/assets/index-CH37UCjj.js',
+  '/puppy-weight-watch/assets/vendor-2joXFKVI.js',
+  '/puppy-weight-watch/assets/react-core-BbsmwqEB.js',
+  '/puppy-weight-watch/assets/data-vendor-CrixjTuP.js',
+  '/puppy-weight-watch/assets/utils-vendor-BjC949i_.js',
+  '/puppy-weight-watch/assets/index-8DayUGUD.css'
 ];
 
 // Install event - cache static assets

@@ -26,7 +26,7 @@ Pentulaskuri.com is a Finnish puppy weight tracking and food calculation web app
 # Install dependencies
 npm install
 
-# Development server (runs on port 8080 by default, or 5173 if 8080 is busy)
+# Development server (configured for port 8080, falls back to 5173)
 npm run dev
 
 # Production build
@@ -41,31 +41,70 @@ npm run lint
 # Preview production build locally
 npm run preview
 
-# Mobile optimization check
+# Mobile optimization check  
 npm run mobile-check
+
+# Mobile testing with validation
 npm run test:mobile
+
+# MCP server management
+claude mcp list              # List configured MCP servers
+claude mcp get <name>        # Get server details
+claude mcp add <name> <cmd>  # Add new MCP server
 ```
 
+## Critical Development Notes
+
+- **Development Server**: Configured for port 8080 (strictPort: true), may run on 5173 if 8080 is busy
+- **Always run `npm run lint` before committing** - TypeScript strict mode enforced
+- **Test mobile responsiveness** at 320px, 768px, 1024px, 1440px breakpoints
+- **No horizontal scroll allowed** - test thoroughly on mobile devices
+
+## MCP Integration
+
+### Playwright MCP Server
+- **Status**: Installed and configured ✓
+- **Command**: `npx @playwright/mcp@latest`
+- **Scope**: Local project configuration
+- **Usage**: Browser automation, testing, and web scraping capabilities
+- **Access**: Available through `/mcp` command in Claude Code sessions
+
 ## Project Architecture
+
+### High-Level Architecture
+This is a **React SPA with lazy-loaded routes** using a **component consolidation strategy**. The app follows a **mobile-first, full-width layout system** with **unified design tokens**.
 
 ### Core Directory Structure
 ```
 src/
 ├── components/          # Reusable React components
 │   ├── ui/             # shadcn/ui base components (Button, Card, etc.)
-│   ├── *Calculator.tsx # Food calculation components
-│   ├── *Tracker.tsx    # Weight tracking components
-│   └── *.tsx           # Other feature components
-├── pages/              # Route components
+│   ├── PuppyBook/      # Puppy book feature components  
+│   ├── Navigation.tsx  # Main navigation (added recently)
+│   ├── AdvancedFoodCalculator.tsx    # CONSOLIDATED food calculator
+│   ├── ModernPuppyWeightTracker.tsx  # CONSOLIDATED weight tracker
+│   ├── ScrollPanBackground.tsx       # Hero section backgrounds
+│   ├── LazyImage.tsx               # Optimized image loading
+│   └── *.tsx                       # Other feature components
+├── pages/              # Route components with lazy loading
 ├── hooks/              # Custom React hooks
 ├── integrations/       # External service integrations
 │   └── supabase/       # Supabase client and types
 ├── utils/              # Utility functions
 ├── types/              # TypeScript type definitions
-├── styles/             # CSS files (including mobile-optimizations.css)
+├── styles/             # CSS files with design system
+│   ├── design-system.css       # Unified design tokens
+│   ├── mobile-optimizations.css # Mobile-specific rules
+│   └── *.css                   # Feature-specific styles
 ├── assets/             # Static images and resources
 └── animations.ts       # Framer Motion animation definitions
 ```
+
+### Bundle Architecture (Vite Configuration)
+- **Route-based lazy loading** for all non-critical pages
+- **Feature-based code splitting**: PuppyBook (52kB), Calculator (3kB), Weight tracking (11kB)
+- **Vendor chunk optimization**: React core, UI components, animations, data libraries split intelligently
+- **Initial bundle**: ~18.3kB JS + 21.6kB CSS (gzipped) - excellent performance
 
 ### Key Components Architecture
 
@@ -84,9 +123,12 @@ src/
 - `OnboardingWizard.tsx` - New user setup flow
 
 **Mobile Optimization:**
-- `MobileOptimizedLayout.tsx` - Responsive layout wrapper
-- `MobileOptimizationMonitor.tsx` - Development tool for mobile testing
-- `src/styles/mobile-optimizations.css` - Mobile-specific CSS rules
+- `src/styles/mobile-optimizations.css` - Mobile-specific CSS rules (253 lines, comprehensive)
+- Mobile-first responsive design with utility classes (`mobile-grid-1`, `mobile-text-wrap`, `mobile-container-safe`)
+- Critical mobile rules prevent horizontal scroll and ensure proper touch targets
+- Performance optimizations (GPU acceleration, smooth scrolling)
+- Accessibility enhancements (focus indicators, reduced motion support)
+- Form optimizations and responsive table handling
 
 ## Styling Conventions
 
@@ -97,10 +139,16 @@ src/
 - **Animations**: Framer Motion for transitions and micro-interactions
 
 ### Design System
-- **Colors**: Warm orange (#FF6B35), golden yellow (#FFD23F), green (#4CAF50)
-- **Typography**: Mobile-first with minimum 14px font sizes
+- **Colors**: Anthropic-inspired warm palette with CSS custom properties
+  - Primary: `var(--color-primary-500)` (#e07856 warm terracotta)
+  - Secondary: `var(--color-secondary-500)` (#60a5fa calm blue)  
+  - Tertiary: `var(--color-tertiary-500)` (#4ade80 vibrant green)
+  - Neutrals: `var(--color-neutral-*)` warm beiges and grays
+- **Typography**: Inter + Source Serif Pro, mobile-first with minimum 14px font sizes
+- **Gradients**: Unified gradient system via CSS classes (`bg-gradient-primary`, `bg-gradient-soft`, `bg-gradient-warm`)
 - **Touch Targets**: Minimum 44px x 44px for mobile interaction
 - **Breakpoints**: 320px (small), 768px (tablet), 1024px (desktop), 1440px (large)
+- **Glassmorphism**: backdrop-blur effects with transparency and white borders
 
 ### Critical Mobile Rules
 ```css
@@ -203,8 +251,9 @@ export const Component: React.FC<ComponentProps> = ({
 
 ### Testing Process
 ```bash
-npm run mobile-check  # Automated mobile optimization check
-npm run dev           # Then test manually in Chrome DevTools device mode
+npm run mobile-check  # Automated mobile optimization check script
+npm run dev           # Development server - then test manually in Chrome DevTools device mode
+# Test breakpoints: 320px (iPhone SE), 768px (tablet), 1024px (desktop)
 ```
 
 ## Business Logic Constraints
@@ -258,13 +307,28 @@ import { Component } from '@/components/Component'
 import { helper } from '@/utils/helper'
 ```
 
-### Mobile Optimization Monitor
-The `MobileOptimizationMonitor` component shows a mobile optimization score in development. Keep this above 90%.
+### Mobile Optimization Utilities
+The `mobile-optimizations.css` file contains comprehensive mobile rules with utility classes:
+- `mobile-grid-1` - Forces single column layout on mobile
+- `mobile-text-wrap` - Ensures proper text wrapping to prevent overflow
+- `mobile-container-safe` - Safe container padding for mobile
+- `mobile-card-safe` - Safe card widths to prevent overflow
+- `mobile-button` - Full-width mobile button behavior
+- `full-width-section` - Full viewport width sections
+- `full-width-content` - Centered content within full-width sections
+- Global overflow-x: hidden to prevent horizontal scroll
 
-### Component Consolidation
-The codebase has been recently refactored to remove duplicate components:
-- Use `AdvancedFoodCalculator` (not FoodCalculator or EnhancedPuppyCalculator)
-- Use `ModernPuppyWeightTracker` (not WeightTracker or PuppyWeightTracker)
+### Component Consolidation Strategy
+**CRITICAL**: The codebase has been recently refactored to remove duplicate components:
+- **Food Calculation**: Use `AdvancedFoodCalculator.tsx` ONLY (not FoodCalculator or EnhancedPuppyCalculator)
+- **Weight Tracking**: Use `ModernPuppyWeightTracker.tsx` ONLY (not WeightTracker or PuppyWeightTracker)
+- **Navigation**: All main pages now include `<Navigation />` component for consistent navigation
+- **Layout System**: Converted to full-width layout with proper content centering
+
+### Recent Navigation & Layout Improvements
+- **Navigation z-index fixed**: Navigation components use z-[200], mobile menu z-[250]
+- **Full-width layout system**: All pages converted to full-width sections with centered content
+- **Design system unification**: All background gradients now use unified CSS classes from design-system.css
 
 ### Supabase Environment
 Ensure environment variables are set:
@@ -273,11 +337,48 @@ VITE_SUPABASE_URL=your_supabase_url
 VITE_SUPABASE_ANON_KEY=your_anon_key
 ```
 
-## Deployment Notes
+## Performance Optimizations
 
-- **Production**: Configured for GitHub Pages with base path `/puppy-weight-watch/`
-- **Development**: Runs on `localhost:8080` or fallback ports
-- **Build**: Optimized chunks, tree-shaking, and minification configured
+### Bundle Optimization
+- **Initial load**: ~18.3 kB JS + 21.6 kB CSS (gzipped) - Excellent performance!
+- **Route-based lazy loading**: All non-critical pages lazy loaded with Suspense
+- **Feature-based chunking**: PuppyBook (52 kB), Calculator (3 kB), Weight tracking (11 kB)
+- **Vendor splitting**: React core, data, UI, animations split intelligently
+- **Critical path**: Only homepage + essential chunks loaded initially
+
+### Image Optimization  
+- **LazyImage component**: WebP support, responsive images, priority loading
+- **Intersection Observer**: 100px margin for optimal loading
+- **Progressive enhancement**: Fallbacks for older browsers
+
+### CSS Performance
+- **Critical CSS**: Inline styles for above-the-fold content  
+- **Deferred loading**: Non-critical CSS loaded after initial render
+- **Mobile-first**: 253 lines of optimized mobile CSS rules
+
+### PWA Features
+- **Service Worker**: Cache-first for static, network-first for API, stale-while-revalidate for dynamic
+- **Offline support**: Basic offline functionality for cached resources
+- **Install prompts**: Full PWA manifest with shortcuts and screenshots
+- **Background sync**: Ready for weight entry synchronization
+
+## Deployment & Build Configuration
+
+### Development Environment
+- **Local Server**: Configured for port 8080 (strictPort: true) in vite.config.ts
+- **Fallback Port**: 5173 if 8080 is busy
+- **Host Configuration**: "0.0.0.0" for network access
+
+### Production Build
+- **Base Path**: `/puppy-weight-watch/` for GitHub Pages deployment
+- **Build Optimization**: Manual vendor chunk splitting for optimal loading
+- **Performance**: Initial bundle ~18.3kB JS + 21.6kB CSS (gzipped)
+- **Tree Shaking**: Aggressive optimization with Terser in production
+- **Console Cleanup**: All console.log/debugger statements removed in production
+
+### CI/CD Pipeline
+- **GitHub Actions**: `.github/workflows/deploy-ionos.yml` for automated deployment
+- **Performance**: Lighthouse Performance Score target >95 (Core Web Vitals optimized)
 - **Assets**: Proper base path handling for production deployment
 
 ## Finnish Language Context
@@ -312,3 +413,53 @@ The codebase was recently simplified to remove redundant components and improve 
 
 ### Import Updates Required
 When working with weight tracking or food calculation features, ensure imports reference the correct consolidated components to avoid build errors.
+
+### TypeScript Configuration
+- **Strict mode enabled** in both `tsconfig.json` and `tsconfig.app.json`
+- Path aliases configured: `@/*` maps to `src/*`
+- **IMPORTANT**: Always run `npm run lint` before committing to catch TypeScript errors
+
+### Critical Mobile & Layout CSS Classes
+Apply these classes from `mobile-optimizations.css` and `design-system.css` when building components:
+
+```css
+/* Mobile Optimization Classes */
+.mobile-grid-1              /* Single column grid on mobile */
+.mobile-text-wrap           /* Prevent text overflow */
+.mobile-container-safe      /* Safe container padding */
+.mobile-card-safe           /* Safe card widths */
+.mobile-button             /* Full-width mobile buttons */
+.mobile-form-full          /* Full-width form controls */
+.mobile-smooth-scroll      /* GPU-accelerated scrolling */
+.mobile-focus-enhanced     /* Enhanced focus indicators */
+.mobile-table-responsive   /* Responsive table wrapper */
+
+/* Full-Width Layout Classes */
+.full-width-section        /* Full viewport width sections */
+.full-width-content        /* Centered content (max-width: 1400px) */
+.hero-content              /* Hero section content (max-width: 1200px) */
+
+/* Design System Classes */
+.bg-gradient-primary       /* Primary brand gradient */
+.bg-gradient-soft          /* Soft background gradient */
+.bg-gradient-warm          /* Warm CTA gradient */
+```
+
+### Navigation Implementation Pattern
+When adding navigation to new pages, follow this pattern:
+```tsx
+import Navigation from '@/components/Navigation'
+
+export default function NewPage() {
+  return (
+    <MobileOptimizedLayout>
+      <Navigation /> {/* Add after MobileOptimizedLayout */}
+      <div className="full-width-section bg-gradient-primary">
+        <div className="full-width-content">
+          {/* Your page content */}
+        </div>
+      </div>
+    </MobileOptimizedLayout>
+  )
+}
+```

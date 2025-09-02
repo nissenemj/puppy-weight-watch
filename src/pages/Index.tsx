@@ -1,5 +1,6 @@
 import React from 'react'
 import Footer from '@/components/Footer'
+import Navigation from '@/components/Navigation'
 import SEO from '@/components/SEO'
 import FAQ from '@/components/FAQ'
 import { Button } from '@/components/ui/button'
@@ -116,11 +117,12 @@ const Index = () => {
 
   return (
     <MobileOptimizedLayout>
+      <Navigation />
     <PageLayout variant="default" animated>
       {/* Skip to main content link for screen readers */}
       <a 
         href="#main-content" 
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-white focus:text-black focus:px-4 focus:py-2 focus:rounded focus:shadow-lg"
+        className="skip-link focus-enhanced"
       >
         Siirry pääsisältöön
       </a>
@@ -133,19 +135,19 @@ const Index = () => {
       />
 
       {/* Pan Hero Section */}
-      <section className="no-horizontal-scroll mobile-text-wrap responsive-media mobile-container-safe" role="banner" aria-label="Pääbanneri">
+      <header className="full-width-section no-horizontal-scroll mobile-text-wrap responsive-media mobile-container-safe" role="banner" aria-labelledby="main-heading">
         <ScrollPanBackground src={heroMainIllustration} alt="Kuvitus: pentu kasvukäyrän ja datan edessä" panX={40} panY={20} zoom={1.04} minHeightClass="min-h-[50svh]" className="no-horizontal-scroll">
-          <div className="container mx-auto text-center mobile-grid-1 mobile-container-safe mobile-text-container mobile-hero-container relative z-40">
+          <div className="hero-content text-center mobile-grid-1 mobile-container-safe mobile-text-container mobile-hero-container relative z-40">
             <motion.div initial="hidden" animate="visible" variants={entranceAnimations.staggerContainer}>
               <motion.div variants={entranceAnimations.staggerChild} className="mb-4">
-                <Badge className="bg-[var(--color-accent-50)] text-[var(--color-accent)] border-[var(--color-accent-200)] relative z-50 shadow-lg">
+                <Badge className="bg-[var(--color-primary-100)] text-[var(--color-primary-600)] border-[var(--color-primary-300)] relative z-50 shadow-lg">
                   <Heart className="w-4 h-4 mr-2" /> Älykäs ja luotettava
                 </Badge>
               </motion.div>
               <motion.h1 variants={entranceAnimations.staggerChild} className="text-display-1 mb-2 text-white relative z-50 font-display" id="main-heading">
                 Huolellista
                 <br />
-                <span className="text-accent">pennun hoitoa</span>
+                <span className="text-[var(--color-primary-500)]">pennun hoitoa</span>
               </motion.h1>
               <motion.p variants={entranceAnimations.staggerChild} className="text-body-xl text-white/90 max-w-2xl mx-auto relative z-50 leading-relaxed">
                 Ammattitasoinen seuranta ja ohjaus pennun terveelle kasvulle ja hyvinvoinnille.
@@ -153,7 +155,7 @@ const Index = () => {
             </motion.div>
           </div>
         </ScrollPanBackground>
-      </section>
+      </header>
 
       {/* How it works: sticky horizontal steps */}
       <Section role="region" aria-labelledby="how-it-works-heading">
@@ -169,7 +171,7 @@ const Index = () => {
 
         <div className="mt-8 text-center">
           <Link to="/weight-tracker" aria-label="Aloita seuranta – siirry painonseurantaan">
-            <Button size="lg" className="min-w-[220px]">
+            <Button size="lg" className="w-full sm:min-w-[220px] sm:w-auto touch-target focus-enhanced">
               Aloita seuranta – 1 min
             </Button>
           </Link>
@@ -177,9 +179,9 @@ const Index = () => {
       </Section>
 
       {/* Hero Section */}
-      <Section className="pt-24 pb-16 mobile-text-wrap responsive-media no-horizontal-scroll mobile-grid-1">
-        <Container size="full" padding="lg">
-          <div className="grid lg:grid-cols-2 gap-12 items-center max-w-7xl mx-auto px-4">
+      <Section className="full-width-section mobile-text-wrap responsive-media no-horizontal-scroll mobile-grid-1 mobile-container-safe mobile-flex-safe" role="main" aria-labelledby="hero-heading" id="main-content">
+        <div className="full-width-content">
+          <div className="grid lg:grid-cols-2 gap-8 items-center">
             
             {/* Left Content */}
             <motion.div
@@ -192,7 +194,7 @@ const Index = () => {
                 variants={entranceAnimations.staggerChild}
                 className="mb-4"
               >
-                <Badge className="bg-[var(--color-accent-50)] text-[var(--color-accent)] border-[var(--color-accent-200)] mb-3">
+                <Badge className="bg-[var(--color-primary-100)] text-[var(--color-primary-600)] border-[var(--color-primary-300)] mb-3">
                   <Sparkles className="w-4 h-4 mr-2" />
                   Uusi ja moderni
                 </Badge>
@@ -220,15 +222,15 @@ const Index = () => {
                 className="flex flex-col sm:flex-row gap-3 mb-6 mobile-button"
               >
                 <Link to="/weight-tracker" aria-label="Aloita pennun painonseuranta – siirry painonseurantasivulle">
-                  <Button size="lg" className="w-full sm:w-auto">
-                    <Scale className="w-5 h-5 mr-2" />
+                  <Button size="lg" className="w-full sm:w-auto touch-target focus-enhanced">
+                    <Scale className="w-5 h-5 mr-2" aria-hidden="true" />
                     Aloita mittaaminen
                   </Button>
                 </Link>
                 
                 <Link to="/calculator" aria-label="Avaa pentulaskuri – laske ruokamäärät">
-                  <Button variant="outline" size="lg" className="w-full sm:w-auto">
-                    <Calculator className="w-5 h-5 mr-2" />
+                  <Button variant="outline" size="lg" className="w-full sm:w-auto touch-target focus-enhanced">
+                    <Calculator className="w-5 h-5 mr-2" aria-hidden="true" />
                     Ruokalaskuri
                   </Button>
                 </Link>
@@ -259,6 +261,8 @@ const Index = () => {
                   src={growthStages}
                   alt="Pennun kasvuvaiheet"
                   className="w-full h-auto rounded-2xl shadow-lg object-cover"
+                  priority={true}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 400px"
                 />
                 
                 {/* Simplified floating stat */}
@@ -281,21 +285,14 @@ const Index = () => {
             </motion.div>
 
           </div>
-        </Container>
+        </div>
       </Section>
 
       {/* Features Section */}
-<<<<<<< HEAD
-      <Section className="py-20 bg-[var(--color-surface-alt)] mobile-text-wrap responsive-media no-horizontal-scroll mobile-grid-1">
-        <Container size="full" padding="lg">
-          <div className="text-center mb-16 max-w-4xl mx-auto px-4">
-            <h2 className="text-h1 mb-6">
-=======
-      <Section className="bg-[var(--color-surface-alt)] mobile-text-wrap responsive-media no-horizontal-scroll mobile-grid-1 mobile-container-safe mobile-card-safe" role="region" aria-labelledby="features-heading">
-        <Container size="xl" padding="none">
+      <Section className="full-width-section bg-[var(--color-surface-alt)] mobile-text-wrap responsive-media no-horizontal-scroll mobile-grid-1 mobile-container-safe mobile-card-safe" role="region" aria-labelledby="features-heading">
+        <div className="full-width-content">
           <div className="text-center mb-16">
             <h2 className="text-h1 mb-6" id="features-heading">
->>>>>>> f438052 (fix: keep nav above hero via higher z-index)
               Kaikki mitä tarvitset
               <br />
               <span className="text-accent">pennun kasvuun</span>
@@ -305,41 +302,29 @@ const Index = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto px-4">
+          <CardGrid cols={2} gap="lg" stagger>
             {features.map((feature, index) => {
               const Icon = feature.icon
-              const variants = ['gradient', 'glass', 'modern', 'elevated']
-              const variant = variants[index % variants.length]
-              
               return (
-<<<<<<< HEAD
-                <Link key={index} to={feature.href}>
-                  <Card variant={variant as any} className="h-full group cursor-pointer">
-=======
                 <Link key={index} to={feature.href} aria-label={`Siirry ${feature.title.toLowerCase()} -sivulle: ${feature.description}`}>
                   <Card variant={index === 0 ? "elevated" : "default"} className="h-full group cursor-pointer">
->>>>>>> f438052 (fix: keep nav above hero via higher z-index)
                     <CardHeader>
                       <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-4 ${
-                        index === 0 ? 'bg-white/20' : 'bg-[var(--color-primary-100)]'
+                        index === 0 ? 'bg-accent' : 'bg-[var(--color-primary-100)]'
                       }`}>
                         <Icon className={`w-7 h-7 ${
                           index === 0 ? 'text-white' : 'text-[var(--color-primary)]'
                         }`} />
                       </div>
-                      <CardTitle className={`group-hover:text-accent transition-colors ${
-                        index === 0 ? 'text-white' : ''
-                      }`}>
+                      <CardTitle className="group-hover:text-accent transition-colors">
                         {feature.title}
                       </CardTitle>
-                      <CardDescription className={index === 0 ? 'text-white/80' : ''} style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                      <CardDescription style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                         {feature.description}
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <div className={`flex items-center gap-2 font-medium group-hover:gap-3 transition-all ${
-                        index === 0 ? 'text-white' : 'text-accent'
-                      }`}>
+                      <div className="flex items-center gap-2 text-accent font-medium group-hover:gap-3 transition-all">
                         <span>Tutustu</span>
                         <ArrowRight className="w-4 h-4" />
                       </div>
@@ -348,122 +333,141 @@ const Index = () => {
                 </Link>
               )
             })}
-          </div>
-        </Container>
+          </CardGrid>
+        </div>
       </Section>
 
-      {/* Stats Section */}
-<<<<<<< HEAD
-      <Section className="py-20 mobile-text-wrap responsive-media no-horizontal-scroll">
-        <Container size="full" padding="lg">
-          <div className="text-center mb-12 max-w-4xl mx-auto px-4">
-            <h2 className="text-h2 mb-4">Luotettu ratkaisu</h2>
-=======
-      <Section className="mobile-text-wrap responsive-media no-horizontal-scroll mobile-container-safe mobile-text-container" role="region" aria-labelledby="stats-heading">
-        <Container size="xl" padding="none">
+
+      {/* Modern Benefits Section */}
+      <Section className="full-width-section bg-gradient-soft mobile-text-wrap responsive-media no-horizontal-scroll mobile-container-safe" role="region" aria-labelledby="benefits-heading">
+        <div className="full-width-content">
           <div className="text-center mb-12">
-            <h2 className="text-h2 mb-4" id="stats-heading">Luotettu ratkaisu</h2>
->>>>>>> f438052 (fix: keep nav above hero via higher z-index)
-            <p className="text-body-lg text-muted">
-              Tuhannet koiranomistajat luottavat meihin päivittäin
-            </p>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <Badge className="bg-[var(--color-tertiary-100)] text-[var(--color-tertiary-600)] border-[var(--color-tertiary-300)] mb-4">
+                <Sparkles className="w-4 h-4 mr-2" />
+                Miksi valita meidät
+              </Badge>
+              <h2 className="text-h1 mb-4" id="benefits-heading">
+                Kaikki mitä tarvitset
+                <br />
+                <span className="text-[var(--color-tertiary-500)]">yhdessä paikassa</span>
+              </h2>
+              <p className="text-body-xl text-muted max-w-2xl mx-auto">
+                Ammattitasoinen ratkaisu, joka kasvaa pennun mukana
+              </p>
+            </motion.div>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-6xl mx-auto px-4">
-            {stats.map((stat, index) => {
-              const variants = ['modern', 'glass', 'elevated', 'gradient']
-              const variant = variants[index % variants.length]
-              
+
+          {/* Modern Benefit Cards Grid */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+            {[
+              {
+                icon: TrendingUp,
+                title: "Älykkäät kasvukäyrät",
+                description: "Visualisoi pennun kasvu ja vertaa rotukohtaisiin keskiarvoihin reaaliajassa",
+                color: "primary",
+                badge: "Suosituin"
+              },
+              {
+                icon: Calculator,
+                title: "Tarkka ruokalaskuri",
+                description: "200+ ruokamerkin tiedot ja henkilökohtaiset suositukset pennun tarpeisiin",
+                color: "secondary"
+              },
+              {
+                icon: Shield,
+                title: "Turvallinen & Yksityinen",
+                description: "GDPR-yhteensopiva tietojen käsittely ja täysi yksityisyydensuoja",
+                color: "tertiary"
+              },
+              {
+                icon: Zap,
+                title: "Salamannopea",
+                description: "Optimoitu suorituskyky ja offline-tuki mobiililaitteilla",
+                color: "accent"
+              },
+              {
+                icon: Heart,
+                title: "Elinikäinen ilmaiskäyttö",
+                description: "Kaikki ominaisuudet ilmaiseksi, ei piilomaksuja tai tilauksia",
+                color: "primary",
+                badge: "100% Ilmainen"
+              },
+              {
+                icon: Award,
+                title: "Asiantuntijatuki",
+                description: "Eläinlääkärien hyväksymät ohjeet ja tutkimuspohjainen tieto",
+                color: "secondary"
+              }
+            ].map((benefit, index) => {
+              const Icon = benefit.icon;
               return (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
-                  <Card variant={variant as any} className="text-center p-8 h-full">
-                    <div className={`text-display-3 font-bold mb-2 ${
-                      variant === 'gradient' ? 'text-white' : 'text-accent'
-                    }`}>
-                      {stat.text ? (
-                        stat.text
-                      ) : (
-                        <CountUp to={stat.numeric!} suffix={stat.suffix as string} />
-                      )}
-                    </div>
-                    <div className={`text-body-sm ${
-                      variant === 'gradient' ? 'text-white/80' : 'text-muted'
-                    }`}>
-                      {stat.label}
-                    </div>
+                  <Card className="h-full group hover:shadow-2xl transition-all duration-300 bg-white/80 backdrop-blur border-white/50 relative overflow-hidden">
+                    {benefit.badge && (
+                      <div className="absolute top-4 right-4">
+                        <Badge className="bg-gradient-warm text-white border-0 px-3 py-1">
+                          {benefit.badge}
+                        </Badge>
+                      </div>
+                    )}
+                    <CardContent className="p-6">
+                      <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br from-[var(--color-${benefit.color}-400)] to-[var(--color-${benefit.color}-600)] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                        <Icon className="w-7 h-7 text-white" />
+                      </div>
+                      <h3 className="text-h4 mb-2 font-semibold">{benefit.title}</h3>
+                      <p className="text-body text-muted leading-relaxed">
+                        {benefit.description}
+                      </p>
+                    </CardContent>
                   </Card>
                 </motion.div>
-              )
+              );
             })}
           </div>
-        </Container>
-      </Section>
 
-      {/* Growth Chart Section */}
-      <Section className="bg-[var(--color-surface-alt)] mobile-text-wrap responsive-media no-horizontal-scroll mobile-grid-1 mobile-container-safe mobile-flex-safe" role="region" aria-labelledby="growth-chart-heading">
-        <Container size="xl" padding="none">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-            >
-              <LazyImage 
-                src={growthChartHero}
-                alt="Kasvukäyrä esimerkki"
-                className="w-full h-auto rounded-2xl shadow-xl"
-              />
-            </motion.div>
-
-            <div>
-              <h2 className="text-h1 mb-6" id="growth-chart-heading">
-                Seuraa kasvua
-                <br />
-                <span className="text-accent">visuaalisesti</span>
-              </h2>
-              
-              <p className="text-body-lg text-muted mb-8">
-                Näe pennun kehitys selkeillä kaavioilla ja vertaa sitä rotukohtaisiin keskiarvoihin. 
-                Automaattiset hälytykset auttavat havaitsemaan poikkeamat ajoissa.
-              </p>
-
-              <Stack spacing="md" className="mb-8">
-                {[
-                  "Interaktiiviset kasvukäyrät",
-                  "Rotukohtaiset vertailut", 
-                  "Automaattiset hälytykset",
-                  "Edistymisen seuranta"
-                ].map((item, index) => (
-                  <div key={index} className="flex items-center gap-3">
-                    <CheckCircle className="w-5 h-5 text-[var(--color-success)] flex-shrink-0" />
-                    <span className="text-body">{item}</span>
+          {/* Stats Bar */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="bg-white/90 backdrop-blur rounded-3xl p-8 shadow-xl border border-white/50"
+          >
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mobile-grid-1">
+              {stats.map((stat, index) => (
+                <div key={index} className="text-center">
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    whileInView={{ scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: index * 0.1, type: "spring" }}
+                    className="text-display-3 font-bold bg-gradient-primary bg-clip-text text-transparent mb-2"
+                  >
+                    {stat.text || <CountUp to={stat.numeric!} suffix={stat.suffix as string} />}
+                  </motion.div>
+                  <div className="text-body-sm text-muted font-medium">
+                    {stat.label}
                   </div>
-                ))}
-              </Stack>
-
-              <Link to="/weight-tracker">
-                <Button size="lg" className="w-full sm:w-auto">
-                  Aloita seuranta
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </Button>
-              </Link>
+                </div>
+              ))}
             </div>
-
-          </div>
-        </Container>
+          </motion.div>
+        </div>
       </Section>
 
       {/* FAQ Section */}
-      <Section className="mobile-container-safe mobile-text-container" role="region" aria-labelledby="faq-heading">
-        <Container size="lg" padding="none">
+      <Section className="full-width-section mobile-container-safe mobile-text-container" role="region" aria-labelledby="faq-heading">
+        <div className="content-narrow">
           <div className="text-center mb-16">
             <h2 className="text-h1 mb-6" id="faq-heading">Usein kysytyt kysymykset</h2>
             <p className="text-body-lg text-muted">
@@ -472,12 +476,12 @@ const Index = () => {
           </div>
           
           <FAQ items={faqs} />
-        </Container>
+        </div>
       </Section>
 
       {/* CTA Section */}
-      <Section className="bg-gradient-to-r from-[var(--color-accent)] to-[var(--color-secondary)] text-white mobile-text-wrap responsive-media no-horizontal-scroll mobile-container-safe mobile-text-container" role="region" aria-labelledby="cta-heading">
-        <Container size="lg" padding="none">
+      <Section className="full-width-section bg-gradient-to-r from-[var(--color-accent)] to-[var(--color-secondary)] text-white mobile-text-wrap responsive-media no-horizontal-scroll mobile-container-safe mobile-text-container" role="region" aria-labelledby="cta-heading">
+        <div className="content-narrow">
           <div className="text-center">
             <h2 className="text-h1 mb-6" id="cta-heading">
               Aloita pennun seuranta tänään
@@ -509,7 +513,7 @@ const Index = () => {
               </Link>
             </div>
           </div>
-        </Container>
+        </div>
       </Section>
 
       {/* Footer */}

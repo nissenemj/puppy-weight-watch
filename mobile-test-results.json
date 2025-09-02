@@ -1,0 +1,1312 @@
+{
+  "config": {
+    "rootDir": "C:/Users/nisse/puppy-weight-watch",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "C:/Users/nisse/puppy-weight-watch/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/nisse/puppy-weight-watch",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.54.2",
+    "workers": 8,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "mobile-validation.spec.js",
+      "file": "mobile-validation.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Mobile Optimization Validation",
+          "file": "mobile-validation.spec.js",
+          "line": 20,
+          "column": 6,
+          "specs": [],
+          "suites": [
+            {
+              "title": "Touch Target Validation",
+              "file": "mobile-validation.spec.js",
+              "line": 23,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "Touch targets meet 44px minimum on iPhone SE",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "",
+                      "projectName": "",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 2858,
+                          "errors": [],
+                          "stdout": [
+                            {
+                              "text": "FAIL: Aloita seuranta – 1 min - 375x35px on iPhone SE\n"
+                            },
+                            {
+                              "text": "FAIL: Aloita seuranta - 343x35px on iPhone SE\n"
+                            }
+                          ],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-08-19T17:26:23.064Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "14b92355736723071f7b-74574015072ce842079a",
+                  "file": "mobile-validation.spec.js",
+                  "line": 25,
+                  "column": 7
+                },
+                {
+                  "title": "Touch targets meet 44px minimum on Galaxy S8",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "",
+                      "projectName": "",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 2151,
+                          "errors": [],
+                          "stdout": [
+                            {
+                              "text": "FAIL: Aloita seuranta – 1 min - 360x35px on Galaxy S8\n"
+                            },
+                            {
+                              "text": "FAIL: Aloita seuranta - 328x35px on Galaxy S8\n"
+                            }
+                          ],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-08-19T17:26:26.118Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "14b92355736723071f7b-92974bef96069a107823",
+                  "file": "mobile-validation.spec.js",
+                  "line": 25,
+                  "column": 7
+                },
+                {
+                  "title": "Touch targets meet 44px minimum on Small Mobile",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "",
+                      "projectName": "",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 2054,
+                          "errors": [],
+                          "stdout": [
+                            {
+                              "text": "FAIL: Aloita seuranta – 1 min - 320x35px on Small Mobile\n"
+                            },
+                            {
+                              "text": "FAIL: Aloita seuranta - 288x35px on Small Mobile\n"
+                            }
+                          ],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-08-19T17:26:28.273Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "14b92355736723071f7b-ef1224a9b88d931225b0",
+                  "file": "mobile-validation.spec.js",
+                  "line": 25,
+                  "column": 7
+                },
+                {
+                  "title": "Touch targets meet 44px minimum on Large Mobile",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "",
+                      "projectName": "",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 1994,
+                          "errors": [],
+                          "stdout": [
+                            {
+                              "text": "FAIL: Aloita seuranta – 1 min - 414x35px on Large Mobile\n"
+                            },
+                            {
+                              "text": "FAIL: Aloita seuranta - 382x35px on Large Mobile\n"
+                            }
+                          ],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-08-19T17:26:30.330Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "14b92355736723071f7b-03443297057120f82bde",
+                  "file": "mobile-validation.spec.js",
+                  "line": 25,
+                  "column": 7
+                }
+              ]
+            },
+            {
+              "title": "Viewport Responsiveness",
+              "file": "mobile-validation.spec.js",
+              "line": 78,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "No horizontal scroll on iPhone SE",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "",
+                      "projectName": "",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 1750,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mfalse\u001b[39m\nReceived: \u001b[31mtrue\u001b[39m",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mfalse\u001b[39m\nReceived: \u001b[31mtrue\u001b[39m\n    at C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js:90:37",
+                            "location": {
+                              "file": "C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js",
+                              "column": 37,
+                              "line": 90
+                            },
+                            "snippet": "\u001b[0m \u001b[90m 88 |\u001b[39m         })\u001b[33m;\u001b[39m\n \u001b[90m 89 |\u001b[39m         \n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 90 |\u001b[39m         expect(hasHorizontalScroll)\u001b[33m.\u001b[39mtoBe(\u001b[36mfalse\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 91 |\u001b[39m         \n \u001b[90m 92 |\u001b[39m         \u001b[90m// Check specific viewport constraints\u001b[39m\n \u001b[90m 93 |\u001b[39m         \u001b[36mconst\u001b[39m viewportInfo \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mevaluate(() \u001b[33m=>\u001b[39m ({\u001b[0m"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js",
+                                "column": 37,
+                                "line": 90
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mfalse\u001b[39m\nReceived: \u001b[31mtrue\u001b[39m\n\n  88 |         });\n  89 |         \n> 90 |         expect(hasHorizontalScroll).toBe(false);\n     |                                     ^\n  91 |         \n  92 |         // Check specific viewport constraints\n  93 |         const viewportInfo = await page.evaluate(() => ({\n    at C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js:90:37"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-08-19T17:26:32.327Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "C:\\Users\\nisse\\puppy-weight-watch\\test-results\\mobile-validation-Mobile-O-d05e6-izontal-scroll-on-iPhone-SE\\error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js",
+                            "column": 37,
+                            "line": 90
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "14b92355736723071f7b-f086cdd740266e5fd6d3",
+                  "file": "mobile-validation.spec.js",
+                  "line": 80,
+                  "column": 7
+                },
+                {
+                  "title": "No horizontal scroll on Galaxy S8",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "",
+                      "projectName": "",
+                      "results": [
+                        {
+                          "workerIndex": 1,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 1889,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mfalse\u001b[39m\nReceived: \u001b[31mtrue\u001b[39m",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mfalse\u001b[39m\nReceived: \u001b[31mtrue\u001b[39m\n    at C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js:90:37",
+                            "location": {
+                              "file": "C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js",
+                              "column": 37,
+                              "line": 90
+                            },
+                            "snippet": "\u001b[0m \u001b[90m 88 |\u001b[39m         })\u001b[33m;\u001b[39m\n \u001b[90m 89 |\u001b[39m         \n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 90 |\u001b[39m         expect(hasHorizontalScroll)\u001b[33m.\u001b[39mtoBe(\u001b[36mfalse\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 91 |\u001b[39m         \n \u001b[90m 92 |\u001b[39m         \u001b[90m// Check specific viewport constraints\u001b[39m\n \u001b[90m 93 |\u001b[39m         \u001b[36mconst\u001b[39m viewportInfo \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mevaluate(() \u001b[33m=>\u001b[39m ({\u001b[0m"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js",
+                                "column": 37,
+                                "line": 90
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mfalse\u001b[39m\nReceived: \u001b[31mtrue\u001b[39m\n\n  88 |         });\n  89 |         \n> 90 |         expect(hasHorizontalScroll).toBe(false);\n     |                                     ^\n  91 |         \n  92 |         // Check specific viewport constraints\n  93 |         const viewportInfo = await page.evaluate(() => ({\n    at C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js:90:37"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-08-19T17:26:35.009Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "C:\\Users\\nisse\\puppy-weight-watch\\test-results\\mobile-validation-Mobile-O-67bba-izontal-scroll-on-Galaxy-S8\\error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js",
+                            "column": 37,
+                            "line": 90
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "14b92355736723071f7b-4faf16d4ecee99b3e66d",
+                  "file": "mobile-validation.spec.js",
+                  "line": 80,
+                  "column": 7
+                },
+                {
+                  "title": "No horizontal scroll on Small Mobile",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "",
+                      "projectName": "",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 1845,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mfalse\u001b[39m\nReceived: \u001b[31mtrue\u001b[39m",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mfalse\u001b[39m\nReceived: \u001b[31mtrue\u001b[39m\n    at C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js:90:37",
+                            "location": {
+                              "file": "C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js",
+                              "column": 37,
+                              "line": 90
+                            },
+                            "snippet": "\u001b[0m \u001b[90m 88 |\u001b[39m         })\u001b[33m;\u001b[39m\n \u001b[90m 89 |\u001b[39m         \n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 90 |\u001b[39m         expect(hasHorizontalScroll)\u001b[33m.\u001b[39mtoBe(\u001b[36mfalse\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 91 |\u001b[39m         \n \u001b[90m 92 |\u001b[39m         \u001b[90m// Check specific viewport constraints\u001b[39m\n \u001b[90m 93 |\u001b[39m         \u001b[36mconst\u001b[39m viewportInfo \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mevaluate(() \u001b[33m=>\u001b[39m ({\u001b[0m"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js",
+                                "column": 37,
+                                "line": 90
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mfalse\u001b[39m\nReceived: \u001b[31mtrue\u001b[39m\n\n  88 |         });\n  89 |         \n> 90 |         expect(hasHorizontalScroll).toBe(false);\n     |                                     ^\n  91 |         \n  92 |         // Check specific viewport constraints\n  93 |         const viewportInfo = await page.evaluate(() => ({\n    at C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js:90:37"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-08-19T17:26:37.942Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "C:\\Users\\nisse\\puppy-weight-watch\\test-results\\mobile-validation-Mobile-O-61ee2-ntal-scroll-on-Small-Mobile\\error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js",
+                            "column": 37,
+                            "line": 90
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "14b92355736723071f7b-8d2a8f99cebb7539026c",
+                  "file": "mobile-validation.spec.js",
+                  "line": 80,
+                  "column": 7
+                },
+                {
+                  "title": "No horizontal scroll on Large Mobile",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "",
+                      "projectName": "",
+                      "results": [
+                        {
+                          "workerIndex": 3,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 1881,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mfalse\u001b[39m\nReceived: \u001b[31mtrue\u001b[39m",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mfalse\u001b[39m\nReceived: \u001b[31mtrue\u001b[39m\n    at C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js:90:37",
+                            "location": {
+                              "file": "C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js",
+                              "column": 37,
+                              "line": 90
+                            },
+                            "snippet": "\u001b[0m \u001b[90m 88 |\u001b[39m         })\u001b[33m;\u001b[39m\n \u001b[90m 89 |\u001b[39m         \n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 90 |\u001b[39m         expect(hasHorizontalScroll)\u001b[33m.\u001b[39mtoBe(\u001b[36mfalse\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 91 |\u001b[39m         \n \u001b[90m 92 |\u001b[39m         \u001b[90m// Check specific viewport constraints\u001b[39m\n \u001b[90m 93 |\u001b[39m         \u001b[36mconst\u001b[39m viewportInfo \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mevaluate(() \u001b[33m=>\u001b[39m ({\u001b[0m"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js",
+                                "column": 37,
+                                "line": 90
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mfalse\u001b[39m\nReceived: \u001b[31mtrue\u001b[39m\n\n  88 |         });\n  89 |         \n> 90 |         expect(hasHorizontalScroll).toBe(false);\n     |                                     ^\n  91 |         \n  92 |         // Check specific viewport constraints\n  93 |         const viewportInfo = await page.evaluate(() => ({\n    at C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js:90:37"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-08-19T17:26:40.814Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "C:\\Users\\nisse\\puppy-weight-watch\\test-results\\mobile-validation-Mobile-O-d0d53-ntal-scroll-on-Large-Mobile\\error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js",
+                            "column": 37,
+                            "line": 90
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "14b92355736723071f7b-04d02f3ef62b6f3eff3a",
+                  "file": "mobile-validation.spec.js",
+                  "line": 80,
+                  "column": 7
+                },
+                {
+                  "title": "No horizontal scroll on iPad",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "",
+                      "projectName": "",
+                      "results": [
+                        {
+                          "workerIndex": 4,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 1826,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mfalse\u001b[39m\nReceived: \u001b[31mtrue\u001b[39m",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mfalse\u001b[39m\nReceived: \u001b[31mtrue\u001b[39m\n    at C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js:90:37",
+                            "location": {
+                              "file": "C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js",
+                              "column": 37,
+                              "line": 90
+                            },
+                            "snippet": "\u001b[0m \u001b[90m 88 |\u001b[39m         })\u001b[33m;\u001b[39m\n \u001b[90m 89 |\u001b[39m         \n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 90 |\u001b[39m         expect(hasHorizontalScroll)\u001b[33m.\u001b[39mtoBe(\u001b[36mfalse\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 91 |\u001b[39m         \n \u001b[90m 92 |\u001b[39m         \u001b[90m// Check specific viewport constraints\u001b[39m\n \u001b[90m 93 |\u001b[39m         \u001b[36mconst\u001b[39m viewportInfo \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mevaluate(() \u001b[33m=>\u001b[39m ({\u001b[0m"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js",
+                                "column": 37,
+                                "line": 90
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mfalse\u001b[39m\nReceived: \u001b[31mtrue\u001b[39m\n\n  88 |         });\n  89 |         \n> 90 |         expect(hasHorizontalScroll).toBe(false);\n     |                                     ^\n  91 |         \n  92 |         // Check specific viewport constraints\n  93 |         const viewportInfo = await page.evaluate(() => ({\n    at C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js:90:37"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-08-19T17:26:43.740Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "C:\\Users\\nisse\\puppy-weight-watch\\test-results\\mobile-validation-Mobile-O-23284-o-horizontal-scroll-on-iPad\\error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js",
+                            "column": 37,
+                            "line": 90
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "14b92355736723071f7b-178c23445e9cc01a3738",
+                  "file": "mobile-validation.spec.js",
+                  "line": 80,
+                  "column": 7
+                },
+                {
+                  "title": "No horizontal scroll on iPad Pro",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "",
+                      "projectName": "",
+                      "results": [
+                        {
+                          "workerIndex": 5,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 1796,
+                          "errors": [],
+                          "stdout": [
+                            {
+                              "text": "iPad Pro viewport info: {\n  bodyWidth: \u001b[33m1024\u001b[39m,\n  windowWidth: \u001b[33m1024\u001b[39m,\n  documentWidth: \u001b[33m1024\u001b[39m,\n  overflow: \u001b[32m'hidden'\u001b[39m\n}\n"
+                            }
+                          ],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-08-19T17:26:46.587Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "14b92355736723071f7b-d77a009586a71460b92b",
+                  "file": "mobile-validation.spec.js",
+                  "line": 80,
+                  "column": 7
+                }
+              ]
+            },
+            {
+              "title": "Mobile Navigation",
+              "file": "mobile-validation.spec.js",
+              "line": 109,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "Navigation accessibility on iPhone SE",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "",
+                      "projectName": "",
+                      "results": [
+                        {
+                          "workerIndex": 5,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 1704,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n    at C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js:118:36",
+                            "location": {
+                              "file": "C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js",
+                              "column": 36,
+                              "line": 118
+                            },
+                            "snippet": "\u001b[0m \u001b[90m 116 |\u001b[39m         \u001b[90m// Check for navigation elements\u001b[39m\n \u001b[90m 117 |\u001b[39m         \u001b[36mconst\u001b[39m navElements \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'nav, [role=\"navigation\"]'\u001b[39m)\u001b[33m.\u001b[39mall()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 118 |\u001b[39m         expect(navElements\u001b[33m.\u001b[39mlength)\u001b[33m.\u001b[39mtoBeGreaterThan(\u001b[35m0\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 119 |\u001b[39m         \n \u001b[90m 120 |\u001b[39m         \u001b[90m// Test main navigation links\u001b[39m\n \u001b[90m 121 |\u001b[39m         \u001b[36mconst\u001b[39m mainNavLinks \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'nav a, [role=\"navigation\"] a'\u001b[39m)\u001b[33m.\u001b[39mall()\u001b[33m;\u001b[39m\u001b[0m"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js",
+                                "column": 36,
+                                "line": 118
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n\n  116 |         // Check for navigation elements\n  117 |         const navElements = await page.locator('nav, [role=\"navigation\"]').all();\n> 118 |         expect(navElements.length).toBeGreaterThan(0);\n      |                                    ^\n  119 |         \n  120 |         // Test main navigation links\n  121 |         const mainNavLinks = await page.locator('nav a, [role=\"navigation\"] a').all();\n    at C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js:118:36"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-08-19T17:26:48.502Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "C:\\Users\\nisse\\puppy-weight-watch\\test-results\\mobile-validation-Mobile-O-a5fa3--accessibility-on-iPhone-SE\\error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js",
+                            "column": 36,
+                            "line": 118
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "14b92355736723071f7b-9cd9e6939d986fbfdb75",
+                  "file": "mobile-validation.spec.js",
+                  "line": 111,
+                  "column": 7
+                },
+                {
+                  "title": "Navigation accessibility on Galaxy S8",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "",
+                      "projectName": "",
+                      "results": [
+                        {
+                          "workerIndex": 6,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 1831,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n    at C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js:118:36",
+                            "location": {
+                              "file": "C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js",
+                              "column": 36,
+                              "line": 118
+                            },
+                            "snippet": "\u001b[0m \u001b[90m 116 |\u001b[39m         \u001b[90m// Check for navigation elements\u001b[39m\n \u001b[90m 117 |\u001b[39m         \u001b[36mconst\u001b[39m navElements \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'nav, [role=\"navigation\"]'\u001b[39m)\u001b[33m.\u001b[39mall()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 118 |\u001b[39m         expect(navElements\u001b[33m.\u001b[39mlength)\u001b[33m.\u001b[39mtoBeGreaterThan(\u001b[35m0\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 119 |\u001b[39m         \n \u001b[90m 120 |\u001b[39m         \u001b[90m// Test main navigation links\u001b[39m\n \u001b[90m 121 |\u001b[39m         \u001b[36mconst\u001b[39m mainNavLinks \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'nav a, [role=\"navigation\"] a'\u001b[39m)\u001b[33m.\u001b[39mall()\u001b[33m;\u001b[39m\u001b[0m"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js",
+                                "column": 36,
+                                "line": 118
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n\n  116 |         // Check for navigation elements\n  117 |         const navElements = await page.locator('nav, [role=\"navigation\"]').all();\n> 118 |         expect(navElements.length).toBeGreaterThan(0);\n      |                                    ^\n  119 |         \n  120 |         // Test main navigation links\n  121 |         const mainNavLinks = await page.locator('nav a, [role=\"navigation\"] a').all();\n    at C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js:118:36"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-08-19T17:26:51.137Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "C:\\Users\\nisse\\puppy-weight-watch\\test-results\\mobile-validation-Mobile-O-3a5de--accessibility-on-Galaxy-S8\\error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js",
+                            "column": 36,
+                            "line": 118
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "14b92355736723071f7b-a64eb0a29c2ca0dec24a",
+                  "file": "mobile-validation.spec.js",
+                  "line": 111,
+                  "column": 7
+                },
+                {
+                  "title": "Navigation accessibility on Small Mobile",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "",
+                      "projectName": "",
+                      "results": [
+                        {
+                          "workerIndex": 7,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 1851,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n    at C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js:118:36",
+                            "location": {
+                              "file": "C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js",
+                              "column": 36,
+                              "line": 118
+                            },
+                            "snippet": "\u001b[0m \u001b[90m 116 |\u001b[39m         \u001b[90m// Check for navigation elements\u001b[39m\n \u001b[90m 117 |\u001b[39m         \u001b[36mconst\u001b[39m navElements \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'nav, [role=\"navigation\"]'\u001b[39m)\u001b[33m.\u001b[39mall()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 118 |\u001b[39m         expect(navElements\u001b[33m.\u001b[39mlength)\u001b[33m.\u001b[39mtoBeGreaterThan(\u001b[35m0\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 119 |\u001b[39m         \n \u001b[90m 120 |\u001b[39m         \u001b[90m// Test main navigation links\u001b[39m\n \u001b[90m 121 |\u001b[39m         \u001b[36mconst\u001b[39m mainNavLinks \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'nav a, [role=\"navigation\"] a'\u001b[39m)\u001b[33m.\u001b[39mall()\u001b[33m;\u001b[39m\u001b[0m"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js",
+                                "column": 36,
+                                "line": 118
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n\n  116 |         // Check for navigation elements\n  117 |         const navElements = await page.locator('nav, [role=\"navigation\"]').all();\n> 118 |         expect(navElements.length).toBeGreaterThan(0);\n      |                                    ^\n  119 |         \n  120 |         // Test main navigation links\n  121 |         const mainNavLinks = await page.locator('nav a, [role=\"navigation\"] a').all();\n    at C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js:118:36"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-08-19T17:26:54.012Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "C:\\Users\\nisse\\puppy-weight-watch\\test-results\\mobile-validation-Mobile-O-ef710-cessibility-on-Small-Mobile\\error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js",
+                            "column": 36,
+                            "line": 118
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "14b92355736723071f7b-4b1a66ba51b23c609a4e",
+                  "file": "mobile-validation.spec.js",
+                  "line": 111,
+                  "column": 7
+                },
+                {
+                  "title": "Navigation accessibility on Large Mobile",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "",
+                      "projectName": "",
+                      "results": [
+                        {
+                          "workerIndex": 8,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 1855,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n    at C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js:118:36",
+                            "location": {
+                              "file": "C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js",
+                              "column": 36,
+                              "line": 118
+                            },
+                            "snippet": "\u001b[0m \u001b[90m 116 |\u001b[39m         \u001b[90m// Check for navigation elements\u001b[39m\n \u001b[90m 117 |\u001b[39m         \u001b[36mconst\u001b[39m navElements \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'nav, [role=\"navigation\"]'\u001b[39m)\u001b[33m.\u001b[39mall()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 118 |\u001b[39m         expect(navElements\u001b[33m.\u001b[39mlength)\u001b[33m.\u001b[39mtoBeGreaterThan(\u001b[35m0\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 119 |\u001b[39m         \n \u001b[90m 120 |\u001b[39m         \u001b[90m// Test main navigation links\u001b[39m\n \u001b[90m 121 |\u001b[39m         \u001b[36mconst\u001b[39m mainNavLinks \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'nav a, [role=\"navigation\"] a'\u001b[39m)\u001b[33m.\u001b[39mall()\u001b[33m;\u001b[39m\u001b[0m"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js",
+                                "column": 36,
+                                "line": 118
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n\n  116 |         // Check for navigation elements\n  117 |         const navElements = await page.locator('nav, [role=\"navigation\"]').all();\n> 118 |         expect(navElements.length).toBeGreaterThan(0);\n      |                                    ^\n  119 |         \n  120 |         // Test main navigation links\n  121 |         const mainNavLinks = await page.locator('nav a, [role=\"navigation\"] a').all();\n    at C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js:118:36"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-08-19T17:26:56.891Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "C:\\Users\\nisse\\puppy-weight-watch\\test-results\\mobile-validation-Mobile-O-6bb46-cessibility-on-Large-Mobile\\error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "C:\\Users\\nisse\\puppy-weight-watch\\mobile-validation.spec.js",
+                            "column": 36,
+                            "line": 118
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "14b92355736723071f7b-eb2e0b4e54b7d0d2c713",
+                  "file": "mobile-validation.spec.js",
+                  "line": 111,
+                  "column": 7
+                }
+              ]
+            },
+            {
+              "title": "Content Overflow Prevention",
+              "file": "mobile-validation.spec.js",
+              "line": 150,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "Content wrapping and overflow on iPhone SE",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "",
+                      "projectName": "",
+                      "results": [
+                        {
+                          "workerIndex": 9,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 2092,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-08-19T17:26:59.758Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "14b92355736723071f7b-57a1554116c907ac5503",
+                  "file": "mobile-validation.spec.js",
+                  "line": 152,
+                  "column": 7
+                },
+                {
+                  "title": "Content wrapping and overflow on Galaxy S8",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "",
+                      "projectName": "",
+                      "results": [
+                        {
+                          "workerIndex": 9,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 1960,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-08-19T17:27:01.965Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "14b92355736723071f7b-f2a24059d9c996a57f33",
+                  "file": "mobile-validation.spec.js",
+                  "line": 152,
+                  "column": 7
+                },
+                {
+                  "title": "Content wrapping and overflow on Small Mobile",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "",
+                      "projectName": "",
+                      "results": [
+                        {
+                          "workerIndex": 9,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 1823,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-08-19T17:27:03.929Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "14b92355736723071f7b-fc1006ee8472e2dda4ca",
+                  "file": "mobile-validation.spec.js",
+                  "line": 152,
+                  "column": 7
+                },
+                {
+                  "title": "Content wrapping and overflow on Large Mobile",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "",
+                      "projectName": "",
+                      "results": [
+                        {
+                          "workerIndex": 9,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 1899,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-08-19T17:27:05.755Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "14b92355736723071f7b-b31836df87e3f51791f8",
+                  "file": "mobile-validation.spec.js",
+                  "line": 152,
+                  "column": 7
+                }
+              ]
+            },
+            {
+              "title": "Mobile Accessibility",
+              "file": "mobile-validation.spec.js",
+              "line": 185,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "Accessibility features on mobile viewports",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "",
+                      "projectName": "",
+                      "results": [
+                        {
+                          "workerIndex": 9,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 1810,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-08-19T17:27:07.657Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "14b92355736723071f7b-09b98c5c498a55e30c90",
+                  "file": "mobile-validation.spec.js",
+                  "line": 186,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "Mobile Performance",
+              "file": "mobile-validation.spec.js",
+              "line": 223,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "Layout stability on iPhone SE",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "",
+                      "projectName": "",
+                      "results": [
+                        {
+                          "workerIndex": 9,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 4587,
+                          "errors": [],
+                          "stdout": [
+                            {
+                              "text": "Cumulative Layout Shift on iPhone SE: 0\n"
+                            }
+                          ],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-08-19T17:27:09.471Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "14b92355736723071f7b-baee491dccd53c8a2f72",
+                  "file": "mobile-validation.spec.js",
+                  "line": 225,
+                  "column": 7
+                },
+                {
+                  "title": "Layout stability on Galaxy S8",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "",
+                      "projectName": "",
+                      "results": [
+                        {
+                          "workerIndex": 9,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 4565,
+                          "errors": [],
+                          "stdout": [
+                            {
+                              "text": "Cumulative Layout Shift on Galaxy S8: 0\n"
+                            }
+                          ],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-08-19T17:27:14.061Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "14b92355736723071f7b-5cb2f1d27c9698614626",
+                  "file": "mobile-validation.spec.js",
+                  "line": 225,
+                  "column": 7
+                },
+                {
+                  "title": "Layout stability on Small Mobile",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "",
+                      "projectName": "",
+                      "results": [
+                        {
+                          "workerIndex": 9,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 4538,
+                          "errors": [],
+                          "stdout": [
+                            {
+                              "text": "Cumulative Layout Shift on Small Mobile: 0\n"
+                            }
+                          ],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-08-19T17:27:18.631Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "14b92355736723071f7b-a9462db8dddd6674cf9d",
+                  "file": "mobile-validation.spec.js",
+                  "line": 225,
+                  "column": 7
+                },
+                {
+                  "title": "Layout stability on Large Mobile",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "",
+                      "projectName": "",
+                      "results": [
+                        {
+                          "workerIndex": 9,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 4572,
+                          "errors": [],
+                          "stdout": [
+                            {
+                              "text": "Cumulative Layout Shift on Large Mobile: 0\n"
+                            }
+                          ],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-08-19T17:27:23.173Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "14b92355736723071f7b-95c8526d1038d3c90ceb",
+                  "file": "mobile-validation.spec.js",
+                  "line": 225,
+                  "column": 7
+                }
+              ]
+            },
+            {
+              "title": "iOS Input Handling",
+              "file": "mobile-validation.spec.js",
+              "line": 259,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "Input elements prevent zoom on iOS",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "",
+                      "projectName": "",
+                      "results": [
+                        {
+                          "workerIndex": 9,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 2083,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-08-19T17:27:27.749Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "14b92355736723071f7b-66144f8dbee02d587812",
+                  "file": "mobile-validation.spec.js",
+                  "line": 260,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "Call-to-Action Elements",
+              "file": "mobile-validation.spec.js",
+              "line": 285,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "Main CTA buttons are properly sized and accessible",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "",
+                      "projectName": "",
+                      "results": [
+                        {
+                          "workerIndex": 9,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 1745,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-08-19T17:27:29.836Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "14b92355736723071f7b-0d91c99ab2f35a4af147",
+                  "file": "mobile-validation.spec.js",
+                  "line": 286,
+                  "column": 5
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-08-19T17:26:21.814Z",
+    "duration": 69849.082,
+    "expected": 16,
+    "skipped": 0,
+    "unexpected": 9,
+    "flaky": 0
+  }
+}

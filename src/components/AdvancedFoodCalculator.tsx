@@ -225,7 +225,7 @@ export default function AdvancedFoodCalculator({ user, currentWeight: propCurren
 
   return (
     <div className="space-y-6">
-      <Card className="bg-gradient-to-br from-gradient-purple to-gradient-rose border-0 shadow-lg">
+      <Card className="bg-gradient-warm border-0 shadow-lg">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-white">
             <Calculator className="h-5 w-5" />
@@ -236,6 +236,7 @@ export default function AdvancedFoodCalculator({ user, currentWeight: propCurren
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
+          <form role="form" aria-labelledby="calculator-title" onSubmit={(e) => { e.preventDefault(); calculateFeeding(); }}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="current-weight" className="text-white">Nykyinen paino (kg)</Label>
@@ -291,18 +292,26 @@ export default function AdvancedFoodCalculator({ user, currentWeight: propCurren
             </div>
           </div>
           
-          <div className="space-y-2">
-            <Label className="text-white">Valitse koiranruoka</Label>
-            <Select value={selectedFoodId} onValueChange={setSelectedFoodId}>
-              <SelectTrigger className="bg-white/20 border-white/30 text-white">
-                <SelectValue placeholder="Valitse ruoka" />
-              </SelectTrigger>
-               <SelectContent>
+            <div className="space-y-2">
+              <Label className="text-white" id="food-label">Valitse koiranruoka *</Label>
+              <Select value={selectedFoodId} onValueChange={setSelectedFoodId} required>
+                <SelectTrigger 
+                  className="bg-white/20 border-white/30 text-white"
+                  aria-labelledby="food-label"
+                  aria-required="true"
+                  aria-describedby="food-desc"
+                >
+                  <SelectValue placeholder="Valitse ruoka" />
+                </SelectTrigger>
+                <SelectContent role="listbox">
+                  <div id="food-desc" className="sr-only">
+                    Valitse lista koiranruoka, jolle haluat laskea annosmäärän. Ruokamerkit perustuvat virallisiin annostelutaulukoihin
+                  </div>
                  {loading ? (
-                   <SelectItem value="loading" disabled>Ladataan ruokia...</SelectItem>
+                   <SelectItem value="loading" disabled role="option">Ladataan ruokia...</SelectItem>
                  ) : (
                    dogFoods.map(food => (
-                     <SelectItem key={food.id} value={food.id}>
+                     <SelectItem key={food.id} value={food.id} role="option">
                        {food.manufacturer} - {food.name}
                      </SelectItem>
                    ))
@@ -311,67 +320,81 @@ export default function AdvancedFoodCalculator({ user, currentWeight: propCurren
             </Select>
           </div>
           
-          <Button 
-            onClick={calculateFeeding} 
-            className="w-full bg-white text-gradient-purple hover:bg-white/90"
-            disabled={!currentWeight || !ageMonths}
-          >
-            <Dog className="mr-2 h-4 w-4" />
-            Laske ruokamäärä
-          </Button>
+            <Button 
+              type="submit"
+              className="w-full bg-white text-gradient-purple hover:bg-white/90 touch-target"
+              disabled={!currentWeight || !ageMonths}
+              aria-describedby="calculate-button-desc"
+            >
+              <Dog className="mr-2 h-4 w-4" aria-hidden="true" />
+              Laske ruokamäärä
+            </Button>
+            <div id="calculate-button-desc" className="sr-only">
+              Laskee pennullesi sopivan päivittäisen ruoka-annoksen annettujen tietojen perusteella
+            </div>
+          </form>
         </CardContent>
       </Card>
 
       {result && (
-        <>
+        <div role="region" aria-labelledby="results-heading" className="space-y-6">
+          <h2 id="results-heading" className="sr-only">Laskentatulokset</h2>
           {/* Results Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <Card className="text-center">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mobile-grid-1">
+            <Card className="text-center" role="article" aria-labelledby="daily-amount">
               <CardHeader className="pb-2">
-                <CardTitle className="text-lg">Päiväannos</CardTitle>
+                <CardTitle id="daily-amount" className="text-lg">Päiväannos</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-primary">{result.dailyAmount}g</div>
+                <div className="text-3xl font-bold text-primary" aria-label={`${result.dailyAmount} grammaa`}>
+                  {result.dailyAmount}g
+                </div>
                 <p className="text-sm text-muted-foreground">yhteensä päivässä</p>
               </CardContent>
             </Card>
             
-            <Card className="text-center">
+            <Card className="text-center" role="article" aria-labelledby="meals-per-day">
               <CardHeader className="pb-2">
-                <CardTitle className="text-lg">Ruokintakerrat</CardTitle>
+                <CardTitle id="meals-per-day" className="text-lg">Ruokintakerrat</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-primary">{result.mealsPerDay}</div>
+                <div className="text-3xl font-bold text-primary" aria-label={`${result.mealsPerDay} kertaa päivässä`}>
+                  {result.mealsPerDay}
+                </div>
                 <p className="text-sm text-muted-foreground">kertaa päivässä</p>
               </CardContent>
             </Card>
             
-            <Card className="text-center">
+            <Card className="text-center" role="article" aria-labelledby="grams-per-meal">
               <CardHeader className="pb-2">
-                <CardTitle className="text-lg">Annos/kerta</CardTitle>
+                <CardTitle id="grams-per-meal" className="text-lg">Annos/kerta</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-primary">{result.gramsPerMeal}g</div>
+                <div className="text-3xl font-bold text-primary" aria-label={`${result.gramsPerMeal} grammaa per ruokintakerta`}>
+                  {result.gramsPerMeal}g
+                </div>
                 <p className="text-sm text-muted-foreground">per ruokintakerta</p>
               </CardContent>
             </Card>
             
-            <Card className="text-center">
+            <Card className="text-center" role="article" aria-labelledby="energy-kcal">
               <CardHeader className="pb-2">
-                <CardTitle className="text-lg">Energia</CardTitle>
+                <CardTitle id="energy-kcal" className="text-lg">Energia</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-primary">{result.energyKcal}</div>
+                <div className="text-3xl font-bold text-primary" aria-label={`${result.energyKcal} kilokaloria päivässä`}>
+                  {result.energyKcal}
+                </div>
                 <p className="text-sm text-muted-foreground">kcal päivässä</p>
               </CardContent>
             </Card>
           </div>
 
           {/* Used Guidelines Display */}
-          <Card>
+          <Card role="complementary" aria-labelledby="guidelines-title">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Scale className="h-5 w-5" />
+              <CardTitle id="guidelines-title" className="flex items-center gap-2">
+                <Scale className="h-5 w-5" aria-hidden="true" />
                 Käytetyt annostelutiedot
               </CardTitle>
               <CardDescription>
@@ -380,42 +403,44 @@ export default function AdvancedFoodCalculator({ user, currentWeight: propCurren
             </CardHeader>
             <CardContent>
               {result.selectedFood && (
-                <div className="mb-4 p-4 bg-blue-50 rounded-lg">
-                  <h4 className="font-semibold mb-2">Valittu ruoka:</h4>
-                  <p><strong>Ruoka:</strong> {result.selectedFood.manufacturer} - {result.selectedFood.name}</p>
-                  <p><strong>Tyyppi:</strong> {result.selectedFood.food_type} - {result.selectedFood.nutrition_type}</p>
-                  <p><strong>Annostelutapa:</strong> {result.selectedFood.dosage_method.replace(/_/g, ' ')}</p>
-                  {result.selectedFood.notes && (
-                    <p><strong>Huomautuksia:</strong> {result.selectedFood.notes}</p>
-                  )}
+                <div className="mb-4 p-4 bg-blue-50 rounded-lg" role="group" aria-labelledby="selected-food">
+                  <h3 id="selected-food" className="font-semibold mb-2">Valittu ruoka:</h3>
+                  <dl className="space-y-1">
+                    <div><dt className="inline font-medium">Ruoka:</dt> <dd className="inline">{result.selectedFood.manufacturer} - {result.selectedFood.name}</dd></div>
+                    <div><dt className="inline font-medium">Tyyppi:</dt> <dd className="inline">{result.selectedFood.food_type} - {result.selectedFood.nutrition_type}</dd></div>
+                    <div><dt className="inline font-medium">Annostelutapa:</dt> <dd className="inline">{result.selectedFood.dosage_method.replace(/_/g, ' ')}</dd></div>
+                    {result.selectedFood.notes && (
+                      <div><dt className="inline font-medium">Huomautuksia:</dt> <dd className="inline">{result.selectedFood.notes}</dd></div>
+                    )}
+                  </dl>
                 </div>
               )}
 
               {result.usedGuidelines.length > 0 && (
-                <div className="overflow-x-auto">
-                  <h4 className="font-semibold mb-2">Käytetyt annostelutiedot:</h4>
-                  <table className="w-full text-sm">
+                <div className="overflow-x-auto mobile-table-responsive">
+                  <h3 className="font-semibold mb-2">Käytetyt annostelutiedot:</h3>
+                  <table className="w-full text-sm" role="table" aria-labelledby="guidelines-table" summary="Taulukko näyttää laskennassa käytetyt annostelutiedot">
                     <thead>
-                      <tr className="border-b">
-                        <th className="text-left p-2">Aikuispaino</th>
-                        <th className="text-left p-2">Ikä</th>
-                        <th className="text-left p-2">Nykyinen paino</th>
-                        <th className="text-left p-2">Kokoluokka</th>
-                        <th className="text-left p-2">Min annos</th>
-                        <th className="text-left p-2">Max annos</th>
-                        <th className="text-left p-2">Kaava</th>
+                      <tr className="border-b" role="row">
+                        <th className="text-left p-2" role="columnheader" scope="col">Aikuispaino</th>
+                        <th className="text-left p-2" role="columnheader" scope="col">Ikä</th>
+                        <th className="text-left p-2" role="columnheader" scope="col">Nykyinen paino</th>
+                        <th className="text-left p-2" role="columnheader" scope="col">Kokoluokka</th>
+                        <th className="text-left p-2" role="columnheader" scope="col">Min annos</th>
+                        <th className="text-left p-2" role="columnheader" scope="col">Max annos</th>
+                        <th className="text-left p-2" role="columnheader" scope="col">Kaava</th>
                       </tr>
                     </thead>
                     <tbody>
                       {result.usedGuidelines.map((guideline, index) => (
-                        <tr key={guideline.id} className="border-b bg-blue-50">
-                          <td className="p-2">{guideline.adult_weight_kg || '-'} kg</td>
-                          <td className="p-2">{guideline.age_months || '-'}</td>
-                          <td className="p-2">{guideline.current_weight_kg || '-'} kg</td>
-                          <td className="p-2">{guideline.size_category || '-'}</td>
-                          <td className="p-2">{guideline.daily_amount_min || '-'}g</td>
-                          <td className="p-2">{guideline.daily_amount_max || '-'}g</td>
-                          <td className="p-2">{guideline.calculation_formula || '-'}</td>
+                        <tr key={guideline.id} className="border-b bg-blue-50" role="row">
+                          <td className="p-2" role="cell">{guideline.adult_weight_kg || '-'} kg</td>
+                          <td className="p-2" role="cell">{guideline.age_months || '-'}</td>
+                          <td className="p-2" role="cell">{guideline.current_weight_kg || '-'} kg</td>
+                          <td className="p-2" role="cell">{guideline.size_category || '-'}</td>
+                          <td className="p-2" role="cell">{guideline.daily_amount_min || '-'}g</td>
+                          <td className="p-2" role="cell">{guideline.daily_amount_max || '-'}g</td>
+                          <td className="p-2" role="cell">{guideline.calculation_formula || '-'}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -423,32 +448,39 @@ export default function AdvancedFoodCalculator({ user, currentWeight: propCurren
                 </div>
               )}
               
-              <div className="mt-4 p-4 bg-green-50 rounded-lg">
-                <h4 className="font-semibold mb-2">Lopputulos:</h4>
-                <p><strong>Perusannos:</strong> {Math.round(result.dailyAmount / result.activityMultiplier)}g päivässä</p>
-                {result.activityMultiplier !== 1.0 && (
-                  <p><strong>Aktiivisuussäätö:</strong> ×{result.activityMultiplier} = {result.dailyAmount}g</p>
-                )}
-                <p><strong>Ruokintakerrat:</strong> {result.mealsPerDay} kertaa päivässä</p>
-                <p><strong>Annos per kerta:</strong> {result.gramsPerMeal}g</p>
+              <div className="mt-4 p-4 bg-green-50 rounded-lg" role="group" aria-labelledby="final-result">
+                <h3 id="final-result" className="font-semibold mb-2">Lopputulos:</h3>
+                <dl className="space-y-1">
+                  <div><dt className="inline font-medium">Perusannos:</dt> <dd className="inline">{Math.round(result.dailyAmount / result.activityMultiplier)}g päivässä</dd></div>
+                  {result.activityMultiplier !== 1.0 && (
+                    <div><dt className="inline font-medium">Aktiivisuussäätö:</dt> <dd className="inline">×{result.activityMultiplier} = {result.dailyAmount}g</dd></div>
+                  )}
+                  <div><dt className="inline font-medium">Ruokintakerrat:</dt> <dd className="inline">{result.mealsPerDay} kertaa päivässä</dd></div>
+                  <div><dt className="inline font-medium">Annos per kerta:</dt> <dd className="inline">{result.gramsPerMeal}g</dd></div>
+                </dl>
               </div>
             </CardContent>
           </Card>
 
           {/* Important Notes */}
-          <Card>
+          <Card role="alert" aria-labelledby="important-notes">
             <CardHeader>
-              <CardTitle>⚠️ Tärkeät huomiot</CardTitle>
+              <CardTitle id="important-notes">
+                <span aria-label="Varoitus" role="img">⚠️</span>
+                Tärkeät huomiot
+              </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-2">
-              <p>• Nämä ovat suuntaa-antavia määriä. Seuraa pennun kasvua ja säädä tarvittaessa.</p>
-              <p>• Jaa päiväannos tasaisesti ruokintakertojen kesken.</p>
-              <p>• Siirry vähitellen uuteen ruokamäärään 3-5 päivän aikana.</p>
-              <p>• Ota aina yhteyttä eläinlääkäriin, jos olet huolissaan pennun kasvusta.</p>
-              <p>• Muista myös herttojen määrä päivittäisessä energiansaannissa!</p>
+            <CardContent>
+              <ul className="space-y-2 list-disc list-inside">
+                <li>Nämä ovat suuntaa-antavia määriä. Seuraa pennun kasvua ja säädä tarvittaessa.</li>
+                <li>Jaa päiväannos tasaisesti ruokintakertojen kesken.</li>
+                <li>Siirry vähitellen uuteen ruokamäärään 3-5 päivän aikana.</li>
+                <li>Ota aina yhteyttä eläinlääkäriin, jos olet huolissaan pennun kasvusta.</li>
+                <li>Muista myös herttojen määrä päivittäisessä energiansaannissa!</li>
+              </ul>
             </CardContent>
           </Card>
-        </>
+        </div>
       )}
     </div>
   )
