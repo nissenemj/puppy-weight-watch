@@ -46,6 +46,7 @@ import puppyBookIcon from '@/assets/puppy-book-icon.png';
 import welcomeIllustration from '@/assets/welcome-illustration.png';
 import { calculatePuppyAge, getMonthNumberFromAge, getDefaultBirthDate } from '@/utils/puppyAge';
 import PuppyBookSelector from './PuppyBookSelector';
+import TestMemoryAdd from './TestMemoryAdd';
 
 // Tyyppimäärittelyt
 interface PuppyBookData {
@@ -355,6 +356,14 @@ const PuppyBook: React.FC = () => {
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3 }}
             >
+              <TestMemoryAdd 
+                bookId={book.id}
+                onMemoryAdded={() => {
+                  if (memoryGalleryRef.current) {
+                    memoryGalleryRef.current();
+                  }
+                }}
+              />
               <MemoryGallery 
                 bookId={book.id} 
                 onRefresh={memoryGalleryRef}

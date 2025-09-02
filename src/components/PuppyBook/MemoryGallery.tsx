@@ -60,6 +60,7 @@ const MemoryGallery: React.FC<MemoryGalleryProps> = ({ bookId, onRefresh, onAddM
 
   // Refresh memories when requested
   const refreshMemories = () => {
+    console.log('MemoryGallery: Refreshing memories for bookId:', bookId);
     loadMemories();
   };
 
@@ -71,6 +72,7 @@ const MemoryGallery: React.FC<MemoryGalleryProps> = ({ bookId, onRefresh, onAddM
 
   const loadMemories = async () => {
     try {
+      console.log('MemoryGallery: Loading memories for bookId:', bookId);
       const { data, error } = await supabase
         .from('memories')
         .select(`
@@ -91,6 +93,7 @@ const MemoryGallery: React.FC<MemoryGalleryProps> = ({ bookId, onRefresh, onAddM
         return;
       }
 
+      console.log('MemoryGallery: Loaded memories:', data?.length || 0, 'items');
       setMemories(data || []);
     } catch (error) {
       console.error('Error:', error);
