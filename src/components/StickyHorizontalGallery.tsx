@@ -45,7 +45,7 @@ export default function StickyHorizontalGallery({
     
     return (
       <section className={`w-full py-16 ${className}`}>
-        <div className="w-full px-4 max-w-6xl mx-auto">
+        <div className="w-full px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {items.map((item, index) => (
               <motion.div
@@ -85,7 +85,7 @@ export default function StickyHorizontalGallery({
           {items.map((item, index) => (
             <div key={item.id} className="min-w-[100vw] px-4">
               <div className="h-full w-full flex items-center justify-center">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl w-full px-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full px-4">
                   {/* Create 2x2 grid by repeating the same content in different card styles */}
                   {Array.from({ length: 4 }, (_, cardIndex) => (
                     <motion.div
