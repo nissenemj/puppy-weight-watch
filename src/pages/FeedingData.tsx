@@ -361,7 +361,7 @@ export default function FeedingData() {
       <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-full min-w-0">
         {/* Hero Section - Pan background */}
         <div className="mb-12 rounded-2xl overflow-hidden">
-          <ScrollPanBackground src={heroImage} alt="" panX={40} panY={20} zoom={1.04} minHeightClass="h-96 sm:h-[500px] lg:h-[600px]">
+          <ScrollPanBackground src={heroImage} alt="Koiranpennun ruokinta-annostelutiedot ja ruokavaliot" panX={40} panY={20} zoom={1.04} minHeightClass="h-96 sm:h-[500px] lg:h-[600px]">
             <div className="absolute bottom-8 left-0 right-0 text-center text-white">
               <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4">Annostelutiedot</h1>
               <p className="text-lg sm:text-xl text-white/90 max-w-2xl mx-auto px-4">

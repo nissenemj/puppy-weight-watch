@@ -507,14 +507,14 @@ const CreateBookPrompt: React.FC<{
       {/* Söpöt taustakuviot */}
       <motion.img 
         src={pawPrints}
-        alt=""
+        alt="Tassunjälkiä - koristeellinen elementti"
         className="absolute top-10 left-10 w-20 h-20 opacity-20"
         animate={{ rotate: 360 }}
         transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
       />
       <motion.img 
         src={pawPrints}
-        alt=""
+        alt="Tassunjälkiä - koristeellinen elementti"
         className="absolute bottom-10 right-10 w-16 h-16 opacity-15"
         animate={{ rotate: -360 }}
         transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
@@ -601,14 +601,14 @@ const PuppyBookHeader: React.FC<{
       {/* Söpöt taustakuviot */}
       <motion.img 
         src={pawPrints}
-        alt=""
+        alt="Tassunjälkiä - koristeellinen elementti"
         className="absolute top-4 right-4 w-16 h-16 opacity-30"
         animate={{ rotate: 360 }}
         transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
       />
       <motion.img 
         src={pawPrints}
-        alt=""
+        alt="Tassunjälkiä - koristeellinen elementti"
         className="absolute bottom-4 left-4 w-12 h-12 opacity-20"
         animate={{ rotate: -360 }}
         transition={{ duration: 20, repeat: Infinity, ease: "linear" }}

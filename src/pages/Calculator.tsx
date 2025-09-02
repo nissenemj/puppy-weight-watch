@@ -14,6 +14,7 @@ import { createCalculatorSchema, createFAQSchema, createBreadcrumbSchema } from 
 import ScrollPanBackground from '@/components/ScrollPanBackground'
 import StickyHorizontalGallery from '@/components/StickyHorizontalGallery'
 import CountUp from '@/components/CountUp'
+import heroIllustration from '@/assets/hero-illustration.png'
 
 const Calculator = () => {
   const faqs = [
@@ -76,8 +77,8 @@ const Calculator = () => {
       
       {/* Hero Section with pan background */}
       <ScrollPanBackground
-        src={import.meta.env.BASE_URL + 'assets/hero-illustration.png'}
-        alt=""
+        src={heroIllustration}
+        alt="Koiranpentu ja laskentataulukko - pentulaskurin kuva"
         panX={60}
         panY={30}
         zoom={1.06}

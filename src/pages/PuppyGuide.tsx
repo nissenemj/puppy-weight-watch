@@ -23,7 +23,7 @@ const PuppyGuide = () => {
       <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-full min-w-0 space-y-8">
       {/* Hero Section with pan background */}
       <div className="rounded-2xl overflow-hidden mb-12">
-        <ScrollPanBackground src={heroImage} alt="" panX={30} panY={20} zoom={1.04} minHeightClass="h-60 sm:h-72 md:h-80">
+        <ScrollPanBackground src={heroImage} alt="Koiranpennun hoito-opas ja kasvatus" panX={30} panY={20} zoom={1.04} minHeightClass="h-60 sm:h-72 md:h-80">
           <div className="text-center space-y-3">
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-heading font-bold text-white drop-shadow">
               🐕 Kattava opas pennun ruokintaan

@@ -74,7 +74,7 @@ const PuppyBookLanding: React.FC = () => {
       
       {/* Hero Section with pan background */}
       <section className="relative py-8 overflow-hidden rounded-2xl mobile-text-wrap responsive-media no-horizontal-scroll">
-        <ScrollPanBackground src={heroIllustration} alt="" panX={40} panY={20} zoom={1.04} minHeightClass="min-h-[50svh]">
+        <ScrollPanBackground src={heroIllustration} alt="Pentukuvakirja - koiranpentuja leikkimässä ja kasvamassa" panX={40} panY={20} zoom={1.04} minHeightClass="min-h-[50svh]">
           <div className="container mx-auto px-4">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <motion.div

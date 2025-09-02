@@ -9,6 +9,8 @@ interface ImageOptimizedProps {
   height?: number;
   loading?: 'lazy' | 'eager';
   priority?: boolean;
+  placeholder?: string;
+  blurDataURL?: string;
 }
 
 const ImageOptimized: React.FC<ImageOptimizedProps> = ({
@@ -18,7 +20,9 @@ const ImageOptimized: React.FC<ImageOptimizedProps> = ({
   width,
   height,
   loading = 'lazy',
-  priority = false
+  priority = false,
+  placeholder,
+  blurDataURL
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
@@ -49,9 +53,29 @@ const ImageOptimized: React.FC<ImageOptimizedProps> = ({
     <div className={cn("relative overflow-hidden", className)}>
       {!isLoaded && (
         <div 
-          className="absolute inset-0 bg-muted animate-pulse"
+          className={cn(
+            "absolute inset-0 animate-pulse",
+            placeholder ? "bg-transparent" : "bg-muted"
+          )}
           style={{ width, height }}
-        />
+        >
+          {placeholder && (
+            <img
+              src={placeholder}
+              alt=""
+              className="w-full h-full object-cover opacity-20 blur-sm"
+              aria-hidden="true"
+            />
+          )}
+          {blurDataURL && !placeholder && (
+            <img
+              src={blurDataURL}
+              alt=""
+              className="w-full h-full object-cover opacity-30 blur-md scale-110"
+              aria-hidden="true"
+            />
+          )}
+        </div>
       )}
       <img
         src={src}
@@ -62,11 +86,12 @@ const ImageOptimized: React.FC<ImageOptimizedProps> = ({
         onLoad={handleLoad}
         onError={handleError}
         className={cn(
-          "transition-opacity duration-300",
+          "transition-opacity duration-500 ease-out",
           isLoaded ? "opacity-100" : "opacity-0",
-          className
+          "w-full h-full object-cover"
         )}
         decoding="async"
+        fetchPriority={priority ? 'high' : 'auto'}
       />
     </div>
   );

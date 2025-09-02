@@ -265,7 +265,7 @@ export function Onboarding({ steps, isOpen, onClose, onComplete }: OnboardingPro
       >
         <div className="text-center space-y-4">
           {step.image && (
-            <img src={step.image} alt="" className="w-32 h-32 mx-auto rounded-lg" />
+            <img src={step.image} alt={`Ohje vaihe ${currentStep + 1}: ${step.title}`} className="w-32 h-32 mx-auto rounded-lg" />
           )}
           
           <h2 className="text-xl font-semibold">{step.title}</h2>
