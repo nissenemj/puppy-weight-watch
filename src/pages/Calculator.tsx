@@ -67,7 +67,7 @@ const Calculator = () => {
 
   return (
     <MobileOptimizedLayout>
-    <PageLayout variant="default" animated className="no-horizontal-scroll mobile-text-wrap responsive-media">
+    <PageLayout variant="full-width" animated className="no-horizontal-scroll mobile-text-wrap responsive-media">
       <SEO
         title="Pentulaskuri - Ruokamäärä"
         description="Laske koiranpentusi optimaalinen päivittäinen ruokamäärä. Huomioi rodun, iän, painon ja aktiivisuuden. Käytä virallisia annostelutaulukoita."
@@ -75,7 +75,7 @@ const Calculator = () => {
         structuredData={structuredData}
       />
       
-      {/* Hero Section with pan background */}
+      {/* Hero Section with pan background - FULL WIDTH */}
       <ScrollPanBackground
         src={heroIllustration}
         alt="Koiranpentu ja laskentataulukko - pentulaskurin kuva"
@@ -83,8 +83,9 @@ const Calculator = () => {
         panY={30}
         zoom={1.06}
         minHeightClass="min-h-[70svh]"
+        className="w-full"
       >
-        <div className="container mx-auto px-4 text-center">
+        <div className="w-full px-4 text-center">
           <motion.div
             initial="hidden"
             animate="visible"
@@ -118,8 +119,8 @@ const Calculator = () => {
         </div>
       </ScrollPanBackground>
 
-      {/* How it works: sticky horizontal steps */}
-      <Section className="py-12">
+      {/* How it works: FULL WIDTH */}
+      <div className="w-full py-12">
         <StickyHorizontalGallery
           items={[
             { id: '1', content: (<div><h3 className="text-h2 mb-2">1. Rotu & ikä</h3><p className="text-muted">Valitse rotu tai sekarotu ja ikä viikoissa.</p></div>) },
@@ -128,18 +129,18 @@ const Calculator = () => {
             { id: '4', content: (<div><h3 className="text-h2 mb-2">4. Ruokamäärä</h3><p className="text-muted">Näet päivittäisen ruokasuosituksen ja jaon aterioihin.</p></div>) },
           ]}
         />
-      </Section>
+      </div>
 
-      {/* Breadcrumb */}
-      <Section className="py-4 border-b border-[var(--color-border)]">
-        <Container size="lg" padding="lg">
+      {/* Breadcrumb - FULL WIDTH */}
+      <div className="w-full py-4 border-b border-[var(--color-border)]">
+        <div className="max-w-6xl mx-auto px-4">
           <Breadcrumb items={breadcrumbItems} />
-        </Container>
-      </Section>
+        </div>
+      </div>
       
-      {/* Calculator Section + trust stats */}
-      <Section className="py-16">
-        <Container size="lg" padding="lg">
+      {/* Calculator Section - FULL WIDTH */}
+      <div className="w-full py-16">
+        <div className="max-w-6xl mx-auto px-4">
           <div className="grid gap-8 md:grid-cols-3 text-center mb-12">
             <div>
               <p className="text-5xl font-semibold"><CountUp to={12000} suffix="+" /></p>
@@ -155,12 +156,12 @@ const Calculator = () => {
             </div>
           </div>
           <EnhancedPuppyCalculator />
-        </Container>
-      </Section>
+        </div>
+      </div>
         
-      {/* FAQ Section */}
-      <Section className="py-20 bg-[var(--color-surface-alt)]">
-        <Container size="lg" padding="lg">
+      {/* FAQ Section - FULL WIDTH */}
+      <div className="w-full py-20 bg-[var(--color-surface-alt)]">
+        <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-h1 mb-6">Usein kysytyt kysymykset</h2>
             <p className="text-body-lg text-muted max-w-2xl mx-auto">
@@ -168,10 +169,10 @@ const Calculator = () => {
             </p>
           </div>
           <FAQ items={faqs} />
-        </Container>
-      </Section>
+        </div>
+      </div>
 
-      {/* Footer */}
+      {/* Footer - FULL WIDTH */}
       <Footer />
       
     </PageLayout>
