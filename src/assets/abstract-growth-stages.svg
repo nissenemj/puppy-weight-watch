@@ -1,0 +1,128 @@
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="300" fill="url(#stagesBg)"/>
+  
+  <defs>
+    <!-- Claude background gradient -->
+    <linearGradient id="stagesBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#F5F3F0"/>
+      <stop offset="100%" style="stop-color:#F0EDE8"/>
+    </linearGradient>
+    
+    <!-- Claude stage gradients -->
+    <radialGradient id="stage1" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#E69F88"/>
+      <stop offset="100%" style="stop-color:#F0B3A0"/>
+    </radialGradient>
+    
+    <radialGradient id="stage2" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#D97757"/>
+      <stop offset="100%" style="stop-color:#E69F88"/>
+    </radialGradient>
+    
+    <radialGradient id="stage3" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#D97757"/>
+      <stop offset="100%" style="stop-color:#C66543"/>
+    </radialGradient>
+    
+    <radialGradient id="connecting" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#1E2D50"/>
+      <stop offset="100%" style="stop-color:#2A3B61"/>
+    </radialGradient>
+  </defs>
+  
+  <!-- Flowing connection between stages -->
+  <path d="M80 150 Q200 120 320 150" 
+        stroke="url(#connecting)" 
+        stroke-width="12" 
+        fill="none" 
+        opacity="0.3"/>
+  
+  <!-- Stage 1: Early puppy - smallest organic shape -->
+  <g transform="translate(80, 150)">
+    <!-- Background glow -->
+    <circle cx="0" cy="0" r="35" fill="url(#stage1)" opacity="0.3"/>
+    <!-- Main shape -->
+    <ellipse cx="0" cy="0" rx="22" ry="18" fill="url(#stage1)" opacity="0.7"/>
+    <!-- Inner detail -->
+    <ellipse cx="-3" cy="-2" rx="8" ry="6" fill="url(#stage1)" opacity="0.9"/>
+    <!-- Gentle emanating dots -->
+    <circle cx="15" cy="-10" r="3" fill="url(#stage1)" opacity="0.5"/>
+    <circle cx="-12" cy="12" r="2" fill="url(#stage1)" opacity="0.6"/>
+    <circle cx="8" cy="18" r="2.5" fill="url(#stage1)" opacity="0.4"/>
+  </g>
+  
+  <!-- Stage 2: Growing puppy - medium organic shape -->
+  <g transform="translate(200, 130)">
+    <!-- Background glow -->
+    <ellipse cx="0" cy="0" rx="45" ry="40" fill="url(#stage2)" opacity="0.25"/>
+    <!-- Main shape -->
+    <ellipse cx="0" cy="0" rx="28" ry="24" fill="url(#stage2)" opacity="0.7" transform="rotate(15)"/>
+    <!-- Inner detail -->
+    <ellipse cx="-2" cy="3" rx="12" ry="9" fill="url(#stage2)" opacity="0.9" transform="rotate(15)"/>
+    <!-- Connecting wisps -->
+    <path d="M-20 -15 Q-10 -25 5 -20" stroke="url(#stage2)" stroke-width="2" fill="none" opacity="0.5"/>
+    <path d="M18 10 Q25 5 20 20" stroke="url(#stage2)" stroke-width="2" fill="none" opacity="0.5"/>
+    <!-- Emanating energy -->
+    <circle cx="25" cy="-15" r="4" fill="url(#stage2)" opacity="0.5"/>
+    <circle cx="-18" cy="20" r="3" fill="url(#stage2)" opacity="0.6"/>
+  </g>
+  
+  <!-- Stage 3: Mature puppy - largest organic shape -->
+  <g transform="translate(320, 150)">
+    <!-- Background glow -->
+    <ellipse cx="0" cy="0" rx="50" ry="45" fill="url(#stage3)" opacity="0.25"/>
+    <!-- Main shape -->
+    <ellipse cx="0" cy="0" rx="35" ry="30" fill="url(#stage3)" opacity="0.7" transform="rotate(-10)"/>
+    <!-- Inner detail -->
+    <ellipse cx="2" cy="-3" rx="15" ry="12" fill="url(#stage3)" opacity="0.9" transform="rotate(-10)"/>
+    <!-- Mature energy patterns -->
+    <path d="M-25 -20 Q-15 -30 0 -25 Q15 -20 25 -15" stroke="url(#stage3)" stroke-width="2" fill="none" opacity="0.4"/>
+    <path d="M-30 10 Q-20 20 -5 18 Q10 16 25 20" stroke="url(#stage3)" stroke-width="2" fill="none" opacity="0.4"/>
+    <!-- Strength indicators -->
+    <circle cx="30" cy="-20" r="5" fill="url(#stage3)" opacity="0.6"/>
+    <circle cx="-25" cy="25" r="4" fill="url(#stage3)" opacity="0.5"/>
+    <circle cx="20" cy="30" r="3" fill="url(#stage3)" opacity="0.7"/>
+  </g>
+  
+  <!-- Floating abstract elements representing growth milestones -->
+  <g opacity="0.4">
+    <!-- Above stage 1 -->
+    <circle cx="80" cy="80" r="6" fill="url(#stage1)"/>
+    <circle cx="95" cy="70" r="4" fill="url(#stage1)"/>
+    
+    <!-- Above stage 2 -->
+    <ellipse cx="200" cy="60" rx="8" ry="6" fill="url(#stage2)" transform="rotate(20 200 60)"/>
+    <ellipse cx="215" cy="50" rx="5" ry="7" fill="url(#stage2)" transform="rotate(-15 215 50)"/>
+    
+    <!-- Above stage 3 -->
+    <circle cx="320" cy="70" r="9" fill="url(#stage3)"/>
+    <circle cx="340" cy="80" r="6" fill="url(#stage3)"/>
+    <circle cx="305" cy="55" r="5" fill="url(#stage3)"/>
+  </g>
+  
+  <!-- Gentle time progression indicators -->
+  <g>
+    <text x="80" y="220" font-family="Arial, sans-serif" font-size="11" fill="#6b7280" text-anchor="middle" opacity="0.7">1-3kk</text>
+    <text x="200" y="210" font-family="Arial, sans-serif" font-size="11" fill="#6b7280" text-anchor="middle" opacity="0.7">3-6kk</text>
+    <text x="320" y="220" font-family="Arial, sans-serif" font-size="11" fill="#6b7280" text-anchor="middle" opacity="0.7">6-12kk</text>
+  </g>
+  
+  <!-- Connecting energy flow underneath -->
+  <g opacity="0.2">
+    <path d="M50 180 Q120 200 150 190 Q180 180 220 185 Q260 190 290 185 Q330 180 350 190" 
+          stroke="url(#connecting)" 
+          stroke-width="3" 
+          fill="none"/>
+  </g>
+  
+  <!-- Subtle heartbeat-like pulse pattern -->
+  <g stroke="url(#connecting)" stroke-width="1" fill="none" opacity="0.15">
+    <path d="M80 240 Q85 235 90 240 Q95 245 100 240"/>
+    <path d="M200 230 Q205 225 210 230 Q215 235 220 230"/>
+    <path d="M320 240 Q325 235 330 240 Q335 245 340 240"/>
+  </g>
+  
+  <!-- Ambient glow effect around the entire composition -->
+  <ellipse cx="200" cy="150" rx="180" ry="80" fill="url(#connecting)" opacity="0.05"/>
+</svg>

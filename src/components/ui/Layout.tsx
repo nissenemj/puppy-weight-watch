@@ -14,9 +14,9 @@ interface PageLayoutProps extends React.HTMLAttributes<HTMLDivElement> {
 export const PageLayout = React.forwardRef<HTMLDivElement, PageLayoutProps>(
   ({ children, variant = 'default', animated = true, className, ...props }, ref) => {
     const layoutStyles = {
-      'default': 'min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 page-with-navigation',
-      'centered': 'min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 flex items-center justify-center p-4',
-      'full-width': 'min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50'
+      'default': 'min-h-screen bg-surface-alt page-with-navigation',
+      'centered': 'min-h-screen bg-surface-alt flex items-center justify-center p-4',
+      'full-width': 'min-h-screen bg-surface-alt'
     }
 
     const content = (
@@ -36,7 +36,7 @@ export const PageLayout = React.forwardRef<HTMLDivElement, PageLayoutProps>(
           animate="animate"
           exit="exit"
           variants={pageTransitions.fade}
-          transition={{ duration: 0.4 }}
+          transition={{ duration: 0.45 }}
         >
           {content}
         </motion.div>
@@ -114,7 +114,7 @@ export const Section = React.forwardRef<HTMLElement, SectionProps>(
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6, delay }}
+          transition={{ duration: 0.35, delay }}
           variants={entranceAnimations.fadeInUp}
         >
           {content}

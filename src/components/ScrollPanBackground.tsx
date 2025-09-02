@@ -67,9 +67,12 @@ export default function ScrollPanBackground({
         />
       )}
 
+      {/* Gradient overlay for better text readability */}
+      <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/30 via-black/10 to-black/50 pointer-events-none" />
+      
       {/* Overlay slot */}
       {children && (
-        <div className={`relative z-10 w-full h-full flex items-center justify-center ${overlayClassName}`}>
+        <div className={`relative z-30 w-full h-full flex items-center justify-center ${overlayClassName}`}>
           {children}
         </div>
       )}

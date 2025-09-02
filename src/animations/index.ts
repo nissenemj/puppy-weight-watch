@@ -16,13 +16,13 @@ export const easings = {
   playful: [0.175, 0.885, 0.32, 1.275]
 } as const
 
-// ===== BASE TRANSITIONS =====
+// ===== CLAUDE-INSPIRED TRANSITIONS =====
 export const transitions = {
-  fast: { duration: 0.15, ease: easings.standard },
-  base: { duration: 0.25, ease: easings.standard },
-  slow: { duration: 0.35, ease: easings.standard },
+  fast: { duration: 0.25, ease: easings.standard },
+  base: { duration: 0.35, ease: easings.standard },
+  slow: { duration: 0.45, ease: easings.standard },
   bounce: { duration: 0.4, ease: easings.puppy },
-  gentle: { duration: 0.6, ease: easings.gentle }
+  gentle: { duration: 0.3, ease: [0.4, 0, 0.2, 1] } // Claude's cubic-bezier
 } as const
 
 // ===== PAGE TRANSITIONS =====
@@ -109,8 +109,8 @@ export const entranceAnimations: { [key: string]: Variants } = {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.1
+        staggerChildren: 0.15,
+        delayChildren: 0.2
       }
     }
   },

@@ -15,8 +15,7 @@ import SocializationGuide from "./pages/SocializationGuide";
 import NotFound from "./pages/NotFound";
 import OnboardingPage from "./pages/OnboardingPage";
 import WeightTrackerPage from "./pages/WeightTrackerPage";
-import ViralDemo from "./pages/ViralDemo";
-import DesignSystemDemo from "./components/DesignSystemDemo";
+// Demo imports removed for production
 
 const router = createBrowserRouter([
   {
@@ -67,14 +66,7 @@ const router = createBrowserRouter([
     path: "/info/safety",
     element: <SafetyPage />,
   },
-  {
-    path: "/viral-demo",
-    element: <ViralDemo />,
-  },
-  {
-    path: "/design-system",
-    element: <DesignSystemDemo />,
-  },
+  // Demo routes removed for production
   {
     path: "*",
     element: <NotFound />,

@@ -1,9 +1,29 @@
-/* Mobile Optimizations (utilities only) - safe defaults */
-
-/* Use utility classes to opt-in on sections/components where needed */
+/* Mobile Optimizations - Consolidated & Optimized */
 
 @media (max-width: 768px) {
-  /* Text wrapping utility */
+  /* === GLOBAL MOBILE SAFETY === */
+  
+  /* Prevent horizontal scroll globally */
+  body, html {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+    box-sizing: border-box !important;
+  }
+
+  * {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Global responsive images */
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* === TEXT OPTIMIZATION === */
+  
+  /* Text wrapping and readability */
   .mobile-text-wrap, .mobile-text-wrap * {
     word-wrap: break-word !important;
     word-break: break-word !important;
@@ -11,7 +31,112 @@
     overflow-wrap: break-word !important;
   }
 
-  /* Make media responsive inside opted-in container */
+  /* Minimum font sizes for readability */
+  p, span, div, li, td, th {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+  }
+
+  .text-xs, .text-sm {
+    font-size: 14px !important;
+  }
+
+  /* === LAYOUT OPTIMIZATION === */
+  
+  /* Single column grids */
+  .mobile-grid-1 .grid,
+  .mobile-grid-1.grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  /* Safe containers */
+  .mobile-container-safe {
+    width: 100%;
+    max-width: 100vw;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+
+  /* Card containers */
+  .mobile-card-safe {
+    width: 100% !important;
+    max-width: calc(100vw - 2rem) !important;
+    margin: 0 auto !important;
+    box-sizing: border-box !important;
+  }
+
+  /* === INTERACTIVE ELEMENTS === */
+  
+  /* Touch targets (44px minimum) */
+  button, .btn, [role="button"], a {
+    min-height: 44px !important;
+    min-width: 44px !important;
+    padding: 8px 16px !important;
+  }
+
+  /* Input elements */
+  input, select, textarea {
+    min-height: 44px !important;
+    padding: 8px 12px !important;
+    font-size: 16px !important; /* Prevent iOS zoom */
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Mobile buttons */
+  .mobile-button,
+  .mobile-button button,
+  .mobile-button .btn {
+    width: 100% !important;
+    min-height: 44px !important;
+    white-space: normal !important;
+    word-wrap: break-word !important;
+  }
+
+  /* === Z-INDEX & OVERLAYS === */
+  
+  /* Hero text overlays */
+  .mobile-hero-container {
+    position: relative !important;
+    z-index: 45 !important;
+  }
+
+  .mobile-hero-container * {
+    position: relative !important;
+    z-index: 50 !important;
+  }
+
+  .mobile-text-overlay {
+    position: relative !important;
+    z-index: 30 !important;
+  }
+
+  /* === TEXT SHADOWS === */
+  
+  /* Standard text shadows */
+  .mobile-text-shadow {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7), 0 0 8px rgba(0, 0, 0, 0.3) !important;
+  }
+
+  /* Hero text shadows */
+  .mobile-hero-text {
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.9), 0 0 12px rgba(0, 0, 0, 0.7), 0 0 20px rgba(0, 0, 0, 0.5) !important;
+    position: relative !important;
+    z-index: 50 !important;
+  }
+
+  /* === UTILITY CLASSES === */
+  
+  /* Prevent horizontal scroll utility */
+  .no-horizontal-scroll {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+  }
+
+  /* Responsive media container */
   .responsive-media img,
   .responsive-media video,
   .responsive-media iframe,
@@ -22,55 +147,13 @@
     object-fit: contain !important;
   }
 
-  /* Ensure flex children wrap within opted-in container */
+  /* Flex wrapping */
   .mobile-flex-wrap .flex {
     flex-wrap: wrap !important;
   }
 
-  /* Simplify grids to single column within opted-in container */
-  .mobile-grid-1 .grid,
-  .mobile-grid-1.grid {
-    grid-template-columns: 1fr !important;
-    gap: 1rem !important;
-  }
-
-  /* Full-width buttons in opted-in container */
-  .mobile-button,
-  .mobile-button button,
-  .mobile-button .btn {
-    width: 100% !important;
-    max-width: 100% !important;
-    white-space: normal !important;
-    word-wrap: break-word !important;
-  }
-
-  /* Full-width inputs in opted-in container */
-  .mobile-input input,
-  .mobile-input textarea,
-  .mobile-input select {
-    width: 100% !important;
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-    font-size: 16px !important; /* Prevent iOS zoom */
-    min-height: 44px !important;
-  }
-
-  /* Container safety utility */
-  .mobile-container-safe {
-    width: 100%;
-    max-width: 100vw;
-    padding-left: 1rem;
-    padding-right: 1rem;
-    margin-left: auto;
-    margin-right: auto;
-    box-sizing: border-box;
-  }
-
-  /* Prevent horizontal scroll utility */
-  .no-horizontal-scroll {
-    overflow-x: hidden !important;
-    max-width: 100vw !important;
+  .mobile-flex-safe .flex > * {
+    min-width: 0 !important;
+    flex-shrink: 1 !important;
   }
 }
-
-

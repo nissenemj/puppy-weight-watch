@@ -252,7 +252,7 @@ export function AccessibilityChecker() {
                           <div className="flex items-start justify-between">
                             <div className="flex-1">
                               <div className="flex items-center gap-2 mb-1">
-                                <Badge variant={getSeverityBadge(issue.severity) as any}>
+                                <Badge variant={getSeverityBadge(issue.severity) as "default" | "secondary" | "destructive" | "outline"}>
                                   {issue.severity}
                                 </Badge>
                                 <span className="font-medium">{issue.rule}</span>

@@ -1,0 +1,116 @@
+<svg width="600" height="400" viewBox="0 0 600 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="600" height="400" fill="url(#chartBg)"/>
+  
+  <defs>
+    <!-- Claude background gradient -->
+    <linearGradient id="chartBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#F5F3F0"/>
+      <stop offset="100%" style="stop-color:#F0EDE8"/>
+    </linearGradient>
+    
+    <!-- Navy to terracotta growth gradient -->
+    <linearGradient id="growthGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#1E2D50"/>
+      <stop offset="50%" style="stop-color:#2A3B61"/>
+      <stop offset="100%" style="stop-color:#D97757"/>
+    </linearGradient>
+    
+    <!-- Terracotta accent -->
+    <radialGradient id="accent" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#D97757"/>
+      <stop offset="100%" style="stop-color:#E69F88"/>
+    </radialGradient>
+  </defs>
+  
+  <!-- Abstract chart background grid (very subtle) -->
+  <g stroke="#e0e8f0" stroke-width="1" opacity="0.3">
+    <line x1="100" y1="50" x2="100" y2="350"/>
+    <line x1="200" y1="50" x2="200" y2="350"/>
+    <line x1="300" y1="50" x2="300" y2="350"/>
+    <line x1="400" y1="50" x2="400" y2="350"/>
+    <line x1="500" y1="50" x2="500" y2="350"/>
+    
+    <line x1="80" y1="100" x2="520" y2="100"/>
+    <line x1="80" y1="180" x2="520" y2="180"/>
+    <line x1="80" y1="260" x2="520" y2="260"/>
+    <line x1="80" y1="340" x2="520" y2="340"/>
+  </g>
+  
+  <!-- Growth curve - main organic flowing line -->
+  <path d="M80 320 Q150 280 200 240 Q280 190 350 160 Q420 140 480 120 Q520 110 540 100" 
+        stroke="url(#growthGradient)" 
+        stroke-width="4" 
+        fill="none" 
+        opacity="0.8"/>
+  
+  <!-- Area under curve for depth -->
+  <path d="M80 320 Q150 280 200 240 Q280 190 350 160 Q420 140 480 120 Q520 110 540 100 L540 350 L80 350 Z" 
+        fill="url(#growthGradient)" 
+        opacity="0.2"/>
+  
+  <!-- Data points as organic shapes -->
+  <g>
+    <!-- Week markers as gentle organic dots -->
+    <ellipse cx="100" cy="310" rx="8" ry="6" fill="url(#accent)" opacity="0.7" transform="rotate(20 100 310)"/>
+    <ellipse cx="180" cy="260" rx="7" ry="9" fill="url(#accent)" opacity="0.7" transform="rotate(-15 180 260)"/>
+    <ellipse cx="260" cy="210" rx="9" ry="7" fill="url(#accent)" opacity="0.7" transform="rotate(30 260 210)"/>
+    <ellipse cx="340" cy="170" rx="8" ry="8" fill="url(#accent)" opacity="0.7"/>
+    <ellipse cx="420" cy="140" rx="7" ry="10" fill="url(#accent)" opacity="0.7" transform="rotate(-25 420 140)"/>
+    <ellipse cx="500" cy="120" rx="10" ry="7" fill="url(#accent)" opacity="0.7" transform="rotate(40 500 120)"/>
+  </g>
+  
+  <!-- Floating abstract elements representing milestones -->
+  <g opacity="0.5">
+    <circle cx="150" cy="80" r="15" fill="url(#growthGradient)" opacity="0.4"/>
+    <circle cx="150" cy="80" r="8" fill="url(#accent)" opacity="0.6"/>
+    
+    <ellipse cx="350" cy="60" rx="20" ry="12" fill="url(#growthGradient)" opacity="0.3" transform="rotate(25 350 60)"/>
+    <ellipse cx="350" cy="60" rx="10" ry="6" fill="url(#accent)" opacity="0.5" transform="rotate(25 350 60)"/>
+    
+    <circle cx="480" cy="70" r="12" fill="url(#growthGradient)" opacity="0.4"/>
+    <circle cx="480" cy="70" r="6" fill="url(#accent)" opacity="0.6"/>
+  </g>
+  
+  <!-- Gentle connecting wisps -->
+  <g stroke="url(#growthGradient)" stroke-width="1" fill="none" opacity="0.3">
+    <path d="M120 290 Q140 270 160 250" stroke-dasharray="3,6"/>
+    <path d="M280 190 Q300 170 320 150" stroke-dasharray="2,8"/>
+    <path d="M440 130 Q460 110 480 90" stroke-dasharray="4,5"/>
+  </g>
+  
+  <!-- Abstract puppy silhouette progressing -->
+  <g transform="translate(60, 300)" opacity="0.4">
+    <!-- Small puppy at start -->
+    <ellipse cx="8" cy="12" rx="6" ry="4" fill="url(#accent)"/>
+    <circle cx="5" cy="9" r="3" fill="url(#accent)"/>
+  </g>
+  
+  <g transform="translate(220, 220)" opacity="0.5">
+    <!-- Medium puppy in middle -->
+    <ellipse cx="12" cy="15" rx="9" ry="6" fill="url(#accent)"/>
+    <circle cx="8" cy="11" r="4" fill="url(#accent)"/>
+  </g>
+  
+  <g transform="translate(450, 110)" opacity="0.6">
+    <!-- Larger puppy at end -->
+    <ellipse cx="15" cy="18" rx="12" ry="8" fill="url(#accent)"/>
+    <circle cx="10" cy="13" r="5" fill="url(#accent)"/>
+  </g>
+  
+  <!-- Subtle progress indicators -->
+  <g>
+    <text x="100" y="375" font-family="Arial, sans-serif" font-size="10" fill="#6b7280" text-anchor="middle" opacity="0.6">1v</text>
+    <text x="200" y="375" font-family="Arial, sans-serif" font-size="10" fill="#6b7280" text-anchor="middle" opacity="0.6">2v</text>
+    <text x="300" y="375" font-family="Arial, sans-serif" font-size="10" fill="#6b7280" text-anchor="middle" opacity="0.6">3v</text>
+    <text x="400" y="375" font-family="Arial, sans-serif" font-size="10" fill="#6b7280" text-anchor="middle" opacity="0.6">4v</text>
+    <text x="500" y="375" font-family="Arial, sans-serif" font-size="10" fill="#6b7280" text-anchor="middle" opacity="0.6">5v</text>
+  </g>
+  
+  <!-- Gentle ambient glow around growth path -->
+  <path d="M80 320 Q150 280 200 240 Q280 190 350 160 Q420 140 480 120 Q520 110 540 100" 
+        stroke="url(#accent)" 
+        stroke-width="8" 
+        fill="none" 
+        opacity="0.15"/>
+</svg>

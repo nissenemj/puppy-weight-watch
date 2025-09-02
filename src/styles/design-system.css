@@ -1,55 +1,57 @@
-/* ===== PUPPY WEIGHT WATCH DESIGN SYSTEM ===== */
-/* Transparent Video inspired design system with puppy theming */
+/* ===== CLAUDE-INSPIRED DESIGN SYSTEM ===== */
+/* Minimalist library + warm studio aesthetic */
 
 :root {
   /* ===== PRIMARY PALETTE ===== */
-  /* Deep charcoal base - professional & modern */
-  --color-primary: hsl(220, 15%, 20%);
-  --color-primary-50: hsl(220, 15%, 95%);
-  --color-primary-100: hsl(220, 15%, 90%);
-  --color-primary-200: hsl(220, 15%, 80%);
-  --color-primary-300: hsl(220, 15%, 70%);
-  --color-primary-400: hsl(220, 15%, 60%);
-  --color-primary-500: hsl(220, 15%, 50%);
-  --color-primary-600: hsl(220, 15%, 40%);
-  --color-primary-700: hsl(220, 15%, 30%);
-  --color-primary-800: hsl(220, 15%, 20%);
-  --color-primary-900: hsl(220, 15%, 10%);
+  /* Deep navy blue - intelligence & authority */
+  --color-primary: hsl(223, 47%, 23%);         /* #1E2D50 */
+  --color-primary-50: hsl(223, 47%, 97%);     /* Very light blue-gray */
+  --color-primary-100: hsl(223, 47%, 93%);    /* Light blue-gray */
+  --color-primary-200: hsl(223, 47%, 85%);    /* Soft blue-gray */
+  --color-primary-300: hsl(223, 47%, 75%);    /* Medium blue-gray */
+  --color-primary-400: hsl(223, 47%, 65%);    /* Darker blue-gray */
+  --color-primary-500: hsl(223, 47%, 55%);    /* Base blue-gray */
+  --color-primary-600: hsl(223, 47%, 45%);    /* Deep blue-gray */
+  --color-primary-700: hsl(223, 47%, 35%);    /* Deeper blue */
+  --color-primary-800: hsl(223, 47%, 23%);    /* Primary navy */
+  --color-primary-900: hsl(223, 47%, 15%);    /* Deepest navy */
 
   /* ===== ACCENT COLORS ===== */
-  /* Warm orange - refined puppy theme */
-  --color-accent: hsl(25, 85%, 60%);
-  --color-accent-50: hsl(25, 85%, 95%);
-  --color-accent-100: hsl(25, 85%, 90%);
-  --color-accent-200: hsl(25, 85%, 80%);
-  --color-accent-300: hsl(25, 85%, 70%);
-  --color-accent-400: hsl(25, 85%, 65%);
-  --color-accent-500: hsl(25, 85%, 60%);
-  --color-accent-600: hsl(25, 85%, 55%);
-  --color-accent-700: hsl(25, 85%, 50%);
-  --color-accent-800: hsl(25, 85%, 45%);
-  --color-accent-900: hsl(25, 85%, 40%);
+  /* Warm terracotta - humanity & warmth */
+  --color-accent: hsl(15, 65%, 60%);          /* #D97757 */
+  --color-accent-50: hsl(15, 65%, 96%);      /* Very light terracotta */
+  --color-accent-100: hsl(15, 65%, 92%);     /* Light terracotta */
+  --color-accent-200: hsl(15, 65%, 84%);     /* Soft terracotta */
+  --color-accent-300: hsl(15, 65%, 76%);     /* Medium terracotta */
+  --color-accent-400: hsl(15, 65%, 68%);     /* Darker terracotta */
+  --color-accent-500: hsl(15, 65%, 60%);     /* Base terracotta */
+  --color-accent-600: hsl(15, 65%, 52%);     /* Deep terracotta */
+  --color-accent-700: hsl(15, 65%, 44%);     /* Deeper terracotta */
+  --color-accent-800: hsl(15, 65%, 36%);     /* Darkest terracotta */
+  --color-accent-900: hsl(15, 65%, 28%);     /* Deep brown-terracotta */
 
   /* ===== SECONDARY PALETTE ===== */
-  /* Soft pink accent */
-  --color-secondary: hsl(340, 75%, 70%);
-  --color-secondary-50: hsl(340, 75%, 95%);
-  --color-secondary-100: hsl(340, 75%, 90%);
-  --color-secondary-500: hsl(340, 75%, 70%);
-  --color-secondary-900: hsl(340, 75%, 40%);
+  /* Soft neutral for supporting elements */
+  --color-secondary: hsl(30, 20%, 85%);      /* Warm light gray */
+  --color-secondary-50: hsl(30, 20%, 97%);
+  --color-secondary-100: hsl(30, 20%, 93%);
+  --color-secondary-500: hsl(30, 20%, 85%);
+  --color-secondary-900: hsl(30, 20%, 45%);
 
   /* ===== NEUTRAL SYSTEM ===== */
-  --color-surface: hsl(0, 0%, 100%);          /* Pure white */
-  --color-surface-alt: hsl(220, 15%, 98%);    /* Off white */
-  --color-surface-hover: hsl(220, 15%, 96%);  /* Light hover */
-  --color-border: hsl(220, 15%, 90%);         /* Light border */
-  --color-border-strong: hsl(220, 15%, 80%);  /* Stronger border */
+  /* Sandy warm gray background - #F5F3F0 inspired */
+  --color-surface: hsl(0, 0%, 100%);              /* Pure white */
+  --color-surface-alt: hsl(30, 15%, 96%);         /* Sandy white #F5F3F0 */
+  --color-surface-warm: hsl(30, 15%, 94%);        /* Warmer off-white */
+  --color-surface-hover: hsl(30, 15%, 92%);       /* Light hover */
+  --color-border: hsl(30, 10%, 88%);              /* Warm light border */
+  --color-border-strong: hsl(30, 10%, 78%);       /* Stronger warm border */
   
   /* ===== TEXT COLORS ===== */
-  --color-text: hsl(220, 15%, 20%);           /* Primary text */
-  --color-text-muted: hsl(220, 15%, 60%);     /* Secondary text */
-  --color-text-light: hsl(220, 15%, 80%);     /* Tertiary text */
-  --color-text-inverse: hsl(0, 0%, 100%);     /* White text */
+  --color-text: hsl(223, 47%, 23%);               /* Primary navy text */
+  --color-text-muted: hsl(223, 25%, 55%);         /* Secondary blue-gray */
+  --color-text-light: hsl(30, 10%, 70%);          /* Tertiary warm gray */
+  --color-text-inverse: hsl(0, 0%, 100%);         /* White text */
 
   /* ===== STATUS COLORS ===== */
   --color-success: hsl(142, 76%, 36%);
@@ -84,18 +86,20 @@
   --space-24: 6rem;      /* 96px */
 
   /* ===== BORDER RADIUS ===== */
-  --radius-sm: 0.25rem;  /* 4px */
-  --radius-md: 0.5rem;   /* 8px */
-  --radius-lg: 0.75rem;  /* 12px */
-  --radius-xl: 1rem;     /* 16px */
+  /* Claude-style soft, larger radiuses */
+  --radius-sm: 0.5rem;   /* 8px */
+  --radius-md: 0.75rem;  /* 12px */
+  --radius-lg: 1rem;     /* 16px - primary component radius */
+  --radius-xl: 1.25rem;  /* 20px */
   --radius-2xl: 1.5rem;  /* 24px */
   --radius-full: 9999px;
 
   /* ===== TRANSITIONS ===== */
-  --transition-fast: 150ms ease-out;
-  --transition-base: 250ms ease-out;
-  --transition-slow: 350ms ease-out;
-  --transition-bounce: 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  /* Slower, more thoughtful transitions */
+  --transition-fast: 250ms ease-in-out;
+  --transition-base: 350ms ease-in-out;
+  --transition-slow: 450ms ease-in-out;
+  --transition-gentle: 300ms cubic-bezier(0.4, 0, 0.2, 1);
 
   /* ===== Z-INDEX SCALE ===== */
   --z-dropdown: 1000;

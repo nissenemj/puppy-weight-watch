@@ -38,11 +38,14 @@ export default {
 			},
 		extend: {
 			fontFamily: {
-				'heading': ['Poppins', 'system-ui', '-apple-system', 'sans-serif'],
-				'body': ['Quicksand', 'system-ui', '-apple-system', 'sans-serif'],
-				'caption': ['Nunito Sans', 'system-ui', '-apple-system', 'sans-serif'],
-				'playful': ['Dancing Script', 'cursive'],
-				'sans': ['Quicksand', 'Poppins', 'system-ui', '-apple-system', 'sans-serif'],
+				// Claude-inspired typography
+				'sans': ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+				'serif': ['IBM Plex Serif', 'Georgia', 'Times New Roman', 'serif'],
+				'heading': ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+				'body': ['Inter', 'system-ui', '-apple-system', 'sans-serif'], 
+				'display': ['IBM Plex Serif', 'Georgia', 'serif'], // For elegant headings
+				'caption': ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+				// Legacy fonts (keeping for compatibility)
 				'poppins': ['Poppins', 'sans-serif'],
 				'quicksand': ['Quicksand', 'sans-serif'],
 				'nunito': ['Nunito Sans', 'sans-serif'],
@@ -91,34 +94,33 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Pentu-themed colors 2025
-				'primary-glow': 'hsl(var(--primary-glow))',
-				'accent-light': 'hsl(var(--accent-light))',
+				// Claude-inspired neutral colors
+				'surface-warm': 'hsl(var(--color-surface-warm))',
+				'text-primary': 'hsl(var(--color-text))',
+				'text-muted': 'hsl(var(--color-text-muted))',
+				'text-light': 'hsl(var(--color-text-light))',
 				
-				// Playful puppy gradient colors
-				'gradient-mint': 'hsl(var(--gradient-mint))',
-				'gradient-mint-light': 'hsl(var(--gradient-mint-light))',
-				'gradient-peach': 'hsl(var(--gradient-peach))',
-				'gradient-peach-light': 'hsl(var(--gradient-peach-light))',
-				'gradient-sky': 'hsl(var(--gradient-sky))',
-				'gradient-warm': 'hsl(var(--gradient-warm))',
+				// Elegant gradients (minimal, sophisticated)
+				'gradient-warm': 'linear-gradient(135deg, hsl(30, 15%, 96%), hsl(30, 15%, 94%))',
+				'gradient-navy': 'linear-gradient(135deg, hsl(223, 47%, 23%), hsl(223, 47%, 35%))',
+				'gradient-terracotta': 'linear-gradient(135deg, hsl(15, 65%, 60%), hsl(15, 65%, 52%))',
 				
-				// Chart colors for data visualization
-				'chart-growth': 'hsl(var(--chart-growth))',
-				'chart-energy': 'hsl(var(--chart-energy))',
-				'chart-health': 'hsl(var(--chart-health))',
-				'chart-milestone': 'hsl(var(--chart-milestone))',
-				'chart-joy': 'hsl(var(--chart-joy))'
+				// Data visualization (refined, professional)
+				'chart-primary': 'hsl(223, 47%, 35%)',
+				'chart-accent': 'hsl(15, 65%, 60%)',
+				'chart-secondary': 'hsl(30, 20%, 85%)',
+				'chart-success': 'hsl(142, 76%, 36%)',
+				'chart-warning': 'hsl(38, 92%, 50%)'
 			},
 			backgroundImage: {
-				// Playful puppy gradients 2025 🌈
-				'gradient-mint': 'linear-gradient(135deg, hsl(var(--gradient-mint)), hsl(var(--gradient-mint-light)))',
-				'gradient-peach': 'linear-gradient(135deg, hsl(var(--gradient-peach)), hsl(var(--gradient-peach-light)))',
-				'gradient-warm': 'linear-gradient(135deg, hsl(var(--gradient-mint)), hsl(var(--gradient-peach)))',
-				'gradient-sky': 'linear-gradient(180deg, hsl(var(--gradient-sky)), hsl(var(--gradient-warm)))',
-				'gradient-primary': 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)))',
-				'gradient-accent': 'linear-gradient(135deg, hsl(var(--accent)), hsl(var(--accent-light)))',
+				// Claude-inspired minimal gradients
+				'gradient-warm': 'linear-gradient(135deg, hsl(30, 15%, 96%), hsl(30, 15%, 94%))',
+				'gradient-navy': 'linear-gradient(135deg, hsl(223, 47%, 23%), hsl(223, 47%, 35%))',
+				'gradient-terracotta': 'linear-gradient(135deg, hsl(15, 65%, 60%), hsl(15, 65%, 52%))',
+				'gradient-primary': 'linear-gradient(135deg, hsl(var(--primary)), hsl(223, 47%, 35%))',
+				'gradient-accent': 'linear-gradient(135deg, hsl(var(--accent)), hsl(15, 65%, 52%))',
 				'gradient-subtle': 'linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)))',
+				'gradient-surface': 'linear-gradient(135deg, hsl(0, 0%, 100%), hsl(30, 15%, 96%))',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

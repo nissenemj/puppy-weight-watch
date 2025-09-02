@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { ConversationalStep } from '@/components/ui/conversational-step';
 import { Dog, Scale, Heart, CheckCircle, Calculator, ArrowLeft, ArrowRight } from 'lucide-react';
 import { useOnboardingState } from '@/hooks/useOnboardingState';
-import FoodCalculator from '@/components/FoodCalculator';
+import AdvancedFoodCalculator from '@/components/AdvancedFoodCalculator';
 
 interface OnboardingWizardProps {
   user: User;
@@ -187,7 +187,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ user, onComplete })
             </div>
             
             <div className="border rounded-lg p-4 bg-muted/50">
-              <FoodCalculator />
+              <AdvancedFoodCalculator />
             </div>
           </motion.div>
         );

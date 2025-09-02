@@ -3,7 +3,7 @@ import { User } from '@supabase/supabase-js'
 import { supabase } from '@/integrations/supabase/client'
 import { useNavigate, useLocation } from 'react-router-dom'
 import AuthenticationWrapper from '@/components/AuthenticationWrapper'
-import WeightTracker from '@/components/WeightTracker'
+import ModernPuppyWeightTracker from '@/components/ModernPuppyWeightTracker'
 import { MobileOptimizedLayout } from '@/components/MobileOptimizedLayout'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -212,7 +212,7 @@ const WeightTrackerPage = () => {
 
   return (
     <MobileOptimizedLayout>
-      <WeightTracker user={user} onSignOut={handleSignOut} hasBooks={hasBooks} />
+      <ModernPuppyWeightTracker user={user} onSignOut={handleSignOut} hasBooks={hasBooks} />
     </MobileOptimizedLayout>
   )
 }

@@ -12,7 +12,7 @@ import { useIsMobile } from '@/hooks/use-mobile'
 import { supabase } from '@/integrations/supabase/client'
 import { User } from '@supabase/supabase-js'
 import WeightChart from './WeightChart'
-import FoodCalculator from './FoodCalculator'
+import AdvancedFoodCalculator from './AdvancedFoodCalculator'
 import PuppyFeeding from './PuppyFeeding'
 import SafetyNewsFeed from './SafetyNewsFeed'
 import OnboardingWizard from '@/features/onboarding/components/OnboardingWizard'
@@ -531,7 +531,7 @@ export default function ModernPuppyWeightTracker() {
           </TabsContent>
 
           <TabsContent value="puppy-feeding" className="animate-fade-in">
-            <FoodCalculator currentWeight={getLatestWeight()} user={user} />
+            <AdvancedFoodCalculator currentWeight={getLatestWeight()} user={user} />
           </TabsContent>
 
           <TabsContent value="news-feed" className="animate-fade-in">

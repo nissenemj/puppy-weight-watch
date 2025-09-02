@@ -144,10 +144,10 @@ export default function AdvancedFoodCalculator({ user, currentWeight: propCurren
           toast.error('Syötä odotettu aikuispaino')
           return
         }
-        const ageCategory = getAgeCategory(months)
+        const ageCategory = getAgeCategory(months);
         const matchingGuidelines = foodGuidelines.filter(g => 
           g.adult_weight_kg === adultWeight && g.age_months === ageCategory
-        )
+        );
         if (matchingGuidelines.length > 0) {
           const guideline = matchingGuidelines[0]
           dailyAmount = guideline.daily_amount_min || 0
@@ -158,7 +158,7 @@ export default function AdvancedFoodCalculator({ user, currentWeight: propCurren
       case 'Nykyinen_Paino':
         const weightGuidelines = foodGuidelines.filter(g => 
           g.current_weight_kg === weight
-        )
+        );
         if (weightGuidelines.length > 0) {
           const guideline = weightGuidelines[0]
           dailyAmount = guideline.daily_amount_min || 0
@@ -167,10 +167,10 @@ export default function AdvancedFoodCalculator({ user, currentWeight: propCurren
         break
 
       case 'Kokoluokka':
-        const sizeCategory = getSizeCategory(adultWeight || weight)
+        const sizeCategory = getSizeCategory(adultWeight || weight);
         const sizeGuidelines = foodGuidelines.filter(g => 
           g.size_category === sizeCategory
-        )
+        );
         if (sizeGuidelines.length > 0) {
           const guideline = sizeGuidelines[0]
           dailyAmount = guideline.daily_amount_min || 0

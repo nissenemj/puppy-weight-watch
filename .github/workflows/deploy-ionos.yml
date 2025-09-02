@@ -1,0 +1,79 @@
+name: Deploy to IONOS
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    environment:
+      name: production
+      url: https://pentulaskuri.com
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci --legacy-peer-deps
+    
+    - name: Run linting
+      run: npm run lint
+      continue-on-error: true  # Don't fail deployment on lint warnings
+    
+    - name: Build project
+      run: npm run build
+      env:
+        NODE_ENV: production
+    
+    - name: Run tests
+      run: npm run test:mobile
+    
+    - name: Deploy to IONOS via FTP
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      with:
+        server: ${{ secrets.IONOS_FTP_HOST }}
+        username: ${{ secrets.IONOS_FTP_USERNAME }}
+        password: ${{ secrets.IONOS_FTP_PASSWORD }}
+        local-dir: ./dist/
+        server-dir: /
+        state-name: ionos-deploy-state
+        dry-run: false
+        log-level: verbose
+        dangerous-clean-slate: false
+        exclude: |
+          **/.git*
+          **/.git*/**
+          **/node_modules/**
+          **/.env*
+    
+    - name: Verify deployment
+      run: |
+        echo "Deployment completed successfully!"
+        echo "Site URL: https://pentulaskuri.com"
+        curl -f https://pentulaskuri.com || exit 1
+    
+    - name: Send deployment notification
+      if: always()
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        channel: '#deployments'
+        webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+        text: |
+          Deployment to IONOS: ${{ job.status }}
+          Branch: ${{ github.ref }}
+          Commit: ${{ github.sha }}
+          Author: ${{ github.actor }}
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      continue-on-error: true

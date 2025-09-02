@@ -15,6 +15,7 @@ import Navigation from '@/components/Navigation';
 import SEO from '@/components/SEO';
 import { MobileOptimizedLayout } from '@/components/MobileOptimizedLayout';
 import ScrollPanBackground from '@/components/ScrollPanBackground';
+import LazyImage from '@/components/LazyImage';
 import heroIllustration from '@/assets/hero-illustration.png';
 import puppyWaveGif from '@/assets/puppy-wave-gif.png';
 import growthStages from '@/assets/growth-stages.png';
@@ -63,7 +64,14 @@ const PuppyBookLanding: React.FC = () => {
 
   return (
     <MobileOptimizedLayout>
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 page-with-navigation no-horizontal-scroll mobile-text-wrap responsive-media">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 page-with-navigation no-horizontal-scroll mobile-text-wrap responsive-media mobile-container-safe mobile-safe-margin">
+      {/* Skip to main content link for screen readers */}
+      <a 
+        href="#main-content" 
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-white focus:text-black focus:px-4 focus:py-2 focus:rounded focus:shadow-lg"
+      >
+        Siirry pääsisältöön
+      </a>
       <SEO 
         title="Pentukirja - Tallenna pennun ensimmäinen vuosi"
         description="Digitaalinen pentukirja pennun ensimmäisen vuoden dokumentointiin. Virstanpylväät, muistot, ystävät ja kasvu yhdessä paikassa."
@@ -82,7 +90,7 @@ const PuppyBookLanding: React.FC = () => {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6 }}
               >
-                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-playful font-bold text-white mb-6 drop-shadow">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-playful font-bold text-white mb-6 drop-shadow" id="main-heading">
                   Pennun Ensimmäinen Vuosi 🐶
                 </h1>
                 <p className="text-xl text-white/90 mb-8 leading-relaxed">
@@ -130,9 +138,9 @@ const PuppyBookLanding: React.FC = () => {
                     ease: "easeInOut"
                   }}
                 >
-                  <img 
+                  <LazyImage 
                     src={puppyWaveGif}
-                    alt="Pentu heiluttaa häntää"
+                    alt="Söpö animaatio pennusta joka heiluttaa häntää iloisesti"
                     className="w-20 h-20 rounded-xl"
                   />
                 </motion.div>
@@ -144,7 +152,7 @@ const PuppyBookLanding: React.FC = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-white/30 mobile-text-wrap responsive-media no-horizontal-scroll">
+      <section className="py-20 bg-white/30 mobile-text-wrap responsive-media no-horizontal-scroll mobile-container-safe mobile-card-safe" role="region" aria-labelledby="features-heading" id="main-content">
         <div className="container mx-auto px-4 mobile-grid-1">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -152,7 +160,7 @@ const PuppyBookLanding: React.FC = () => {
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-playful font-bold text-gray-800 mb-4">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-playful font-bold text-gray-800 mb-4" id="features-heading">
               Miksi pentukirja? ✨
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -177,7 +185,7 @@ const PuppyBookLanding: React.FC = () => {
                 <h3 className="text-xl font-semibold text-gray-800 mb-3">
                   {feature.title}
                 </h3>
-                <p className="text-gray-600 line-clamp-3">
+                <p className="text-gray-600" style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                   {feature.description}
                 </p>
               </motion.div>
@@ -187,7 +195,7 @@ const PuppyBookLanding: React.FC = () => {
       </section>
 
       {/* Growth Stages Section */}
-      <section className="py-20 mobile-text-wrap responsive-media no-horizontal-scroll">
+      <section className="py-20 mobile-text-wrap responsive-media no-horizontal-scroll mobile-container-safe mobile-flex-safe" role="region" aria-labelledby="growth-stages-heading">
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <motion.div
@@ -195,7 +203,7 @@ const PuppyBookLanding: React.FC = () => {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-playful font-bold text-gray-800 mb-6">
+              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-playful font-bold text-gray-800 mb-6" id="growth-stages-heading">
                 Seuraa pennun kasvua 📈
               </h2>
               <p className="text-lg text-gray-600 mb-8">
@@ -224,9 +232,9 @@ const PuppyBookLanding: React.FC = () => {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <img 
+              <LazyImage 
                 src={growthStages}
-                alt="Pennun kasvuvaiheet"
+                alt="Infograafi pennun kasvuvaiheista 0-12 kuukauden ikään, näyttää tärkeimmät virstanpylväät"
                 className="w-full h-auto rounded-2xl shadow-xl"
               />
             </motion.div>
@@ -235,14 +243,14 @@ const PuppyBookLanding: React.FC = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-orange-500 to-pink-500 text-white mobile-text-wrap responsive-media no-horizontal-scroll">
-        <div className="container mx-auto px-4 text-center mobile-button">
+      <section className="py-20 bg-gradient-to-r from-orange-500 to-pink-500 text-white mobile-text-wrap responsive-media no-horizontal-scroll mobile-container-safe mobile-text-container" role="region" aria-labelledby="cta-heading">
+        <div className="container mx-auto px-4 text-center mobile-button mobile-container-safe mobile-text-container">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-playful font-bold mb-6">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-playful font-bold mb-6" id="cta-heading">
               Aloita pennun tarinan kirjoittaminen tänään! 📖
             </h2>
             <p className="text-xl mb-8 max-w-2xl mx-auto opacity-90">

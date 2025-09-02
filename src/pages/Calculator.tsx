@@ -1,6 +1,6 @@
 import React from 'react'
 import Footer from '@/components/Footer'
-import EnhancedPuppyCalculator from '@/components/EnhancedPuppyCalculator'
+import AdvancedFoodCalculator from '@/components/AdvancedFoodCalculator'
 import SEO from '@/components/SEO'
 import FAQ from '@/components/FAQ'
 import Breadcrumb from '@/components/Breadcrumb'
@@ -155,7 +155,7 @@ const Calculator = () => {
               <p className="mt-2 text-muted">rotupohjaa</p>
             </div>
           </div>
-          <EnhancedPuppyCalculator />
+          <AdvancedFoodCalculator />
         </div>
       </div>
         
