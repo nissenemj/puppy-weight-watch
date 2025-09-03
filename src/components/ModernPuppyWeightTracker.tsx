@@ -12,13 +12,15 @@ import { useIsMobile } from '@/hooks/use-mobile'
 import { supabase } from '@/integrations/supabase/client'
 import { dbToAppTypes } from '@/utils/typeConverters'
 import { User } from '@supabase/supabase-js'
-import WeightChart from './WeightChart'
+import WeightChart from './EnhancedWeightChart'
 import AdvancedFoodCalculator from './AdvancedFoodCalculator'
 import PuppyFeeding from './PuppyFeeding'
 import SafetyNewsFeed from './SafetyNewsFeed'
 import OnboardingWizard from '@/features/onboarding/components/OnboardingWizard'
 import DogSelector from '@/components/DogSelector'
 import WeightEntry from '@/features/weight-tracking/components/WeightEntry'
+import GrowthDevelopmentSection from './GrowthDevelopmentSection'
+import AchievementSystem from './AchievementSystem'
 import { Scale, TrendingUp, Calculator, Utensils, Bell, LogIn, UserPlus, RefreshCw } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -510,12 +512,80 @@ export default function ModernPuppyWeightTracker() {
 
           <TabsContent value="weight-tracking" className="space-y-6 animate-fade-in">
             {selectedDog ? (
-              <WeightEntry 
-                user={user} 
-                entries={entries} 
-                onEntryAdded={fetchWeightEntries}
-                selectedDogId={selectedDog.id}
-              />
+              <>
+                {/* Stats Cards */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+                  <Card className="bg-white/80 backdrop-blur-sm shadow-xl rounded-2xl border-0 hover-3d">
+                    <CardContent className="p-4 sm:p-6">
+                      <div className="flex items-center space-x-3 sm:space-x-4">
+                        <div className="p-3 sm:p-4 bg-gradient-cool rounded-full text-white shadow-lg">
+                          <Scale className="h-6 w-6 sm:h-8 sm:w-8" />
+                        </div>
+                        <div>
+                          <p className="text-xs sm:text-sm text-gray-600 font-medium">Nykyinen paino</p>
+                          <p className="text-2xl sm:text-3xl font-bold text-gray-900">
+                            {getLatestWeight().toFixed(1)} kg
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="bg-white/80 backdrop-blur-sm shadow-xl rounded-2xl border-0 hover-3d">
+                    <CardContent className="p-4 sm:p-6">
+                      <div className="flex items-center space-x-3 sm:space-x-4">
+                        <div className="p-3 sm:p-4 bg-gradient-purple rounded-full text-white shadow-lg">
+                          <TrendingUp className="h-6 w-6 sm:h-8 sm:w-8" />
+                        </div>
+                        <div>
+                          <p className="text-xs sm:text-sm text-gray-600 font-medium">Painon muutos</p>
+                          <p className="text-2xl sm:text-3xl font-bold text-gray-900">
+                            {getWeightChange() !== null ? `${getWeightChange()! > 0 ? '+' : ''}${getWeightChange()!.toFixed(1)} kg` : 'N/A'}
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="bg-white/80 backdrop-blur-sm shadow-xl rounded-2xl border-0 hover-3d">
+                    <CardContent className="p-4 sm:p-6">
+                      <div className="flex items-center space-x-3 sm:space-x-4">
+                        <div className="p-3 sm:p-4 bg-gradient-warm rounded-full text-white shadow-lg">
+                          <Calculator className="h-6 w-6 sm:h-8 sm:w-8" />
+                        </div>
+                        <div>
+                          <p className="text-xs sm:text-sm text-gray-600 font-medium">Mittauksia</p>
+                          <p className="text-2xl sm:text-3xl font-bold text-gray-900">
+                            {entries.length}
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* Enhanced Weight Chart */}
+                <WeightChart weightData={entries} />
+
+                {/* Achievement System */}
+                <AchievementSystem 
+                  weightData={entries}
+                  onCelebration={() => {
+                    toast({
+                      title: "🎉 Uusi saavutus avattu!",
+                      description: "Hienoa työtä painonseurannassa!",
+                    })
+                  }}
+                />
+
+                {/* Weight Entry Form */}
+                <WeightEntry 
+                  user={user} 
+                  entries={entries} 
+                  onEntryAdded={fetchWeightEntries}
+                  selectedDogId={selectedDog.id}
+                />
+              </>
             ) : (
               <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
                 <CardContent className="text-center py-12">
@@ -528,7 +598,10 @@ export default function ModernPuppyWeightTracker() {
           </TabsContent>
 
           <TabsContent value="growth-chart" className="animate-fade-in">
-            <WeightChart weightData={entries} />
+            <GrowthDevelopmentSection 
+              weightData={entries}
+              birthDate={selectedDog ? "2024-05-14" : undefined}
+            />
           </TabsContent>
 
           <TabsContent value="puppy-feeding" className="animate-fade-in">
