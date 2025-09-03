@@ -70,7 +70,7 @@ export const AddHealthRecordDialog: React.FC<AddHealthRecordDialogProps> = ({
       if (error) {
         console.error('Error fetching templates:', error);
       } else {
-        setTemplates(data || []);
+        setTemplates((data as any) || []);
       }
     };
 

@@ -94,7 +94,7 @@ const MemoryGallery: React.FC<MemoryGalleryProps> = ({ bookId, onRefresh, onAddM
       }
 
       console.log('MemoryGallery: Loaded memories:', data?.length || 0, 'items');
-      setMemories(data || []);
+      setMemories((data as any) || []);
     } catch (error) {
       console.error('Error:', error);
     } finally {

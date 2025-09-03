@@ -132,7 +132,7 @@ export function SimplifiedOnboarding({ user, onComplete, onSkip }: SimplifiedOnb
       // Update user preferences
       if (profile.notifications) {
         const { error: prefsError } = await supabase
-          .from('user_preferences')
+          .from('dogs' as any)
           .upsert({
             user_id: user.id,
             notifications_enabled: true,

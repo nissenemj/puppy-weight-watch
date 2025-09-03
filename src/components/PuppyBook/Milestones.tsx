@@ -49,7 +49,7 @@ const Milestones: React.FC<MilestonesProps> = ({ bookId }) => {
         return;
       }
 
-      setMilestones(data || []);
+      setMilestones((data as any) || []);
     } catch (error) {
       console.error('Error:', error);
     } finally {
@@ -79,7 +79,7 @@ const Milestones: React.FC<MilestonesProps> = ({ bookId }) => {
 
       setMilestones(prev => prev.map(milestone => 
         milestone.id === milestoneId 
-          ? { ...milestone, completed: !completed, completed_at: !completed ? new Date().toISOString() : null }
+          ? { ...milestone, completed: !completed, completed_at: !completed ? new Date().toISOString() : undefined }
           : milestone
       ));
 

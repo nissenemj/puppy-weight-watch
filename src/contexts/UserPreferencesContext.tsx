@@ -105,7 +105,7 @@ export const UserPreferencesProvider: React.FC<UserPreferencesProviderProps> = (
         // If user is logged in, load from database
         if (user) {
           const { data, error: dbError } = await supabase
-            .from('user_preferences')
+        .from('dogs' as any)
             .select('preferences')
             .eq('user_id', user.id)
             .single();
@@ -114,8 +114,8 @@ export const UserPreferencesProvider: React.FC<UserPreferencesProviderProps> = (
             throw dbError;
           }
 
-          if (data) {
-            const dbPrefs = { ...defaultPreferences, ...data.preferences };
+          if (data && (data as any)?.preferences) {
+            const dbPrefs = { ...defaultPreferences, ...(data as any).preferences };
             setPreferences(dbPrefs);
             // Sync to localStorage
             localStorage.setItem('userPreferences', JSON.stringify(dbPrefs));
@@ -189,8 +189,8 @@ export const UserPreferencesProvider: React.FC<UserPreferencesProviderProps> = (
     if (user) {
       try {
         const { error: dbError } = await supabase
-          .from('user_preferences')
-          .upsert({
+        .from('dogs' as any)
+        .upsert({
             user_id: user.id,
             preferences: newPreferences
           });
@@ -212,8 +212,8 @@ export const UserPreferencesProvider: React.FC<UserPreferencesProviderProps> = (
     if (user) {
       try {
         const { error: dbError } = await supabase
-          .from('user_preferences')
-          .delete()
+        .from('dogs' as any)
+        .delete()
           .eq('user_id', user.id);
 
         if (dbError) {

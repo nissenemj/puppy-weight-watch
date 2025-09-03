@@ -51,7 +51,7 @@ const Timeline: React.FC<TimelineProps> = ({ bookId }) => {
         return;
       }
 
-      setEntries(data || []);
+      setEntries((data as any) || []);
     } catch (error) {
       console.error('Error:', error);
     } finally {

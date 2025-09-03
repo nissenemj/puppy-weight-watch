@@ -51,7 +51,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
         .order('created_at', { ascending: true });
 
       if (error) throw error;
-      setComments(data || []);
+      setComments((data as any) || []);
     } catch (error) {
       console.error('Error loading comments:', error);
     }
@@ -84,7 +84,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
 
       if (error) throw error;
 
-      setComments([...comments, data]);
+      setComments([...comments, data as any]);
       setNewComment('');
       onCommentAdded?.();
       

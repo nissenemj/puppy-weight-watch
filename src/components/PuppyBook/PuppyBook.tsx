@@ -199,7 +199,7 @@ const PuppyBook: React.FC = () => {
       }
 
       if (data) {
-        setBook(data);
+        setBook(data as any);
         toast({
           title: "Onnistui!",
           description: "Pentukirja luotu onnistuneesti! Voit nyt aloittaa pennun tarinan tallentamisen",
