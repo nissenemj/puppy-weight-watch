@@ -17,6 +17,10 @@ interface CommunityMemory {
   tags: string[];
   location?: any;
   created_at: string;
+  privacy_settings?: {
+    visibility: 'private' | 'public';
+    shareWithCommunity: boolean;
+  };
   reactions?: Array<{ id: string; user_id: string; reaction_type: string }>;
   comments?: Array<{ id: string; memory_id: string; user_id: string; comment_text: string; created_at: string }>;
   puppy_profile?: {
@@ -52,16 +56,16 @@ const CommunityFeed: React.FC = () => {
     try {
       setLoading(true);
       
-      // Load public memories with puppy profile data
+      // Load memories that are explicitly shared with community
       const { data: memoriesData, error } = await supabase
         .from('memories')
         .select(`
           *,
-          puppy_books!inner(title, cover_image_url, privacy_settings),
+          puppy_books(title, cover_image_url, birth_date),
           memory_reactions(id, user_id, reaction_type),
           memory_comments(id, user_id, comment_text, created_at)
         `)
-        .eq('puppy_books.privacy_settings->visibility', 'public')
+        .eq('privacy_settings->>shareWithCommunity', 'true')
         .order(activeFilter === 'recent' ? 'created_at' : 'id', { ascending: false })
         .limit(20);
 
@@ -72,7 +76,7 @@ const CommunityFeed: React.FC = () => {
         ...memory,
         puppy_profile: {
           name: memory.puppy_books?.title?.replace('Pennun elämäntarina', '').replace('Pentukirja', '').trim() || 'Pentu',
-          birthDate: new Date().toISOString().split('T')[0], // Default to today since birth_date is not available
+          birthDate: memory.puppy_books?.birth_date || new Date().toISOString().split('T')[0],
           profileImage: memory.puppy_books?.cover_image_url
         },
         owner_score: (memory.memory_reactions?.length || 0) * 2 + (memory.memory_comments?.length || 0) * 3

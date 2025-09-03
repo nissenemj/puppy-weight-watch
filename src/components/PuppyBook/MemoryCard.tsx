@@ -1,6 +1,20 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Heart, MessageCircle, MapPin, Calendar, MoreVertical, Edit2, Trash2, Share2, Sparkles } from '@/utils/iconImports';
+import { 
+  Heart, 
+  MessageCircle, 
+  MapPin, 
+  Calendar, 
+  MoreVertical, 
+  Edit2, 
+  Trash2, 
+  Share2, 
+  Sparkles,
+  Eye,
+  Lock,
+  Users,
+  EyeOff
+} from '@/utils/iconImports';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { SocialShareGenerator } from './SocialShareGenerator';
@@ -16,6 +30,10 @@ interface Memory {
   tags: string[];
   location?: any;
   created_at: string;
+  privacy_settings?: {
+    visibility: 'private' | 'public';
+    shareWithCommunity: boolean;
+  };
   reactions?: Array<{ id: string; user_id: string; reaction_type: string }>;
   comments?: Array<{ id: string; memory_id: string; user_id: string; comment_text: string; created_at: string }>;
 }
@@ -118,6 +136,39 @@ const MemoryCard: React.FC<MemoryCardProps> = ({ memory, viewMode, onMemoryUpdat
     }
   };
 
+  const handlePrivacyToggle = async (field: 'visibility' | 'shareWithCommunity', value: any) => {
+    try {
+      const currentSettings = memory.privacy_settings || { visibility: 'private', shareWithCommunity: false };
+      const newSettings = {
+        ...currentSettings,
+        [field]: value
+      };
+
+      const { error } = await supabase
+        .from('memories')
+        .update({ privacy_settings: newSettings })
+        .eq('id', memory.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Päivitetty! ✅",
+        description: field === 'visibility' 
+          ? `Muisto on nyt ${value === 'public' ? 'julkinen' : 'yksityinen'}`
+          : `Yhteisöjakaminen ${value ? 'käytössä' : 'pois käytöstä'}`,
+      });
+
+      onMemoryUpdated();
+    } catch (error) {
+      console.error('Error updating privacy:', error);
+      toast({
+        title: "Virhe",
+        description: "Yksityisyysasetusten päivittäminen epäonnistui",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
@@ -126,7 +177,7 @@ const MemoryCard: React.FC<MemoryCardProps> = ({ memory, viewMode, onMemoryUpdat
         viewMode === 'grid' ? 'aspect-square' : 'p-4'
       } bg-white hover:shadow-xl transition-shadow cursor-pointer relative group`}
     >
-      {/* Content */}
+      {/* Privacy indicator and content */}
       {memory.content_url ? (
         <div className={viewMode === 'grid' ? 'relative h-full' : 'flex gap-4'}>
           <img
@@ -136,6 +187,25 @@ const MemoryCard: React.FC<MemoryCardProps> = ({ memory, viewMode, onMemoryUpdat
               viewMode === 'grid' ? 'w-full h-full' : 'w-20 h-20 rounded-lg'
             }`}
           />
+          
+          {/* Privacy indicator badge */}
+          <div className="absolute top-2 left-2 flex gap-1">
+            {memory.privacy_settings?.visibility === 'public' ? (
+              <div className="bg-green-500 text-white p-1 rounded-full" title="Julkinen">
+                <Eye className="w-3 h-3" />
+              </div>
+            ) : (
+              <div className="bg-gray-500 text-white p-1 rounded-full" title="Yksityinen">
+                <Lock className="w-3 h-3" />
+              </div>
+            )}
+            {memory.privacy_settings?.shareWithCommunity && (
+              <div className="bg-blue-500 text-white p-1 rounded-full" title="Jaettu yhteisölle">
+                <Users className="w-3 h-3" />
+              </div>
+            )}
+          </div>
+          
           {viewMode === 'grid' && (
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
               <div className="absolute bottom-4 left-4 right-4">
@@ -184,9 +254,27 @@ const MemoryCard: React.FC<MemoryCardProps> = ({ memory, viewMode, onMemoryUpdat
           )}
         </div>
       ) : (
-        <div className={`bg-orange-100 flex items-center justify-center ${
+        <div className={`bg-orange-100 flex items-center justify-center relative ${
           viewMode === 'grid' ? 'h-full' : 'w-20 h-20 rounded-lg'
         }`}>
+          {/* Privacy indicator for text memories */}
+          <div className="absolute top-1 left-1 flex gap-1">
+            {memory.privacy_settings?.visibility === 'public' ? (
+              <div className="bg-green-500 text-white p-0.5 rounded-full" title="Julkinen">
+                <Eye className="w-2 h-2" />
+              </div>
+            ) : (
+              <div className="bg-gray-500 text-white p-0.5 rounded-full" title="Yksityinen">
+                <Lock className="w-2 h-2" />
+              </div>
+            )}
+            {memory.privacy_settings?.shareWithCommunity && (
+              <div className="bg-blue-500 text-white p-0.5 rounded-full" title="Jaettu yhteisölle">
+                <Users className="w-2 h-2" />
+              </div>
+            )}
+          </div>
+          
           <div className="text-center">
             <Heart className="w-8 h-8 text-orange-500 mx-auto mb-2" />
             {viewMode === 'grid' && memory.caption && (
@@ -269,7 +357,56 @@ const MemoryCard: React.FC<MemoryCardProps> = ({ memory, viewMode, onMemoryUpdat
 
       {/* Menu dropdown */}
       {showMenu && (
-        <div className="absolute top-2 right-2 bg-white rounded-lg shadow-lg border z-10">
+        <div className="absolute top-2 right-2 bg-white rounded-lg shadow-lg border z-10 min-w-48">
+          {/* Privacy Controls */}
+          <div className="border-b border-gray-100 p-2">
+            <p className="text-xs font-medium text-gray-600 mb-2">Yksityisyys</p>
+            
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                const isPublic = memory.privacy_settings?.visibility === 'public';
+                handlePrivacyToggle('visibility', isPublic ? 'private' : 'public');
+                setShowMenu(false);
+              }}
+              className={`flex items-center gap-2 px-3 py-1.5 text-xs rounded w-full transition-colors ${
+                memory.privacy_settings?.visibility === 'public'
+                  ? 'bg-green-50 text-green-700 hover:bg-green-100'
+                  : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              {memory.privacy_settings?.visibility === 'public' ? (
+                <>
+                  <Eye className="w-3 h-3" />
+                  Julkinen
+                </>
+              ) : (
+                <>
+                  <Lock className="w-3 h-3" />
+                  Yksityinen
+                </>
+              )}
+            </button>
+            
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                const isShared = memory.privacy_settings?.shareWithCommunity;
+                handlePrivacyToggle('shareWithCommunity', !isShared);
+                setShowMenu(false);
+              }}
+              className={`flex items-center gap-2 px-3 py-1.5 text-xs rounded w-full mt-1 transition-colors ${
+                memory.privacy_settings?.shareWithCommunity
+                  ? 'bg-blue-50 text-blue-700 hover:bg-blue-100'
+                  : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              <Users className="w-3 h-3" />
+              {memory.privacy_settings?.shareWithCommunity ? 'Jaettu yhteisölle' : 'Jaa yhteisölle'}
+            </button>
+          </div>
+          
+          {/* Regular Menu Items */}
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -281,6 +418,7 @@ const MemoryCard: React.FC<MemoryCardProps> = ({ memory, viewMode, onMemoryUpdat
             <Share2 className="w-4 h-4" />
             Jaa
           </button>
+          
           {memory.content_url && (
             <button
               onClick={(e) => {
@@ -294,6 +432,7 @@ const MemoryCard: React.FC<MemoryCardProps> = ({ memory, viewMode, onMemoryUpdat
               Lisää tarroja
             </button>
           )}
+          
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -305,6 +444,7 @@ const MemoryCard: React.FC<MemoryCardProps> = ({ memory, viewMode, onMemoryUpdat
             <Edit2 className="w-4 h-4" />
             Muokkaa
           </button>
+          
           <button
             onClick={(e) => {
               e.stopPropagation();
