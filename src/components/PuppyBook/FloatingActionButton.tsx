@@ -142,18 +142,6 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
         <div />
       </AddHealthRecordDialog>
       
-      {/* Backdrop */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setIsOpen(false)}
-            className="fixed inset-0 bg-black/20 z-40"
-          />
-        )}
-      </AnimatePresence>
 
       <div 
         ref={fabRef} 
