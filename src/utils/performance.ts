@@ -1,11 +1,10 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useRef, useCallback, useMemo } from 'react';
 
 // Memoization utility for expensive calculations
-export const memoize = <T extends (...args: any[]) => any>(
-  fn: T,
-  deps: any[] = []
-): T => {
-  return useMemo(() => fn, deps) as T;
+export const useMemoizedFn = <T extends (...args: any[]) => any>(fn: T): T => {
+  const fnRef = useRef(fn);
+  fnRef.current = fn;
+  return useCallback(((...args: Parameters<T>) => fnRef.current(...args)) as T, []);
 };
 
 // Debounce utility for expensive operations
