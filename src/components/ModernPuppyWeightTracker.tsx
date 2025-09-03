@@ -488,6 +488,62 @@ export default function ModernPuppyWeightTracker() {
           />
         </div>
 
+        {/* Weight Entry Section - Always Visible */}
+        {selectedDog && (
+          <div className="mb-6">
+            <Card className="backdrop-blur-sm bg-white/80 border-0 shadow-xl animate-scale-in">
+              <CardHeader className="pb-3">
+                <CardTitle className="flex items-center gap-2 text-foreground">
+                  <Scale className="h-6 w-6 text-primary" />
+                  Lisää painomittaus
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                  <div className="flex-1">
+                    <Label htmlFor="current-weight" className="text-base font-medium mb-2 block">
+                      Paino (kg)
+                    </Label>
+                    <Input
+                      id="current-weight"
+                      type="number"
+                      step="0.1"
+                      value={currentWeight}
+                      onChange={(e) => setCurrentWeight(e.target.value)}
+                      placeholder="Esim. 2.5"
+                      className="h-12 text-base rounded-xl border-2 focus:border-primary focus:ring-primary"
+                    />
+                  </div>
+                  <div className="flex items-end">
+                    <Button 
+                      onClick={addWeightEntry}
+                      disabled={!currentWeight}
+                      size="mobile"
+                      className="w-full sm:w-auto h-12 rounded-xl bg-gradient-warm hover:opacity-90 transition-all duration-200 hover:scale-105 shadow-lg"
+                    >
+                      Lisää paino
+                    </Button>
+                  </div>
+                </div>
+                
+                {/* Quick Stats */}
+                <div className="grid grid-cols-2 gap-4 pt-2">
+                  <div className="text-center p-3 bg-white/60 rounded-xl backdrop-blur-sm">
+                    <p className="text-sm text-gray-600">Viimeisin paino</p>
+                    <p className="text-xl font-bold text-foreground">{getLatestWeight()} kg</p>
+                  </div>
+                  <div className="text-center p-3 bg-white/60 rounded-xl backdrop-blur-sm">
+                    <p className="text-sm text-gray-600">Muutos</p>
+                    <p className={`text-xl font-bold ${getWeightChange() && getWeightChange()! > 0 ? 'text-green-600' : getWeightChange() && getWeightChange()! < 0 ? 'text-red-600' : 'text-gray-600'}`}>
+                      {getWeightChange() ? (getWeightChange()! > 0 ? '+' : '') + getWeightChange()!.toFixed(1) + ' kg' : '-'}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
         <Tabs value={activeTab} onValueChange={setActiveTab} onSwipe={handleTabSwipe} className="space-y-6">
           <TabsList className="grid w-full grid-cols-4 h-16 md:h-14 rounded-2xl bg-white/50 backdrop-blur-sm overflow-x-auto">
             <TabsTrigger 
@@ -598,14 +654,6 @@ export default function ModernPuppyWeightTracker() {
                       description: "Hienoa työtä painonseurannassa!",
                     })
                   }}
-                />
-
-                {/* Weight Entry Form */}
-                <WeightEntry 
-                  user={user} 
-                  entries={entries} 
-                  onEntryAdded={fetchWeightEntries}
-                  selectedDogId={selectedDog.id}
                 />
               </>
             ) : (
