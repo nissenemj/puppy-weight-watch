@@ -25,10 +25,10 @@ const Tabs = React.forwardRef<
 
   return (
     <TabsPrimitive.Root
-      ref={ref}
       className={className}
       {...(isMobile ? swipeHandlers : {})}
       {...props}
+      ref={ref}
     >
       {children}
     </TabsPrimitive.Root>

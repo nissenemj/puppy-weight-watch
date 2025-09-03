@@ -77,7 +77,7 @@ export const WeeklyTasks: React.FC<WeeklyTasksProps> = ({
 
       if (error) throw error;
 
-      setWeeklyTasks(tasks || []);
+      setWeeklyTasks((tasks || []) as any);
     } catch (error) {
       console.error('Error loading weekly tasks:', error);
       toast({

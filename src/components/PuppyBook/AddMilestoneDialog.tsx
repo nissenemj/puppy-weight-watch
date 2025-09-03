@@ -73,7 +73,7 @@ const AddMilestoneDialog: React.FC<AddMilestoneDialogProps> = ({
         .limit(1);
 
       const nextDisplayOrder = existingMilestones && existingMilestones.length > 0 
-        ? existingMilestones[0].display_order + 1 
+        ? (existingMilestones[0]?.display_order || 0) + 1 
         : 1;
 
       const { error } = await supabase

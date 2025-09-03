@@ -54,7 +54,7 @@ export const useOnboardingState = (user: User) => {
 
       if (data) {
         setProgressId(data.id);
-        setCurrentStep(data.current_step);
+        setCurrentStep(data.current_step || 0);
         if (data.step_data && typeof data.step_data === 'object' && 'dogProfile' in data.step_data) {
           const profileData = (data.step_data as any).dogProfile;
           if (profileData && typeof profileData === 'object') {

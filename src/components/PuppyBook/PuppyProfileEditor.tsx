@@ -85,7 +85,11 @@ const PuppyProfileEditor: React.FC<PuppyProfileEditorProps> = ({
 
       if (error) throw error;
 
-      onBookUpdated(updates);
+      onBookUpdated({
+        ...updates,
+        birth_date: updates.birth_date === null ? undefined : updates.birth_date,
+        cover_image_url: updates.cover_image_url === null ? undefined : updates.cover_image_url
+      } as any);
       toast({
         title: "Tallennettu!",
         description: "Pennun tiedot päivitettiin onnistuneesti"

@@ -102,7 +102,7 @@ export class DogFoodService {
     }
     
     // Type assertion to handle the Supabase response
-    return (data || []).map(item => ({
+    return ((data || []) as any).map((item: any) => ({
       ...item,
       food_type: item.food_type as DogFood['food_type'],
       nutrition_type: item.nutrition_type as DogFood['nutrition_type'],
@@ -116,8 +116,8 @@ export class DogFoodService {
         ...all,
         allergen_type: all.allergen_type as FoodAllergen['allergen_type']
       })),
-      nutrition: item.food_nutrition ? item.food_nutrition[0] : undefined,
-      manufacturer_info: item.food_manufacturers ? item.food_manufacturers[0] : undefined
+      nutrition: item.food_nutrition ? (item.food_nutrition as any)[0] : undefined,
+      manufacturer_info: item.food_manufacturers ? (item.food_manufacturers as any)[0] : undefined
     }))
   }
 

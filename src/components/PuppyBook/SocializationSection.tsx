@@ -99,9 +99,9 @@ export const SocializationSection: React.FC<SocializationSectionProps> = ({
 
       if (progressError) throw progressError;
 
-      setCategories(categoriesData || []);
-      setItems(itemsData || []);
-      setProgress(progressData || []);
+      setCategories((categoriesData || []) as any);
+      setItems((itemsData || []) as any);
+      setProgress((progressData || []) as any);
 
       if (categoriesData && categoriesData.length > 0) {
         setSelectedCategory(categoriesData[0].id);

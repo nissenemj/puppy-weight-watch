@@ -120,7 +120,7 @@ const ShareDialog: React.FC<ShareDialogProps> = ({
           {/* Share Options */}
           <div className="grid grid-cols-2 gap-3">
             {/* Native Share (if supported) */}
-            {navigator.share && (
+            {typeof navigator !== 'undefined' && 'share' in navigator && (
               <Button
                 variant="outline"
                 onClick={shareNative}

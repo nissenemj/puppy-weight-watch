@@ -77,7 +77,7 @@ export default function AdvancedFoodCalculator({ user, currentWeight: propCurren
         .order('manufacturer', { ascending: true })
 
       if (error) throw error
-      setDogFoods(data || [])
+      setDogFoods((data || []) as any)
     } catch (error) {
       console.error('Error fetching dog foods:', error)
       toast({
@@ -97,7 +97,7 @@ export default function AdvancedFoodCalculator({ user, currentWeight: propCurren
         .order('current_weight_kg', { ascending: true, nullsFirst: false })
 
       if (error) throw error
-      setFeedingGuidelines(data || [])
+      setFeedingGuidelines((data || []) as any)
     } catch (error) {
       console.error('Error fetching feeding guidelines:', error)
       toast({

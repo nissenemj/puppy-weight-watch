@@ -159,7 +159,7 @@ const Calculator = () => {
               <p className="mt-2 text-muted">rotupohjaa</p>
             </div>
           </div>
-          <AdvancedFoodCalculator />
+          <AdvancedFoodCalculator user={null as any} />
         </div>
       </Section>
         

@@ -214,7 +214,7 @@ const WeightTrackerPage = () => {
   return (
     <MobileOptimizedLayout>
       <Navigation />
-      <ModernPuppyWeightTracker user={user} onSignOut={handleSignOut} hasBooks={hasBooks} />
+      <ModernPuppyWeightTracker />
     </MobileOptimizedLayout>
   )
 }

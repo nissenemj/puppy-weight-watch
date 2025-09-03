@@ -212,7 +212,7 @@ export default function FeedingData() {
         food.food_ingredients?.length > 0 || 
         food.ingredients ||
         food.protein_percentage ||
-        food.special_features?.length > 0
+        (food.special_features && food.special_features.length > 0)
       )
     }
 

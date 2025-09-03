@@ -44,7 +44,7 @@ export const useSocializationAchievements = (bookId: string) => {
 
       if (error) throw error;
       
-      setAchievements(data || []);
+      setAchievements((data || []) as any);
     } catch (error) {
       console.error('Error loading achievements:', error);
       toast({

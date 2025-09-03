@@ -22,15 +22,15 @@ export function ManufacturerEditor({ manufacturer, onChange }: ManufacturerEdito
       const newManufacturer: FoodManufacturer = {
         id: `temp_${Date.now()}`,
         dog_food_id: '',
-        country_of_origin: null,
-        website_url: null,
-        feeding_guide_url: null,
+        country_of_origin: undefined,
+        website_url: undefined,
+        feeding_guide_url: undefined,
         created_at: new Date().toISOString()
-      }
-      newManufacturer[field] = value || null
+      } as any
+      newManufacturer[field] = (value || '') as any
       onChange(newManufacturer)
     } else {
-      onChange({ ...manufacturer, [field]: value || null })
+      onChange({ ...manufacturer, [field]: value || undefined } as any)
     }
   }
 
