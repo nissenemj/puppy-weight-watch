@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { supabase } from '@/integrations/supabase/client'
+import { dbToAppTypes } from '@/utils/typeConverters'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -58,7 +59,7 @@ export default function FoodRecipeSearch({ onRecipeSelect, selectedRecipe }: Foo
         .limit(20)
 
       if (error) throw error
-      setRecipes(data || [])
+      setRecipes(dbToAppTypes.dogFood(data) || [])
     } catch (error) {
       console.error('Error loading recipes:', error)
     }
@@ -74,7 +75,7 @@ export default function FoodRecipeSearch({ onRecipeSelect, selectedRecipe }: Foo
         .limit(20)
 
       if (error) throw error
-      setRecipes(data || [])
+      setRecipes(dbToAppTypes.dogFood(data) || [])
     } catch (error) {
       console.error('Error searching recipes:', error)
     }
@@ -116,7 +117,7 @@ export default function FoodRecipeSearch({ onRecipeSelect, selectedRecipe }: Foo
       setIsAddingRecipe(false)
       
       if (data) {
-        onRecipeSelect(data)
+        onRecipeSelect(dbToAppTypes.dogFood(data))
       }
     } catch (error) {
       console.error('Error adding recipe:', error)

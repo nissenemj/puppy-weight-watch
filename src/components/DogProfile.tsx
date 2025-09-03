@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { supabase } from '@/integrations/supabase/client'
+import { dbToAppTypes } from '@/utils/typeConverters'
 import { User } from '@supabase/supabase-js'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -49,11 +50,11 @@ export default function DogProfile({ user, onDogSelect, selectedDog }: DogProfil
         .order('created_at', { ascending: false })
 
       if (error) throw error
-      setDogs(data || [])
+      setDogs(dbToAppTypes.dog(data) || [])
       
       // Auto-select first dog if none selected
       if (data?.length && !selectedDog) {
-        onDogSelect(data[0])
+        onDogSelect(dbToAppTypes.dog(data[0]))
       }
     } catch (error) {
       console.error('Error loading dogs:', error)
@@ -97,7 +98,7 @@ export default function DogProfile({ user, onDogSelect, selectedDog }: DogProfil
       toast.success('Koira lisätty!')
       
       if (data) {
-        onDogSelect(data)
+        onDogSelect(dbToAppTypes.dog(data))
       }
     } catch (error) {
       console.error('Error adding dog:', error)

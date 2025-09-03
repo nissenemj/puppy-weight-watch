@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Plus, Save, Trash2, Edit, X } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
+import { dbToAppTypes } from '@/utils/typeConverters'
 import { useToast } from '@/hooks/use-toast'
 
 interface DosageTableRow {
@@ -76,7 +77,7 @@ export default function GeneralDosageSection() {
         })
       )
 
-      setGuidelines(guidelinesWithRows)
+      setGuidelines(dbToAppTypes.dogFood(guidelinesWithRows))
     } catch (error) {
       console.error('Error fetching guidelines:', error)
       toast({

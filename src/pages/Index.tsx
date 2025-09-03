@@ -107,11 +107,30 @@ const Index = () => {
     { icon: Heart, text: "Suunniteltu rakkauden vuoksi" }
   ];
 
-  const stats = [
-    { numeric: 10000, suffix: "+", label: "Tyytyväistä käyttäjää" },
-    { numeric: 50000, suffix: "+", label: "Seurattua mittausta" },
-    { numeric: 98, suffix: "%", label: "Tyytyväisyysprosentti" },
-    { text: "24/7", label: "Käytettävyys" }
+  const cards = [
+    {
+      icon: TrendingUp,
+      title: "Älykkäät kasvukäyrät",
+      description: "Vertaa pennun kasvua rotukohtaisiin keskiarvoihin ja seuraa kehitystä",
+      href: "/weight-tracker",
+      variant: "primary" as const
+    },
+    {
+      icon: Calculator,
+      title: "Tarkka ruokalaskuri",
+      description: "Laske optimaalinen ruokamäärä pennun iän ja painon mukaan",
+      href: "/calculator",
+      badge: "Tulossa oleva ominaisuus",
+      variant: "secondary" as const
+    },
+    {
+      icon: Book,
+      title: "Pentukirja",
+      description: "Tallenna pennun tärkeimmät hetket, virstanpylväät ja muistot",
+      href: "/puppy-book",
+      cta: "Tutustu ominaisuuteen",
+      variant: "accent" as const
+    }
   ];
 
   return (
@@ -301,24 +320,57 @@ const Index = () => {
             viewport={{ once: true }}
             className="bg-white/90 backdrop-blur rounded-3xl p-8 shadow-xl border border-white/50"
           >
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mobile-grid-1">
-              {stats.map((stat, index) => (
-                <div key={index} className="text-center">
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    whileInView={{ scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: index * 0.1, type: "spring" }}
-                    className="text-display-3 font-bold bg-gradient-primary bg-clip-text text-transparent mb-2"
-                  >
-                    {stat.text || <CountUp to={stat.numeric!} suffix={stat.suffix as string} />}
-                  </motion.div>
-                  <div className="text-body-sm text-muted font-medium">
-                    {stat.label}
+          {/* Cards Section */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {cards.map((card, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className="relative"
+              >
+                <Link to={card.href} className="group block">
+                  <div className="bg-white/80 backdrop-blur rounded-2xl p-6 shadow-lg border border-white/30 hover:shadow-xl transition-all duration-300 hover:scale-105">
+                    <div className="flex items-start gap-4">
+                      <div className={`p-3 rounded-xl bg-gradient-to-br ${
+                        card.variant === 'primary' ? 'from-primary/20 to-primary/10' : 
+                        card.variant === 'accent' ? 'from-accent/20 to-accent/10' : 
+                        'from-secondary/20 to-secondary/10'
+                      }`}>
+                        <card.icon className={`w-6 h-6 ${
+                          card.variant === 'primary' ? 'text-primary' : 
+                          card.variant === 'accent' ? 'text-accent' : 
+                          'text-secondary'
+                        }`} />
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <h3 className="text-h3 font-semibold">{card.title}</h3>
+                          {card.badge && (
+                            <Badge variant="secondary" className="text-xs">
+                              {card.badge}
+                            </Badge>
+                          )}
+                        </div>
+                        <p className="text-body-sm text-muted leading-relaxed">
+                          {card.description}
+                        </p>
+                        {card.cta && (
+                          <div className="mt-4">
+                            <span className="text-accent font-medium text-body-sm group-hover:underline">
+                              {card.cta} →
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
           </motion.div>
         </div>
       </Section>

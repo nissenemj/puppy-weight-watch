@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { User } from '@supabase/supabase-js'
 import { supabase } from '@/integrations/supabase/client'
+import { dbToAppTypes } from '@/utils/typeConverters'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
@@ -48,13 +49,13 @@ export default function DogSelector({ user, selectedDogId, onDogSelect }: DogSel
 
       if (error) throw error
 
-      setDogs(data || [])
+      setDogs(dbToAppTypes.dog(data) || [])
       
       // Auto-select first dog if none selected and dogs exist
       if (data && data.length > 0 && !selectedDogId) {
         // Small delay to ensure parent component is ready
         setTimeout(() => {
-          onDogSelect(data[0].id, data[0])
+          onDogSelect(data[0].id, dbToAppTypes.dog(data[0]))
         }, 100)
       }
     } catch (error) {

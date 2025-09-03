@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast'
 import { usePullToRefresh } from '@/hooks/usePullToRefresh'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { supabase } from '@/integrations/supabase/client'
+import { dbToAppTypes } from '@/utils/typeConverters'
 import { User } from '@supabase/supabase-js'
 import WeightChart from './WeightChart'
 import AdvancedFoodCalculator from './AdvancedFoodCalculator'
@@ -146,7 +147,7 @@ export default function ModernPuppyWeightTracker() {
         variant: "destructive",
       })
     } else if (data) {
-      setEntries(data)
+      setEntries(dbToAppTypes.dogFood(data))
     }
   }
 

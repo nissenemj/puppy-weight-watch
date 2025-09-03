@@ -10,6 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Plus, Upload, Trash2, Eye, Save, X } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { supabase } from '@/integrations/supabase/client'
+import { dbToAppTypes } from '@/utils/typeConverters'
 import { useToast } from '@/hooks/use-toast'
 import { Badge } from '@/components/ui/badge'
 
@@ -135,7 +136,7 @@ export default function DosageImagesSection() {
         })
       )
 
-      setDosageImages(imagesWithTableData)
+      setDosageImages(dbToAppTypes.dosageImage(imagesWithTableData))
     } catch (error) {
       console.error('Error fetching dosage images:', error)
       toast({

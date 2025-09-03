@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { Calculator, Dog, Scale } from 'lucide-react'
 import { User } from '@supabase/supabase-js'
 import { supabase } from '@/integrations/supabase/client'
+import { dbToAppTypes } from '@/utils/typeConverters'
 import { toast } from 'sonner'
 
 // Database types
@@ -87,8 +88,8 @@ export default function AdvancedFoodCalculator({ user, currentWeight: propCurren
 
       if (guidelinesError) throw guidelinesError
 
-      setDogFoods(foodsData || [])
-      setFeedingGuidelines(guidelinesData || [])
+      setDogFoods(dbToAppTypes.dogFood(foodsData) || [])
+      setFeedingGuidelines(dbToAppTypes.feedingGuideline(guidelinesData) || [])
     } catch (error) {
       console.error('Error loading food data:', error)
       toast.error('Virhe ruokien lataamisessa')

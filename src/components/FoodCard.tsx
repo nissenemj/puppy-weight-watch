@@ -17,6 +17,7 @@ import { AllergenEditor } from './admin/AllergenEditor'
 import { NutritionEditor } from './admin/NutritionEditor'
 import { ManufacturerEditor } from './admin/ManufacturerEditor'
 import { supabase } from '@/integrations/supabase/client'
+import { dbToAppTypes, appToDbTypes } from '@/utils/typeConverters'
 import { toast } from 'sonner'
 
 // Component to show linked dosage images
@@ -197,8 +198,8 @@ export function FoodCard({ food, onSelect, isSelected = false, showDetails = fal
       ...food,
       food_ingredients: food.food_ingredients || [],
       allergens: food.allergens || [],
-      nutrition: food.nutrition || null,
-      manufacturer_info: food.manufacturer_info || null
+      nutrition: dbToAppTypes.foodNutrition(food.nutrition),
+      manufacturer_info: dbToAppTypes.foodManufacturer(food.manufacturer_info)
     })
   }
 
@@ -608,18 +609,18 @@ export function FoodCard({ food, onSelect, isSelected = false, showDetails = fal
 
             <TabsContent value="nutrition" className="mt-4">
               <NutritionEditor
-                nutrition={enhancedEditingFood.nutrition}
+                nutrition={dbToAppTypes.foodNutrition(enhancedEditingFood.nutrition)}
                 onChange={(nutrition) => 
-                  setEnhancedEditingFood(prev => prev ? { ...prev, nutrition } : null)
+                  setEnhancedEditingFood(prev => prev ? { ...prev, nutrition: appToDbTypes.foodNutrition(nutrition) } : null)
                 }
               />
             </TabsContent>
 
             <TabsContent value="manufacturer" className="mt-4">
               <ManufacturerEditor
-                manufacturer={enhancedEditingFood.manufacturer_info}
+                manufacturer={dbToAppTypes.foodManufacturer(enhancedEditingFood.manufacturer_info)}
                 onChange={(manufacturer_info) => 
-                  setEnhancedEditingFood(prev => prev ? { ...prev, manufacturer_info } : null)
+                  setEnhancedEditingFood(prev => prev ? { ...prev, manufacturer_info: appToDbTypes.foodManufacturer(manufacturer_info) } : null)
                 }
               />
             </TabsContent>
