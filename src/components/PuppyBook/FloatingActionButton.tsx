@@ -76,34 +76,41 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
 
   // Enhanced overflow detection for all sides
   useEffect(() => {
-    if (isOpen && menuRef.current && fabRef.current) {
-      const menuRect = menuRef.current.getBoundingClientRect();
+    if (isOpen && fabRef.current) {
       const fabRect = fabRef.current.getBoundingClientRect();
       const windowWidth = window.innerWidth;
       const windowHeight = window.innerHeight;
-      const safeMargin = 16;
-
-      // Check horizontal overflow
-      const wouldOverflowRight = fabRect.right + menuRect.width + safeMargin > windowWidth;
-      const wouldOverflowLeft = fabRect.left - menuRect.width - safeMargin < 0;
+      const safeMargin = 20;
       
-      // Check vertical overflow (estimate menu height as 5 items * 60px)
-      const estimatedMenuHeight = actions.length * 60;
-      const wouldOverflowTop = fabRect.top - estimatedMenuHeight - safeMargin < 0;
-      const wouldOverflowBottom = fabRect.bottom + estimatedMenuHeight + safeMargin > windowHeight;
+      // Estimate menu dimensions
+      const menuWidth = 200; // max-w-[200px]
+      const menuItemHeight = 60; // Each action item height
+      const menuHeight = actions.length * menuItemHeight + (actions.length - 1) * 12; // gap-3
 
-      // Set horizontal position
-      if (wouldOverflowRight && !wouldOverflowLeft) {
+      // Check horizontal overflow - prefer right side
+      const availableRight = windowWidth - fabRect.right - safeMargin;
+      const availableLeft = fabRect.left - safeMargin;
+      
+      if (menuWidth <= availableRight) {
+        setMenuPosition('right');
+      } else if (menuWidth <= availableLeft) {
         setMenuPosition('left');
       } else {
-        setMenuPosition('right');
+        // If neither side has enough space, choose the side with more space
+        setMenuPosition(availableRight >= availableLeft ? 'right' : 'left');
       }
 
-      // Set vertical position - prefer up unless it would overflow
-      if (wouldOverflowTop && !wouldOverflowBottom) {
+      // Check vertical overflow - prefer up direction
+      const availableUp = fabRect.top - safeMargin;
+      const availableDown = windowHeight - fabRect.bottom - safeMargin;
+      
+      if (menuHeight <= availableUp) {
+        setMenuDirection('up');
+      } else if (menuHeight <= availableDown) {
         setMenuDirection('down');
       } else {
-        setMenuDirection('up');
+        // If neither direction has enough space, choose the direction with more space
+        setMenuDirection(availableUp >= availableDown ? 'up' : 'down');
       }
     }
   }, [isOpen, actions.length]);
