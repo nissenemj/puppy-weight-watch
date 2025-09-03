@@ -15,11 +15,10 @@ import { User } from '@supabase/supabase-js'
 import WeightChart from './WeightChart'
 import AdvancedFoodCalculator from './AdvancedFoodCalculator'
 import PuppyFeeding from './PuppyFeeding'
-import SafetyNewsFeed from './SafetyNewsFeed'
 import OnboardingWizard from '@/features/onboarding/components/OnboardingWizard'
 import DogSelector from '@/components/DogSelector'
 import WeightEntry from '@/features/weight-tracking/components/WeightEntry'
-import { Scale, TrendingUp, Calculator, Utensils, Bell, LogIn, UserPlus, RefreshCw } from 'lucide-react'
+import { Scale, TrendingUp, Utensils, LogIn, UserPlus, RefreshCw } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 // Import the generated assets
@@ -392,7 +391,7 @@ export default function ModernPuppyWeightTracker() {
   }
 
   const handleTabSwipe = (direction: 'left' | 'right') => {
-    const tabs = ['weight-tracking', 'growth-chart', 'puppy-feeding', 'news-feed']
+    const tabs = ['weight-tracking', 'growth-chart', 'puppy-feeding']
     const currentIndex = tabs.indexOf(activeTab)
     
     if (direction === 'left' && currentIndex < tabs.length - 1) {
@@ -465,7 +464,7 @@ export default function ModernPuppyWeightTracker() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} onSwipe={handleTabSwipe} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 h-16 md:h-14 rounded-2xl bg-white/50 backdrop-blur-sm overflow-x-auto">
+          <TabsList className="grid w-full grid-cols-3 h-16 md:h-14 rounded-2xl bg-white/50 backdrop-blur-sm overflow-x-auto">
             <TabsTrigger 
               value="weight-tracking" 
               className={cn(
@@ -496,16 +495,6 @@ export default function ModernPuppyWeightTracker() {
               <Utensils className="h-5 w-5 sm:h-4 sm:w-4" />
               <span className="text-xs sm:text-sm">Ruokinta</span>
             </TabsTrigger>
-            <TabsTrigger 
-              value="news-feed" 
-              className={cn(
-                "flex flex-col sm:flex-row items-center gap-1 sm:gap-2 rounded-xl transition-all duration-200 hover:scale-105 px-2 sm:px-4 text-white font-medium",
-                activeTab === "news-feed" ? "bg-gradient-purple !important" : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              <Bell className="h-5 w-5 sm:h-4 sm:w-4" />
-              <span className="text-xs sm:text-sm">Uutiset</span>
-            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="weight-tracking" className="space-y-6 animate-fade-in">
@@ -533,10 +522,6 @@ export default function ModernPuppyWeightTracker() {
 
           <TabsContent value="puppy-feeding" className="animate-fade-in">
             <AdvancedFoodCalculator currentWeight={getLatestWeight()} user={user} />
-          </TabsContent>
-
-          <TabsContent value="news-feed" className="animate-fade-in">
-            <SafetyNewsFeed />
           </TabsContent>
         </Tabs>
       </div>

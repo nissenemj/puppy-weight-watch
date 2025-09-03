@@ -7,9 +7,7 @@ import { Link } from 'react-router-dom'
 import { ArrowLeft, Shield, FileText, AlertTriangle } from 'lucide-react'
 import Navigation from '@/components/Navigation'
 import InfoCard from '@/components/InfoCard'
-import InfoSection from '@/components/InfoSection'
 import BackToTopButton from '@/components/BackToTopButton'
-import SafetyNewsFeed from '@/components/SafetyNewsFeed'
 import heroImage from '@/assets/welcome-illustration.png'
 import ScrollPanBackground from '@/components/ScrollPanBackground'
 
@@ -27,16 +25,11 @@ export default function SafetyPage() {
                 🛡️ Turvallisuus ja suositukset
               </h1>
               <p className="text-lg sm:text-xl text-white/90 max-w-3xl mx-auto">
-                Tärkeät turvallisuusohjeet ja ajankohtaiset uutiset koiranruokinnasta
+                Tärkeät turvallisuusohjeet ja suositukset koiranruokinnasta
               </p>
             </div>
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
           </ScrollPanBackground>
-        </div>
-
-        {/* News Feed */}
-        <div className="mb-8">
-          <SafetyNewsFeed />
         </div>
 
         <InfoCard
