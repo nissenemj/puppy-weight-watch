@@ -4,8 +4,7 @@ import Navigation from '@/components/Navigation'
 import SEO from '@/components/SEO'
 import FAQ from '@/components/FAQ'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { PageLayout, Container, Section, CardGrid, Stack } from '@/components/ui/Layout'
+import { PageLayout, Container, Section, Stack } from '@/components/ui/Layout'
 import { createWebApplicationSchema, createWeightTrackingSchema, createFAQSchema } from '@/utils/structuredData'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
@@ -271,56 +270,6 @@ const Index = () => {
         </div>
       </Section>
 
-      {/* Features Section */}
-      <Section className="full-width-section bg-[var(--color-surface-alt)] mobile-text-wrap responsive-media no-horizontal-scroll mobile-grid-1 mobile-container-safe mobile-card-safe" role="region" aria-labelledby="features-heading">
-        <div className="full-width-content">
-          <div className="text-center mb-16">
-            <h2 className="text-h1 mb-6" id="features-heading">
-              Kaikki mitä tarvitset
-              <br />
-              <span className="text-accent">pennun kasvuun</span>
-            </h2>
-            <p className="text-body-xl text-muted max-w-3xl mx-auto">
-              Ammattimaiset työkalut koiran kehityksen seuraamiseen ja optimoimiseen
-            </p>
-          </div>
-
-          <CardGrid cols={2} gap="lg" stagger>
-            {features.map((feature, index) => {
-              const Icon = feature.icon
-              return (
-                <Link key={index} to={feature.href} aria-label={`Siirry ${feature.title.toLowerCase()} -sivulle: ${feature.description}`}>
-                  <Card variant={index === 0 ? "elevated" : "default"} className="h-full group cursor-pointer">
-                    <CardHeader>
-                      <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-4 ${
-                        index === 0 ? 'bg-accent' : 'bg-[var(--color-primary-100)]'
-                      }`}>
-                        <Icon className={`w-7 h-7 ${
-                          index === 0 ? 'text-white' : 'text-[var(--color-primary)]'
-                        }`} />
-                      </div>
-                      <CardTitle className="group-hover:text-accent transition-colors">
-                        {feature.title}
-                      </CardTitle>
-                      <CardDescription style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                        {feature.description}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center gap-2 text-accent font-medium group-hover:gap-3 transition-all">
-                        <span>Tutustu</span>
-                        <ArrowRight className="w-4 h-4" />
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              )
-            })}
-          </CardGrid>
-        </div>
-      </Section>
-
-
       {/* Modern Benefits Section */}
       <Section className="full-width-section bg-gradient-soft mobile-text-wrap responsive-media no-horizontal-scroll mobile-container-safe" role="region" aria-labelledby="benefits-heading">
         <div className="full-width-content">
@@ -343,80 +292,6 @@ const Index = () => {
                 Ammattitasoinen ratkaisu, joka kasvaa pennun mukana
               </p>
             </motion.div>
-          </div>
-
-          {/* Modern Benefit Cards Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-            {[
-              {
-                icon: TrendingUp,
-                title: "Älykkäät kasvukäyrät",
-                description: "Visualisoi pennun kasvu ja vertaa rotukohtaisiin keskiarvoihin reaaliajassa",
-                color: "primary",
-                badge: "Suosituin"
-              },
-              {
-                icon: Calculator,
-                title: "Tarkka ruokalaskuri",
-                description: "200+ ruokamerkin tiedot ja henkilökohtaiset suositukset pennun tarpeisiin",
-                color: "secondary"
-              },
-              {
-                icon: Shield,
-                title: "Turvallinen & Yksityinen",
-                description: "GDPR-yhteensopiva tietojen käsittely ja täysi yksityisyydensuoja",
-                color: "tertiary"
-              },
-              {
-                icon: Zap,
-                title: "Salamannopea",
-                description: "Optimoitu suorituskyky ja offline-tuki mobiililaitteilla",
-                color: "accent"
-              },
-              {
-                icon: Heart,
-                title: "Elinikäinen ilmaiskäyttö",
-                description: "Kaikki ominaisuudet ilmaiseksi, ei piilomaksuja tai tilauksia",
-                color: "primary",
-                badge: "100% Ilmainen"
-              },
-              {
-                icon: Award,
-                title: "Asiantuntijatuki",
-                description: "Eläinlääkärien hyväksymät ohjeet ja tutkimuspohjainen tieto",
-                color: "secondary"
-              }
-            ].map((benefit, index) => {
-              const Icon = benefit.icon;
-              return (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                >
-                  <Card className="h-full group hover:shadow-2xl transition-all duration-300 bg-white/80 backdrop-blur border-white/50 relative overflow-hidden">
-                    {benefit.badge && (
-                      <div className="absolute top-4 right-4">
-                        <Badge className="bg-gradient-warm text-white border-0 px-3 py-1">
-                          {benefit.badge}
-                        </Badge>
-                      </div>
-                    )}
-                    <CardContent className="p-6">
-                      <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br from-[var(--color-${benefit.color}-400)] to-[var(--color-${benefit.color}-600)] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                        <Icon className="w-7 h-7 text-white" />
-                      </div>
-                      <h3 className="text-h4 mb-2 font-semibold">{benefit.title}</h3>
-                      <p className="text-body text-muted leading-relaxed">
-                        {benefit.description}
-                      </p>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              );
-            })}
           </div>
 
           {/* Stats Bar */}
