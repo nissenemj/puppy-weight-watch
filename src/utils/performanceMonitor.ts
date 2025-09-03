@@ -179,7 +179,7 @@ class PerformanceMonitor {
       }
     });
 
-    return Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
+    return Math.round(scores.reduce((a: number, b: number) => a + b, 0) / scores.length);
   }
 
   // Memory monitoring

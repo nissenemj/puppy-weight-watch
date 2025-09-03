@@ -130,7 +130,7 @@ export const generateBreadcrumbs = (pathname: string): Array<{ name: string; url
   if (!config) return breadcrumbs;
   
   // Add parent if exists
-  if (config.parent && config.parent !== '/') {
+  if ('parent' in config && config.parent && config.parent !== '/') {
     const parentConfig = BREADCRUMB_CONFIG[config.parent as keyof typeof BREADCRUMB_CONFIG];
     if (parentConfig) {
       breadcrumbs.push({ name: parentConfig.name, url: config.parent });

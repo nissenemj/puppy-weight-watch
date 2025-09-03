@@ -1,6 +1,7 @@
 
 import { supabase } from "@/integrations/supabase/client"
 import { WeightEntrySchema } from "@/lib/validationSchemas"
+import { convertNullToUndefined } from "@/utils/typeConverters"
 import { z } from "zod"
 
 export interface WeightEntry {
@@ -36,7 +37,7 @@ export class WeightService {
       throw new Error(error.message)
     }
     
-    return data
+    return convertNullToUndefined(data) as WeightEntry
   }
 
   static async updateWeightEntry(id: string, weight: number): Promise<WeightEntry> {
@@ -58,7 +59,7 @@ export class WeightService {
       throw new Error(error.message)
     }
     
-    return data
+    return convertNullToUndefined(data) as WeightEntry
   }
 
   static async deleteWeightEntry(id: string): Promise<void> {
@@ -90,7 +91,7 @@ export class WeightService {
       throw new Error(error.message)
     }
     
-    return data || []
+    return convertNullToUndefined(data || []) as WeightEntry[]
   }
 
   static async getLatestWeightEntry(userId: string, dogId?: string): Promise<WeightEntry | null> {
@@ -113,7 +114,7 @@ export class WeightService {
       throw new Error(error.message)
     }
     
-    return data
+    return data ? convertNullToUndefined(data) as WeightEntry : null
   }
 
   static async checkExistingEntry(userId: string, date: string, dogId?: string): Promise<WeightEntry | null> {
@@ -134,6 +135,6 @@ export class WeightService {
       throw new Error(error.message)
     }
     
-    return data
+    return data ? convertNullToUndefined(data) as WeightEntry : null
   }
 }

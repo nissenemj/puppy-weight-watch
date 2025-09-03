@@ -209,7 +209,7 @@ export default function FeedingData() {
     // Detailed info filter
     if (filters.hasDetailedInfo) {
       filtered = filtered.filter(food => 
-        food.food_ingredients?.length > 0 || 
+        (food.food_ingredients && food.food_ingredients.length > 0) || 
         food.ingredients ||
         food.protein_percentage ||
         (food.special_features && food.special_features.length > 0)

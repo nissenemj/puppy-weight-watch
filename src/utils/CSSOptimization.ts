@@ -240,7 +240,7 @@ export function addResourceHints(): void {
     link.rel = hint.rel;
     link.href = hint.href;
     if ('crossOrigin' in hint) {
-      link.crossOrigin = hint.crossOrigin;
+      link.crossOrigin = hint.crossOrigin || null;
     }
     document.head.appendChild(link);
   });

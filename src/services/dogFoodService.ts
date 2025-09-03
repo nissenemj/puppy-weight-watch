@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client"
+import { convertNullToUndefined } from "@/utils/typeConverters"
 
 export interface FoodIngredient {
   id: string
@@ -159,13 +160,13 @@ export class DogFoodService {
       }
     }
 
-    // Type assertion for the return value
-    return {
+    // Convert null values to undefined and return with proper types
+    return convertNullToUndefined({
       ...foodData,
       food_type: foodData.food_type as DogFood['food_type'],
       nutrition_type: foodData.nutrition_type as DogFood['nutrition_type'],
       dosage_method: foodData.dosage_method as DogFood['dosage_method']
-    }
+    }) as DogFood
   }
 
   static async initializeDatabase(): Promise<void> {
