@@ -113,12 +113,12 @@ const NavigationWithRouter = () => {
           initial={{ y: -100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-[1000] transition-all duration-500 mobile-optimized mobile-touch-target ${
-            scrolled ? 'top-2 scale-95' : 'top-4'
+          className={`fixed top-safe left-4 right-4 z-[1000] transition-all duration-500 mobile-optimized mobile-touch-target ${
+            scrolled ? 'top-2 scale-98' : 'top-safe'
           }`}
         >
-          <div className={`glass-nav rounded-2xl px-3 py-3 ${scrolled ? 'shadow-md' : 'shadow-xl'}`}>
-            <div className="flex items-center gap-2">
+          <div className={`glass-nav rounded-2xl px-4 py-3 mx-auto max-w-6xl ${scrolled ? 'shadow-md' : 'shadow-xl'}`}>
+            <div className="flex items-center justify-between w-full">
               {/* Logo */}
               <motion.div
                 whileHover={hoverAnimations.scale.whileHover}
@@ -126,24 +126,19 @@ const NavigationWithRouter = () => {
               >
                 <Link 
                   to="/" 
-                  className="flex items-center gap-3 px-4 py-2 rounded-xl hover:bg-white/20 transition-all duration-200"
+                  className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-white/20 transition-all duration-200"
                   aria-current={isActive('/') ? 'page' : undefined}
                 >
                   <motion.div
                     animate={{ rotate: [0, 5, -5, 0] }}
                     transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                    className="w-10 h-10 bg-[var(--color-accent)] rounded-xl flex items-center justify-center shadow-md"
+                    className="w-8 h-8 bg-[var(--color-accent)] rounded-lg flex items-center justify-center shadow-md"
                   >
-                    <Dog className="w-5 h-5 text-white" aria-hidden="true" />
+                    <Dog className="w-4 h-4 text-white" aria-hidden="true" />
                   </motion.div>
-                  <span className="hidden sm:block text-h6 font-semibold text-[var(--color-text)]">Pentulaskuri</span>
+                  <span className="hidden sm:block text-base font-semibold text-[var(--color-text)]">Pentulaskuri</span>
                 </Link>
               </motion.div>
-
-              <div className="w-px h-6 bg-gray-300 mx-2 hidden sm:block"></div>
-
-
-              <div className="w-px h-6 bg-gray-300 mx-2 hidden sm:block"></div>
 
               {/* Desktop Navigation */}
               <div className="hidden md:flex items-center gap-1">
@@ -158,21 +153,21 @@ const NavigationWithRouter = () => {
                     >
                       <Link
                         to={item.href}
-                        className={`relative px-4 py-3 rounded-xl font-medium text-sm transition-all duration-200 flex items-center gap-2 ${
+                        className={`relative px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 flex items-center gap-2 ${
                           isItemActive
-                            ? 'bg-[var(--color-accent)] text-white shadow-lg'
-                            : 'text-[var(--color-text)] hover:bg-gray-100'
+                            ? 'bg-[var(--color-accent)] text-white shadow-md'
+                            : 'text-[var(--color-text)] hover:bg-white/10'
                         }`}
                         aria-current={isItemActive ? 'page' : undefined}
                         aria-label={`${item.label} - siirry sivulle`}
                       >
                         <Icon className="w-4 h-4" />
-                        <span className="text-body-sm font-medium">{item.label}</span>
+                        <span className="text-sm font-medium">{item.label}</span>
                         
                         {isItemActive && (
                           <motion.div
                             layoutId="activeNavItem"
-                            className="absolute inset-0 bg-[var(--color-accent)] rounded-xl -z-10"
+                            className="absolute inset-0 bg-[var(--color-accent)] rounded-lg -z-10"
                             transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                           />
                         )}
@@ -186,9 +181,9 @@ const NavigationWithRouter = () => {
               <div className="md:hidden">
                 <Button
                   variant="ghost"
-                  size="icon"
+                  size="sm"
                   onClick={() => setIsMobileMenuOpen(true)}
-                  className="rounded-xl"
+                  className="rounded-lg hover:bg-white/10"
                   aria-haspopup="dialog"
                   aria-expanded={isMobileMenuOpen}
                   aria-controls="mobile-menu-panel"

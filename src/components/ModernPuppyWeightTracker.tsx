@@ -427,66 +427,41 @@ export default function ModernPuppyWeightTracker() {
   }
 
   return (
-    <div 
-      ref={containerRef}
-      className="min-h-screen bg-gradient-primary relative"
-      style={{
-        transform: shouldShowIndicator ? `translateY(${Math.min(pullDistance * 0.5, 40)}px)` : 'none',
-        transition: shouldShowIndicator ? 'none' : 'transform 0.2s ease-out'
-      }}
-    >
-      {/* Pull to refresh indicator */}
-      {shouldShowIndicator && (
-        <div 
-          className="absolute top-0 left-0 right-0 flex items-center justify-center py-4 bg-white/80 backdrop-blur-sm z-50"
-          style={{
-            opacity: Math.min(pullDistance / 80, 1),
-            transform: `translateY(${-40 + Math.min(pullDistance * 0.5, 40)}px)`
-          }}
-        >
-          <RefreshCw 
-            className={`h-6 w-6 text-primary ${isRefreshing ? 'animate-spin' : ''}`}
-          />
-          <span className="ml-2 text-sm text-gray-600">
-            {isRefreshing ? 'Päivitetään...' : pullDistance > 80 ? 'Päästä päivittääksesi' : 'Vedä alas päivittääksesi'}
-          </span>
-        </div>
-      )}
-      
-      <div className="container mx-auto p-3 sm:p-4 max-w-full overflow-x-hidden">
-        {/* Modern Header - Mobile Responsive */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-4 animate-fade-in">
-          <div className="flex items-center gap-3 sm:gap-4">
-            <img src={appIcon} alt="Pentulaskuri" className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl sm:rounded-3xl shadow-lg animate-bounce-gentle" />
-            <div>
-            <h1 className="text-2xl sm:text-4xl font-bold text-foreground">
-              Pentulaskuri
-            </h1>
-              <p className="text-gray-600 text-sm sm:text-lg">Seuraa pentusi kasvua ja ruokintaa</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto">
-            <span className="text-xs sm:text-sm text-gray-600 bg-white/50 px-2 sm:px-3 py-1 sm:py-2 rounded-lg backdrop-blur-sm flex-1 sm:flex-initial text-center sm:text-left">
-              {user.email}
+      <div 
+        ref={containerRef}
+        className="min-h-screen bg-gradient-primary relative pt-24"
+        style={{
+          transform: shouldShowIndicator ? `translateY(${Math.min(pullDistance * 0.5, 40)}px)` : 'none',
+          transition: shouldShowIndicator ? 'none' : 'transform 0.2s ease-out'
+        }}
+      >
+        {/* Pull to refresh indicator */}
+        {shouldShowIndicator && (
+          <div 
+            className="absolute top-0 left-0 right-0 flex items-center justify-center py-4 bg-white/80 backdrop-blur-sm z-50"
+            style={{
+              opacity: Math.min(pullDistance / 80, 1),
+              transform: `translateY(${-40 + Math.min(pullDistance * 0.5, 40)}px)`
+            }}
+          >
+            <RefreshCw 
+              className={`h-6 w-6 text-primary ${isRefreshing ? 'animate-spin' : ''}`}
+            />
+            <span className="ml-2 text-sm text-gray-600">
+              {isRefreshing ? 'Päivitetään...' : pullDistance > 80 ? 'Päästä päivittääksesi' : 'Vedä alas päivittääksesi'}
             </span>
-            <Button 
-              variant="outline" 
-              onClick={handleSignOut}
-              className="rounded-xl hover:scale-105 transition-all duration-200 text-xs sm:text-sm px-3 sm:px-4"
-            >
-              Kirjaudu ulos
-            </Button>
           </div>
-        </div>
-
-        {/* Dog Selector */}
-        <div className="mb-6">
-          <DogSelector 
-            user={user} 
-            selectedDogId={selectedDog?.id} 
-            onDogSelect={(dogId, dog) => setSelectedDog(dog)} 
-          />
-        </div>
+        )}
+        
+        <div className="container mx-auto p-3 sm:p-4 max-w-full overflow-x-hidden">
+          {/* Dog Selector */}
+          <div className="mb-6">
+            <DogSelector 
+              user={user} 
+              selectedDogId={selectedDog?.id} 
+              onDogSelect={(dogId, dog) => setSelectedDog(dog)} 
+            />
+          </div>
 
         {/* Weight Entry Section - Always Visible */}
         {selectedDog && (
