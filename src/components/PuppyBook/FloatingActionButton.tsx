@@ -45,36 +45,9 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
   const [healthDialogOpen, setHealthDialogOpen] = useState(false);
   const [dialogType, setDialogType] = useState<'photo' | 'text' | 'event' | 'milestone'>('photo');
   const [menuPosition, setMenuPosition] = useState<'right' | 'left'>('right');
+  const [menuDirection, setMenuDirection] = useState<'up' | 'down'>('up');
   const menuRef = useRef<HTMLDivElement>(null);
   const fabRef = useRef<HTMLDivElement>(null);
-
-  // Check menu position to prevent overflow
-  useEffect(() => {
-    if (isOpen && menuRef.current && fabRef.current) {
-      const menuRect = menuRef.current.getBoundingClientRect();
-      const fabRect = fabRef.current.getBoundingClientRect();
-      const windowWidth = window.innerWidth;
-      
-      // Check if menu would overflow to the right
-      const wouldOverflowRight = fabRect.right + menuRect.width > windowWidth;
-      
-      if (wouldOverflowRight) {
-        setMenuPosition('left');
-      } else {
-        setMenuPosition('right');
-      }
-    }
-  }, [isOpen]);
-
-  // Update dialog state when external showDialog changes
-  React.useEffect(() => {
-    if (showDialog !== dialogOpen) {
-      setDialogOpen(showDialog);
-      if (showDialog) {
-        setDialogType('photo'); // Default to photo when opened externally
-      }
-    }
-  }, [showDialog, dialogOpen]);
 
   const handleActionClick = (type: 'photo' | 'text' | 'event' | 'milestone') => {
     setDialogType(type);
@@ -101,6 +74,50 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
     { icon: Stethoscope, label: 'Lisää terveysmerkintä', onClick: handleHealthClick },
   ];
 
+  // Enhanced overflow detection for all sides
+  useEffect(() => {
+    if (isOpen && menuRef.current && fabRef.current) {
+      const menuRect = menuRef.current.getBoundingClientRect();
+      const fabRect = fabRef.current.getBoundingClientRect();
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+      const safeMargin = 16;
+
+      // Check horizontal overflow
+      const wouldOverflowRight = fabRect.right + menuRect.width + safeMargin > windowWidth;
+      const wouldOverflowLeft = fabRect.left - menuRect.width - safeMargin < 0;
+      
+      // Check vertical overflow (estimate menu height as 5 items * 60px)
+      const estimatedMenuHeight = actions.length * 60;
+      const wouldOverflowTop = fabRect.top - estimatedMenuHeight - safeMargin < 0;
+      const wouldOverflowBottom = fabRect.bottom + estimatedMenuHeight + safeMargin > windowHeight;
+
+      // Set horizontal position
+      if (wouldOverflowRight && !wouldOverflowLeft) {
+        setMenuPosition('left');
+      } else {
+        setMenuPosition('right');
+      }
+
+      // Set vertical position - prefer up unless it would overflow
+      if (wouldOverflowTop && !wouldOverflowBottom) {
+        setMenuDirection('down');
+      } else {
+        setMenuDirection('up');
+      }
+    }
+  }, [isOpen, actions.length]);
+
+  // Update dialog state when external showDialog changes
+  useEffect(() => {
+    if (showDialog !== dialogOpen) {
+      setDialogOpen(showDialog);
+      if (showDialog) {
+        setDialogType('photo');
+      }
+    }
+  }, [showDialog, dialogOpen]);
+
   return (
     <>
       <AddMemoryDialog
@@ -125,65 +142,6 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
         <div />
       </AddHealthRecordDialog>
       
-      <div ref={fabRef} className="fixed bottom-6 right-6 z-50">
-        <div className="relative">
-        {/* Action Buttons */}
-        <AnimatePresence>
-          {isOpen && (
-            <motion.div
-              ref={menuRef}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className={`absolute bottom-16 space-y-3 max-w-[200px] ${
-                menuPosition === 'right' ? 'right-0' : 'left-0'
-              }`}
-            >
-              {actions.map((action, index) => (
-                <motion.div
-                  key={action.label}
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: 20, opacity: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className={`flex items-center gap-3 ${
-                    menuPosition === 'left' ? 'flex-row-reverse' : ''
-                  }`}
-                >
-                  <motion.span
-                    initial={{ opacity: 0, x: menuPosition === 'right' ? 10 : -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: menuPosition === 'right' ? 10 : -10 }}
-                    transition={{ delay: index * 0.1 + 0.1 }}
-                    className={`bg-gray-800 text-white px-3 py-1 rounded-lg text-sm font-medium break-words min-w-0 ${
-                      menuPosition === 'left' ? 'text-left' : 'text-right'
-                    }`}
-                  >
-                    {action.label}
-                  </motion.span>
-                  <ActionButton {...action} />
-                </motion.div>
-              ))}
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Main FAB */}
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={() => setIsOpen(!isOpen)}
-          className="w-14 h-14 bg-gradient-to-r from-orange-500 to-pink-500 rounded-full shadow-lg flex items-center justify-center text-white hover:shadow-xl transition-shadow"
-        >
-          <motion.div
-            animate={{ rotate: isOpen ? 45 : 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            {isOpen ? <X className="w-6 h-6" /> : <Plus className="w-6 h-6" />}
-          </motion.div>
-        </motion.button>
-      </div>
-
       {/* Backdrop */}
       <AnimatePresence>
         {isOpen && (
@@ -192,10 +150,82 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setIsOpen(false)}
-            className="fixed inset-0 bg-black/20 -z-10"
+            className="fixed inset-0 bg-black/20 z-40"
           />
         )}
       </AnimatePresence>
+
+      <div 
+        ref={fabRef} 
+        className="fixed bottom-safe-or-4 right-safe-or-4 z-50"
+        style={{ 
+          bottom: `max(env(safe-area-inset-bottom, 0px), 1rem)`,
+          right: `max(env(safe-area-inset-right, 0px), 1rem)`
+        }}
+      >
+        <div className="relative">
+          {/* Action Buttons Menu */}
+          <AnimatePresence>
+            {isOpen && (
+              <motion.div
+                ref={menuRef}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className={`absolute space-y-3 max-w-[200px] ${
+                  menuDirection === 'up' 
+                    ? 'bottom-16' 
+                    : 'top-16'
+                } ${
+                  menuPosition === 'right' 
+                    ? 'right-0' 
+                    : 'left-0'
+                }`}
+              >
+                {actions.map((action, index) => (
+                  <motion.div
+                    key={action.label}
+                    initial={{ y: menuDirection === 'up' ? 20 : -20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: menuDirection === 'up' ? 20 : -20, opacity: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className={`flex items-center gap-3 ${
+                      menuPosition === 'left' ? 'flex-row-reverse' : ''
+                    }`}
+                  >
+                    <motion.span
+                      initial={{ opacity: 0, x: menuPosition === 'right' ? 10 : -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: menuPosition === 'right' ? 10 : -10 }}
+                      transition={{ delay: index * 0.1 + 0.1 }}
+                      className={`bg-gray-800 text-white px-3 py-1 rounded-lg text-sm font-medium break-words min-w-0 ${
+                        menuPosition === 'left' ? 'text-left' : 'text-right'
+                      }`}
+                    >
+                      {action.label}
+                    </motion.span>
+                    <ActionButton {...action} />
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Main FAB */}
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => setIsOpen(!isOpen)}
+            className="w-14 h-14 bg-gradient-to-r from-orange-500 to-pink-500 rounded-full shadow-lg flex items-center justify-center text-white hover:shadow-xl transition-shadow"
+          >
+            <motion.div
+              animate={{ rotate: isOpen ? 45 : 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              {isOpen ? <X className="w-6 h-6" /> : <Plus className="w-6 h-6" />}
+            </motion.div>
+          </motion.button>
+        </div>
       </div>
     </>
   );
