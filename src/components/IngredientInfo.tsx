@@ -21,8 +21,8 @@ export function IngredientInfo({ food }: IngredientInfoProps) {
   const freeFromAllergens = food.allergens?.filter(a => a.allergen_type === 'free_from') || []
 
   // Check if we have any data to display
-  const hasIngredients = food.food_ingredients?.length > 0 || Boolean(food.ingredients)
-  const hasAllergens = food.allergens?.length > 0 || food.nutrition
+  const hasIngredients = Boolean(food.food_ingredients?.length) || Boolean(food.ingredients)
+  const hasAllergens = Boolean(food.allergens?.length) || food.nutrition
   const hasNutrition = food.nutrition
 
   // Don't render if no data available at all

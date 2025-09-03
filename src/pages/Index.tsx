@@ -320,7 +320,6 @@ const Index = () => {
             viewport={{ once: true }}
             className="bg-white/90 backdrop-blur rounded-3xl p-8 shadow-xl border border-white/50"
           >
-          {/* Cards Section */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {cards.map((card, index) => (
               <motion.div
