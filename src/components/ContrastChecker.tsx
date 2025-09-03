@@ -101,7 +101,7 @@ export function ContrastChecker() {
                 <Card>
                   <CardContent className="p-4 text-center">
                     <div className="text-2xl font-bold text-red-600">{results.failed.length}</div>
-                    <div className="text-sm text-muted-foreground">Hylätty (<AA)</div>
+                    <div className="text-sm text-muted-foreground">Hylätty (&lt;AA)</div>
                   </CardContent>
                 </Card>
               </div>

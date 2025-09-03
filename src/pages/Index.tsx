@@ -264,23 +264,6 @@ const Index = () => {
                   priority={true}
                   sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 400px"
                 />
-                
-                {/* Simplified floating stat */}
-                <motion.div
-                  animate={{ y: [0, -8, 0] }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute -top-3 -right-3 bg-white rounded-xl p-3 shadow-md"
-                >
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
-                      <TrendingUp className="w-4 h-4 text-white" />
-                    </div>
-                    <div>
-                      <div className="text-sm font-semibold">Tarkkaa</div>
-                      <div className="text-xs text-muted">seurantaa</div>
-                    </div>
-                  </div>
-                </motion.div>
               </div>
             </motion.div>
 
