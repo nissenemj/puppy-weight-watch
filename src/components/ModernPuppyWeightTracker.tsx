@@ -49,6 +49,7 @@ export default function ModernPuppyWeightTracker() {
   const [checkingOnboarding, setCheckingOnboarding] = useState(false)
   const [activeTab, setActiveTab] = useState('weight-tracking')
   const [selectedDog, setSelectedDog] = useState<{ id: string; name: string } | null>(null)
+  const [selectedDogBirthDate, setSelectedDogBirthDate] = useState<string | null>(null)
   const { toast } = useToast()
   const isMobile = useIsMobile()
 
@@ -91,6 +92,7 @@ export default function ModernPuppyWeightTracker() {
   useEffect(() => {
     if (user && selectedDog) {
       fetchWeightEntries()
+      fetchDogBirthDate()
     }
   }, [user, selectedDog])
 
@@ -150,6 +152,26 @@ export default function ModernPuppyWeightTracker() {
       })
     } else if (data) {
       setEntries(dbToAppTypes.dogFood(data))
+    }
+  }
+
+  const fetchDogBirthDate = async () => {
+    if (!user || !selectedDog) return
+
+    const { data, error } = await supabase
+      .from('puppy_books')
+      .select('birth_date')
+      .eq('owner_id', user.id)
+      .eq('dog_id', selectedDog.id)
+      .maybeSingle()
+
+    if (error) {
+      console.error('Error fetching birth date:', error)
+      setSelectedDogBirthDate(null)
+    } else if (data?.birth_date) {
+      setSelectedDogBirthDate(data.birth_date)
+    } else {
+      setSelectedDogBirthDate(null)
     }
   }
 
@@ -600,7 +622,7 @@ export default function ModernPuppyWeightTracker() {
           <TabsContent value="growth-chart" className="animate-fade-in">
             <GrowthDevelopmentSection 
               weightData={entries}
-              birthDate={selectedDog ? "2024-05-14" : undefined}
+              birthDate={selectedDogBirthDate || undefined}
             />
           </TabsContent>
 
