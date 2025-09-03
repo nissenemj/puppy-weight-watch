@@ -138,48 +138,51 @@ export default function AdvancedFoodCalculator({ user, currentWeight: propCurren
     let dailyAmount = 0
     let usedGuidelines: FeedingGuideline[] = []
 
-    // Different calculation methods based on food's dosage method
-    switch (selectedFood.dosage_method) {
-      case 'Odotettu_Aikuispaino_Ja_Ikä':
-        if (!adultWeight) {
-          toast.error('Syötä odotettu aikuispaino')
-          return
+      // Different calculation methods based on food's dosage method
+      switch (selectedFood.dosage_method) {
+        case 'Odotettu_Aikuispaino_Ja_Ikä': {
+          if (!adultWeight) {
+            toast.error('Syötä odotettu aikuispaino')
+            return
+          }
+          const ageCategory = getAgeCategory(months)
+          const matchingGuidelines = foodGuidelines.filter(g =>
+            g.adult_weight_kg === adultWeight && g.age_months === ageCategory
+          )
+          if (matchingGuidelines.length > 0) {
+            const guideline = matchingGuidelines[0]
+            dailyAmount = guideline.daily_amount_min || 0
+            usedGuidelines = matchingGuidelines
+          }
+          break
         }
-        const ageCategory = getAgeCategory(months);
-        const matchingGuidelines = foodGuidelines.filter(g => 
-          g.adult_weight_kg === adultWeight && g.age_months === ageCategory
-        );
-        if (matchingGuidelines.length > 0) {
-          const guideline = matchingGuidelines[0]
-          dailyAmount = guideline.daily_amount_min || 0
-          usedGuidelines = matchingGuidelines
-        }
-        break
 
-      case 'Nykyinen_Paino':
-        const weightGuidelines = foodGuidelines.filter(g => 
-          g.current_weight_kg === weight
-        );
-        if (weightGuidelines.length > 0) {
-          const guideline = weightGuidelines[0]
-          dailyAmount = guideline.daily_amount_min || 0
-          usedGuidelines = weightGuidelines
+        case 'Nykyinen_Paino': {
+          const weightGuidelines = foodGuidelines.filter(g =>
+            g.current_weight_kg === weight
+          )
+          if (weightGuidelines.length > 0) {
+            const guideline = weightGuidelines[0]
+            dailyAmount = guideline.daily_amount_min || 0
+            usedGuidelines = weightGuidelines
+          }
+          break
         }
-        break
 
-      case 'Kokoluokka':
-        const sizeCategory = getSizeCategory(adultWeight || weight);
-        const sizeGuidelines = foodGuidelines.filter(g => 
-          g.size_category === sizeCategory
-        );
-        if (sizeGuidelines.length > 0) {
-          const guideline = sizeGuidelines[0]
-          dailyAmount = guideline.daily_amount_min || 0
-          usedGuidelines = sizeGuidelines
+        case 'Kokoluokka': {
+          const sizeCategory = getSizeCategory(adultWeight || weight)
+          const sizeGuidelines = foodGuidelines.filter(g =>
+            g.size_category === sizeCategory
+          )
+          if (sizeGuidelines.length > 0) {
+            const guideline = sizeGuidelines[0]
+            dailyAmount = guideline.daily_amount_min || 0
+            usedGuidelines = sizeGuidelines
+          }
+          break
         }
-        break
 
-      case 'Prosentti_Nykyisestä_Painosta':
+        case 'Prosentti_Nykyisestä_Painosta':
         // 5-10% of current weight (use 7.5% as average)
         dailyAmount = Math.round(weight * 1000 * 0.075)
         usedGuidelines = foodGuidelines

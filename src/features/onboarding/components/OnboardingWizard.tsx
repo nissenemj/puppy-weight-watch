@@ -93,8 +93,8 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ user, onComplete })
           </motion.div>
         );
 
-      case 1:
-        const dogQuestions = [
+        case 1: {
+          const dogQuestions = [
           {
             id: 'name',
             message: 'Mikä on pennun nimi?',
@@ -144,10 +144,11 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ user, onComplete })
             }}
             isLoading={isLoading}
           />
-        );
+          );
+        }
 
-      case 2:
-        const weightQuestions = [
+        case 2: {
+          const weightQuestions = [
           {
             id: 'weight_kg',
             message: 'Mikä on pennun nykyinen paino kilogrammoina?',
@@ -169,9 +170,10 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ user, onComplete })
             }}
             isLoading={isLoading}
           />
-        );
+          );
+        }
 
-      case 3:
+        case 3:
         return (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
