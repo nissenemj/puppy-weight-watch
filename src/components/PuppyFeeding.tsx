@@ -86,7 +86,7 @@ export default function PuppyFeedingCalculator() {
       }
 
       switch (selectedFoodTemplate.dosageBase) {
-        case 'odotettu_aikuispaino_ja_ikä':
+        case 'odotettu_aikuispaino_ja_ikä': {
           const weightNum = parseFloat(expectedWeight)
           if (isNaN(weightNum) || isNaN(ageNum)) {
               setResult({ amount: null, warning: 'Syötä kelvolliset arvot painolle ja iälle.' })
@@ -167,13 +167,14 @@ export default function PuppyFeedingCalculator() {
               }
               
               // Tarkista onko löytynyt matching food notes
-              const anyMatchingFood = ageGroupVariants.find(f => Math.abs(f.adultWeight! - weightNum) <= 2.5)
-              if (anyMatchingFood?.notes) notes = anyMatchingFood.notes
+                const anyMatchingFood = ageGroupVariants.find(f => Math.abs(f.adultWeight! - weightNum) <= 2.5)
+                if (anyMatchingFood?.notes) notes = anyMatchingFood.notes
+              }
             }
+            break
           }
-          break
 
-        case 'nykyinen_paino':
+          case 'nykyinen_paino': {
           const currentWeightNum = parseFloat(currentWeight)
            if (isNaN(currentWeightNum)) {
               setResult({ amount: null, warning: 'Syötä kelvollinen nykyinen paino.' })
@@ -201,8 +202,9 @@ export default function PuppyFeedingCalculator() {
             else { warning = 'Paino ylittää esimerkkitaulukon. Tarkista annostus pakkauksesta.'; }
           }
           break
+        }
 
-        case 'prosentti_nykyisestä_painosta':
+        case 'prosentti_nykyisestä_painosta': {
           const currentWeightForPercent = parseFloat(currentWeight)
            if (isNaN(currentWeightForPercent)) {
               setResult({ amount: null, warning: 'Syötä kelvollinen nykyinen paino.' })
@@ -212,23 +214,25 @@ export default function PuppyFeedingCalculator() {
           maxAmount = Math.round(currentWeightForPercent * 1000 * 0.10) // 10%
           calculatedAmount = Math.round((minAmount + maxAmount) / 2) // Näytetään keskiarvo
           break
+        }
 
-        case 'kokoluokka':
+        case 'kokoluokka': {
            const adultWeightForSize = parseFloat(expectedWeight)
            if (isNaN(adultWeightForSize)) {
               setResult({ amount: null, warning: 'Syötä kelvollinen odotettu aikuispaino.' })
               return
           }
-          if (adultWeightForSize <= 10) { minAmount = 200; maxAmount = 400; }
-          else if (adultWeightForSize <= 25) { minAmount = 400; maxAmount = 800; }
-          else if (adultWeightForSize <= 50) { minAmount = 800; maxAmount = 1200; }
-          else { warning = 'Paino ylittää esimerkkitaulukon. Tarkista annostus pakkauksesta.'; }
-          
+          if (adultWeightForSize <= 10) { minAmount = 200; maxAmount = 400 }
+          else if (adultWeightForSize <= 25) { minAmount = 400; maxAmount = 800 }
+          else if (adultWeightForSize <= 50) { minAmount = 800; maxAmount = 1200 }
+          else { warning = 'Paino ylittää esimerkkitaulukon. Tarkista annostus pakkauksesta.' }
+
           if(selectedFoodTemplate.nutritionType === 'täydennysravinto') {
-              minAmount = minAmount ? Math.round(minAmount / 2) : null;
-              maxAmount = maxAmount ? Math.round(maxAmount / 2) : null;
+              minAmount = minAmount ? Math.round(minAmount / 2) : null
+              maxAmount = maxAmount ? Math.round(maxAmount / 2) : null
           }
           break
+        }
       }
 
       setResult({
