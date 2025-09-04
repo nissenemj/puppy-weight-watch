@@ -146,7 +146,7 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
           onHealthRecordAdded?.();
         }}
       >
-        <div />
+        <></>
       </AddHealthRecordDialog>
       
 
