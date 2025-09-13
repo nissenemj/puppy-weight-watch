@@ -46,13 +46,13 @@ export default function ScrollProgressBar({
   return (
     <motion.div
       aria-hidden
-      className={`fixed top-0 left-0 right-0 z-[10000] ${heightClassName} ${className}`}
+      className={`fixed top-0 left-0 right-0 z-[10000] pointer-events-none ${heightClassName} ${className}`}
       style={{
         transformOrigin: '0% 0%',
         scaleX
       }}
     >
-      <div className={`w-full h-full ${colorClassName}`} />
+      <div className={`w-full h-full ${colorClassName} pointer-events-none`} />
     </motion.div>
   )
 }
