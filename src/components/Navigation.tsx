@@ -140,6 +140,42 @@ const NavigationWithRouter = () => {
                 </Link>
               </motion.div>
 
+              {/* Desktop Navigation */}
+              <div className="hidden md:flex items-center gap-1">
+                {navItems.slice(1).map((item) => {
+                  const Icon = item.icon
+                  const isItemActive = isActive(item.href)
+                  return (
+                    <motion.div
+                      key={item.href}
+                      whileHover={hoverAnimations.lift.whileHover}
+                      whileTap={hoverAnimations.lift.whileTap}
+                    >
+                      <Link
+                        to={item.href}
+                        className={`relative px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 flex items-center gap-2 ${
+                          isItemActive
+                            ? 'bg-[var(--color-accent)] text-white shadow-md'
+                            : 'text-[var(--color-text)] hover:bg-white/10'
+                        }`}
+                        aria-current={isItemActive ? 'page' : undefined}
+                        aria-label={`${item.label} - siirry sivulle`}
+                      >
+                        <Icon className="w-4 h-4" />
+                        <span className="text-sm font-medium">{item.label}</span>
+                        
+                        {isItemActive && (
+                          <motion.div
+                            layoutId="activeNavItem"
+                            className="absolute inset-0 bg-[var(--color-accent)] rounded-lg -z-10"
+                            transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                          />
+                        )}
+                      </Link>
+                    </motion.div>
+                  )
+                })}
+              </div>
 
               {/* Mobile Menu Button */}
               <div className="md:hidden">
