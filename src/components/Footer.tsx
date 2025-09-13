@@ -54,9 +54,9 @@ const Footer = () => {
   ]
 
   return (
-    <footer className="relative">
+    <footer className="relative w-full">
       {/* Newsletter Section */}
-      <section className="full-width-section bg-gradient-warm py-16 mobile-container-safe">
+      <section className="full-width-section bg-gradient-to-br from-[var(--color-neutral-900)] via-[var(--color-neutral-800)] to-[var(--color-primary-900)] py-16 mobile-container-safe">
         <div className="full-width-content">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -98,8 +98,8 @@ const Footer = () => {
       </section>
 
       {/* Main Footer */}
-      <div className="bg-gradient-to-br from-[var(--color-neutral-900)] via-[var(--color-neutral-800)] to-[var(--color-primary-900)] text-white">
-        <div className="full-width-section py-16 mobile-container-safe">
+      <div className="full-width-section bg-gradient-to-br from-[var(--color-neutral-800)] via-[var(--color-neutral-700)] to-[var(--color-primary-800)] text-white">
+        <div className="py-16 mobile-container-safe">
           <div className="full-width-content">
             <div className="grid lg:grid-cols-12 gap-12">
               
@@ -266,7 +266,7 @@ const Footer = () => {
 
         {/* Bottom Bar */}
         <div className="border-t border-white/10">
-          <div className="full-width-section py-6 mobile-container-safe">
+          <div className="py-6 mobile-container-safe">
             <div className="full-width-content">
               <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-body-sm text-white/60">
                 <div className="flex items-center gap-2">
