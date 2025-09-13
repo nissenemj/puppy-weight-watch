@@ -116,6 +116,13 @@ const Index = () => {
       variant: "primary" as const
     },
     {
+      icon: Scale,
+      title: "Painonseuranta",
+      description: "Seuraa pennun painoa visuaalisilla kaavioilla ja tallenna mittaukset",
+      href: "/weight-tracker",
+      variant: "primary" as const
+    },
+    {
       icon: Calculator,
       title: "Tarkka ruokalaskuri",
       description: "Laske optimaalinen ruokamäärä pennun iän ja painon mukaan",
