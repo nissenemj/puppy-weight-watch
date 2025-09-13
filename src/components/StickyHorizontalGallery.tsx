@@ -41,7 +41,13 @@ export default function StickyHorizontalGallery({
   const x = useTransform(scrollYProgress, [0, 1], [0, -(total - 1) * 100])
   const xVW = useMotionTemplate`${x}vw`
   if (reduceMotion) {
-    const cardVariants = ['gradient', 'glass', 'modern', 'elevated']
+    const cardVariants = ['warm', 'puppy', 'elevated', 'default']
+    const cardBackgrounds = [
+      'bg-gradient-warm backdrop-blur-sm',
+      'bg-gradient-cool backdrop-blur-sm', 
+      'bg-gradient-purple backdrop-blur-sm',
+      'bg-card/80 backdrop-blur-sm'
+    ]
     
     return (
       <section className={`w-full py-16 ${className}`}>
@@ -57,10 +63,10 @@ export default function StickyHorizontalGallery({
               >
                 <Card 
                   variant={cardVariants[index % cardVariants.length] as any}
-                  className="aspect-square p-8 flex items-center justify-center text-center hover:scale-105 transition-transform duration-300"
+                  className={`aspect-square p-8 flex items-center justify-center text-center hover-scale animate-fade-in border-0 shadow-xl rounded-2xl ${cardBackgrounds[index % cardBackgrounds.length]}`}
                 >
                   <div className={`w-full ${
-                    cardVariants[index % cardVariants.length] === 'gradient' ? 'text-white' : ''
+                    index % 4 < 3 ? 'text-white' : 'text-card-foreground'
                   }`}>
                     {item.content}
                   </div>
@@ -73,7 +79,13 @@ export default function StickyHorizontalGallery({
     )
   }
 
-  const cardVariants = ['gradient', 'glass', 'modern', 'elevated']
+  const cardVariants = ['warm', 'puppy', 'elevated', 'default']
+  const cardBackgrounds = [
+    'bg-gradient-warm backdrop-blur-sm',
+    'bg-gradient-cool backdrop-blur-sm', 
+    'bg-gradient-purple backdrop-blur-sm',
+    'bg-card/80 backdrop-blur-sm'
+  ]
   
   return (
     <section ref={containerRef} className={`w-full ${className}`}>
@@ -96,10 +108,10 @@ export default function StickyHorizontalGallery({
                     >
                       <Card 
                         variant={cardVariants[cardIndex] as any}
-                        className="aspect-square p-8 flex items-center justify-center text-center hover:scale-105 transition-transform duration-300"
+                        className={`aspect-square p-8 flex items-center justify-center text-center hover-scale animate-fade-in border-0 shadow-xl rounded-2xl ${cardBackgrounds[cardIndex]}`}
                       >
                         <div className={`w-full ${
-                          cardVariants[cardIndex] === 'gradient' ? 'text-white' : ''
+                          cardIndex < 3 ? 'text-white' : 'text-card-foreground'
                         }`}>
                           {item.content}
                         </div>
