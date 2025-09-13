@@ -164,11 +164,6 @@ const Index = () => {
         <ScrollPanBackground src={heroMainIllustration} alt="Kuvitus: pentu kasvukäyrän ja datan edessä" panX={40} panY={20} zoom={1.04} minHeightClass="min-h-[50svh]" className="no-horizontal-scroll">
           <div className="hero-content text-center mobile-grid-1 mobile-container-safe mobile-text-container mobile-hero-container relative z-40">
             <motion.div initial="hidden" animate="visible" variants={entranceAnimations.staggerContainer}>
-              <motion.div variants={entranceAnimations.staggerChild} className="mb-4">
-                <Badge className="bg-[var(--color-primary-100)] text-[var(--color-primary-600)] border-[var(--color-primary-300)] relative z-50 shadow-lg">
-                  <Heart className="w-4 h-4 mr-2" /> Älykäs ja luotettava
-                </Badge>
-              </motion.div>
               <motion.h1 variants={entranceAnimations.staggerChild} className="text-display-1 mb-2 text-white relative z-50 font-display" id="main-heading">
                 Huolellista
                 <br />
