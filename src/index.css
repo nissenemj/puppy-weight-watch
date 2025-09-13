@@ -523,13 +523,7 @@ nav {
   border-bottom: 1px solid var(--color-border);
 }
 
-header {
-  position: sticky;
-  top: 0;
-  z-index: var(--z-sticky);
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-}
+/* Removed global header sticky positioning to prevent conflicts */
 
 /* Sticky header offset for anchored scroll */
 html { scroll-padding-top: 80px; }
