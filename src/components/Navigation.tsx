@@ -113,8 +113,8 @@ const NavigationWithRouter = () => {
           initial={{ y: -100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className={`fixed top-[calc(env(safe-area-inset-top)+1rem)] sm:top-4 left-0 right-0 z-[11000] transition-all duration-500 mobile-optimized mobile-touch-target ${
-            scrolled ? 'top-2 sm:top-4 scale-98' : ''
+          className={`fixed left-0 right-0 z-[11000] transition-all duration-500 mobile-optimized mobile-touch-target ${
+            scrolled ? 'top-2 sm:top-4 scale-98' : 'top-0 sm:top-4'
           }`}
         >
           <div className={`glass-nav rounded-2xl px-8 py-6 mx-auto max-w-full ${scrolled ? 'shadow-md' : 'shadow-xl'}`}>
