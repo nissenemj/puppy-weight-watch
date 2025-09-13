@@ -74,7 +74,7 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
     { icon: Stethoscope, label: 'Lisää terveysmerkintä', onClick: handleHealthClick },
   ];
 
-  // Enhanced overflow detection for all sides
+  // Enhanced overflow detection for proper inward positioning
   useEffect(() => {
     if (isOpen && fabRef.current) {
       const fabRect = fabRef.current.getBoundingClientRect();
@@ -82,25 +82,29 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
       const windowHeight = window.innerHeight;
       const safeMargin = 20;
       
-      // Estimate menu dimensions
-      const menuWidth = 200; // max-w-[200px]
-      const menuItemHeight = 60; // Each action item height
-      const menuHeight = actions.length * menuItemHeight + (actions.length - 1) * 12; // gap-3
+      // Estimate menu dimensions including text labels
+      const menuWidth = 200; // max-w-[200px] for text labels
+      const buttonWidth = 56; // FAB button width (w-14)
+      const totalMenuWidth = menuWidth + buttonWidth + 12; // gap-3
+      const menuItemHeight = 60;
+      const menuHeight = actions.length * menuItemHeight + (actions.length - 1) * 12;
 
-      // Check horizontal overflow - prefer right side
+      // Check horizontal positioning - open inward when possible
       const availableRight = windowWidth - fabRect.right - safeMargin;
       const availableLeft = fabRect.left - safeMargin;
       
-      if (menuWidth <= availableRight) {
-        setMenuPosition('right');
-      } else if (menuWidth <= availableLeft) {
-        setMenuPosition('left');
+      // If FAB is on right side and no space to expand right, open left (inward)
+      // If FAB is on left side and no space to expand left, open right (inward)
+      if (totalMenuWidth <= availableRight) {
+        setMenuPosition('right'); // Open to the right of FAB
+      } else if (totalMenuWidth <= availableLeft) {
+        setMenuPosition('left'); // Open to the left of FAB
       } else {
-        // If neither side has enough space, choose the side with more space
-        setMenuPosition(availableRight >= availableLeft ? 'right' : 'left');
+        // Choose the side with more space, preferring inward direction
+        setMenuPosition(availableLeft >= availableRight ? 'left' : 'right');
       }
 
-      // Check vertical overflow - prefer up direction
+      // Check vertical overflow
       const availableUp = fabRect.top - safeMargin;
       const availableDown = windowHeight - fabRect.bottom - safeMargin;
       
@@ -109,7 +113,6 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
       } else if (menuHeight <= availableDown) {
         setMenuDirection('down');
       } else {
-        // If neither direction has enough space, choose the direction with more space
         setMenuDirection(availableUp >= availableDown ? 'up' : 'down');
       }
     }
@@ -173,8 +176,8 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
                     : 'top-16'
                 } ${
                   menuPosition === 'right' 
-                    ? 'right-0' 
-                    : 'left-0'
+                    ? 'left-full ml-3' 
+                    : 'right-full mr-3'
                 }`}
               >
                 {actions.map((action, index) => (
@@ -185,16 +188,16 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
                     exit={{ y: menuDirection === 'up' ? 20 : -20, opacity: 0 }}
                     transition={{ delay: index * 0.1 }}
                     className={`flex items-center gap-3 ${
-                      menuPosition === 'left' ? 'flex-row-reverse' : ''
+                      menuPosition === 'right' ? 'flex-row' : 'flex-row-reverse'
                     }`}
                   >
                     <motion.span
-                      initial={{ opacity: 0, x: menuPosition === 'right' ? 10 : -10 }}
+                      initial={{ opacity: 0, x: menuPosition === 'right' ? -10 : 10 }}
                       animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: menuPosition === 'right' ? 10 : -10 }}
+                      exit={{ opacity: 0, x: menuPosition === 'right' ? -10 : 10 }}
                       transition={{ delay: index * 0.1 + 0.1 }}
                       className={`bg-gray-800 text-white px-3 py-1 rounded-lg text-sm font-medium break-words min-w-0 ${
-                        menuPosition === 'left' ? 'text-left' : 'text-right'
+                        menuPosition === 'right' ? 'text-left' : 'text-right'
                       }`}
                     >
                       {action.label}
