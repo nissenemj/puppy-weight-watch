@@ -143,7 +143,6 @@ const Index = () => {
   return (
     <MobileOptimizedLayout>
       <Navigation />
-    <PageLayout variant="default" animated>
       {/* Skip to main content link for screen readers */}
       <a 
         href="#main-content" 
@@ -309,8 +308,6 @@ const Index = () => {
 
       {/* Footer */}
       <Footer />
-      
-    </PageLayout>
     </MobileOptimizedLayout>
   )
 }
