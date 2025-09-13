@@ -27,7 +27,7 @@ import {
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { entranceAnimations, hoverAnimations, componentAnimations } from '@/animations'
-import StickyHorizontalGallery from '@/components/StickyHorizontalGallery'
+
 import CountUp from '@/components/CountUp'
 import ScrollPanBackground from '@/components/ScrollPanBackground'
 import { MobileOptimizedLayout } from '@/components/MobileOptimizedLayout'
@@ -177,26 +177,6 @@ const Index = () => {
         </ScrollPanBackground>
       </header>
 
-      {/* How it works: sticky horizontal steps */}
-      <Section role="region" aria-labelledby="how-it-works-heading">
-        <h2 className="sr-only" id="how-it-works-heading">Miten palvelu toimii</h2>
-        <StickyHorizontalGallery
-          items={[
-            { id: 'h1', content: (<div><h3 className="text-h2 mb-2">1. Aloita (profiili valinnainen)</h3><p className="text-muted">Voit seurata heti ilman rekisteröintiä – tallenna myöhemmin, jos haluat.</p></div>) },
-            { id: 'h2', content: (<div><h3 className="text-h2 mb-2">2. Lisää paino viikoittain</h3><p className="text-muted">Syötä mittaus 10 sekunnissa. Näet muutoksen ja trendin yhdellä vilkaisulla.</p></div>) },
-            { id: 'h3', content: (<div><h3 className="text-h2 mb-2">3. Laske ruokamäärä</h3><p className="text-muted">Suositus pennun iän, rodun ja aktiivisuuden mukaan. Päivitä helposti.</p></div>) },
-            { id: 'h4', content: (<div><h3 className="text-h2 mb-2">4. Opas ja vinkit</h3><p className="text-muted">Selkeät ohjeet ruokintaan, sosiaalistamiseen ja turvallisuuteen.</p></div>) },
-          ]}
-        />
-
-        <div className="mt-8 text-center">
-          <Link to="/weight-tracker" aria-label="Aloita seuranta – siirry painonseurantaan">
-            <Button size="lg" className="w-full sm:min-w-[220px] sm:w-auto touch-target focus-enhanced">
-              Aloita seuranta – 1 min
-            </Button>
-          </Link>
-        </div>
-      </Section>
 
       {/* Hero Section */}
       <Section className="full-width-section mobile-text-wrap responsive-media no-horizontal-scroll mobile-grid-1 mobile-container-safe mobile-flex-safe" role="main" aria-labelledby="hero-heading" id="main-content">
