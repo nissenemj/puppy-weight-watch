@@ -20,10 +20,7 @@ export function MobileOptimizedLayout({
 }: MobileOptimizedLayoutProps) {
   return (
     <div className={`min-h-screen bg-background ${className}`}>
-      {/* Main content with safe area padding */}
-      <main id="main-content" role="main" aria-label="Pääsisältö" tabIndex={-1} className="pb-20 pt-4 px-4 sm:px-6 lg:px-8">
-        {children}
-      </main>
+      {children}
       
       {/* Floating Action Button for mobile */}
       {showFloatingAction && (
