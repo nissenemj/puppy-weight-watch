@@ -113,11 +113,11 @@ const NavigationWithRouter = () => {
           initial={{ y: -100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className={`fixed top-safe left-0 right-0 z-[9999] transition-all duration-500 mobile-optimized mobile-touch-target ${
-            scrolled ? 'top-2 scale-98' : 'top-safe'
+          className={`fixed mt-6 mb-6 left-0 right-0 z-[9999] transition-all duration-500 mobile-optimized mobile-touch-target ${
+            scrolled ? 'top-4 scale-98' : 'top-6'
           }`}
         >
-          <div className={`glass-nav rounded-2xl px-6 py-4 mx-auto max-w-full ${scrolled ? 'shadow-md' : 'shadow-xl'}`}>
+          <div className={`glass-nav rounded-2xl px-8 py-6 mx-auto max-w-full ${scrolled ? 'shadow-md' : 'shadow-xl'}`}>
             <div className="flex items-center justify-between w-full">
               {/* Logo */}
               <motion.div

@@ -162,7 +162,7 @@ const Index = () => {
       {/* Pan Hero Section */}
       <header className="full-width-section no-horizontal-scroll mobile-text-wrap responsive-media mobile-container-safe" role="banner" aria-labelledby="main-heading">
         <ScrollPanBackground src={heroMainIllustration} alt="Kuvitus: pentu kasvukäyrän ja datan edessä" panX={40} panY={20} zoom={1.04} minHeightClass="min-h-[50svh]" className="no-horizontal-scroll">
-          <div className="hero-content text-center mobile-grid-1 mobile-container-safe mobile-text-container mobile-hero-container relative z-40">
+          <div className="hero-content text-center mobile-grid-1 mobile-container-safe mobile-text-container mobile-hero-container relative z-40 px-8 py-12">
             <motion.div initial="hidden" animate="visible" variants={entranceAnimations.staggerContainer}>
               <motion.h1 variants={entranceAnimations.staggerChild} className="text-display-1 mb-2 text-white relative z-50 font-display" id="main-heading">
                 Huolellista
