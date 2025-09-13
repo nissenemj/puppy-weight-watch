@@ -1,6 +1,8 @@
 import React, { ReactNode, useMemo, useRef, useEffect, useState } from 'react'
 import { motion, useScroll, useTransform, useReducedMotion, useMotionTemplate } from 'framer-motion'
-import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Link } from 'react-router-dom'
+import { UserPlus, Scale, Calculator, BookOpen } from 'lucide-react'
 
 interface Item {
   id: string
@@ -14,13 +16,13 @@ interface StickyHorizontalGalleryProps {
 }
 
 /**
- * Sticky section that pins to viewport while inner track scrolls horizontally.
- * Falls back to vertical list when reduced motion is preferred.
+ * Sticky section that creates smaller button-style navigation cards
+ * Links to different sections of the app with appropriate icons
  */
 export default function StickyHorizontalGallery({
   items,
   className = '',
-  heightClassName = 'h-[70svh]'
+  heightClassName = 'h-[50svh]'
 }: StickyHorizontalGalleryProps) {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const reduceMotion = useReducedMotion()
@@ -36,56 +38,79 @@ export default function StickyHorizontalGallery({
   }, [])
   const { scrollYProgress } = useScroll(scrollOptions)
 
+  // Navigation buttons configuration
+  const navigationButtons = [
+    { 
+      icon: UserPlus, 
+      title: "Luo Profiili", 
+      subtitle: "Aloita seuranta",
+      link: "/puppy-book",
+      variant: "default" as const
+    },
+    { 
+      icon: Scale, 
+      title: "Paino Seuranta", 
+      subtitle: "Lisää mittaus",
+      link: "/weight-tracker", 
+      variant: "secondary" as const
+    },
+    { 
+      icon: Calculator, 
+      title: "Ruokalaskuri", 
+      subtitle: "Laske annostelu",
+      link: "/calculator", 
+      variant: "outline" as const
+    },
+    { 
+      icon: BookOpen, 
+      title: "Oppaat", 
+      subtitle: "Lue vinkit",
+      link: "/guides", 
+      variant: "ghost" as const
+    }
+  ]
+
   // Track width: number of slides * 100vw
   const total = items.length
   const x = useTransform(scrollYProgress, [0, 1], [0, -(total - 1) * 100])
   const xVW = useMotionTemplate`${x}vw`
+  
   if (reduceMotion) {
-    const cardVariants = ['warm', 'puppy', 'elevated', 'default']
-    const cardBackgrounds = [
-      'bg-gradient-warm backdrop-blur-sm',
-      'bg-gradient-cool backdrop-blur-sm', 
-      'bg-gradient-purple backdrop-blur-sm',
-      'bg-card/80 backdrop-blur-sm'
-    ]
-    
     return (
       <section className={`w-full py-16 ${className}`}>
         <div className="w-full px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {items.map((item, index) => (
-              <motion.div
-                key={item.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="group"
-              >
-                <Card 
-                  variant={cardVariants[index % cardVariants.length] as any}
-                  className={`aspect-square p-8 flex items-center justify-center text-center hover-scale animate-fade-in border-0 shadow-xl rounded-2xl ${cardBackgrounds[index % cardBackgrounds.length]}`}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+            {navigationButtons.map((button, index) => {
+              const IconComponent = button.icon
+              return (
+                <motion.div
+                  key={button.link}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
-                  <div className={`w-full ${
-                    index % 4 < 3 ? 'text-white' : 'text-card-foreground'
-                  }`}>
-                    {item.content}
-                  </div>
-                </Card>
-              </motion.div>
-            ))}
+                  <Button 
+                    asChild
+                    variant={button.variant}
+                    size="lg"
+                    className="w-full h-24 flex-col gap-2 text-center hover-scale animate-fade-in"
+                  >
+                    <Link to={button.link} aria-label={`${button.title} - ${button.subtitle}`}>
+                      <IconComponent className="w-6 h-6" />
+                      <div className="text-xs">
+                        <div className="font-semibold">{button.title}</div>
+                        <div className="opacity-80">{button.subtitle}</div>
+                      </div>
+                    </Link>
+                  </Button>
+                </motion.div>
+              )
+            })}
           </div>
         </div>
       </section>
     )
   }
-
-  const cardVariants = ['warm', 'puppy', 'elevated', 'default']
-  const cardBackgrounds = [
-    'bg-gradient-warm backdrop-blur-sm',
-    'bg-gradient-cool backdrop-blur-sm', 
-    'bg-gradient-purple backdrop-blur-sm',
-    'bg-card/80 backdrop-blur-sm'
-  ]
   
   return (
     <section ref={containerRef} className={`w-full ${className}`}>
@@ -97,27 +122,33 @@ export default function StickyHorizontalGallery({
           {items.map((item, index) => (
             <div key={item.id} className="min-w-[100vw] px-4">
               <div className="h-full w-full flex items-center justify-center">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full px-4">
-                  {/* Create 2x2 grid by repeating the same content in different card styles */}
-                  {Array.from({ length: 4 }, (_, cardIndex) => (
-                    <motion.div
-                      key={`${item.id}-${cardIndex}`}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.5, delay: cardIndex * 0.1 }}
-                    >
-                      <Card 
-                        variant={cardVariants[cardIndex] as any}
-                        className={`aspect-square p-8 flex items-center justify-center text-center hover-scale animate-fade-in border-0 shadow-xl rounded-2xl ${cardBackgrounds[cardIndex]}`}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 w-full max-w-4xl px-4">
+                  {navigationButtons.map((button, buttonIndex) => {
+                    const IconComponent = button.icon
+                    return (
+                      <motion.div
+                        key={`${item.id}-${button.link}`}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.5, delay: buttonIndex * 0.1 }}
                       >
-                        <div className={`w-full ${
-                          cardIndex < 3 ? 'text-white' : 'text-card-foreground'
-                        }`}>
-                          {item.content}
-                        </div>
-                      </Card>
-                    </motion.div>
-                  ))}
+                        <Button 
+                          asChild
+                          variant={button.variant}
+                          size="lg"
+                          className="w-full h-28 flex-col gap-3 text-center hover-scale animate-fade-in shadow-lg"
+                        >
+                          <Link to={button.link} aria-label={`${button.title} - ${button.subtitle}`}>
+                            <IconComponent className="w-8 h-8" />
+                            <div className="text-sm">
+                              <div className="font-semibold">{button.title}</div>
+                              <div className="opacity-80">{button.subtitle}</div>
+                            </div>
+                          </Link>
+                        </Button>
+                      </motion.div>
+                    )
+                  })}
                 </div>
               </div>
             </div>
