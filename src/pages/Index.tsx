@@ -312,23 +312,23 @@ const Index = () => {
       </Section>
 
       {/* CTA Section */}
-      <Section className="full-width-section bg-gradient-to-r from-[var(--color-accent)] to-[var(--color-secondary)] text-white mobile-text-wrap responsive-media no-horizontal-scroll mobile-container-safe mobile-text-container" role="region" aria-labelledby="cta-heading">
-        <div className="content-narrow">
-          <div className="text-center">
-            <h2 className="text-h1 mb-6" id="cta-heading">
+      <Section className="full-width-section bg-gradient-to-br from-[var(--color-neutral-900)] via-[var(--color-neutral-800)] to-[var(--color-primary-900)] text-white mobile-text-wrap responsive-media no-horizontal-scroll mobile-container-safe mobile-text-container" role="region" aria-labelledby="cta-heading">
+        <div className="full-width-content py-20 lg:py-24">
+          <div className="text-center max-w-4xl mx-auto">
+            <h2 className="text-h1 mb-8" id="cta-heading">
               Aloita pennun seuranta tänään
             </h2>
-            <p className="text-body-xl mb-8 opacity-90 max-w-2xl mx-auto">
+            <p className="text-body-xl mb-12 text-white/90 max-w-2xl mx-auto leading-relaxed">
               Liity tuhansien tyytyväisten koiranomistajien joukkoon. 
               Täysin ilmainen - ei piilokustannuksia.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mobile-button">
+            <div className="flex flex-col sm:flex-row gap-6 justify-center mobile-button">
               <Link to="/weight-tracker">
                 <Button 
                   size="xl" 
                   variant="secondary"
-                  className="bg-white text-[var(--color-accent)] hover:bg-white/90"
+                  className="bg-white text-[var(--color-primary-600)] hover:bg-white/90 font-semibold px-8 py-4"
                 >
                   <Scale className="w-5 h-5 mr-2" />
                   Aloita ilmaiseksi
@@ -338,7 +338,7 @@ const Index = () => {
                 <Button 
                   size="xl" 
                   variant="ghost"
-                  className="text-white border-white/30 hover:bg-white/10"
+                  className="text-white border-2 border-white/30 hover:bg-white/10 hover:border-white/50 px-8 py-4"
                 >
                   Lue lisää
                 </Button>
