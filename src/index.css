@@ -518,7 +518,7 @@ body {
 
 /* ===== LAYOUT UTILITIES ===== */
 .page-with-navigation {
-  padding-top: 4rem;
+  padding-top: 0;
   min-height: 100vh;
 }
 

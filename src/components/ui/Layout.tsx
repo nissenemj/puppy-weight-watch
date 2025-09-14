@@ -14,9 +14,9 @@ interface PageLayoutProps extends React.HTMLAttributes<HTMLDivElement> {
 export const PageLayout = React.forwardRef<HTMLDivElement, PageLayoutProps>(
   ({ children, variant = 'default', animated = true, className, ...props }, ref) => {
     const layoutStyles = {
-      'default': 'min-h-screen bg-surface-alt page-with-navigation pt-24 sm:pt-28',
-      'centered': 'min-h-screen bg-surface-alt flex items-center justify-center p-4 pt-24 sm:pt-28',
-      'full-width': 'min-h-screen bg-surface-alt pt-24 sm:pt-28'
+      'default': 'min-h-screen bg-surface-alt',
+      'centered': 'min-h-screen bg-surface-alt flex items-center justify-center p-4',
+      'full-width': 'min-h-screen bg-surface-alt'
     }
 
     const content = (
