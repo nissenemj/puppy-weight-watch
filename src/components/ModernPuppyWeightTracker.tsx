@@ -432,7 +432,8 @@ export default function ModernPuppyWeightTracker() {
         className="min-h-screen bg-gradient-primary relative"
         style={{
           transform: shouldShowIndicator ? `translateY(${Math.min(pullDistance * 0.5, 40)}px)` : 'none',
-          transition: shouldShowIndicator ? 'none' : 'transform 0.2s ease-out'
+          transition: shouldShowIndicator ? 'none' : 'transform 0.2s ease-out',
+          scrollbarGutter: 'stable'
         }}
       >
         {/* Pull to refresh indicator */}
