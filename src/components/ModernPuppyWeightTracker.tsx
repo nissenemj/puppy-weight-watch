@@ -429,7 +429,7 @@ export default function ModernPuppyWeightTracker() {
   return (
       <div 
         ref={containerRef}
-        className="min-h-screen bg-gradient-primary relative pt-24"
+        className="min-h-screen bg-gradient-primary relative pt-32"
         style={{
           transform: shouldShowIndicator ? `translateY(${Math.min(pullDistance * 0.5, 40)}px)` : 'none',
           transition: shouldShowIndicator ? 'none' : 'transform 0.2s ease-out'
