@@ -116,7 +116,7 @@ const NavigationWithRouter = () => {
                 }} className="w-8 h-8 bg-[var(--color-accent)] rounded-lg flex items-center justify-center shadow-md">
                     <Dog className="w-4 h-4 text-white" aria-hidden="true" />
                   </motion.div>
-                  <span className="hidden sm:block text-base font-semibold text-white drop-shadow-md">Pentulaskuri</span>
+                  <span className="hidden sm:block text-base font-semibold text-[var(--color-text)]">Pentulaskuri</span>
                 </Link>
               </motion.div>
 
@@ -126,7 +126,7 @@ const NavigationWithRouter = () => {
                 const Icon = item.icon;
                 const isItemActive = isActive(item.href);
                 return <motion.div key={item.href} whileHover={hoverAnimations.lift.whileHover} whileTap={hoverAnimations.lift.whileTap}>
-                      <Link to={item.href} className={`relative px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 flex items-center gap-2 ${isItemActive ? 'bg-[var(--color-accent)] text-white shadow-md' : 'text-white drop-shadow-md hover:bg-white/10'}`} aria-current={isItemActive ? 'page' : undefined} aria-label={`${item.label} - siirry sivulle`}>
+                      <Link to={item.href} className={`relative px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 flex items-center gap-2 ${isItemActive ? 'bg-[var(--color-accent)] text-white shadow-md' : 'text-[var(--color-text)] hover:bg-white/10'}`} aria-current={isItemActive ? 'page' : undefined} aria-label={`${item.label} - siirry sivulle`}>
                         <Icon className="w-4 h-4" />
                         <span className="text-sm font-medium">{item.label}</span>
                         
@@ -142,7 +142,7 @@ const NavigationWithRouter = () => {
 
               {/* Mobile Menu Button */}
               <div className="md:hidden">
-                <Button variant="ghost" size="sm" onClick={() => setIsMobileMenuOpen(true)} className="text-white drop-shadow-md rounded-lg hover:bg-white/10" aria-haspopup="dialog" aria-expanded={isMobileMenuOpen} aria-controls="mobile-menu-panel" aria-label="Avaa valikko">
+                <Button variant="ghost" size="sm" onClick={() => setIsMobileMenuOpen(true)} className="rounded-lg hover:bg-white/10" aria-haspopup="dialog" aria-expanded={isMobileMenuOpen} aria-controls="mobile-menu-panel" aria-label="Avaa valikko">
                   <Menu className="w-5 h-5" />
                 </Button>
               </div>
@@ -288,7 +288,7 @@ const NavigationStatic: React.FC = () => {
                 }} className="w-10 h-10 bg-[var(--color-accent)] rounded-xl flex items-center justify-center shadow-md">
                     <Dog className="w-5 h-5 text-white" />
                   </motion.div>
-                  <span className="hidden sm:block text-h6 font-semibold text-white drop-shadow-md">Pentulaskuri</span>
+                  <span className="hidden sm:block text-h6 font-semibold text-[var(--color-text)]">Pentulaskuri</span>
                 </a>
               </motion.div>
             </div>
