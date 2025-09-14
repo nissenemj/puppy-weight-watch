@@ -102,7 +102,17 @@
   font-weight: var(--font-medium);
   line-height: var(--leading-snug);
   letter-spacing: var(--tracking-normal);
-  color: var(--color-text);
+  color: #ffffff;
+}
+
+/* Global h3 styling */
+h3 {
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  font-weight: var(--font-medium);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-normal);
+  color: #ffffff !important;
 }
 
 .text-h4 {

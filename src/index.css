@@ -174,7 +174,7 @@ body {
   --color-gray-900: #111827;
   
   /* ===== SEMANTIC COLORS ===== */
-  --color-text: var(--color-gray-900);
+  --color-text: #000000;
   --color-text-muted: var(--color-gray-600);
   --color-text-light: var(--color-gray-400);
   --color-background: var(--color-white);
