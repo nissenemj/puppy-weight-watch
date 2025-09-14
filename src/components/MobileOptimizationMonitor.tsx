@@ -54,7 +54,7 @@ export const MobileOptimizationMonitor: React.FC<MobileOptimizationMonitorProps>
 
   if (showScoreOnly) {
     return (
-      <div className="fixed bottom-4 right-4 z-50">
+      <div className="fixed bottom-20 right-4 z-50">
         <Badge className={`${getScoreColor(report.score)} text-white flex items-center gap-2`}>
           {getScoreIcon(report.score)}
           Mobile: {report.score}%
@@ -66,7 +66,7 @@ export const MobileOptimizationMonitor: React.FC<MobileOptimizationMonitorProps>
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 z-50 max-w-md mx-auto">
+    <div className="fixed bottom-20 left-4 right-4 z-50 max-w-md mx-auto">
       <Alert className="bg-white border-l-4 border-l-orange-500 shadow-lg">
         <AlertTriangle className="h-4 w-4" />
         <AlertDescription>

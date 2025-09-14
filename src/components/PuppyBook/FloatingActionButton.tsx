@@ -155,9 +155,9 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
 
       <div 
         ref={fabRef} 
-        className="fixed bottom-safe-or-4 right-safe-or-4 z-50"
+        className="fixed bottom-24 right-4 z-50"
         style={{ 
-          bottom: `max(env(safe-area-inset-bottom, 0px), 1rem)`,
+          bottom: `max(calc(env(safe-area-inset-bottom, 0px) + 6rem), 6rem)`,
           right: `max(env(safe-area-inset-right, 0px), 1rem)`
         }}
       >
