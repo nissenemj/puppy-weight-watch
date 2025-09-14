@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
 import { ArrowLeft, CheckCircle, AlertCircle, Info, Microscope, TrendingUp, Heart } from 'lucide-react'
-import Navigation from '@/components/Navigation'
+
 import InfoCard from '@/components/InfoCard'
 import InfoSection from '@/components/InfoSection'
 import InfoBadge from '@/components/InfoBadge'
@@ -16,8 +16,6 @@ import ScrollPanBackground from '@/components/ScrollPanBackground'
 export default function FoodTypes() {
   return (
     <MobileOptimizedLayout>
-    <div className="min-h-screen bg-background page-with-navigation w-full overflow-x-hidden">
-      <Navigation />
       <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-full min-w-0">
         {/* Hero Section with pan background */}
         <div className="rounded-2xl overflow-hidden mb-12">
@@ -355,7 +353,6 @@ export default function FoodTypes() {
         
         <BackToTopButton />
       </div>
-    </div>
     </MobileOptimizedLayout>
   )
 }
