@@ -155,21 +155,6 @@ const Footer = () => {
                   </a>
                 </div>
 
-                {/* Trust Badges */}
-                <div className="flex flex-wrap gap-3">
-                  <Badge className="bg-white/10 text-white border-white/20">
-                    <Shield className="w-3 h-3 mr-1" />
-                    GDPR
-                  </Badge>
-                  <Badge className="bg-white/10 text-white border-white/20">
-                    <Heart className="w-3 h-3 mr-1" />
-                    100% Ilmainen
-                  </Badge>
-                  <Badge className="bg-white/10 text-white border-white/20">
-                    <Clock className="w-3 h-3 mr-1" />
-                    24/7 Käytössä
-                  </Badge>
-                </div>
               </motion.div>
 
               {/* Quick Access */}
