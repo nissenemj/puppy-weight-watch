@@ -62,11 +62,11 @@ const Calculator = () => {
       </a>
       <SEO title="Pentulaskuri - Ruokamäärä" description="Laske koiranpentusi optimaalinen päivittäinen ruokamäärä. Huomioi rodun, iän, painon ja aktiivisuuden. Käytä virallisia annostelutaulukoita." keywords="pentulaskuri, ruokalaskuri, koiranpennun ruokinta, annostelu, ruokamäärä, penturuoka" structuredData={structuredData} />
       
-      {/* Hero Section with pan background */}
-      <ScrollPanBackground src={import.meta.env.BASE_URL + 'assets/hero-illustration.png'} alt="" panX={60} panY={30} zoom={1.06} minHeightClass="min-h-[70svh]">
-        <div className="hero-content text-center">
+      {/* Hero Section with dog food background */}
+      <ScrollPanBackground src="/src/assets/calculator-hero-bg.jpg" alt="" panX={30} panY={20} zoom={1.03} minHeightClass="min-h-[70svh]">
+        <div className="hero-content text-left max-w-2xl">
           <motion.div initial="hidden" animate="visible" variants={entranceAnimations.staggerContainer}>
-            <motion.div variants={entranceAnimations.staggerChild} className="mb-4 flex justify-center">
+            <motion.div variants={entranceAnimations.staggerChild} className="mb-4 flex justify-start">
               
             </motion.div>
             <motion.h1 variants={entranceAnimations.staggerChild} className="text-display-1 mb-4">
@@ -74,10 +74,10 @@ const Calculator = () => {
               <br />
               <span className="text-[var(--color-primary-500)]">Ruokamäärät</span>
             </motion.h1>
-            <motion.p variants={entranceAnimations.staggerChild} className="text-body-xl text-muted max-w-3xl mx-auto">
+            <motion.p variants={entranceAnimations.staggerChild} className="text-body-xl text-muted max-w-xl">
               Laske koiranpentusi optimaalinen päivittäinen ruokamäärä huomioiden rodun, iän, painon ja aktiivisuustason.
             </motion.p>
-            <motion.div variants={entranceAnimations.staggerChild} className="mt-6 flex items-center justify-center gap-6 text-body-sm text-muted mobile-flex-wrap">
+            <motion.div variants={entranceAnimations.staggerChild} className="mt-6 flex items-start justify-start gap-6 text-body-sm text-muted mobile-flex-wrap flex-col sm:flex-row">
               <div className="flex items-center gap-2">
                 <TrendingUp className="w-4 h-4 text-accent" />
                 <span>Tarkat tulokset</span>
