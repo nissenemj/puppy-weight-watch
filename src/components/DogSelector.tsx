@@ -112,7 +112,7 @@ export default function DogSelector({ user, selectedDogId, onDogSelect }: DogSel
   }
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 flex-shrink-0">
       <Select 
         value={selectedDogId || ''} 
         onValueChange={(value) => {
@@ -123,7 +123,7 @@ export default function DogSelector({ user, selectedDogId, onDogSelect }: DogSel
         <SelectTrigger className="min-w-[140px] sm:min-w-[180px]">
           <SelectValue placeholder="Valitse koira" />
         </SelectTrigger>
-        <SelectContent className="z-[1300]">
+        <SelectContent position="item-aligned" className="z-[1300] min-w-[200px] w-auto">
           {dogs.map((dog) => (
             <SelectItem key={dog.id} value={dog.id}>
               <div className="flex flex-col">
