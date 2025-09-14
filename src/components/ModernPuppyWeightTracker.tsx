@@ -454,7 +454,7 @@ export default function ModernPuppyWeightTracker() {
           </div>
         )}
         
-        <div className="container mx-auto p-3 sm:p-4 max-w-full overflow-x-hidden">
+        <div className="w-full mx-auto p-3 sm:p-4 max-w-full overflow-x-hidden">
           {/* Dog Selector */}
           <div className="mb-6">
             <DogSelector 

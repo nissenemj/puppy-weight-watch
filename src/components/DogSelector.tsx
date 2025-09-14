@@ -120,7 +120,7 @@ export default function DogSelector({ user, selectedDogId, onDogSelect }: DogSel
           if (dog) onDogSelect(value, dog)
         }}
       >
-        <SelectTrigger className="w-[160px] sm:w-[200px]">
+        <SelectTrigger className="w-[160px] sm:w-[200px] shrink-0">
           <SelectValue placeholder="Valitse koira" />
         </SelectTrigger>
         <SelectContent className="z-[1300] min-w-[200px] w-auto">
