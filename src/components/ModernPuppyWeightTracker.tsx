@@ -427,41 +427,40 @@ export default function ModernPuppyWeightTracker() {
   }
 
   return (
-      <div 
-        ref={containerRef}
-        className="min-h-screen bg-gradient-primary relative pt-24"
-        style={{
-          transform: shouldShowIndicator ? `translateY(${Math.min(pullDistance * 0.5, 40)}px)` : 'none',
-          transition: shouldShowIndicator ? 'none' : 'transform 0.2s ease-out'
-        }}
-      >
-        {/* Pull to refresh indicator */}
-        {shouldShowIndicator && (
-          <div 
-            className="absolute top-0 left-0 right-0 flex items-center justify-center py-4 bg-white/80 backdrop-blur-sm z-50"
-            style={{
-              opacity: Math.min(pullDistance / 80, 1),
-              transform: `translateY(${-40 + Math.min(pullDistance * 0.5, 40)}px)`
-            }}
-          >
-            <RefreshCw 
-              className={`h-6 w-6 text-primary ${isRefreshing ? 'animate-spin' : ''}`}
-            />
-            <span className="ml-2 text-sm text-gray-600">
-              {isRefreshing ? 'Päivitetään...' : pullDistance > 80 ? 'Päästä päivittääksesi' : 'Vedä alas päivittääksesi'}
-            </span>
-          </div>
-        )}
-        
-        <div className="container mx-auto p-3 sm:p-4 max-w-full overflow-x-hidden">
-          {/* Dog Selector */}
-          <div className="mb-6">
-            <DogSelector 
-              user={user} 
-              selectedDogId={selectedDog?.id} 
-              onDogSelect={(dogId, dog) => setSelectedDog(dog)} 
-            />
-          </div>
+    <div 
+      ref={containerRef}
+      style={{
+        transform: shouldShowIndicator ? `translateY(${Math.min(pullDistance * 0.5, 40)}px)` : 'none',
+        transition: shouldShowIndicator ? 'none' : 'transform 0.2s ease-out'
+      }}
+    >
+      {/* Pull to refresh indicator */}
+      {shouldShowIndicator && (
+        <div 
+          className="absolute top-0 left-0 right-0 flex items-center justify-center py-4 bg-white/80 backdrop-blur-sm z-50"
+          style={{
+            opacity: Math.min(pullDistance / 80, 1),
+            transform: `translateY(${-40 + Math.min(pullDistance * 0.5, 40)}px)`
+          }}
+        >
+          <RefreshCw 
+            className={`h-6 w-6 text-primary ${isRefreshing ? 'animate-spin' : ''}`}
+          />
+          <span className="ml-2 text-sm text-gray-600">
+            {isRefreshing ? 'Päivitetään...' : pullDistance > 80 ? 'Päästä päivittääksesi' : 'Vedä alas päivittääksesi'}
+          </span>
+        </div>
+      )}
+      
+      <div className="container mx-auto p-3 sm:p-4 max-w-full overflow-x-hidden">
+        {/* Dog Selector */}
+        <div className="mb-6">
+          <DogSelector 
+            user={user} 
+            selectedDogId={selectedDog?.id} 
+            onDogSelect={(dogId, dog) => setSelectedDog(dog)} 
+          />
+        </div>
 
         {/* Weight Entry Section - Always Visible */}
         {selectedDog && (
@@ -500,9 +499,9 @@ export default function ModernPuppyWeightTracker() {
                     </Button>
                   </div>
                 </div>
-                
-                {/* Quick Stats */}
-                <div className="grid grid-cols-2 gap-4 pt-2">
+
+                {/* Current Stats */}
+                <div className="grid grid-cols-2 gap-4 mt-6">
                   <div className="text-center p-3 bg-white/60 rounded-xl backdrop-blur-sm">
                     <p className="text-sm text-gray-600">Viimeisin paino</p>
                     <p className="text-xl font-bold text-foreground">{getLatestWeight()} kg</p>
@@ -525,127 +524,114 @@ export default function ModernPuppyWeightTracker() {
               value="weight-tracking" 
               className={cn(
                 "flex flex-col sm:flex-row items-center gap-1 sm:gap-2 rounded-xl transition-all duration-200 hover:scale-105 px-2 sm:px-4 text-white font-medium",
-                activeTab === "weight-tracking" ? "bg-gradient-cool !important" : "text-muted-foreground hover:text-foreground"
+                activeTab === 'weight-tracking' 
+                  ? "bg-white text-primary shadow-lg scale-105" 
+                  : "hover:bg-white/20"
               )}
             >
-              <Scale className="h-5 w-5 sm:h-4 sm:w-4" />
-              <span className="text-xs sm:text-sm">Paino</span>
+              <Scale className="h-4 w-4 sm:h-5 sm:w-5" />
+              <span className="text-xs sm:text-sm font-medium whitespace-nowrap">Paino</span>
             </TabsTrigger>
             <TabsTrigger 
               value="growth-chart" 
               className={cn(
                 "flex flex-col sm:flex-row items-center gap-1 sm:gap-2 rounded-xl transition-all duration-200 hover:scale-105 px-2 sm:px-4 text-white font-medium",
-                activeTab === "growth-chart" ? "bg-gradient-purple !important" : "text-muted-foreground hover:text-foreground"
+                activeTab === 'growth-chart' 
+                  ? "bg-white text-primary shadow-lg scale-105" 
+                  : "hover:bg-white/20"
               )}
             >
-              <TrendingUp className="h-5 w-5 sm:h-4 sm:w-4" />
-              <span className="text-xs sm:text-sm">Kasvu</span>
+              <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5" />
+              <span className="text-xs sm:text-sm font-medium whitespace-nowrap">Kasvu</span>
             </TabsTrigger>
             <TabsTrigger 
               value="puppy-feeding" 
               className={cn(
                 "flex flex-col sm:flex-row items-center gap-1 sm:gap-2 rounded-xl transition-all duration-200 hover:scale-105 px-2 sm:px-4 text-white font-medium",
-                activeTab === "puppy-feeding" ? "bg-gradient-warm !important" : "text-muted-foreground hover:text-foreground"
+                activeTab === 'puppy-feeding' 
+                  ? "bg-white text-primary shadow-lg scale-105" 
+                  : "hover:bg-white/20"
               )}
             >
-              <Utensils className="h-5 w-5 sm:h-4 sm:w-4" />
-              <span className="text-xs sm:text-sm">Ruokinta</span>
+              <Utensils className="h-4 w-4 sm:h-5 sm:w-5" />
+              <span className="text-xs sm:text-sm font-medium whitespace-nowrap">Ruokinta</span>
             </TabsTrigger>
             <TabsTrigger 
               value="news-feed" 
               className={cn(
                 "flex flex-col sm:flex-row items-center gap-1 sm:gap-2 rounded-xl transition-all duration-200 hover:scale-105 px-2 sm:px-4 text-white font-medium",
-                activeTab === "news-feed" ? "bg-gradient-purple !important" : "text-muted-foreground hover:text-foreground"
+                activeTab === 'news-feed' 
+                  ? "bg-white text-primary shadow-lg scale-105" 
+                  : "hover:bg-white/20"
               )}
             >
-              <Bell className="h-5 w-5 sm:h-4 sm:w-4" />
-              <span className="text-xs sm:text-sm">Uutiset</span>
+              <Bell className="h-4 w-4 sm:h-5 sm:w-5" />
+              <span className="text-xs sm:text-sm font-medium whitespace-nowrap">Uutiset</span>
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="weight-tracking" className="space-y-6 animate-fade-in">
-            {selectedDog ? (
-              <>
-                {/* Stats Cards */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
-                  <Card className="bg-white/80 backdrop-blur-sm shadow-xl rounded-2xl border-0 hover-3d">
-                    <CardContent className="p-4 sm:p-6">
-                      <div className="flex items-center space-x-3 sm:space-x-4">
-                        <div className="p-3 sm:p-4 bg-gradient-cool rounded-full text-white shadow-lg">
-                          <Scale className="h-6 w-6 sm:h-8 sm:w-8" />
-                        </div>
-                        <div>
-                          <p className="text-xs sm:text-sm text-gray-600 font-medium">Nykyinen paino</p>
-                          <p className="text-2xl sm:text-3xl font-bold text-gray-900">
-                            {getLatestWeight().toFixed(1)} kg
-                          </p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="bg-white/80 backdrop-blur-sm shadow-xl rounded-2xl border-0 hover-3d">
-                    <CardContent className="p-4 sm:p-6">
-                      <div className="flex items-center space-x-3 sm:space-x-4">
-                        <div className="p-3 sm:p-4 bg-gradient-purple rounded-full text-white shadow-lg">
-                          <TrendingUp className="h-6 w-6 sm:h-8 sm:w-8" />
-                        </div>
-                        <div>
-                          <p className="text-xs sm:text-sm text-gray-600 font-medium">Painon muutos</p>
-                          <p className="text-2xl sm:text-3xl font-bold text-gray-900">
-                            {getWeightChange() !== null ? `${getWeightChange()! > 0 ? '+' : ''}${getWeightChange()!.toFixed(1)} kg` : 'N/A'}
-                          </p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="bg-white/80 backdrop-blur-sm shadow-xl rounded-2xl border-0 hover-3d">
-                    <CardContent className="p-4 sm:p-6">
-                      <div className="flex items-center space-x-3 sm:space-x-4">
-                        <div className="p-3 sm:p-4 bg-gradient-warm rounded-full text-white shadow-lg">
-                          <Calculator className="h-6 w-6 sm:h-8 sm:w-8" />
-                        </div>
-                        <div>
-                          <p className="text-xs sm:text-sm text-gray-600 font-medium">Mittauksia</p>
-                          <p className="text-2xl sm:text-3xl font-bold text-gray-900">
-                            {entries.length}
-                          </p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                {/* Enhanced Weight Chart */}
+          <TabsContent value="weight-tracking" className="animate-fade-in">
+            {entries.length > 0 && selectedDog && (
+              <div className="space-y-6">
                 <WeightChart weightData={entries} />
-
+                
                 {/* Achievement System */}
                 <AchievementSystem 
-                  weightData={entries}
-                  onCelebration={() => {
-                    toast({
-                      title: "🎉 Uusi saavutus avattu!",
-                      description: "Hienoa työtä painonseurannassa!",
-                    })
-                  }}
+                  weightData={entries} 
                 />
-              </>
-            ) : (
-              <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
+                
+                {/* Growth Development */}
+                <GrowthDevelopmentSection 
+                  weightData={entries} 
+                  birthDate={selectedDogBirthDate || undefined}
+                />
+
+                {/* Weight Entry Component for editing */}
+                <WeightEntry
+                  user={user}
+                  entries={entries}
+                  onEntryAdded={fetchWeightEntries}
+                  selectedDogId={selectedDog.id}
+                />
+              </div>
+            )}
+            
+            {entries.length === 0 && selectedDog && (
+              <Card className="backdrop-blur-sm bg-white/80 border-0 shadow-xl">
                 <CardContent className="text-center py-12">
-                  <Scale className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-gray-700 mb-2">Valitse koira</h3>
-                  <p className="text-gray-500">Valitse ensin koira aloittaaksesi painonseurannan</p>
+                  <img 
+                    src={heroIllustration} 
+                    alt="Aloita seuraamaan pentusi kasvua" 
+                    className="w-48 h-36 mx-auto mb-6 object-contain"
+                  />
+                  <h3 className="text-xl font-semibold text-foreground mb-2">
+                    Ei painomittauksia vielä
+                  </h3>
+                  <p className="text-gray-600">
+                    Lisää pentusi ensimmäinen painomittaus yllä olevalla lomakkeella
+                  </p>
+                </CardContent>
+              </Card>
+            )}
+
+            {!selectedDog && (
+              <Card className="backdrop-blur-sm bg-white/80 border-0 shadow-xl">
+                <CardContent className="text-center py-12">
+                  <Scale className="h-16 w-16 mx-auto mb-4 text-gray-300" />
+                  <h3 className="text-xl font-semibold text-foreground mb-2">
+                    Valitse koira
+                  </h3>
+                  <p className="text-gray-600">
+                    Valitse koira yllä olevasta valikosta nähdäksesi painotiedot
+                  </p>
                 </CardContent>
               </Card>
             )}
           </TabsContent>
 
           <TabsContent value="growth-chart" className="animate-fade-in">
-            <GrowthDevelopmentSection 
+            <WeightChart 
               weightData={entries}
-              birthDate={selectedDogBirthDate || undefined}
             />
           </TabsContent>
 
