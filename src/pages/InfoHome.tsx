@@ -141,7 +141,7 @@ export default function InfoHome() {
                   <ArrowRight className="h-5 w-5 text-orange-600 dark:text-orange-400 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300" />
                 </div>
                 <h3 className="text-xl font-bold text-orange-900 dark:text-orange-100 mb-2">Ruokatyypit</h3>
-                <p className="text-orange-700 dark:text-orange-300 text-sm leading-relaxed mb-4">
+                <p className="text-orange-900 dark:text-orange-200 text-sm leading-relaxed mb-4">
                   Syväanalyysi kuiva-, märkä- ja raakaruokien eduista ja haitoista. Vertailu ravintosisällöstä ja soveltuvuudesta eri ikäkausiin.
                 </p>
                 <div className="text-xs text-orange-600 dark:text-orange-400 font-medium">Lue lisää →</div>
@@ -159,7 +159,7 @@ export default function InfoHome() {
                   <ArrowRight className="h-5 w-5 text-blue-600 dark:text-blue-400 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300" />
                 </div>
                 <h3 className="text-xl font-bold text-blue-900 dark:text-blue-100 mb-2">Annostelutiedot</h3>
-                <p className="text-blue-700 dark:text-blue-300 text-sm leading-relaxed mb-4">
+                <p className="text-blue-900 dark:text-blue-200 text-sm leading-relaxed mb-4">
                   Tarkat laskukaavat ja suositukset pennun ruokamäärille. Ikä-, paino- ja rotukohtaiset ohjeet optimaalisen kasvun varmistamiseksi.
                 </p>
                 <div className="text-xs text-blue-600 dark:text-blue-400 font-medium">Tutustu dataan →</div>
@@ -177,7 +177,7 @@ export default function InfoHome() {
                   <ArrowRight className="h-5 w-5 text-red-600 dark:text-red-400 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300" />
                 </div>
                 <h3 className="text-xl font-bold text-red-900 dark:text-red-100 mb-2">Turvallisuus</h3>
-                <p className="text-red-700 dark:text-red-300 text-sm leading-relaxed mb-4">
+                <p className="text-red-900 dark:text-red-200 text-sm leading-relaxed mb-4">
                   Tuotevetoja, varoituksia ja turvallisuusohjeita. Ajankohtaiset uutiset ruokaturvallisuudesta ja vaarallisista ainesosista.
                 </p>
                 <div className="text-xs text-red-600 dark:text-red-400 font-medium">Turvallisuusinfo →</div>
@@ -195,7 +195,7 @@ export default function InfoHome() {
                   <ArrowRight className="h-5 w-5 text-green-600 dark:text-green-400 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300" />
                 </div>
                 <h3 className="text-xl font-bold text-green-900 dark:text-green-100 mb-2">Pennun ruokintaopas</h3>
-                <p className="text-green-700 dark:text-green-300 text-sm leading-relaxed mb-4">
+                <p className="text-green-900 dark:text-green-200 text-sm leading-relaxed mb-4">
                   Kattava vaiheittainen opas pennun ruokintaan syntymästä aikuistumiseen. Siirtymät, aikataulut ja erityistilanteet.
                 </p>
                 <div className="text-xs text-green-600 dark:text-green-400 font-medium">Ruokintaopas →</div>
@@ -213,7 +213,7 @@ export default function InfoHome() {
                   <ArrowRight className="h-5 w-5 text-purple-600 dark:text-purple-400 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300" />
                 </div>
                 <h3 className="text-xl font-bold text-purple-900 dark:text-purple-100 mb-2">Sosiaalistamisopas</h3>
-                <p className="text-purple-700 dark:text-purple-300 text-sm leading-relaxed mb-4">
+                <p className="text-purple-900 dark:text-purple-200 text-sm leading-relaxed mb-4">
                   Opas pennun sosiaalistamiseen ja käyttäytymiseen. Kohtaamiset, harjoittelu ja yhteisön rakentaminen pennun ympärille.
                 </p>
                 <div className="text-xs text-purple-600 dark:text-purple-400 font-medium">Sosiaalistimine →</div>
