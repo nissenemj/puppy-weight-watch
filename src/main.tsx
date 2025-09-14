@@ -12,7 +12,7 @@ import { VirtualKeyboardHandler } from './utils/VirtualKeyboardHandler'
 import { initializeCSSOptimizations } from './utils/CSSOptimization'
 import { MobileOptimizationChecker } from './utils/mobileOptimizationCheck'
 import { ProductionReadiness } from './components/ProductionReadiness'
-import MobileOptimizationMonitor from './components/MobileOptimizationMonitor'
+
 import { ErrorBoundary } from './components/ErrorBoundary'
 import ScrollProgressBar from './components/ScrollProgressBar'
 
@@ -75,9 +75,6 @@ createRoot(document.getElementById("root")!).render(
       <QueryClientProvider client={queryClient}>
         <HelmetProvider>
           <ProductionReadiness />
-          {import.meta.env.DEV && (
-            <MobileOptimizationMonitor showScoreOnly />
-          )}
           <Router />
         </HelmetProvider>
       </QueryClientProvider>

@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { lazy, Suspense } from "react";
-import MobileOptimizationMonitor from '@/components/MobileOptimizationMonitor';
+
 
 // Critical pages - load immediately
 import Index from "./pages/Index";
@@ -127,9 +127,6 @@ const router = createBrowserRouter([
 
 export default function Router() {
   return (
-    <>
-      <RouterProvider router={router} />
-      <MobileOptimizationMonitor showScoreOnly />
-    </>
+    <RouterProvider router={router} />
   );
 }
