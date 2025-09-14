@@ -250,7 +250,7 @@ const Footer = () => {
                 <div className="mt-6 p-4 bg-white/5 rounded-xl">
                   <p className="text-body-sm text-white/60 mb-2">
                     <MapPin className="w-3 h-3 inline mr-1" />
-                    Helsinki, Suomi
+                    Kuopio, Suomi
                   </p>
                   <p className="text-body-sm text-white/60">
                     <Phone className="w-3 h-3 inline mr-1" />
