@@ -562,6 +562,14 @@ h1, h2, h3, h4, h5, h6 { scroll-margin-top: 80px; }
   z-index: var(--z-sticky);
 }
 
+/* Navigation header transparency override */
+.site-header-transparent {
+  background: transparent !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
 /* ===== MOBILE MENU ===== */
 .mobile-menu-backdrop {
   background: rgba(0, 0, 0, 0.5);

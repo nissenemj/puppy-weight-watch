@@ -101,7 +101,7 @@ const NavigationWithRouter = () => {
       }} transition={{
         duration: 0.6,
         delay: 0.2
-      }} className={`fixed top-4 left-4 right-4 z-[1000] transition-all duration-500 mobile-optimized mobile-touch-target ${scrolled ? 'top-2 scale-98' : 'top-4'}`}>
+      }} className={`site-header-transparent fixed top-4 left-4 right-4 z-[1000] transition-all duration-500 mobile-optimized mobile-touch-target ${scrolled ? 'top-2 scale-98' : 'top-4'}`}>
           <div className="mx-auto max-w-6xl">
             <div className={`glass-nav rounded-2xl px-4 py-3 flex items-center justify-between w-full ${scrolled ? 'shadow-md' : 'shadow-xl'}`}>
               {/* Logo */}
@@ -261,7 +261,7 @@ const NavigationStatic: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
   return <>
-      <header role="banner" aria-label="Sivun ylätunniste">
+      <header role="banner" aria-label="Sivun ylätunniste" className="site-header-transparent">
         <a href="#main-content" className="skip-link fixed left-[-9999px] top-4 z-[300] glass px-4 py-2 rounded-xl focus:left-4 transition-all duration-300 text-gray-800 font-medium">
           Siirry suoraan sisältöön
         </a>
