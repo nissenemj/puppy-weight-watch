@@ -69,7 +69,7 @@ const Calculator = () => {
             <motion.div variants={entranceAnimations.staggerChild} className="mb-4 flex justify-start">
               
             </motion.div>
-            <motion.h1 variants={entranceAnimations.staggerChild} className="text-display-1 mb-4">
+            <motion.h1 variants={entranceAnimations.staggerChild} className="text-h1 mb-4">
               Pentulaskuri
               <br />
               <span className="text-[var(--color-primary-500)]">Ruokamäärät</span>
