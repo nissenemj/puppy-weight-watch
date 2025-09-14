@@ -102,7 +102,7 @@ const NavigationWithRouter = () => {
         duration: 0.6,
         delay: 0.2
       }} className={`site-header-transparent fixed top-4 left-4 right-4 z-[1000] transition-all duration-500 mobile-optimized mobile-touch-target ${scrolled ? 'top-2 scale-98' : 'top-4'}`}>
-          <div className="mx-auto max-w-6xl">
+          <div className="mx-auto max-w-6xl bg-transparent">
             <div className={`glass-nav rounded-2xl px-4 py-3 flex items-center justify-between w-full ${scrolled ? 'shadow-md' : 'shadow-xl'}`}>
               {/* Logo */}
               <motion.div whileHover={hoverAnimations.scale.whileHover} whileTap={hoverAnimations.scale.whileTap}>
