@@ -113,7 +113,7 @@ const NavigationWithRouter = () => {
           initial={{ y: -100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className={`fixed left-0 right-0 z-[100] transition-all duration-500 mobile-optimized mobile-touch-target bg-transparent ${
+          className={`fixed left-0 right-0 z-40 transition-all duration-500 mobile-optimized mobile-touch-target bg-transparent ${
             scrolled ? 'top-2 sm:top-4 scale-98' : 'top-0 sm:top-4'
           }`}
         >
@@ -342,7 +342,7 @@ const NavigationStatic: React.FC = () => {
           initial={{ y: -100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-[9999] transition-all duration-500 mobile-optimized mobile-touch-target bg-transparent ${
+          className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-40 transition-all duration-500 mobile-optimized mobile-touch-target bg-transparent ${
             scrolled ? 'top-2 scale-95' : 'top-4'
           }`}
         >
