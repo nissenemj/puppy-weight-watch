@@ -65,7 +65,7 @@ export default function InfoHome() {
         <div className="relative max-w-7xl mx-auto px-4 py-20 sm:py-32">
           <div className="grid lg:grid-cols-2 gap-12 items-center mobile-grid-1">
             {/* Left Content */}
-            <div className="text-white">
+            <div className="text-white m-6">
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium mb-6">
                 <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
                 Reaaliaikainen tietopankki
