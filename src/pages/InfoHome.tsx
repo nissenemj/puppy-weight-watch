@@ -10,7 +10,7 @@ import SEO from '@/components/SEO'
 import FAQ from '@/components/FAQ'
 import { AnimatedCard } from '@/components/ui/animated-card'
 import { createArticleSchema, createFAQSchema, createBreadcrumbSchema } from '@/utils/structuredData'
-import heroImage from '@/assets/welcome-illustration.png'
+import heroImage from '@/assets/puppy-care-guide.jpg'
 
 export default function InfoHome() {
   const faqs = [
