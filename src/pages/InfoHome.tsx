@@ -82,18 +82,6 @@ export default function InfoHome() {
                 <span className="font-semibold">ohjelmistokehityksen näkökulmasta</span>
               </p>
               
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="bg-white text-gray-900 hover:bg-white/90 px-8 py-4 text-lg font-semibold rounded-2xl">
-                  Aloita tutkiminen
-                </Button>
-                <Button 
-                  variant="ghost" 
-                  size="lg" 
-                  className="text-white border-white/30 hover:bg-white/10 px-8 py-4 text-lg rounded-2xl"
-                >
-                  Katso demovideoita
-                </Button>
-              </div>
               
               {/* Stats */}
               <div className="grid grid-cols-3 gap-6 mt-12 pt-8 border-t border-white/20">
