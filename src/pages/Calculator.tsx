@@ -64,7 +64,7 @@ const Calculator = () => {
       
       {/* Hero Section with dog food background */}
       <ScrollPanBackground src="/src/assets/calculator-hero-bg.jpg" alt="" panX={30} panY={20} zoom={1.03} minHeightClass="min-h-[70svh]">
-        <div className="hero-content text-left max-w-2xl">
+        <div className="hero-content text-left max-w-lg ml-0">
           <motion.div initial="hidden" animate="visible" variants={entranceAnimations.staggerContainer}>
             <motion.div variants={entranceAnimations.staggerChild} className="mb-4 flex justify-start">
               

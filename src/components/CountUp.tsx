@@ -55,5 +55,9 @@ export default function CountUp({
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals
   });
-  return;
+  return (
+    <span ref={ref} className={className}>
+      {formatted}{suffix}
+    </span>
+  );
 }
