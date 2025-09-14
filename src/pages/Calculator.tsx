@@ -118,20 +118,6 @@ const Calculator = () => {
       {/* Calculator Section + trust stats */}
       <Section className="full-width-section py-16 mobile-text-wrap mobile-container-safe" role="main" id="calculator-main">
         <div className="full-width-content py-16">
-          <div className="grid gap-8 md:grid-cols-3 text-center mb-12 mobile-grid-1">
-            <div>
-              <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold"><CountUp to={12000} suffix="+" /></p>
-              <p className="mt-2 text-muted">laskentaa/kk</p>
-            </div>
-            <div>
-              <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold"><CountUp to={86} suffix="%" /></p>
-              <p className="mt-2 text-muted">hyödyksi koettu</p>
-            </div>
-            <div>
-              <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold"><CountUp to={250} suffix="+" /></p>
-              <p className="mt-2 text-muted">rotupohjaa</p>
-            </div>
-          </div>
           <AdvancedFoodCalculator user={null as any} />
         </div>
       </Section>
