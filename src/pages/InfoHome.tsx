@@ -1,36 +1,57 @@
-import React from 'react';
-import { MobileOptimizedLayout } from '@/components/MobileOptimizedLayout';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
-import { BookOpen, Database, AlertTriangle } from 'lucide-react';
-import Navigation from '@/components/Navigation';
-import SEO from '@/components/SEO';
-import FAQ from '@/components/FAQ';
-import { createArticleSchema, createFAQSchema, createBreadcrumbSchema } from '@/utils/structuredData';
-import heroImage from '@/assets/welcome-illustration.png';
+
+import React from 'react'
+import { MobileOptimizedLayout } from '@/components/MobileOptimizedLayout'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Link } from 'react-router-dom'
+import { BookOpen, Database, AlertTriangle, Utensils, Shield, Heart, Users, ArrowRight } from 'lucide-react'
+import Navigation from '@/components/Navigation'
+import SEO from '@/components/SEO'
+import FAQ from '@/components/FAQ'
+import { AnimatedCard } from '@/components/ui/animated-card'
+import { createArticleSchema, createFAQSchema, createBreadcrumbSchema } from '@/utils/structuredData'
+import heroImage from '@/assets/puppy-care-guide.jpg'
+
 export default function InfoHome() {
-  const faqs = [{
-    question: "Mikä on ero täysravinnon ja täydennysravinnon välillä?",
-    answer: "Täysravinto on suunniteltu kattamaan yksinään kaikki koiran päivittäiset ravintotarpeet, kun taas täydennysravinto on tarkoitettu käytettäväksi muun ruoan ohella."
-  }, {
-    question: "Onko raakaruokinta turvallista pennuille?",
-    answer: "Helsingin yliopiston tutkimusten mukaan vähintään 20% raakaruokaa pennun ruokavaliossa vähentää allergia- ja atopiaoireita aikuisiässä merkittävästi."
-  }, {
-    question: "Kuinka usein pennun ruokamäärää tulee säätää?",
-    answer: "Pennun ruokamäärää tulee tarkistaa ja säätää viikoittain kasvun ja painonnousun mukaan ensimmäisten kuukausien ajan."
-  }];
-  const breadcrumbs = [{
-    name: "Etusivu",
-    url: window.location.origin
-  }, {
-    name: "Tietopankki",
-    url: `${window.location.origin}/info`
-  }];
-  const structuredData = [createArticleSchema("Penturuoka-opas - Koiranpentujen ruokinta ja ravitsemus", "Laaja katsaus Suomessa myytäviin koiranpentujen ruokiin ja niiden annosteluun ohjelmistokehityksen näkökulmasta"), createFAQSchema(faqs), createBreadcrumbSchema(breadcrumbs)];
-  return <MobileOptimizedLayout>
+  const faqs = [
+    {
+      question: "Mikä on ero täysravinnon ja täydennysravinnon välillä?",
+      answer: "Täysravinto on suunniteltu kattamaan yksinään kaikki koiran päivittäiset ravintotarpeet, kun taas täydennysravinto on tarkoitettu käytettäväksi muun ruoan ohella."
+    },
+    {
+      question: "Onko raakaruokinta turvallista pennuille?",
+      answer: "Helsingin yliopiston tutkimusten mukaan vähintään 20% raakaruokaa pennun ruokavaliossa vähentää allergia- ja atopiaoireita aikuisiässä merkittävästi."
+    },
+    {
+      question: "Kuinka usein pennun ruokamäärää tulee säätää?",
+      answer: "Pennun ruokamäärää tulee tarkistaa ja säätää viikoittain kasvun ja painonnousun mukaan ensimmäisten kuukausien ajan."
+    }
+  ];
+
+  const breadcrumbs = [
+    { name: "Etusivu", url: window.location.origin },
+    { name: "Tietopankki", url: `${window.location.origin}/info` }
+  ];
+
+  const structuredData = [
+    createArticleSchema(
+      "Penturuoka-opas - Koiranpentujen ruokinta ja ravitsemus",
+      "Laaja katsaus Suomessa myytäviin koiranpentujen ruokiin ja niiden annosteluun ohjelmistokehityksen näkökulmasta"
+    ),
+    createFAQSchema(faqs),
+    createBreadcrumbSchema(breadcrumbs)
+  ];
+
+  return (
+    <MobileOptimizedLayout>
     <div className="min-h-screen bg-gradient-soft page-with-navigation no-horizontal-scroll mobile-text-wrap responsive-media full-width-section">
-      <SEO title="Tietopankki - Penturuoka-opas" description="Laaja katsaus koiranpentujen ruokintaan ja ravitsemukseen. Kuiva-, märkä- ja raakaruokien analyysi, annostelutiedot ja turvallisuusohjeet." keywords="penturuoka, koiranpennun ruokinta, ruokatyypit, annostelu, turvallisuus, Helsingin yliopisto, DogRisk" type="article" structuredData={structuredData} />
+      <SEO
+        title="Tietopankki - Penturuoka-opas"
+        description="Laaja katsaus koiranpentujen ruokintaan ja ravitsemukseen. Kuiva-, märkä- ja raakaruokien analyysi, annostelutiedot ja turvallisuusohjeet."
+        keywords="penturuoka, koiranpennun ruokinta, ruokatyypit, annostelu, turvallisuus, Helsingin yliopisto, DogRisk"
+        type="article"
+        structuredData={structuredData}
+      />
       <Navigation />
       
       {/* Dribbble-inspired Hero Header */}
@@ -46,7 +67,7 @@ export default function InfoHome() {
             {/* Left Content */}
             <div className="text-white">
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium mb-6">
-                
+                <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
                 Reaaliaikainen tietopankki
               </div>
               
@@ -62,37 +83,18 @@ export default function InfoHome() {
                 <span className="font-semibold">ohjelmistokehityksen näkökulmasta</span>
               </p>
               
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="bg-white text-gray-900 hover:bg-white/90 px-8 py-4 text-lg font-semibold rounded-2xl">
-                  Aloita tutkiminen
-                </Button>
-                <Button variant="ghost" size="lg" className="text-white border-white/30 hover:bg-white/10 px-8 py-4 text-lg rounded-2xl">
-                  Katso demovideoita
-                </Button>
-              </div>
               
-              {/* Stats */}
-              <div className="grid grid-cols-3 gap-6 mt-12 pt-8 border-t border-white/20">
-                <div>
-                  <div className="text-3xl font-bold text-white">500+</div>
-                  <div className="text-white/80 text-sm">Tutkittua ruokaa</div>
-                </div>
-                <div>
-                  <div className="text-3xl font-bold text-white">15k+</div>
-                  <div className="text-white/80 text-sm">Datapistettä</div>
-                </div>
-                <div>
-                  <div className="text-3xl font-bold text-white">98%</div>
-                  <div className="text-white/80 text-sm">Tarkkuus</div>
-                </div>
-              </div>
             </div>
             
             {/* Right Visual */}
             <div className="relative">
               <div className="relative z-10">
                 <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20">
-                  <img src={heroImage} alt="Penturuoka-opas dashboard" className="w-full h-auto object-contain rounded-2xl" />
+                  <img 
+                    src={heroImage} 
+                    alt="Penturuoka-opas dashboard" 
+                    className="w-full h-auto object-contain rounded-2xl"
+                  />
                 </div>
               </div>
               
@@ -127,76 +129,96 @@ export default function InfoHome() {
           </CardContent>
         </Card>
 
-        {/* Navigation Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          <Link to="/info/food-types">
-            <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer bg-card/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-lg">
-                  <BookOpen className="h-5 w-5" />
-                  Ruokatyypit
-                </CardTitle>
-                <CardDescription>
-                  Kuiva-, märkä- ja raakaruokien analyysi
-                </CardDescription>
-              </CardHeader>
-            </Card>
+        {/* Modern Navigation Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+          <Link to="/info/food-types" className="group">
+            <AnimatedCard delay={0.1} className="h-full">
+              <div className="bg-gradient-to-br from-orange-100 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20 p-6 rounded-2xl border border-orange-200/50 dark:border-orange-800/50 group-hover:border-orange-300/70 dark:group-hover:border-orange-700/70 transition-all duration-300">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="p-3 bg-gradient-to-br from-orange-500 to-amber-500 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow duration-300">
+                    <Utensils className="h-8 w-8 text-white" />
+                  </div>
+                  <ArrowRight className="h-5 w-5 text-orange-600 dark:text-orange-400 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300" />
+                </div>
+                <h3 className="text-xl font-bold text-orange-900 dark:text-orange-100 mb-2">Ruokatyypit</h3>
+                <p className="text-orange-700 dark:text-orange-300 text-sm leading-relaxed mb-4">
+                  Syväanalyysi kuiva-, märkä- ja raakaruokien eduista ja haitoista. Vertailu ravintosisällöstä ja soveltuvuudesta eri ikäkausiin.
+                </p>
+                <div className="text-xs text-orange-600 dark:text-orange-400 font-medium">Lue lisää →</div>
+              </div>
+            </AnimatedCard>
           </Link>
 
-          <Link to="/info/feeding-data">
-            <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer bg-card/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-lg">
-                  <Database className="h-5 w-5" />
-                  Annostelutiedot
-                </CardTitle>
-                <CardDescription>
-                  Yksityiskohtaiset annosteluohjeet
-                </CardDescription>
-              </CardHeader>
-            </Card>
+          <Link to="/info/feeding-data" className="group">
+            <AnimatedCard delay={0.2} className="h-full">
+              <div className="bg-gradient-to-br from-blue-100 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-6 rounded-2xl border border-blue-200/50 dark:border-blue-800/50 group-hover:border-blue-300/70 dark:group-hover:border-blue-700/70 transition-all duration-300">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="p-3 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow duration-300">
+                    <Database className="h-8 w-8 text-white" />
+                  </div>
+                  <ArrowRight className="h-5 w-5 text-blue-600 dark:text-blue-400 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300" />
+                </div>
+                <h3 className="text-xl font-bold text-blue-900 dark:text-blue-100 mb-2">Annostelutiedot</h3>
+                <p className="text-blue-700 dark:text-blue-300 text-sm leading-relaxed mb-4">
+                  Tarkat laskukaavat ja suositukset pennun ruokamäärille. Ikä-, paino- ja rotukohtaiset ohjeet optimaalisen kasvun varmistamiseksi.
+                </p>
+                <div className="text-xs text-blue-600 dark:text-blue-400 font-medium">Tutustu dataan →</div>
+              </div>
+            </AnimatedCard>
           </Link>
 
-          <Link to="/info/safety">
-            <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer bg-card/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-lg">
-                  <AlertTriangle className="h-5 w-5" />
-                  Turvallisuus
-                </CardTitle>
-                <CardDescription>
-                  Tuoteturvallisuus ja ajankohtaiset uutiset
-                </CardDescription>
-              </CardHeader>
-            </Card>
+          <Link to="/info/safety" className="group">
+            <AnimatedCard delay={0.3} className="h-full">
+              <div className="bg-gradient-to-br from-red-100 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20 p-6 rounded-2xl border border-red-200/50 dark:border-red-800/50 group-hover:border-red-300/70 dark:group-hover:border-red-700/70 transition-all duration-300">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="p-3 bg-gradient-to-br from-red-500 to-pink-500 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow duration-300">
+                    <Shield className="h-8 w-8 text-white" />
+                  </div>
+                  <ArrowRight className="h-5 w-5 text-red-600 dark:text-red-400 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300" />
+                </div>
+                <h3 className="text-xl font-bold text-red-900 dark:text-red-100 mb-2">Turvallisuus</h3>
+                <p className="text-red-700 dark:text-red-300 text-sm leading-relaxed mb-4">
+                  Tuotevetoja, varoituksia ja turvallisuusohjeita. Ajankohtaiset uutiset ruokaturvallisuudesta ja vaarallisista ainesosista.
+                </p>
+                <div className="text-xs text-red-600 dark:text-red-400 font-medium">Turvallisuusinfo →</div>
+              </div>
+            </AnimatedCard>
           </Link>
 
-          <Link to="/info/puppy-guide">
-            <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer bg-accent/10 backdrop-blur-sm border-0 shadow-xl rounded-2xl border-accent/20">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-lg text-accent">
-                  <BookOpen className="h-5 w-5" />
-                  Pennun ruokintaopas
-                </CardTitle>
-                <CardDescription>
-                  Kattava opas pennun ruokintaan ja ravitsemukseen
-                </CardDescription>
-              </CardHeader>
-            </Card>
+          <Link to="/info/puppy-guide" className="group">
+            <AnimatedCard delay={0.4} className="h-full">
+              <div className="bg-gradient-to-br from-green-100 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 p-6 rounded-2xl border border-green-200/50 dark:border-green-800/50 group-hover:border-green-300/70 dark:group-hover:border-green-700/70 transition-all duration-300">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="p-3 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow duration-300">
+                    <Heart className="h-8 w-8 text-white" />
+                  </div>
+                  <ArrowRight className="h-5 w-5 text-green-600 dark:text-green-400 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300" />
+                </div>
+                <h3 className="text-xl font-bold text-green-900 dark:text-green-100 mb-2">Pennun ruokintaopas</h3>
+                <p className="text-green-700 dark:text-green-300 text-sm leading-relaxed mb-4">
+                  Kattava vaiheittainen opas pennun ruokintaan syntymästä aikuistumiseen. Siirtymät, aikataulut ja erityistilanteet.
+                </p>
+                <div className="text-xs text-green-600 dark:text-green-400 font-medium">Ruokintaopas →</div>
+              </div>
+            </AnimatedCard>
           </Link>
 
-          <Link to="/info/socialization-guide">
-            <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer bg-primary/10 backdrop-blur-sm border-0 shadow-xl rounded-2xl border-primary/20">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-lg text-primary">
-                  <BookOpen className="h-5 w-5" />
-                  Pennun sosiaalistamisopas
-                </CardTitle>
-                <CardDescription>
-                  Kattava opas pennun sosiaalistamiseen ja käytökseen
-                </CardDescription>
-              </CardHeader>
-            </Card>
+          <Link to="/info/socialization-guide" className="group">
+            <AnimatedCard delay={0.5} className="h-full">
+              <div className="bg-gradient-to-br from-purple-100 to-violet-50 dark:from-purple-900/20 dark:to-violet-900/20 p-6 rounded-2xl border border-purple-200/50 dark:border-purple-800/50 group-hover:border-purple-300/70 dark:group-hover:border-purple-700/70 transition-all duration-300">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="p-3 bg-gradient-to-br from-purple-500 to-violet-500 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow duration-300">
+                    <Users className="h-8 w-8 text-white" />
+                  </div>
+                  <ArrowRight className="h-5 w-5 text-purple-600 dark:text-purple-400 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300" />
+                </div>
+                <h3 className="text-xl font-bold text-purple-900 dark:text-purple-100 mb-2">Sosiaalistamisopas</h3>
+                <p className="text-purple-700 dark:text-purple-300 text-sm leading-relaxed mb-4">
+                  Opas pennun sosiaalistamiseen ja käyttäytymiseen. Kohtaamiset, harjoittelu ja yhteisön rakentaminen pennun ympärille.
+                </p>
+                <div className="text-xs text-purple-600 dark:text-purple-400 font-medium">Sosiaalistimine →</div>
+              </div>
+            </AnimatedCard>
           </Link>
         </div>
 
@@ -228,5 +250,6 @@ export default function InfoHome() {
         </div>
       </div>
     </div>
-    </MobileOptimizedLayout>;
+    </MobileOptimizedLayout>
+  )
 }
