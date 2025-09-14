@@ -19,7 +19,7 @@ const FAQ: React.FC<FAQProps> = ({
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle className="text-2xl font-heading text-center text-black">{title}</CardTitle>
+        <CardTitle className="text-2xl font-heading text-center !text-black">{title}</CardTitle>
       </CardHeader>
       <CardContent className="text-black">
         <Accordion type="single" collapsible className="w-full">
