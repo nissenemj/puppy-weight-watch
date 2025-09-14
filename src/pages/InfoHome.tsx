@@ -83,21 +83,6 @@ export default function InfoHome() {
               </p>
               
               
-              {/* Stats */}
-              <div className="grid grid-cols-3 gap-6 mt-12 pt-8 border-t border-white/20">
-                <div>
-                  <div className="text-3xl font-bold text-white">500+</div>
-                  <div className="text-white/80 text-sm">Tutkittua ruokaa</div>
-                </div>
-                <div>
-                  <div className="text-3xl font-bold text-white">15k+</div>
-                  <div className="text-white/80 text-sm">Datapistettä</div>
-                </div>
-                <div>
-                  <div className="text-3xl font-bold text-white">98%</div>
-                  <div className="text-white/80 text-sm">Tarkkuus</div>
-                </div>
-              </div>
             </div>
             
             {/* Right Visual */}
