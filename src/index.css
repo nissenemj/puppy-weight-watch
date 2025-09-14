@@ -657,4 +657,12 @@ h1, h2, h3, h4, h5, h6 { scroll-margin-top: 80px; }
   }
 }
 
+/* Glass nav transparency override */
+.glass-nav.bg-transparent {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
 /* (moved) mobile utilities imported at top to satisfy CSS import ordering */
