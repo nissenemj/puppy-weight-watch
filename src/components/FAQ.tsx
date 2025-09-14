@@ -21,14 +21,14 @@ const FAQ: React.FC<FAQProps> = ({
       <CardHeader>
         <CardTitle className="text-2xl font-heading text-center">{title}</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="text-black">
         <Accordion type="single" collapsible className="w-full">
           {items.map((item, index) => (
             <AccordionItem key={index} value={`item-${index}`}>
               <AccordionTrigger className="text-left font-medium">
                 {item.question}
               </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground">
+              <AccordionContent className="text-black">
                 {item.answer}
               </AccordionContent>
             </AccordionItem>
