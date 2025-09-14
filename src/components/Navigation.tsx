@@ -163,7 +163,7 @@ const NavigationWithRouter = () => {
           opacity: 0
         }} transition={{
           duration: 0.3
-        }} className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[250]" onClick={() => setIsMobileMenuOpen(false)} />
+        }} className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[250]" onClick={() => setIsMobileMenuOpen(false)} />
 
             {/* Mobile Menu */}
             <motion.div initial={{
@@ -176,7 +176,7 @@ const NavigationWithRouter = () => {
           type: "spring",
           damping: 25,
           stiffness: 300
-        }} className="fixed top-0 right-0 h-full w-80 max-w-[90vw] bg-white/95 backdrop-blur-xl border-l border-white/30 z-[251] p-6" role="dialog" aria-modal="true" aria-labelledby="mobile-menu-title" id="mobile-menu-panel" ref={panelRef}>
+        }} className="fixed top-0 right-0 h-full w-80 max-w-[90vw] mobile-menu-panel border-l border-white/30 z-[251] p-6" role="dialog" aria-modal="true" aria-labelledby="mobile-menu-title" id="mobile-menu-panel" ref={panelRef}>
               {/* Header */}
               <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-3">
@@ -184,17 +184,17 @@ const NavigationWithRouter = () => {
                     <Dog className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <h3 id="mobile-menu-title" className="font-bold text-gray-800 text-lg">Pentulaskuri</h3>
-                    <p className="text-gray-600 text-sm">Koiran kasvun seuranta</p>
+                    <h3 id="mobile-menu-title" className="font-bold text-white text-lg">Pentulaskuri</h3>
+                    <p className="text-gray-300 text-sm">Koiran kasvun seuranta</p>
                   </div>
                 </div>
                 
-                <motion.button onClick={() => setIsMobileMenuOpen(false)} className="p-2 rounded-full hover:bg-gray-100 transition-all duration-300" whileHover={{
+                <motion.button onClick={() => setIsMobileMenuOpen(false)} className="p-2 rounded-full hover:bg-white/10 transition-all duration-300" whileHover={{
               scale: 1.1
             }} whileTap={{
               scale: 0.95
             }} aria-label="Sulje valikko" ref={closeBtnRef}>
-                  <X className="w-5 h-5 text-gray-700" />
+                  <X className="w-5 h-5 text-gray-300" />
                 </motion.button>
               </div>
 
@@ -211,7 +211,7 @@ const NavigationWithRouter = () => {
               }} transition={{
                 delay: index * 0.1
               }}>
-                      <Link to={item.href} onClick={() => setIsMobileMenuOpen(false)} className={`w-full flex items-center gap-4 p-4 rounded-2xl font-medium transition-all duration-300 ${isActive(item.href) ? 'bg-gradient-primary text-white shadow-lg' : 'text-gray-700 hover:bg-gray-100'}`} aria-current={isActive(item.href) ? 'page' : undefined} aria-label={`${item.label} - siirry sivulle`}>
+                      <Link to={item.href} onClick={() => setIsMobileMenuOpen(false)} className={`w-full flex items-center gap-4 p-4 rounded-2xl font-medium transition-all duration-300 ${isActive(item.href) ? 'bg-gradient-primary text-white shadow-lg' : 'text-white hover:bg-white/10'}`} aria-current={isActive(item.href) ? 'page' : undefined} aria-label={`${item.label} - siirry sivulle`}>
                         <Icon className="w-5 h-5" aria-hidden="true" />
                         <span className="text-lg">{item.label}</span>
                         
@@ -230,11 +230,11 @@ const NavigationWithRouter = () => {
 
               {/* Footer */}
               <div className="absolute bottom-6 left-6 right-6">
-                <div className="bg-gray-50 rounded-2xl p-4 text-center">
-                  <p className="text-gray-600 text-sm">
+                <div className="bg-white/10 rounded-2xl p-4 text-center">
+                  <p className="text-gray-300 text-sm">
                     Modernilla designilla
                   </p>
-                  <p className="text-gray-800 font-medium">
+                  <p className="text-white font-medium">
                     Hellodani.co-inspiraatio
                   </p>
                 </div>

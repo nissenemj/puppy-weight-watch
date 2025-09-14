@@ -126,7 +126,7 @@ const NavigationButtons: React.FC = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100]"
+              className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[100]"
               onClick={() => setIsMobileMenuOpen(false)}
             />
 
@@ -136,27 +136,27 @@ const NavigationButtons: React.FC = () => {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-white/95 backdrop-blur-xl border-l border-white/20 shadow-2xl z-[101]"
+              className="fixed top-0 right-0 h-full w-80 max-w-[85vw] mobile-menu-panel border-l border-white/20 shadow-2xl z-[101]"
             >
               <div className="flex flex-col h-full">
                 {/* Header */}
-                <div className="flex items-center justify-between p-6 border-b border-gray-200/50">
+                <div className="flex items-center justify-between p-6 border-b border-white/10">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-gradient-primary rounded-full flex items-center justify-center">
                       <Dog className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                      <h2 className="font-bold text-gray-800">Pentulaskuri</h2>
-                      <p className="text-xs text-gray-500">Pentukoiran seuranta</p>
+                      <h2 className="font-bold text-white">Pentulaskuri</h2>
+                      <p className="text-xs text-gray-300">Pentukoiran seuranta</p>
                     </div>
                   </div>
                   <motion.button
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+                    className="p-2 rounded-full hover:bg-white/10 transition-colors"
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    <X className="w-5 h-5 text-gray-600" />
+                    <X className="w-5 h-5 text-gray-300" />
                   </motion.button>
                 </div>
 
@@ -178,13 +178,13 @@ const NavigationButtons: React.FC = () => {
                             className={`flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 ${
                               isActive(item.href)
                                 ? 'bg-gradient-primary text-white shadow-lg hover:shadow-xl'
-                                : 'hover:bg-gray-100 text-gray-700'
+                                : 'hover:bg-white/10 text-white'
                             }`}
                           >
                             <div className={`p-2 rounded-xl ${
                               isActive(item.href) 
                                 ? 'bg-white/20' 
-                                : 'bg-gray-100'
+                                : 'bg-white/10'
                             }`}>
                               <Icon className="w-5 h-5" />
                             </div>
