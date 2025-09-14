@@ -21,7 +21,7 @@ export const AnimatedCard: React.FC<AnimatedCardProps> = ({
       whileHover={{ y: -4, transition: { duration: 0.2 } }}
       className={className}
     >
-      <Card className="card-elevated p-6 h-full">
+      <Card className="h-full" variant="elevated">
         {children}
       </Card>
     </motion.div>
