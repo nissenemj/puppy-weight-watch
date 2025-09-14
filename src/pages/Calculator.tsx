@@ -108,10 +108,6 @@ const Calculator = () => {
         }]} />
       </Section>
 
-      {/* Breadcrumb */}
-      <Section className="full-width-section py-4 border-b border-[var(--color-border)]">
-          <Breadcrumb items={breadcrumbItems} />
-      </Section>
       
       {/* Calculator Section + trust stats */}
       <Section className="full-width-section py-16 mobile-text-wrap mobile-container-safe" role="main" id="calculator-main">
