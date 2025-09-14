@@ -17,7 +17,7 @@ const FAQ: React.FC<FAQProps> = ({
   items 
 }) => {
   return (
-    <Card className="w-full">
+    <Card className="w-full m-6">
       <CardContent className="text-black">
         <Accordion type="single" collapsible className="w-full">
           {items.map((item, index) => (
