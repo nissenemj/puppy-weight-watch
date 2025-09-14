@@ -264,6 +264,17 @@ body {
     0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+/* Navigation safe spacing utility */
+.nav-safe-top {
+  padding-top: 6rem; /* 24 * 0.25rem = 6rem */
+}
+
+@media (min-width: 640px) {
+  .nav-safe-top {
+    padding-top: 7rem; /* 28 * 0.25rem = 7rem */
+  }
+}
+
 /* ===== ANIMATIONS ===== */
 .float-animation {
   animation: float 6s ease-in-out infinite;
