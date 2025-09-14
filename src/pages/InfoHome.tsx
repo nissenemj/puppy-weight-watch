@@ -42,7 +42,65 @@ export default function InfoHome() {
         </div>
         
         <div className="relative max-w-7xl mx-auto px-4 py-20 sm:py-32">
-          
+          <div className="grid lg:grid-cols-2 gap-12 items-center mobile-grid-1">
+            {/* Left Content */}
+            <div className="text-white">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium mb-6">
+                
+                Reaaliaikainen tietopankki
+              </div>
+              
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 leading-tight">
+                Penturuoka-
+                <span className="block text-transparent bg-gradient-to-r from-yellow-300 to-orange-200 bg-clip-text">
+                  opas
+                </span>
+              </h1>
+              
+              <p className="text-xl sm:text-2xl text-white/90 mb-8 leading-relaxed">
+                Laaja katsaus Suomessa myytäviin koiranpentujen ruokiin ja niiden annosteluun 
+                <span className="font-semibold">ohjelmistokehityksen näkökulmasta</span>
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Button size="lg" className="bg-white text-gray-900 hover:bg-white/90 px-8 py-4 text-lg font-semibold rounded-2xl">
+                  Aloita tutkiminen
+                </Button>
+                <Button variant="ghost" size="lg" className="text-white border-white/30 hover:bg-white/10 px-8 py-4 text-lg rounded-2xl">
+                  Katso demovideoita
+                </Button>
+              </div>
+              
+              {/* Stats */}
+              <div className="grid grid-cols-3 gap-6 mt-12 pt-8 border-t border-white/20">
+                <div>
+                  <div className="text-3xl font-bold text-white">500+</div>
+                  <div className="text-white/80 text-sm">Tutkittua ruokaa</div>
+                </div>
+                <div>
+                  <div className="text-3xl font-bold text-white">15k+</div>
+                  <div className="text-white/80 text-sm">Datapistettä</div>
+                </div>
+                <div>
+                  <div className="text-3xl font-bold text-white">98%</div>
+                  <div className="text-white/80 text-sm">Tarkkuus</div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Right Visual */}
+            <div className="relative">
+              <div className="relative z-10">
+                <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20">
+                  <img src={heroImage} alt="Penturuoka-opas dashboard" className="w-full h-auto object-contain rounded-2xl" />
+                </div>
+              </div>
+              
+              {/* Floating Elements */}
+              <div className="absolute -top-4 -right-4 w-20 h-20 bg-yellow-400 rounded-full opacity-20 animate-pulse"></div>
+              <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-pink-400 rounded-full opacity-10 animate-bounce"></div>
+            </div>
+          </div>
         </div>
       </div>
 
