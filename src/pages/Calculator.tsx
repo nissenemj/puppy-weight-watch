@@ -74,7 +74,7 @@ const Calculator = () => {
               <br />
               <span className="text-[var(--color-primary-500)]">Ruokamäärät</span>
             </motion.h1>
-            <motion.p variants={entranceAnimations.staggerChild} className="text-body-xl text-muted max-w-xl">
+            <motion.p variants={entranceAnimations.staggerChild} className="text-body-lg text-muted max-w-xl">
               Laske koiranpentusi optimaalinen päivittäinen ruokamäärä huomioiden rodun, iän, painon ja aktiivisuustason.
             </motion.p>
             <motion.div variants={entranceAnimations.staggerChild} className="mt-6 flex items-start justify-start gap-6 text-body-sm text-muted mobile-flex-wrap flex-col sm:flex-row">
