@@ -36,7 +36,7 @@ import LazyImage from '@/components/LazyImage'
 // Import new abstract illustrations
 import heroMainIllustration from '@/assets/abstract-hero-main.svg'
 import growthChartHero from '@/assets/abstract-growth-chart.svg'
-import growthStages from '@/assets/abstract-growth-stages.svg'
+import heroPuppyCartoon from '@/assets/hero-puppy-cartoon.jpg'
 import appIcon from '@/assets/app-icon.png'
 
 const Index = () => {
@@ -277,8 +277,8 @@ const Index = () => {
             >
               <div className="relative max-w-md mx-auto">
                 <LazyImage 
-                  src={growthStages}
-                  alt="Pennun kasvuvaiheet"
+                  src={heroPuppyCartoon}
+                  alt="Iloinen sarjakuvapentu vilkuttamassa"
                   className="w-full h-auto rounded-2xl shadow-lg object-cover"
                   priority={true}
                   sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 400px"

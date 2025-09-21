@@ -92,11 +92,11 @@ nav a, nav button {
 
 /* Navigation styles */
 .nav-tab-active {
-  @apply text-primary border-b-2 border-primary;
+  @apply text-[var(--color-primary)] border-b-2 border-[var(--color-primary)];
 }
 
 .nav-tab-inactive {
-  @apply text-muted-foreground hover:text-foreground;
+  @apply text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)];
 }
 
 /* Skip to content link */
