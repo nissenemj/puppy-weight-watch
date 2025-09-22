@@ -36,7 +36,14 @@ export default function ScrollPanBackground({
   return (
     <section ref={sectionRef} className={`relative w-full overflow-hidden ${minHeightClass} ${className}`}>
       {/* Background image: Suspense fallback shows static image until Motion chunk loads */}
-      <ErrorBoundary fallback={() => null}>
+      <ErrorBoundary fallback={() => (
+        <img
+          src={src}
+          alt={alt}
+          aria-hidden={alt === ''}
+          className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
+        />
+      )}>
         <Suspense
           fallback={
             <img
