@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, { ReactNode, useEffect, useRef, useState } from 'react'
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
 
 interface ScrollPanBackgroundProps {
@@ -35,7 +35,11 @@ export default function ScrollPanBackground({
   useEffect(() => {
     const raf = requestAnimationFrame(() => {
       if (sectionRef.current) {
-        setScrollOptions({ target: sectionRef, offset: ['start end', 'end start'] })
+        try {
+          setScrollOptions({ target: sectionRef, offset: ['start end', 'end start'] })
+        } catch (error) {
+          console.warn('ScrollPanBackground: Error setting scroll options', error)
+        }
       }
     })
     return () => cancelAnimationFrame(raf)

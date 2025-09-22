@@ -12,6 +12,7 @@ import BackToTopButton from '@/components/BackToTopButton'
 import SafetyNewsFeed from '@/components/SafetyNewsFeed'
 import heroImage from '@/assets/welcome-illustration.png'
 import ScrollPanBackground from '@/components/ScrollPanBackground'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
 
 export default function SafetyPage() {
   return (
@@ -21,17 +22,34 @@ export default function SafetyPage() {
       <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-full min-w-0">
         {/* Hero Section with pan background */}
         <div className="rounded-2xl overflow-hidden mb-12">
-          <ScrollPanBackground src={heroImage} alt="Koirien turvallisuus ja terveys" panX={25} panY={15} zoom={1.03} minHeightClass="h-60 sm:h-72 md:h-80">
-            <div className="text-center">
-              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-3 drop-shadow">
-                🛡️ Turvallisuus ja suositukset
-              </h1>
-              <p className="text-lg sm:text-xl text-white/90 max-w-3xl mx-auto">
-                Tärkeät turvallisuusohjeet ja ajankohtaiset uutiset koiranruokinnasta
-              </p>
+          <ErrorBoundary fallback={() => (
+            <div 
+              className="h-60 sm:h-72 md:h-80 bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center relative"
+              style={{ backgroundImage: `url(${heroImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+            >
+              <div className="absolute inset-0 bg-black/50" />
+              <div className="text-center relative z-10">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-3 drop-shadow">
+                  🛡️ Turvallisuus ja suositukset
+                </h1>
+                <p className="text-lg sm:text-xl text-white/90 max-w-3xl mx-auto">
+                  Tärkeät turvallisuusohjeet ja ajankohtaiset uutiset koiranruokinnasta
+                </p>
+              </div>
             </div>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-          </ScrollPanBackground>
+          )}>
+            <ScrollPanBackground src={heroImage} alt="Koirien turvallisuus ja terveys" panX={25} panY={15} zoom={1.03} minHeightClass="h-60 sm:h-72 md:h-80">
+              <div className="text-center">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-3 drop-shadow">
+                  🛡️ Turvallisuus ja suositukset
+                </h1>
+                <p className="text-lg sm:text-xl text-white/90 max-w-3xl mx-auto">
+                  Tärkeät turvallisuusohjeet ja ajankohtaiset uutiset koiranruokinnasta
+                </p>
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+            </ScrollPanBackground>
+          </ErrorBoundary>
         </div>
 
         {/* News Feed */}
