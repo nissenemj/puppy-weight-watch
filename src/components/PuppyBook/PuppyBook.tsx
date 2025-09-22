@@ -29,7 +29,7 @@ import MonthlyTracker from './MonthlyTracker';
 import Timeline from './Timeline';
 import Milestones from './Milestones';
 import MemoryGallery from './MemoryGallery';
-import CommunityFeed from './CommunityFeed';
+
 import Leaderboard from './Leaderboard';
 import WeeklyChallenges from './WeeklyChallenges';
 import UserSpotlight from './UserSpotlight';
@@ -285,7 +285,7 @@ const PuppyBook: React.FC = () => {
       </div>
       <AnimatedHeader 
         title="Pentu kasvaa – seuraa matkaa!"
-        subtitle="Tallenna ainutlaatuisia hetkiä ja jaa iloa yhteisön kanssa"
+        subtitle="Tallenna ainutlaatuisia hetkiä pennun matkalla"
         puppyName={book.title}
         birthDate={book.birth_date}
         puppyImageUrl={book.cover_image_url}
@@ -365,17 +365,6 @@ const PuppyBook: React.FC = () => {
                   profileImage: book.cover_image_url
                 }}
               />
-            </motion.div>
-          )}
-          {activeSection === 'community' && (
-            <motion.div
-              key="community"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
-            >
-              <CommunityFeed />
             </motion.div>
           )}
           {activeSection === 'leaderboard' && (
@@ -703,7 +692,7 @@ const PuppyBookNavigation: React.FC<{
     { id: 'milestones', label: 'Virstanpylväät', icon: Award },
     { id: 'growth', label: 'Kasvu', icon: Target },
     { id: 'memories', label: 'Muistot', icon: Heart },
-    { id: 'community', label: 'Yhteisö', icon: Users }
+    
   ];
 
   return (

@@ -64,14 +64,6 @@ const ACHIEVEMENTS: Achievement[] = [
     points: 75
   },
   {
-    id: 'community_helper',
-    title: 'Yhteisön auttaja',
-    description: 'Kirjoita 20 kommenttia',
-    icon: 'messageCircle',
-    condition: (stats) => stats.total_comments >= 20,
-    points: 40
-  },
-  {
     id: 'top_scorer',
     title: 'Pistekunkku',
     description: 'Saavuta 500 pistettä',

@@ -83,7 +83,7 @@ const Footer = () => {
             <div className="max-w-2xl mx-auto">
               <Badge className="bg-white/20 text-white border-white/30 mb-4">
                 <Mail className="w-4 h-4 mr-2" />
-                Liity yhteisöön
+                Uutiskirje
               </Badge>
               <h2 className="text-h2 text-white mb-4">
                 Saa vinkkejä & päivityksiä

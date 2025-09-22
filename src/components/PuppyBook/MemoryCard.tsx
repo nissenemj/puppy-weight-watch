@@ -32,7 +32,6 @@ interface Memory {
   created_at: string;
   privacy_settings?: {
     visibility: 'private' | 'public';
-    shareWithCommunity: boolean;
   };
   reactions?: Array<{ id: string; user_id: string; reaction_type: string }>;
   comments?: Array<{ id: string; memory_id: string; user_id: string; comment_text: string; created_at: string }>;
@@ -136,9 +135,9 @@ const MemoryCard: React.FC<MemoryCardProps> = ({ memory, viewMode, onMemoryUpdat
     }
   };
 
-  const handlePrivacyToggle = async (field: 'visibility' | 'shareWithCommunity', value: any) => {
+  const handlePrivacyToggle = async (field: 'visibility', value: any) => {
     try {
-      const currentSettings = memory.privacy_settings || { visibility: 'private', shareWithCommunity: false };
+      const currentSettings = memory.privacy_settings || { visibility: 'private' };
       const newSettings = {
         ...currentSettings,
         [field]: value
@@ -153,9 +152,7 @@ const MemoryCard: React.FC<MemoryCardProps> = ({ memory, viewMode, onMemoryUpdat
 
       toast({
         title: "Päivitetty! ✅",
-        description: field === 'visibility' 
-          ? `Muisto on nyt ${value === 'public' ? 'julkinen' : 'yksityinen'}`
-          : `Yhteisöjakaminen ${value ? 'käytössä' : 'pois käytöstä'}`,
+        description: `Muisto on nyt ${value === 'public' ? 'julkinen' : 'yksityinen'}`,
       });
 
       onMemoryUpdated();
@@ -197,11 +194,6 @@ const MemoryCard: React.FC<MemoryCardProps> = ({ memory, viewMode, onMemoryUpdat
             ) : (
               <div className="bg-gray-500 text-white p-1 rounded-full" title="Yksityinen">
                 <Lock className="w-3 h-3" />
-              </div>
-            )}
-            {memory.privacy_settings?.shareWithCommunity && (
-              <div className="bg-blue-500 text-white p-1 rounded-full" title="Jaettu yhteisölle">
-                <Users className="w-3 h-3" />
               </div>
             )}
           </div>
@@ -266,11 +258,6 @@ const MemoryCard: React.FC<MemoryCardProps> = ({ memory, viewMode, onMemoryUpdat
             ) : (
               <div className="bg-gray-500 text-white p-0.5 rounded-full" title="Yksityinen">
                 <Lock className="w-2 h-2" />
-              </div>
-            )}
-            {memory.privacy_settings?.shareWithCommunity && (
-              <div className="bg-blue-500 text-white p-0.5 rounded-full" title="Jaettu yhteisölle">
-                <Users className="w-2 h-2" />
               </div>
             )}
           </div>
@@ -386,23 +373,6 @@ const MemoryCard: React.FC<MemoryCardProps> = ({ memory, viewMode, onMemoryUpdat
                   Yksityinen
                 </>
               )}
-            </button>
-            
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                const isShared = memory.privacy_settings?.shareWithCommunity;
-                handlePrivacyToggle('shareWithCommunity', !isShared);
-                setShowMenu(false);
-              }}
-              className={`flex items-center gap-2 px-3 py-1.5 text-xs rounded w-full mt-1 transition-colors ${
-                memory.privacy_settings?.shareWithCommunity
-                  ? 'bg-blue-50 text-blue-700 hover:bg-blue-100'
-                  : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
-              }`}
-            >
-              <Users className="w-3 h-3" />
-              {memory.privacy_settings?.shareWithCommunity ? 'Jaettu yhteisölle' : 'Jaa yhteisölle'}
             </button>
           </div>
           

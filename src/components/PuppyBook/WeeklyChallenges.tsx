@@ -29,7 +29,7 @@ interface Challenge {
   title: string;
   description: string;
   icon: string;
-  category: 'memory' | 'social' | 'milestone' | 'health' | 'community';
+  category: 'memory' | 'social' | 'milestone' | 'health';
   target: number;
   points: number;
   difficulty: 'easy' | 'medium' | 'hard';
@@ -76,15 +76,6 @@ const WEEKLY_CHALLENGES: Omit<Challenge, 'id' | 'startDate' | 'endDate'>[] = [
     target: 2,
     points: 25,
     difficulty: 'easy'
-  },
-  {
-    title: 'Yhteisön tuki',
-    description: 'Kommentoi 8 muiden muistoa',
-    icon: 'messageCircle',
-    category: 'community',
-    target: 8,
-    points: 35,
-    difficulty: 'medium'
   },
   {
     title: 'Jokapäiväinen dokumentoija',
@@ -184,14 +175,6 @@ const WeeklyChallenges: React.FC = () => {
         .gte('created_at', weekStart.toISOString())
         .lte('created_at', weekEnd.toISOString());
 
-      // Community challenges - count comments this week
-      const { count: commentsCount } = await supabase
-        .from('memory_comments')
-        .select('*', { count: 'exact', head: true })
-        .eq('user_id', user.id)
-        .gte('created_at', weekStart.toISOString())
-        .lte('created_at', weekEnd.toISOString());
-
       // Map progress to challenge categories
       challenges.forEach((challenge) => {
         switch (challenge.category) {
@@ -206,9 +189,6 @@ const WeeklyChallenges: React.FC = () => {
             break;
           case 'health':
             progress[challenge.id] = healthCount || 0;
-            break;
-          case 'community':
-            progress[challenge.id] = commentsCount || 0;
             break;
         }
       });
@@ -236,7 +216,6 @@ const WeeklyChallenges: React.FC = () => {
       case 'social': return <Heart className="w-4 h-4" />;
       case 'milestone': return <Target className="w-4 h-4" />;
       case 'health': return <PawPrint className="w-4 h-4" />;
-      case 'community': return <Users className="w-4 h-4" />;
       default: return <Star className="w-4 h-4" />;
     }
   };
@@ -253,14 +232,13 @@ const WeeklyChallenges: React.FC = () => {
     return iconMap[iconName] || <Star className="w-6 h-6 text-gray-500" />;
   };
 
-  const categories = ['all', 'memory', 'social', 'milestone', 'health', 'community'];
+  const categories = ['all', 'memory', 'social', 'milestone', 'health'];
   const categoryLabels = {
     all: 'Kaikki',
     memory: 'Muistot',
     social: 'Sosiaalinen',
     milestone: 'Virstanpylväät',
-    health: 'Terveys',
-    community: 'Yhteisö'
+    health: 'Terveys'
   };
 
   const filteredChallenges = selectedCategory === 'all' 

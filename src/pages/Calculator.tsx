@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Footer from '@/components/Footer';
 import Navigation from '@/components/Navigation';
 import AdvancedFoodCalculator from '@/components/AdvancedFoodCalculator';
@@ -15,7 +15,52 @@ import { createCalculatorSchema, createFAQSchema, createBreadcrumbSchema } from 
 import ScrollPanBackground from '@/components/ScrollPanBackground';
 import StickyHorizontalGallery from '@/components/StickyHorizontalGallery';
 import CountUp from '@/components/CountUp';
+import ComingSoon from '@/components/ComingSoon';
+import { supabase } from '@/integrations/supabase/client';
 const Calculator = () => {
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Check current user
+    const checkUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+      setLoading(false);
+    };
+
+    checkUser();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  // Check if user is admin
+  const isAdmin = user?.email === 'nissenemj@gmail.com';
+
+  if (loading) {
+    return (
+      <MobileOptimizedLayout>
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-orange-500"></div>
+        </div>
+      </MobileOptimizedLayout>
+    );
+  }
+
+  // Show coming soon for non-admin users
+  if (!isAdmin) {
+    return (
+      <MobileOptimizedLayout>
+        <ComingSoon />
+      </MobileOptimizedLayout>
+    );
+  }
   const faqs = [{
     question: "Kuinka paljon ruokaa pentu tarvitsee painon mukaan?",
     answer: "Ruokamäärä lasketaan elopainokiloa kohden. Pienet rodut (1-5 kg): 42g/kg 6 viikon iässä, vähennetään 31g/kg 7 kuukauteen mennessä. Suuret rodut (10-20 kg): 26g/kg 6 viikon iässä, vähennetään 19g/kg 8 kuukauteen mennessä. Esimerkki: 4kg, 5kk ikäinen pentu tarvitsee noin 136g päivässä."
