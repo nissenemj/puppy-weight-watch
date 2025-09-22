@@ -6,7 +6,7 @@ import { Progress } from '@/components/ui/progress';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ConversationalStep } from '@/components/ui/conversational-step';
 import { Dog, Scale, Heart, CheckCircle, Calculator, ArrowLeft, ArrowRight } from 'lucide-react';
-import { useOnboardingState } from '@/hooks/useOnboardingState';
+import { useOnboardingState, type DogProfile } from '@/hooks/useOnboardingState';
 import AdvancedFoodCalculator from '@/components/AdvancedFoodCalculator';
 
 interface OnboardingWizardProps {
@@ -130,11 +130,15 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ user, onComplete })
           <ConversationalStep
             questions={dogQuestions}
             onComplete={(answers) => {
-              updateDogProfile('name', answers.name || '');
-              updateDogProfile('breed', answers.breed || '');
-              updateDogProfile('age_years', answers.age_years ? Number(answers.age_years) : null);
-              updateDogProfile('activity_level', answers.activity_level || 'medium');
-              nextStep();
+              const updatedProfile: DogProfile = {
+                ...dogProfile,
+                name: String(answers.name || ''),
+                breed: String(answers.breed || ''),
+                age_years: answers.age_years ? Number(answers.age_years) : null,
+                activity_level: String(answers.activity_level || 'medium')
+              };
+              updateDogProfile(updatedProfile);
+              nextStep({ dogDetails: answers }, updatedProfile);
             }}
             initialAnswers={{
               name: dogProfile.name,
@@ -162,8 +166,12 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ user, onComplete })
           <ConversationalStep
             questions={weightQuestions}
             onComplete={(answers) => {
-              updateDogProfile('weight_kg', answers.weight_kg ? Number(answers.weight_kg) : null);
-              nextStep();
+              const updatedProfile: DogProfile = {
+                ...dogProfile,
+                weight_kg: answers.weight_kg ? Number(answers.weight_kg) : null
+              };
+              updateDogProfile(updatedProfile);
+              nextStep({ weightDetails: answers }, updatedProfile);
             }}
             initialAnswers={{
               weight_kg: dogProfile.weight_kg || ''

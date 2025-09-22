@@ -11,7 +11,7 @@ interface OnboardingProgress {
   completed: boolean;
 }
 
-interface DogProfile {
+export interface DogProfile {
   name: string;
   breed: string;
   age_years: number | null;
@@ -73,14 +73,19 @@ export const useOnboardingState = (user: User) => {
     }
   };
 
-  const saveProgress = useCallback(async (step: number, stepData?: Record<string, any>) => {
+  const saveProgress = useCallback(async (
+    step: number,
+    stepData?: Record<string, any>,
+    updatedDogProfile?: DogProfile
+  ) => {
     setIsLoading(true);
     try {
+      const profileToPersist = updatedDogProfile ?? dogProfile;
       const progressData = {
         user_id: user.id,
         current_step: step,
         step_data: {
-          dogProfile: JSON.parse(JSON.stringify(dogProfile)),
+          dogProfile: JSON.parse(JSON.stringify(profileToPersist)),
           ...stepData
         } as any,
         completed: false
@@ -178,14 +183,14 @@ export const useOnboardingState = (user: User) => {
     }
   };
 
-  const updateDogProfile = (key: keyof DogProfile, value: any) => {
-    setDogProfile(prev => ({ ...prev, [key]: value }));
+  const updateDogProfile = (profile: DogProfile) => {
+    setDogProfile(profile);
   };
 
-  const nextStep = () => {
+  const nextStep = (stepData?: Record<string, any>, updatedDogProfile?: DogProfile) => {
     const newStep = currentStep + 1;
     setCurrentStep(newStep);
-    saveProgress(newStep);
+    saveProgress(newStep, stepData, updatedDogProfile);
   };
 
   const previousStep = () => {
