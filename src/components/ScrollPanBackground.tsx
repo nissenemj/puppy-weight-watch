@@ -1,5 +1,7 @@
-import React, { ReactNode, useEffect, useRef, useState } from 'react'
-import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
+import React, { ReactNode, Suspense, useRef } from 'react'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
+
+const MotionBG = React.lazy(() => import('./ScrollPanBackgroundMotion'))
 
 interface ScrollPanBackgroundProps {
   src: string
@@ -15,7 +17,8 @@ interface ScrollPanBackgroundProps {
 
 /**
  * Pan + subtle zoom background that reacts to vertical scroll within its section.
- * Respects prefers-reduced-motion and falls back to static image.
+ * Framer Motion is lazy-loaded to avoid hydration and vendor bundling issues.
+ * Respects prefers-reduced-motion and falls back to static image (Suspense fallback).
  */
 export default function ScrollPanBackground({
   src,
@@ -29,47 +32,24 @@ export default function ScrollPanBackground({
   children
 }: ScrollPanBackgroundProps) {
   const sectionRef = useRef<HTMLDivElement | null>(null)
-  const reduceMotion = useReducedMotion()
-  // Defer useScroll binding until after mount to avoid hydration issues
-  const [scrollOptions, setScrollOptions] = useState<any>(undefined)
-  useEffect(() => {
-    const raf = requestAnimationFrame(() => {
-      if (sectionRef.current) {
-        try {
-          setScrollOptions({ target: sectionRef, offset: ['start end', 'end start'] })
-        } catch (error) {
-          console.warn('ScrollPanBackground: Error setting scroll options', error)
-        }
-      }
-    })
-    return () => cancelAnimationFrame(raf)
-  }, [])
-  const { scrollYProgress } = useScroll(scrollOptions)
-
-  // Compute transforms: from -half pan to +half pan; scale from 1 to zoom
-  const x = useTransform(scrollYProgress, [0, 1], [-panX / 2, panX / 2])
-  const y = useTransform(scrollYProgress, [0, 1], [-panY / 2, panY / 2])
-  const scale = useTransform(scrollYProgress, [0, 1], [1, zoom])
 
   return (
     <section ref={sectionRef} className={`relative w-full overflow-hidden ${minHeightClass} ${className}`}>
-      {/* Background image */}
-      {reduceMotion ? (
-        <img
-          src={src}
-          alt={alt}
-          aria-hidden={alt === ''}
-          className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
-        />
-      ) : (
-        <motion.img
-          src={src}
-          alt={alt}
-          aria-hidden={alt === ''}
-          className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none will-change-transform"
-          style={{ x, y, scale }}
-        />
-      )}
+      {/* Background image: Suspense fallback shows static image until Motion chunk loads */}
+      <ErrorBoundary fallback={() => null}>
+        <Suspense
+          fallback={
+            <img
+              src={src}
+              alt={alt}
+              aria-hidden={alt === ''}
+              className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
+            />
+          }
+        >
+          <MotionBG src={src} alt={alt} panX={panX} panY={panY} zoom={zoom} sectionRef={sectionRef} />
+        </Suspense>
+      </ErrorBoundary>
 
       {/* Gradient overlay for better text readability */}
       <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/30 via-black/10 to-black/50 pointer-events-none" />

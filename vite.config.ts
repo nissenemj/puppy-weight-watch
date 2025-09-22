@@ -20,6 +20,8 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      "react": path.resolve(__dirname, "node_modules/react"),
+      "react-dom": path.resolve(__dirname, "node_modules/react-dom"),
     },
     dedupe: ['react', 'react-dom', 'react/jsx-runtime'],
   },
@@ -67,10 +69,8 @@ export default defineConfig(({ mode }) => ({
               return 'chart-vendor';
             }
             
-            // Animations (load when needed) 
-            if (id.includes('framer-motion')) {
-              return 'animation-vendor';
-            }
+            // Animations (let Vite decide optimal chunking)
+            // Previously forced: if (id.includes('framer-motion')) return 'animation-vendor';
             
             // Forms (used on specific pages)
             if (id.includes('react-hook-form') || id.includes('@hookform') || id.includes('zod')) {
@@ -152,8 +152,7 @@ export default defineConfig(({ mode }) => ({
       '@tanstack/react-query',
       '@supabase/supabase-js',
       'react-helmet-async',
-      'lucide-react',
-      'framer-motion',
+      'lucide-react'
     ],
   },
 }));
