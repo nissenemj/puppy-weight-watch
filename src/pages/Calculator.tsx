@@ -17,6 +17,7 @@ import StickyHorizontalGallery from '@/components/StickyHorizontalGallery';
 import CountUp from '@/components/CountUp';
 import ComingSoon from '@/components/ComingSoon';
 import { supabase } from '@/integrations/supabase/client';
+import calculatorHeroBg from '@/assets/calculator-hero-bg.jpg';
 const Calculator = () => {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -108,7 +109,7 @@ const Calculator = () => {
       <SEO title="Pentulaskuri - Ruokamäärä" description="Laske koiranpentusi optimaalinen päivittäinen ruokamäärä. Huomioi rodun, iän, painon ja aktiivisuuden. Käytä virallisia annostelutaulukoita." keywords="pentulaskuri, ruokalaskuri, koiranpennun ruokinta, annostelu, ruokamäärä, penturuoka" structuredData={structuredData} />
       
       {/* Hero Section with dog food background */}
-      <ScrollPanBackground src="/src/assets/calculator-hero-bg.jpg" alt="" panX={30} panY={20} zoom={1.03} minHeightClass="min-h-[70svh]">
+      <ScrollPanBackground src={calculatorHeroBg} alt="" panX={30} panY={20} zoom={1.03} minHeightClass="min-h-[70svh]">
         <div className="hero-content text-left max-w-lg ml-0">
           <motion.div initial="hidden" animate="visible" variants={entranceAnimations.staggerContainer}>
             <motion.div variants={entranceAnimations.staggerChild} className="mb-4 flex justify-start">

@@ -38,6 +38,7 @@ import heroMainIllustration from '@/assets/abstract-hero-main.svg'
 import growthChartHero from '@/assets/abstract-growth-chart.svg'
 import heroPuppyCartoon from '@/assets/hero-puppy-cartoon.jpg'
 import appIcon from '@/assets/app-icon.png'
+import dogscaleImage from '@/assets/dogscale.jpg'
 
 const Index = () => {
   const faqs = [
@@ -160,7 +161,7 @@ const Index = () => {
 
       {/* Pan Hero Section */}
       <section className="full-width-section no-horizontal-scroll mobile-text-wrap responsive-media mobile-container-safe" role="region" aria-labelledby="main-heading">
-        <ScrollPanBackground src="/src/assets/dogscale.jpg" alt="Pentulaskuri - koirankuvia laskimen kanssa" panX={40} panY={20} zoom={1.04} minHeightClass="min-h-[50svh]" className="no-horizontal-scroll">
+        <ScrollPanBackground src={dogscaleImage} alt="Pentulaskuri - koirankuvia laskimen kanssa" panX={40} panY={20} zoom={1.04} minHeightClass="min-h-[50svh]" className="no-horizontal-scroll">
           <div className="hero-content text-center mobile-grid-1 mobile-container-safe mobile-text-container mobile-hero-container relative z-40 px-8 py-12 bg-black/40 backdrop-blur-sm rounded-lg border border-white/10">
             <motion.div initial="hidden" animate="visible" variants={entranceAnimations.staggerContainer}>
               <motion.h1 variants={entranceAnimations.staggerChild} className="text-display-1 mb-2 text-white relative z-50 font-display" id="main-heading">

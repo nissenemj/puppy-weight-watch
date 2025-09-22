@@ -3,6 +3,9 @@
  * Optimized for mobile performance with intersection observer and native lazy loading
  */
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import puppyLogo from '@/assets/puppy-logo.png';
+import heroPuppy from '@/assets/hero-puppy.png';
+import pawIcon from '@/assets/paw-icon.png';
 
 interface LazyImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   src: string;
@@ -220,9 +223,9 @@ export function ProgressiveImage({
  */
 export function preloadCriticalResources() {
   const criticalImages = [
-    '/src/assets/puppy-logo.png',
-    '/src/assets/hero-puppy.png',
-    '/src/assets/paw-icon.png'
+    puppyLogo,
+    heroPuppy,
+    pawIcon
   ];
 
   criticalImages.forEach(src => {

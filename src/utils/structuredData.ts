@@ -1,4 +1,5 @@
 // Structured data helpers for SEO optimization
+import puppyLogo from '@/assets/puppy-logo.png';
 
 export const createOrganizationSchema = () => ({
   "@context": "https://schema.org",
@@ -6,7 +7,7 @@ export const createOrganizationSchema = () => ({
   "name": "Koiranpennun Painonseuranta",
   "description": "Koiranpentujen kasvun ja kehityksen seurantapalvelu",
   "url": window.location.origin,
-  "logo": `${window.location.origin}/src/assets/puppy-logo.png`,
+  "logo": `${window.location.origin}${puppyLogo}`,
   "sameAs": [],
   "contactPoint": {
     "@type": "ContactPoint",
