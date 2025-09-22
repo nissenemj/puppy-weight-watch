@@ -636,7 +636,7 @@ export default function ModernPuppyWeightTracker() {
               <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
                 <CardContent className="text-center py-12">
                   <Scale className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-gray-700 mb-2">Valitse koira</h3>
+                  <h3 className="text-xl font-semibold text-[var(--color-text-primary)] mb-2">Valitse koira</h3>
                   <p className="text-gray-500">Valitse ensin koira aloittaaksesi painonseurannan</p>
                 </CardContent>
               </Card>

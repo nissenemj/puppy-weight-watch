@@ -292,7 +292,7 @@ export default function GrowthDevelopmentSection({ weightData, birthDate }: Grow
                       {stage.icon}
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-semibold">{stage.title}</h3>
+                      <h3 className="font-semibold text-[var(--color-text-primary)]">{stage.title}</h3>
                       <p className="text-sm text-muted-foreground">
                         {stage.ageWeeks[0]}-{stage.ageWeeks[1]} viikkoa
                       </p>
