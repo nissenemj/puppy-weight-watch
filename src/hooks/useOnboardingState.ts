@@ -86,7 +86,7 @@ export const useOnboardingState = (user: User) => {
         current_step: step,
         step_data: {
           dogProfile: JSON.parse(JSON.stringify(profileToPersist)),
-          ...stepData
+          ...(stepData || {})
         } as any,
         completed: false
       };
