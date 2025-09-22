@@ -6,8 +6,8 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  // Use GitHub Pages base path in production so assets resolve under /puppy-weight-watch/
-  base: mode === 'production' ? '/puppy-weight-watch/' : '/',
+  // IONOS serves from domain root, no subpath needed
+  base: '/',
   server: {
     host: "0.0.0.0",
     port: 8080,
