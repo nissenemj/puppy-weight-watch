@@ -87,12 +87,26 @@ class ErrorTracker {
 
   private async sendError(report: ErrorReport) {
     try {
+      // For production, log to console for debugging
+      if (import.meta.env.PROD) {
+        console.error('🚨 Production Error:', {
+          message: report.message,
+          stack: report.stack,
+          url: report.url,
+          timestamp: new Date(report.timestamp).toISOString(),
+          userAgent: report.userAgent
+        });
+      }
+      
+      // Try to send to error endpoint (if available)
       await fetch('/api/errors', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(report)
+      }).catch(() => {
+        // Fail silently if endpoint doesn't exist
       });
     } catch (error) {
       // If sending fails, store locally

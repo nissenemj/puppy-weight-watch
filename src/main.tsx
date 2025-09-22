@@ -6,6 +6,8 @@ import Router from './router'
 import CriticalCSS from './components/CriticalCSS'
 import './index.css'
 import './i18n'
+import { initializeHealthCheck } from './utils/productionHealthCheck'
+import { AccessibilityEnhancer } from './components/MobileEnhancements'
 
 // Initialize mobile optimizations
 import { VirtualKeyboardHandler } from './utils/VirtualKeyboardHandler'
@@ -26,6 +28,9 @@ const queryClient = new QueryClient({
 
 // Initialize critical optimizations immediately
 initializeCSSOptimizations()
+
+// Initialize production health check
+const healthCheck = initializeHealthCheck()
 
 // Initialize virtual keyboard handler
 new VirtualKeyboardHandler()
@@ -54,6 +59,7 @@ createRoot(document.getElementById("root")!).render(
   <ErrorBoundary>
     <CriticalCSS />
     <ScrollProgressBar />
+    <AccessibilityEnhancer />
     <ThemeProvider>
       <QueryClientProvider client={queryClient}>
         <HelmetProvider>

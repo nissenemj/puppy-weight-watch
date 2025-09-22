@@ -7,6 +7,9 @@ AddType application/json .json
 # Enable mod_rewrite
 RewriteEngine On
 
+# Enable error logging for debugging
+LogLevel alert rewrite:trace3
+
 # Handle client-side routing for React SPA
 # Don't rewrite files that exist
 RewriteCond %{REQUEST_FILENAME} !-f
@@ -14,8 +17,13 @@ RewriteCond %{REQUEST_FILENAME} !-d
 # Don't rewrite API calls or assets
 RewriteCond %{REQUEST_URI} !^/api/
 RewriteCond %{REQUEST_URI} !^/assets/
+# Don't rewrite health check endpoint
+RewriteCond %{REQUEST_URI} !^/health$
 # Rewrite everything else to index.html
 RewriteRule ^.*$ /index.html [L]
+
+# Health check endpoint for monitoring
+RewriteRule ^health$ /health.html [L]
 
 # Cache static assets for better performance
 <FilesMatch "\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$">

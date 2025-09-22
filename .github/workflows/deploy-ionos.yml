@@ -35,6 +35,20 @@ jobs:
       env:
         NODE_ENV: production
     
+    - name: Verify build artifacts
+      run: |
+        echo "Verifying build output..."
+        ls -la dist/
+        if [ ! -f "dist/index.html" ]; then
+          echo "❌ index.html not found in dist/"
+          exit 1
+        fi
+        if [ ! -d "dist/assets" ]; then
+          echo "❌ assets directory not found in dist/"
+          exit 1
+        fi
+        echo "✅ Build artifacts verified"
+    
     - name: Run tests
       run: npm run test:mobile
     
@@ -60,7 +74,31 @@ jobs:
       run: |
         echo "Deployment completed successfully!"
         echo "Site URL: https://pentulaskuri.com"
-        curl -f https://pentulaskuri.com || exit 1
+        
+        # Wait for deployment to propagate
+        sleep 30
+        
+        # Check health endpoint first
+        echo "Testing health endpoint..."
+        curl -f https://pentulaskuri.com/health || echo "Health endpoint not accessible"
+        
+        # Check main site
+        echo "Testing main site..."
+        response=$(curl -s -o /dev/null -w "%{http_code}" https://pentulaskuri.com)
+        if [ "$response" != "200" ]; then
+          echo "❌ Main site returned HTTP $response"
+          exit 1
+        fi
+        
+        # Check if main site returns HTML content
+        content=$(curl -s https://pentulaskuri.com)
+        if [[ "$content" == *"Koiranpennun Painonseuranta"* ]]; then
+          echo "✅ Site is serving correct content"
+        else
+          echo "❌ Site content verification failed"
+          echo "Received content length: ${#content}"
+          exit 1
+        fi
     
     - name: Send deployment notification
       if: always()

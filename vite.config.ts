@@ -40,98 +40,32 @@ export default defineConfig(({ mode }) => ({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          // Vendor libraries
+          // Simplified chunking for production reliability
           if (id.includes('node_modules')) {
-            // Core React chunk (keep small for initial load)
-            if (id.includes('react') && !id.includes('router') && !id.includes('query') && !id.includes('hook-form')) {
-              return 'react-core';
+            // Core React libraries
+            if (id.includes('react') || id.includes('react-dom')) {
+              return 'react-vendor';
             }
             
-            // Router (loaded when needed)
-            if (id.includes('react-router')) {
-              return 'router-vendor';
+            // UI libraries
+            if (id.includes('@radix-ui') || id.includes('lucide-react')) {
+              return 'ui-vendor';
             }
             
-            // UI components (split by usage frequency)
-            if (id.includes('@radix-ui/react-dialog') || 
-                id.includes('@radix-ui/react-toast') || 
-                id.includes('@radix-ui/react-slot') ||
-                id.includes('@radix-ui/react-label')) {
-              return 'ui-core-vendor'; // Essential UI
-            }
-            
-            if (id.includes('@radix-ui')) {
-              return 'ui-extended-vendor'; // Extended UI components
-            }
-            
-            // Charts (heavy, load when needed)
-            if (id.includes('recharts')) {
-              return 'chart-vendor';
-            }
-            
-            // Animations (let Vite decide optimal chunking)
-            // Previously forced: if (id.includes('framer-motion')) return 'animation-vendor';
-            
-            // Forms (used on specific pages)
-            if (id.includes('react-hook-form') || id.includes('@hookform') || id.includes('zod')) {
-              return 'form-vendor';
-            }
-            
-            // Database
+            // Database and queries
             if (id.includes('@supabase') || id.includes('@tanstack/react-query')) {
               return 'data-vendor';
             }
             
-            // Icons (load when needed)
-            if (id.includes('lucide-react') || id.includes('react-icons')) {
-              return 'icons-vendor';
-            }
-            
-            // Utilities (essential)
-            if (id.includes('clsx') || id.includes('class-variance-authority') || id.includes('tailwind-merge')) {
-              return 'utils-vendor';
-            }
-            
-            // Date utilities (specific pages)
-            if (id.includes('date-fns')) {
-              return 'date-vendor';
-            }
-            
-            // Large libraries that can be lazy loaded
-            if (id.includes('html-to-image') || id.includes('tesseract') || id.includes('react-player')) {
+            // Charts and heavy libraries
+            if (id.includes('recharts') || id.includes('framer-motion') || 
+                id.includes('html-to-image') || id.includes('tesseract') || 
+                id.includes('react-player')) {
               return 'heavy-vendor';
             }
             
             // Everything else
             return 'vendor';
-          }
-          
-          // Application code splitting by feature
-          if (id.includes('/src/')) {
-            // PuppyBook feature (large, can be lazy loaded)
-            if (id.includes('/PuppyBook/') || id.includes('PuppyBook')) {
-              return 'feature-puppybook';
-            }
-            
-            // Weight tracking (core feature)
-            if (id.includes('weight-tracking') || id.includes('WeightTracker') || id.includes('WeightChart')) {
-              return 'feature-weight';
-            }
-            
-            // Food calculator (important feature)
-            if (id.includes('FoodCalculator') || id.includes('food-calculation')) {
-              return 'feature-calculator';
-            }
-            
-            // Admin/management features (rarely used)
-            if (id.includes('/admin/') || id.includes('Admin')) {
-              return 'feature-admin';
-            }
-            
-            // UI components (shared)
-            if (id.includes('/ui/') || id.includes('/components/ui/')) {
-              return 'app-ui';
-            }
           }
         },
       },
@@ -140,7 +74,7 @@ export default defineConfig(({ mode }) => ({
     minify: 'terser',
     terserOptions: {
       compress: {
-        drop_console: mode === 'production',
+        drop_console: false, // Keep console logs for production debugging
         drop_debugger: mode === 'production',
       },
     },

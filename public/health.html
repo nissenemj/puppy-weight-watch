@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Health Check</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>Pentulaskuri Health Check</h1>
+    <p>Status: OK</p>
+    <p>Timestamp: <span id="timestamp"></span></p>
+    <script>
+        document.getElementById('timestamp').textContent = new Date().toISOString();
+        
+        // Basic JavaScript execution test
+        console.log('Health check page loaded successfully');
+        
+        // Try to access the main application
+        fetch('/')
+            .then(response => {
+                console.log('Main app accessible:', response.status === 200);
+            })
+            .catch(error => {
+                console.error('Main app not accessible:', error);
+            });
+    </script>
+</body>
+</html>

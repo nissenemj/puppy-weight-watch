@@ -32,6 +32,8 @@ import CountUp from '@/components/CountUp'
 import ScrollPanBackground from '@/components/ScrollPanBackground'
 import { MobileOptimizedLayout } from '@/components/MobileOptimizedLayout'
 import LazyImage from '@/components/LazyImage'
+import { UserOnboarding, useOnboarding } from '@/components/UserOnboarding'
+import { useMobileEnhancements, TouchTarget } from '@/components/MobileEnhancements'
 
 // Import new abstract illustrations
 import heroMainIllustration from '@/assets/abstract-hero-main.svg'
@@ -41,6 +43,10 @@ import appIcon from '@/assets/app-icon.png'
 import dogscaleImage from '@/assets/dogscale.jpg'
 
 const Index = () => {
+  // Initialize mobile enhancements and onboarding
+  useMobileEnhancements();
+  const { showOnboarding, completeOnboarding } = useOnboarding();
+
   const faqs = [
     {
       question: "Kuinka usein minun pitäisi punnita pentuni?",
@@ -309,6 +315,12 @@ const Index = () => {
 
       {/* Footer */}
       <Footer />
+      
+      {/* User Onboarding */}
+      <UserOnboarding 
+        show={showOnboarding}
+        onComplete={completeOnboarding}
+      />
     </MobileOptimizedLayout>
   )
 }
