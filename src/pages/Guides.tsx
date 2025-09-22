@@ -149,7 +149,7 @@ const Guides = () => {
                       </div>
                     </div>
                     
-                    <CardTitle id={`guide-${index}-title`} className="text-h3 mb-2">
+                    <CardTitle id={`guide-${index}-title`} className="text-h3 mb-2 text-foreground font-semibold">
                       {guide.title}
                     </CardTitle>
                     
