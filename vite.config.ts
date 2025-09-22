@@ -40,33 +40,40 @@ export default defineConfig(({ mode }) => ({
         manualChunks(id) {
           // Simplified chunking for production reliability
           if (id.includes('node_modules')) {
+            // IMPORTANT: Exclude Storybook from production build
+            if (id.includes('@storybook') || id.includes('storybook')) {
+              return; // Don't include in any chunk
+            }
+
             // Core React libraries
             if (id.includes('react') || id.includes('react-dom')) {
               return 'react-vendor';
             }
-            
+
             // UI libraries
             if (id.includes('@radix-ui') || id.includes('lucide-react')) {
               return 'ui-vendor';
             }
-            
+
             // Database and queries
             if (id.includes('@supabase') || id.includes('@tanstack/react-query')) {
               return 'data-vendor';
             }
-            
+
             // Charts and heavy libraries
-            if (id.includes('recharts') || id.includes('framer-motion') || 
-                id.includes('html-to-image') || id.includes('tesseract') || 
+            if (id.includes('recharts') || id.includes('framer-motion') ||
+                id.includes('html-to-image') || id.includes('tesseract') ||
                 id.includes('react-player')) {
               return 'heavy-vendor';
             }
-            
+
             // Everything else
             return 'vendor';
           }
         },
       },
+      // Exclude Storybook files from production build
+      external: mode === 'production' ? [/@storybook/] : [],
     },
     chunkSizeWarningLimit: 500, // Lower limit to enforce smaller chunks
     minify: 'terser',
