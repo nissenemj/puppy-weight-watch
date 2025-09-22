@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useMemo } from 'react';
+import React, { useRef, useCallback, useMemo, useState, useEffect } from 'react';
 
 // Memoization utility for expensive calculations
 export const useMemoizedFn = <T extends (...args: any[]) => any>(fn: T): T => {
@@ -88,10 +88,10 @@ export const lazyLoad = <T extends React.ComponentType<any>>(
 export const useIntersectionObserver = (
   options: IntersectionObserverInit = {}
 ) => {
-  const [isIntersecting, setIsIntersecting] = React.useState(false);
-  const [ref, setRef] = React.useState<HTMLElement | null>(null);
+  const [isIntersecting, setIsIntersecting] = useState(false);
+  const [ref, setRef] = useState<HTMLElement | null>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!ref) return;
 
     const observer = new IntersectionObserver(([entry]) => {
