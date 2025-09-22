@@ -102,7 +102,7 @@
   font-weight: var(--font-medium);
   line-height: var(--leading-snug);
   letter-spacing: var(--tracking-normal);
-  color: #ffffff;
+  color: var(--color-text);
 }
 
 /* Global h3 styling */
@@ -112,7 +112,7 @@ h3 {
   font-weight: var(--font-medium);
   line-height: var(--leading-snug);
   letter-spacing: var(--tracking-normal);
-  color: #ffffff !important;
+  color: var(--color-text) !important;
 }
 
 .text-h4 {
