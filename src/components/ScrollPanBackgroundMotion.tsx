@@ -19,15 +19,13 @@ export default function ScrollPanBackgroundMotion({
   sectionRef
 }: MotionProps) {
   const reduceMotion = useReducedMotion()
-  
-  // Respect reduced motion: render nothing here (static fallback is shown by Suspense in parent)
-  if (reduceMotion) return null
-
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] })
-
   const x = useTransform(scrollYProgress, [0, 1], [-panX / 2, panX / 2])
   const y = useTransform(scrollYProgress, [0, 1], [-panY / 2, panY / 2])
   const scale = useTransform(scrollYProgress, [0, 1], [1, zoom])
+
+  // Respect reduced motion: render nothing here (static fallback is shown by Suspense in parent)
+  if (reduceMotion) return null
 
   return (
     <motion.img
