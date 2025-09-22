@@ -1,12 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Dog, Heart, Mail, Github, Twitter, Instagram, Scale, Calculator, Book, TrendingUp, Info, Shield, ArrowRight, MapPin, Phone, Clock, CheckCircle } from 'lucide-react';
+import { Dog, Heart, Mail, Github, Twitter, Instagram, Scale, Calculator, Book, TrendingUp, Info, Shield, ArrowRight, MapPin, Phone, Clock, CheckCircle, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { entranceAnimations, hoverAnimations } from '@/animations';
+import { useNewsletterSubscription } from '@/hooks/useNewsletterSubscription';
 const Footer = () => {
+  const { subscribe, isLoading, isSubscribed } = useNewsletterSubscription();
+  const [email, setEmail] = useState('');
+
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email.trim()) {
+      await subscribe(email);
+      if (isSubscribed) {
+        setEmail('');
+      }
+    }
+  };
   const quickLinks = [{
     href: '/weight-tracker',
     icon: Scale,
@@ -90,13 +103,40 @@ const Footer = () => {
               </h2>
               
               
-              <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-                <input type="email" placeholder="sinun@email.fi" className="flex-1 px-6 py-3 rounded-xl bg-white/90 backdrop-blur text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50" />
-                <Button size="lg" className="bg-white text-[var(--color-primary-600)] hover:bg-white/90">
-                  Tilaa uutiskirje
-                  <ArrowRight className="w-5 h-5 ml-2" />
+              <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+                <input 
+                  type="email" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="sinun@email.fi" 
+                  className="flex-1 px-6 py-3 rounded-xl bg-white/90 backdrop-blur text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50 disabled:opacity-50" 
+                  disabled={isLoading || isSubscribed}
+                  required
+                />
+                <Button 
+                  type="submit"
+                  size="lg" 
+                  className="bg-white text-[var(--color-primary-600)] hover:bg-white/90 disabled:opacity-50"
+                  disabled={isLoading || isSubscribed || !email.trim()}
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                      Tilataan...
+                    </>
+                  ) : isSubscribed ? (
+                    <>
+                      <CheckCircle className="w-5 h-5 mr-2" />
+                      Tilattu!
+                    </>
+                  ) : (
+                    <>
+                      Tilaa uutiskirje
+                      <ArrowRight className="w-5 h-5 ml-2" />
+                    </>
+                  )}
                 </Button>
-              </div>
+              </form>
               
               <p className="text-body-sm text-white/70 mt-4">
                 <CheckCircle className="w-4 h-4 inline mr-1" />
