@@ -81,7 +81,7 @@ export default function ContactForm({ onSubmit }: ContactFormProps) {
         ref={successRef}
       >
         <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-4">🎉</div>
-        <h3 className="text-2xl font-bold mb-2">Kiitos viestistäsi!</h3>
+        <h3 className="text-2xl font-bold mb-2 text-[var(--color-text-primary)]">Kiitos viestistäsi!</h3>
         <p className="text-white/90">Vastaamme sinulle pian. Pentukoirasi on onnekkaassa!</p>
       </motion.div>
     );

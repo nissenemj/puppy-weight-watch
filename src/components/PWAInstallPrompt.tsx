@@ -34,7 +34,7 @@ export function PWAInstallPrompt() {
             </div>
             
             <div className="flex-1 min-w-0">
-              <h3 className="font-medium text-sm text-foreground">
+              <h3 className="font-medium text-sm text-foreground text-[var(--color-text-primary)]">
                 Asenna Pentulaskuri
               </h3>
               <p className="text-xs text-muted-foreground mt-1">

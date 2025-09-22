@@ -128,7 +128,7 @@ const Footer = () => {
                     <Dog className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="text-h4 font-bold text-white">Pentulaskuri.com</h3>
+                    <h3 className="text-h4 font-bold text-white text-[var(--color-text-primary)]">Pentulaskuri.com</h3>
                     <p className="text-body-sm text-white/70">Moderni pennunhoito</p>
                   </div>
                 </div>

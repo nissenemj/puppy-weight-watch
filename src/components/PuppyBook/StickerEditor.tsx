@@ -169,7 +169,7 @@ const StickerEditor: React.FC<StickerEditorProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Sticker Palette */}
           <div className="lg:col-span-1">
-            <h3 className="font-semibold mb-4 text-gray-800">Valitse tarra:</h3>
+            <h3 className="font-semibold mb-4 text-gray-800 text-[var(--color-text-primary)]">Valitse tarra:</h3>
             <div className="grid grid-cols-2 gap-3">
               {AVAILABLE_STICKERS.map((sticker) => (
                 <Button

@@ -256,7 +256,7 @@ const InfoNavigation = () => {
                   {/* Info Sub-items for mobile */}
                   {location.pathname.startsWith('/info') && (
                     <div className="mt-6 pt-6 border-t border-white/10">
-                      <h3 className="text-sm font-medium text-gray-300 mb-3 px-2">Tietopankki</h3>
+                      <h3 className="text-sm font-medium text-gray-300 mb-3 px-2 text-[var(--color-text-primary)]">Tietopankki</h3>
                       <div className="space-y-1">
                         {infoSubItems.map((item) => {
                           const Icon = item.icon

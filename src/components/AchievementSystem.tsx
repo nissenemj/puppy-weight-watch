@@ -295,8 +295,8 @@ export default function AchievementSystem({ weightData, onCelebration }: Achieve
                   
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <h3 className={`font-semibold ${
-                        achievement.isUnlocked ? 'text-foreground' : 'text-muted-foreground'
+                      <h3 className={`font-semibold text-[var(--color-text-primary)] ${
+                        achievement.isUnlocked ? '' : 'text-muted-foreground'
                       }`}>
                         {achievement.title}
                       </h3>
@@ -350,7 +350,7 @@ export default function AchievementSystem({ weightData, onCelebration }: Achieve
                 <Flame className="h-6 w-6" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-orange-800">
+                <h3 className="text-xl font-bold text-[var(--color-text-primary)]">
                   {streak} viikon sarja!
                 </h3>
                 <p className="text-orange-600">

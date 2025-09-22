@@ -300,7 +300,7 @@ const Leaderboard: React.FC = () => {
                       </div>
                       
                       <div>
-                        <h3 className="font-semibold">{user.username}</h3>
+                        <h3 className="font-semibold text-[var(--color-text-primary)]">{user.username}</h3>
                         <p className="text-sm text-gray-600">
                           {user.puppy_name && `${user.puppy_name} • `}
                           <span className={`px-2 py-1 rounded-full text-xs ${getLevelColor(user.level)}`}>
@@ -347,7 +347,7 @@ const Leaderboard: React.FC = () => {
                       <div className="flex items-start gap-3">
                         {getAchievementIcon(achievement.icon)}
                         <div className="flex-1">
-                          <h3 className="font-semibold flex items-center gap-2">
+                          <h3 className="font-semibold flex items-center gap-2 text-[var(--color-text-primary)]">
                             {achievement.title}
                             {isEarned && <Badge className="bg-yellow-100 text-yellow-800 text-xs">Saavutettu</Badge>}
                           </h3>

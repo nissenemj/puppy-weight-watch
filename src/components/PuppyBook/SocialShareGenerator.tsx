@@ -373,7 +373,7 @@ export const SocialShareGenerator: React.FC<SocialShareGeneratorProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Template selection */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Valitse mallipohja</h3>
+            <h3 className="text-lg font-semibold text-[var(--color-text-primary)]">Valitse mallipohja</h3>
             <div className="grid grid-cols-1 gap-3">
               {templates.map((template) => {
                 const IconComponent = template.icon;
@@ -450,7 +450,7 @@ export const SocialShareGenerator: React.FC<SocialShareGeneratorProps> = ({
 
           {/* Preview */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Esikatselu</h3>
+            <h3 className="text-lg font-semibold text-[var(--color-text-primary)]">Esikatselu</h3>
             <div className="flex justify-center">
               <motion.div
                 key={selectedTemplate}

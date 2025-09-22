@@ -575,7 +575,7 @@ export function FoodCard({ food, onSelect, isSelected = false, showDetails = fal
       {isEnhancedEditing && enhancedEditingFood && (
         <CardContent className="border-t">
           <div className="mb-4">
-            <h3 className="text-lg font-semibold">Muokkaa yksityiskohtaisia tietoja</h3>
+            <h3 className="text-lg font-semibold text-[var(--color-text-primary)]">Muokkaa yksityiskohtaisia tietoja</h3>
             <p className="text-sm text-muted-foreground">
               Täydennä ruoan tiedot ainesosilla, allergeeneilla, ravitsemustiedoilla ja valmistajatiedoilla.
             </p>

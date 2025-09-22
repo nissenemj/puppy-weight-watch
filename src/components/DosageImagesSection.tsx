@@ -411,7 +411,7 @@ export default function DosageImagesSection() {
                 <CardHeader>
                   <div className="flex justify-between items-start">
                     <div>
-                      <h3 className="font-semibold text-lg">{image.title}</h3>
+                      <h3 className="font-semibold text-lg text-[var(--color-text-primary)]">{image.title}</h3>
                       {image.food_brand && (
                         <p className="text-sm text-muted-foreground">{image.food_brand}</p>
                       )}

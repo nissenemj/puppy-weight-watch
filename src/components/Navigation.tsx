@@ -184,7 +184,7 @@ const NavigationWithRouter = () => {
                     <Dog className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <h3 id="mobile-menu-title" className="font-bold text-white text-lg">Pentulaskuri</h3>
+                    <h3 id="mobile-menu-title" className="font-bold text-white text-lg text-[var(--color-text-primary)]">Pentulaskuri</h3>
                     <p className="text-gray-300 text-sm">Koiran kasvun seuranta</p>
                   </div>
                 </div>

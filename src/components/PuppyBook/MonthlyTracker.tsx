@@ -42,7 +42,7 @@ const MonthlyTracker: React.FC<MonthlyTrackerProps> = ({
             <ChevronLeft className="w-5 h-5" />
           </button>
           
-          <h3 className="text-xl font-semibold text-gray-800">
+          <h3 className="text-xl font-semibold text-gray-800 text-[var(--color-text-primary)]">
             {getMonthLabel(selectedMonth)}
           </h3>
           

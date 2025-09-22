@@ -604,7 +604,7 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
             exit={{ opacity: 0, x: -20 }}
             className="space-y-4"
           >
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">
+            <h3 className="text-xl font-semibold text-gray-800 mb-4 text-[var(--color-text-primary)]">
               Kuukauden virstanpylväät ⭐
             </h3>
             {loadingMilestones ? (
@@ -737,7 +737,7 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
             className="space-y-4"
           >
             <div className="flex items-center justify-between">
-              <h3 className="text-xl font-semibold text-gray-800">
+              <h3 className="text-xl font-semibold text-gray-800 text-[var(--color-text-primary)]">
                 Terveys ja hoito 🏥
               </h3>
               <AddHealthRecordDialog bookId={bookId} onHealthRecordAdded={loadHealthRecords}>
@@ -936,7 +936,7 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
             className="space-y-6"
           >
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-semibold text-gray-800">
+              <h3 className="text-xl font-semibold text-gray-800 text-[var(--color-text-primary)]">
                 Sosiaalistaminen ja ystävät 👥
               </h3>
               <Button
@@ -1116,7 +1116,7 @@ const MonthlyContent: React.FC<MonthlyContentProps> = ({ monthNumber, bookId, bi
             className="space-y-6"
           >
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-semibold text-gray-800">
+              <h3 className="text-xl font-semibold text-gray-800 text-[var(--color-text-primary)]">
                 Painonseuranta 📊
               </h3>
               <div className="flex gap-2">

@@ -306,7 +306,7 @@ export default function GeneralDosageSection() {
                 <CardHeader>
                   <div className="flex justify-between items-start">
                     <div>
-                      <h3 className="font-semibold text-lg">{guideline.title}</h3>
+                      <h3 className="font-semibold text-lg text-[var(--color-text-primary)]">{guideline.title}</h3>
                       {guideline.food_brand && (
                         <p className="text-sm text-muted-foreground">Merkki: {guideline.food_brand}</p>
                       )}

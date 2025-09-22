@@ -221,7 +221,7 @@ export function LoadingError({ error, onRetry, context, className = '' }: Loadin
         <AlertTriangle className="h-8 w-8 text-red-500" aria-hidden="true" />
       </div>
       
-      <h3 className="text-lg font-semibold text-red-900 mb-2">
+      <h3 className="text-lg font-semibold text-red-900 mb-2 text-[var(--color-text-primary)]">
         Lataus epäonnistui
       </h3>
       

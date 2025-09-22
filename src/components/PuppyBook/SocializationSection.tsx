@@ -215,7 +215,7 @@ export const SocializationSection: React.FC<SocializationSectionProps> = ({
           <div className="flex items-center gap-3">
             <AlertCircle className="text-orange-500 h-5 w-5" />
             <div>
-              <h3 className="font-semibold text-orange-800">Kriittinen sosiaalistamisikkuna auki!</h3>
+              <h3 className="font-semibold text-orange-800 text-[var(--color-text-primary)]">Kriittinen sosiaalistamisikkuna auki!</h3>
               <p className="text-sm text-orange-700">
                 {getCriticalWindowRemaining()} viikkoa jäljellä optimaaliseen sosiaalistamisaikaan (3-16 viikkoa)
               </p>
@@ -230,7 +230,7 @@ export const SocializationSection: React.FC<SocializationSectionProps> = ({
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="font-semibold">Pennun ikä</h3>
+                <h3 className="font-semibold text-[var(--color-text-primary)]">Pennun ikä</h3>
                 <p className="text-2xl font-bold text-primary">{puppyAge.ageString}</p>
                 <p className="text-sm text-muted-foreground">{puppyAge.weeks} viikkoa</p>
               </div>
@@ -308,7 +308,7 @@ export const SocializationSection: React.FC<SocializationSectionProps> = ({
                   <>
                     <div className="flex items-center justify-between">
                       <div>
-                        <h3 className="text-xl font-semibold flex items-center gap-2">
+                        <h3 className="text-xl font-semibold flex items-center gap-2 text-[var(--color-text-primary)]">
                           <span>{category?.icon}</span>
                           {category?.name}
                         </h3>

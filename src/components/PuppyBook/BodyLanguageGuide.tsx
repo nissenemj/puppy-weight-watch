@@ -127,7 +127,7 @@ export const BodyLanguageGuide: React.FC<BodyLanguageGuideProps> = ({
                   <div className="flex items-center gap-3 mb-3">
                     <span className="text-2xl">{data.emoji}</span>
                     <div>
-                      <h3 className="font-semibold">{data.title}</h3>
+                      <h3 className="font-semibold text-[var(--color-text-primary)]">{data.title}</h3>
                       <Badge className={`${data.badgeColor} text-white text-xs`}>
                         {key === 'relaxed' ? 'Positiivinen' : 
                          key === 'hesitant' ? 'Neutraali' : 'Negatiivinen'}
@@ -168,7 +168,7 @@ export const BodyLanguageGuide: React.FC<BodyLanguageGuideProps> = ({
           {/* General Tips */}
           <Card className="bg-blue-50 border-blue-200">
             <CardContent className="pt-4">
-              <h3 className="font-semibold text-blue-800 mb-3">💡 Yleisiä vinkkejä</h3>
+              <h3 className="font-semibold text-blue-800 mb-3 text-[var(--color-text-primary)]">💡 Yleisiä vinkkejä</h3>
               <div className="grid md:grid-cols-2 gap-4 text-sm text-blue-700">
                 <ul className="space-y-2">
                   <li>• Seuraa pennun kehonkieltä jatkuvasti harjoituksen aikana</li>

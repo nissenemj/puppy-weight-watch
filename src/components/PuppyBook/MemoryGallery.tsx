@@ -165,7 +165,7 @@ const MemoryGallery: React.FC<MemoryGalleryProps> = ({ bookId, onRefresh, onAddM
       {memories.length === 0 ? (
         <div className="text-center py-12">
           <Camera className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-500 mb-2">
+          <h3 className="text-lg font-semibold text-gray-500 mb-2 text-[var(--color-text-primary)]">
             Ei vielä muistoja
           </h3>
           <p className="text-gray-400 mb-4">

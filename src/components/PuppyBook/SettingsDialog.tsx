@@ -153,7 +153,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
         <div className="space-y-6">
           {/* Basic Info */}
           <div className="space-y-4">
-            <h3 className="text-sm font-medium text-foreground flex items-center gap-2">
+            <h3 className="text-sm font-medium text-foreground flex items-center gap-2 text-[var(--color-text-primary)]">
               <Calendar className="w-4 h-4" />
               Perustiedot
             </h3>
@@ -183,7 +183,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
 
           {/* Theme */}
           <div className="space-y-4">
-            <h3 className="text-sm font-medium text-foreground flex items-center gap-2">
+            <h3 className="text-sm font-medium text-foreground flex items-center gap-2 text-[var(--color-text-primary)]">
               <Palette className="w-4 h-4" />
               Teema
             </h3>
@@ -214,7 +214,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
 
           {/* Privacy */}
           <div className="space-y-4">
-            <h3 className="text-sm font-medium text-foreground flex items-center gap-2">
+            <h3 className="text-sm font-medium text-foreground flex items-center gap-2 text-[var(--color-text-primary)]">
               <Shield className="w-4 h-4" />
               Yksityisyys
             </h3>
