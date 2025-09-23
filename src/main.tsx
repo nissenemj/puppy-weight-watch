@@ -1,4 +1,5 @@
 import { createRoot } from 'react-dom/client'
+import { StrictMode } from 'react'
 import { HelmetProvider } from 'react-helmet-async'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ThemeProvider } from './contexts/ThemeContext'
@@ -15,6 +16,7 @@ import { initializeCSSOptimizations } from './utils/CSSOptimization'
 import { ProductionReadiness } from './components/ProductionReadiness'
 
 import { ErrorBoundary } from './components/ErrorBoundary'
+import { ModuleLoadingErrorBoundary } from './components/ModuleLoadingErrorBoundary'
 import ScrollProgressBar from './components/ScrollProgressBar'
 
 const queryClient = new QueryClient({
@@ -56,19 +58,23 @@ performanceMonitor.measureCoreWebVitals()
 performanceMonitor.measureStart('app_initialization')
 
 createRoot(document.getElementById("root")!).render(
-  <ErrorBoundary>
-    <CriticalCSS />
-    <ScrollProgressBar />
-    <AccessibilityEnhancer />
-    <ThemeProvider>
-      <QueryClientProvider client={queryClient}>
-        <HelmetProvider>
-          <ProductionReadiness />
-          <Router />
-        </HelmetProvider>
-      </QueryClientProvider>
-    </ThemeProvider>
-  </ErrorBoundary>
+  <StrictMode>
+    <ModuleLoadingErrorBoundary>
+      <ErrorBoundary>
+        <CriticalCSS />
+        <ScrollProgressBar />
+        <AccessibilityEnhancer />
+        <ThemeProvider>
+          <QueryClientProvider client={queryClient}>
+            <HelmetProvider>
+              <ProductionReadiness />
+              <Router />
+            </HelmetProvider>
+          </QueryClientProvider>
+        </ThemeProvider>
+      </ErrorBoundary>
+    </ModuleLoadingErrorBoundary>
+  </StrictMode>
 )
 
 // Mark app initialization complete

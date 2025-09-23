@@ -37,59 +37,19 @@ export default defineConfig(({ mode }) => ({
   build: {
     rollupOptions: {
       output: {
-        manualChunks(id) {
-          // Simplified chunking for production reliability
-          if (id.includes('node_modules')) {
-            // IMPORTANT: Exclude Storybook from production build
-            if (id.includes('@storybook') || id.includes('storybook')) {
-              return; // Don't include in any chunk
-            }
-
-            // Core React and ALL React-dependent libraries
-            // IMPORTANT: This must include anything that uses React hooks or components
-            if (id.includes('react') ||
-                id.includes('react-dom') ||
-                id.includes('react-router') ||
-                id.includes('react-hook-form') ||
-                id.includes('react-helmet') ||
-                id.includes('react-i18next') ||
-                id.includes('react-icons') ||
-                id.includes('react-share') ||
-                id.includes('react-swipeable') ||
-                id.includes('react-day-picker') ||
-                id.includes('react-resizable') ||
-                id.includes('use-') ||  // Common hook libraries
-                id.includes('next-themes')) {  // Uses React context
-              return 'react-vendor';
-            }
-
-            // UI libraries (Radix UI is React-based but handles its own React imports)
-            if (id.includes('@radix-ui') || id.includes('lucide-react')) {
-              return 'ui-vendor';
-            }
-
-            // Database and queries
-            if (id.includes('@supabase') || id.includes('@tanstack/react-query')) {
-              return 'data-vendor';
-            }
-
-            // Charts and heavy libraries (these also use React but are large enough for separate chunk)
-            if (id.includes('recharts') || id.includes('framer-motion') ||
-                id.includes('html-to-image') || id.includes('tesseract') ||
-                id.includes('react-player')) {
-              return 'heavy-vendor';
-            }
-
-            // Everything else
-            return 'vendor';
-          }
+        // Simplified chunking strategy to avoid circular dependencies
+        manualChunks: {
+          // Keep React ecosystem together to prevent initialization issues
+          'react-vendor': ['react', 'react-dom', 'react/jsx-runtime'],
+          // Separate vendor chunk for other libraries
+          'vendor': ['@tanstack/react-query', '@supabase/supabase-js'],
         },
       },
       // Exclude Storybook files from production build
       external: mode === 'production' ? [/@storybook/] : [],
     },
-    chunkSizeWarningLimit: 500, // Lower limit to enforce smaller chunks
-    // Use esbuild for minification to avoid potential terser ESM issues
+    chunkSizeWarningLimit: 1000,
+    // Use esbuild for reliable minification
     minify: 'esbuild',
   },
   optimizeDeps: {
