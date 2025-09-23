@@ -76,13 +76,8 @@ export default defineConfig(({ mode }) => ({
       external: mode === 'production' ? [/@storybook/] : [],
     },
     chunkSizeWarningLimit: 500, // Lower limit to enforce smaller chunks
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: false, // Keep console logs for production debugging
-        drop_debugger: mode === 'production',
-      },
-    },
+    // Use esbuild for minification to avoid potential terser ESM issues
+    minify: 'esbuild',
   },
   optimizeDeps: {
     // Let Vite handle React automatically - include only non-core libraries
