@@ -27,7 +27,20 @@
       "mcp__playwright__browser_take_screenshot",
       "mcp__playwright__browser_snapshot",
       "mcp__playwright__browser_close",
-      "mcp__playwright__browser_install"
+      "mcp__playwright__browser_install",
+      "Bash(git pull:*)",
+      "Bash(git stash:*)",
+      "Bash(git push:*)",
+      "Bash(gh run list:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(git fetch:*)",
+      "Bash(ls:*)",
+      "WebFetch(domain:pentulaskuri.com)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "mcp__playwright__browser_console_messages",
+      "mcp__playwright__browser_network_requests",
+      "Bash(npx kill-port:*)"
     ],
     "deny": [],
     "additionalDirectories": [
