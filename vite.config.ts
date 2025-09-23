@@ -45,12 +45,25 @@ export default defineConfig(({ mode }) => ({
               return; // Don't include in any chunk
             }
 
-            // Core React libraries
-            if (id.includes('react') || id.includes('react-dom')) {
+            // Core React and ALL React-dependent libraries
+            // IMPORTANT: This must include anything that uses React hooks or components
+            if (id.includes('react') ||
+                id.includes('react-dom') ||
+                id.includes('react-router') ||
+                id.includes('react-hook-form') ||
+                id.includes('react-helmet') ||
+                id.includes('react-i18next') ||
+                id.includes('react-icons') ||
+                id.includes('react-share') ||
+                id.includes('react-swipeable') ||
+                id.includes('react-day-picker') ||
+                id.includes('react-resizable') ||
+                id.includes('use-') ||  // Common hook libraries
+                id.includes('next-themes')) {  // Uses React context
               return 'react-vendor';
             }
 
-            // UI libraries
+            // UI libraries (Radix UI is React-based but handles its own React imports)
             if (id.includes('@radix-ui') || id.includes('lucide-react')) {
               return 'ui-vendor';
             }
@@ -60,7 +73,7 @@ export default defineConfig(({ mode }) => ({
               return 'data-vendor';
             }
 
-            // Charts and heavy libraries
+            // Charts and heavy libraries (these also use React but are large enough for separate chunk)
             if (id.includes('recharts') || id.includes('framer-motion') ||
                 id.includes('html-to-image') || id.includes('tesseract') ||
                 id.includes('react-player')) {
@@ -85,8 +98,11 @@ export default defineConfig(({ mode }) => ({
     },
   },
   optimizeDeps: {
-    // Let Vite handle React automatically - include only non-core libraries
+    // Explicitly include React to ensure proper dependency resolution
     include: [
+      'react',
+      'react-dom',
+      'react/jsx-runtime',
       'react-router-dom',
       '@tanstack/react-query',
       '@supabase/supabase-js',
