@@ -159,7 +159,7 @@ export const LazyImage: React.FC<LazyImageProps> = ({
       
       {/* Error state */}
       {isError && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-100 text-gray-500">
+        <div className="absolute inset-0 flex items-center justify-center bg-muted text-muted-foreground">
           <div className="text-center">
             <div className="text-2xl mb-2">⚠️</div>
             <div className="text-sm">Kuvan lataus epäonnistui</div>
