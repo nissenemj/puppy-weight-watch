@@ -1,20 +1,16 @@
 // Service Worker for Puppy Weight Tracker - Production Enhanced
-const CACHE_NAME = 'puppy-tracker-v3';
-const STATIC_CACHE = 'static-v3';
-const DYNAMIC_CACHE = 'dynamic-v3';
-const IMAGE_CACHE = 'images-v3';
-const API_CACHE = 'api-v3';
+const CACHE_NAME = 'puppy-tracker-v4';
+const STATIC_CACHE = 'static-v4';
+const DYNAMIC_CACHE = 'dynamic-v4';
+const IMAGE_CACHE = 'images-v4';
+const API_CACHE = 'api-v4';
 
-// Static assets to cache immediately
+// Static assets to cache immediately - use root paths
 const STATIC_ASSETS = [
-  '/puppy-weight-watch/',
-  '/puppy-weight-watch/manifest.json',
-  '/puppy-weight-watch/assets/index-CH37UCjj.js',
-  '/puppy-weight-watch/assets/vendor-2joXFKVI.js',
-  '/puppy-weight-watch/assets/react-core-BbsmwqEB.js',
-  '/puppy-weight-watch/assets/data-vendor-CrixjTuP.js',
-  '/puppy-weight-watch/assets/utils-vendor-BjC949i_.js',
-  '/puppy-weight-watch/assets/index-8DayUGUD.css'
+  '/',
+  '/manifest.json',
+  // Note: Asset filenames change with each build, so we'll cache them dynamically
+  // instead of hardcoding specific asset files here
 ];
 
 // Install event - cache static assets

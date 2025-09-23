@@ -2,29 +2,8 @@ import { useEffect } from 'react';
 
 const CriticalCSS = () => {
   useEffect(() => {
-    // Preload non-critical CSS
-    const preloadCSS = (href: string) => {
-      const link = document.createElement('link');
-      link.rel = 'preload';
-      link.as = 'style';
-      link.href = href;
-      link.onload = () => {
-        link.rel = 'stylesheet';
-      };
-      document.head.appendChild(link);
-    };
-
-    // Defer non-critical styles
-    const timer = setTimeout(() => {
-      // These styles will be loaded after initial page load
-      const nonCriticalStyles = [
-        '/puppy-weight-watch/assets/index-8DayUGUD.css'
-      ];
-      
-      nonCriticalStyles.forEach(preloadCSS);
-    }, 100);
-
-    return () => clearTimeout(timer);
+    // Let Vite handle CSS loading automatically
+    // No manual CSS preloading needed as it's handled by the build process
   }, []);
 
   return (
