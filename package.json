@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "mobile-check": "node scripts/mobile-check.js",
-    "test:mobile": "npm run mobile-check && echo 'Mobiilitestaus valmis'"
+    "test:mobile": "npm run mobile-check && echo 'Mobiilitestaus valmis'",
+    "generate-icons": "node scripts/generate-icons.js"
   },
   "dependencies": {
     "@capacitor/android": "^7.4.1",
@@ -99,6 +100,7 @@
     "lovable-tagger": "^1.1.9",
     "playwright": "^1.54.2",
     "postcss": "^8.4.47",
+    "sharp": "^0.34.4",
     "tailwindcss": "^3.4.11",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.1",
