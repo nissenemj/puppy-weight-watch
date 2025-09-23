@@ -228,17 +228,6 @@ const NavigationWithRouter = () => {
             })}
               </div>
 
-              {/* Footer */}
-              <div className="absolute bottom-6 left-6 right-6">
-                <div className="bg-white/10 rounded-2xl p-4 text-center">
-                  <p className="text-gray-300 text-sm">
-                    Modernilla designilla
-                  </p>
-                  <p className="text-white font-medium">
-                    Hellodani.co-inspiraatio
-                  </p>
-                </div>
-              </div>
             </motion.div>
           </>}
       </AnimatePresence>
