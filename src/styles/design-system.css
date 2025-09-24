@@ -499,17 +499,29 @@
   width: 100%;
 }
 
-/* Hero-osioiden sisältö */
+/* Hero-osioiden sisältö - vähennetty padding paremman layoutin vuoksi */
 .hero-content {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 3rem 2rem;
+  padding: 1.5rem 2rem;
+  width: 100%;
+}
+
+/* Kompakti versio hero-contentille minimaalisella paddingilla */
+.hero-content-compact {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.75rem 2rem;
   width: 100%;
 }
 
 @media (max-width: 768px) {
   .hero-content {
-    padding: 2.5rem 1.5rem;
+    padding: 1rem 1.5rem;
+  }
+
+  .hero-content-compact {
+    padding: 0.5rem 1.5rem;
   }
 }
 
