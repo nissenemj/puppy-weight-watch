@@ -69,14 +69,22 @@
   }
 
   /* === INTERACTIVE ELEMENTS === */
-  
-  /* Enhanced Touch targets (44px minimum) - WCAG AA compliant */
-  button, .btn, [role="button"], a, .touch-target {
-    min-height: var(--touch-target-min) !important;
-    min-width: var(--touch-target-min) !important;
-    padding: var(--spacing-2) var(--spacing-4) !important;
-    /* Ensure adequate spacing between elements */
-    margin: var(--spacing-1) !important;
+
+  /* Smart Touch targets - Only apply when explicitly requested to avoid conflicts */
+  .mobile-touch-optimize,
+  .mobile-touch-optimize button:not(.btn-design-system),
+  .mobile-touch-optimize .btn:not(.btn-design-system),
+  [role="button"].mobile-touch-target,
+  .touch-target {
+    min-height: var(--touch-target-min);
+    min-width: var(--touch-target-min);
+  }
+
+  /* Legacy touch targets - fallback for unoptimized elements */
+  button:not([class*="btn-"]):not([class*="Button"]),
+  [role="button"]:not([class*="btn-"]) {
+    min-height: 44px;
+    min-width: 44px;
   }
 
   /* Specific touch targets for different element types */
@@ -125,22 +133,43 @@
     cursor: pointer !important;
   }
 
-  /* Mobile buttons - enhanced */
-  .mobile-button,
-  .mobile-button button,
-  .mobile-button .btn {
-    width: 100% !important;
-    min-height: 48px !important;
-    white-space: normal !important;
-    word-wrap: break-word !important;
-    text-align: center !important;
+  /* Mobile buttons - enhanced (opt-in only) */
+  .mobile-button-full,
+  .mobile-button-full button,
+  .mobile-button-full .btn {
+    width: 100%;
+    min-height: 48px;
+    white-space: normal;
+    word-wrap: break-word;
+    text-align: center;
   }
 
-  /* Icon buttons need proper sizing */
-  .btn-icon, button:has(svg):not(:has(span)) {
-    min-width: 44px !important;
-    min-height: 44px !important;
-    padding: var(--spacing-2) !important;
+  /* Smart mobile button wrapper - only applies styling when explicitly requested */
+  .mobile-button-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+  }
+
+  .mobile-button-wrapper button,
+  .mobile-button-wrapper .btn {
+    width: 100%;
+    min-height: 48px;
+  }
+
+  /* Icon buttons - smart touch targets (less aggressive) */
+  .mobile-icon-button,
+  button[class*="icon"]:not(.btn-design-system),
+  .btn-icon:not(.btn-design-system) {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* Legacy icon buttons fallback */
+  button:has(svg):not(:has(span)):not([class*="btn-"]):not([class*="Button"]) {
+    min-width: 44px;
+    min-height: 44px;
+    padding: var(--spacing-2);
   }
 
   /* Dropdown and select triggers */
@@ -163,13 +192,25 @@
   }
 
   /* === TOUCH TARGET SPACING === */
-  
-  /* Prevent cramped layouts - ensure adequate spacing between touch targets */
-  .touch-spacing button + button,
-  .touch-spacing .btn + .btn,
-  .touch-spacing a + a {
-    margin-left: var(--spacing-2) !important;
-    margin-top: var(--spacing-2) !important;
+
+  /* Prevent cramped layouts - opt-in spacing for touch targets */
+  .mobile-touch-spacing button + button,
+  .mobile-touch-spacing .btn + .btn,
+  .mobile-touch-spacing a + a {
+    margin-left: var(--spacing-2);
+    margin-top: var(--spacing-2);
+  }
+
+  /* Smart button group spacing */
+  .mobile-button-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+  }
+
+  .mobile-button-group--horizontal {
+    flex-direction: row;
+    flex-wrap: wrap;
   }
 
   /* Form element spacing */
@@ -181,14 +222,26 @@
     margin-top: var(--spacing-6) !important;
   }
 
-  /* Button group spacing */
-  .button-group {
-    gap: var(--spacing-2) !important;
+  /* Button group spacing - less aggressive */
+  .mobile-button-group-legacy {
+    gap: var(--spacing-2);
   }
 
-  .button-group button,
-  .button-group .btn {
-    min-width: calc(50% - var(--spacing-1)) !important;
+  .mobile-button-group-legacy button,
+  .mobile-button-group-legacy .btn {
+    min-width: calc(50% - var(--spacing-1));
+  }
+
+  /* Modern button group (preferred) */
+  .button-group-mobile {
+    display: flex;
+    gap: var(--spacing-2);
+    flex-wrap: wrap;
+  }
+
+  .button-group-mobile > * {
+    flex: 1;
+    min-width: 120px;
   }
 
   /* Navigation spacing */

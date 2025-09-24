@@ -5,12 +5,12 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap font-family-heading transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-5 [&_svg]:shrink-0 relative overflow-hidden",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap font-family-heading transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-5 [&_svg]:shrink-0 relative overflow-hidden btn-design-system touch-pan-y select-none",
   {
     variants: {
       variant: {
-        // Primary - Warm terracotta with Anthropic-inspired animations
-        default: "bg-[var(--color-interactive-primary)] text-[var(--color-text-on-primary)] rounded-[var(--radius-md)] shadow-[var(--shadow-sm)] hover:bg-[var(--color-interactive-primary-hover)] hover:shadow-[var(--shadow-md)] focus-visible:ring-[var(--color-interactive-secondary)] transform hover:translate-y-[-1px] active:translate-y-[0] before:absolute before:top-1/2 before:left-1/2 before:w-0 before:h-0 before:rounded-full before:bg-white/20 before:transition-all before:duration-300 before:transform before:-translate-x-1/2 before:-translate-y-1/2 hover:before:w-full hover:before:h-full font-medium",
+        // Primary - Warm terracotta with Anthropic-inspired animations + smart mobile
+        default: "bg-[var(--color-interactive-primary)] text-[var(--color-text-on-primary)] rounded-[var(--radius-md)] shadow-[var(--shadow-sm)] [@media(hover:hover)]:hover:bg-[var(--color-interactive-primary-hover)] [@media(hover:hover)]:hover:shadow-[var(--shadow-md)] focus-visible:ring-[var(--color-interactive-secondary)] [@media(hover:hover)]:transform [@media(hover:hover)]:hover:translate-y-[-1px] active:translate-y-[0] active:scale-95 active:bg-[var(--color-interactive-primary-hover)] before:absolute before:top-1/2 before:left-1/2 before:w-0 before:h-0 before:rounded-full before:bg-white/20 before:transition-all before:duration-300 before:transform before:-translate-x-1/2 before:-translate-y-1/2 [@media(hover:hover)]:hover:before:w-full [@media(hover:hover)]:hover:before:h-full font-medium",
         
         // Secondary - Warm neutral surface
         secondary: "bg-[var(--color-background-secondary)] text-[var(--color-text-primary)] border-2 border-[var(--color-border-default)] rounded-[var(--radius-md)] shadow-[var(--shadow-sm)] hover:bg-[var(--color-background-tertiary)] hover:shadow-[var(--shadow-md)] hover:border-[var(--color-interactive-primary)] focus-visible:ring-[var(--color-interactive-secondary)] transform hover:translate-y-[-1px] active:translate-y-[0] font-medium",
@@ -34,22 +34,27 @@ const buttonVariants = cva(
         pill: "bg-[var(--color-interactive-primary)] text-[var(--color-text-on-primary)] rounded-[var(--radius-full)] shadow-[var(--shadow-sm)] hover:bg-[var(--color-interactive-primary-hover)] hover:shadow-[var(--shadow-md)] focus-visible:ring-[var(--color-interactive-secondary)] transform hover:translate-y-[-1px] active:translate-y-[0] px-6 font-medium",
         
         // Link - Text-only with warm accent
-        link: "text-[var(--color-text-link)] underline-offset-4 hover:underline hover:text-[var(--color-interactive-secondary-hover)] focus-visible:ring-[var(--color-interactive-secondary)] p-0 h-auto font-medium",
+        link: "text-[var(--color-text-link)] underline-offset-4 [@media(hover:hover)]:hover:underline [@media(hover:hover)]:hover:text-[var(--color-interactive-secondary-hover)] focus-visible:ring-[var(--color-interactive-secondary)] p-0 h-auto font-medium active:scale-95",
+
+        // Mobile-optimized - Enhanced touch experience
+        mobile: "bg-[var(--color-interactive-primary)] text-[var(--color-text-on-primary)] rounded-[var(--radius-lg)] shadow-[var(--shadow-md)] focus-visible:ring-[var(--color-interactive-secondary)] active:scale-95 active:bg-[var(--color-interactive-primary-hover)] font-medium min-h-[48px] px-6 py-3 touch-manipulation",
       },
       size: {
         // Comfortable touch targets - mobile-first approach
-        sm: "h-11 px-4 text-[var(--font-size-sm)] font-[var(--font-weight-medium)] min-h-[44px]", 
+        sm: "h-11 px-4 text-[var(--font-size-sm)] font-[var(--font-weight-medium)] min-h-[44px]",
         default: "h-12 px-6 text-[var(--font-size-base)] font-[var(--font-weight-medium)] min-h-[44px]",
-        lg: "h-16 px-8 text-[var(--font-size-lg)] font-[var(--font-weight-semibold)] min-h-[44px]",
-        xl: "h-16 px-10 text-[var(--font-size-xl)] font-[var(--font-weight-semibold)] min-h-[44px]",
-        
+        lg: "h-14 px-8 text-[var(--font-size-lg)] font-[var(--font-weight-semibold)] min-h-[48px]",
+        xl: "h-16 px-10 text-[var(--font-size-xl)] font-[var(--font-weight-semibold)] min-h-[48px]",
+
         // Icon buttons with proper touch targets
         icon: "h-12 w-12 p-0 min-h-[44px] min-w-[44px] rounded-[var(--radius-md)]",
-        "icon-sm": "h-11 w-11 p-0 min-h-[44px] min-w-[44px] rounded-[var(--radius-md)]", 
-        "icon-lg": "h-16 w-16 p-0 min-h-[44px] min-w-[44px] rounded-[var(--radius-lg)]",
-        
-        // Mobile optimized
-        mobile: "h-16 px-6 text-[var(--font-size-base)] font-[var(--font-weight-medium)] min-w-[44px] min-h-[44px]",
+        "icon-sm": "h-11 w-11 p-0 min-h-[44px] min-w-[44px] rounded-[var(--radius-md)]",
+        "icon-lg": "h-16 w-16 p-0 min-h-[48px] min-w-[48px] rounded-[var(--radius-lg)]",
+
+        // Mobile optimized sizes
+        mobile: "h-14 px-6 text-[var(--font-size-base)] font-[var(--font-weight-medium)] min-h-[48px] min-w-[120px]",
+        "mobile-sm": "h-12 px-4 text-[var(--font-size-sm)] font-[var(--font-weight-medium)] min-h-[44px] min-w-[80px]",
+        "mobile-lg": "h-16 px-8 text-[var(--font-size-lg)] font-[var(--font-weight-semibold)] min-h-[52px] min-w-[140px]",
       },
     },
     defaultVariants: {
