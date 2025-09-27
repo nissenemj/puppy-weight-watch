@@ -249,7 +249,7 @@ const Index = () => {
                 
                 <motion.p 
                   variants={entranceAnimations.staggerChild}
-                  className="text-body-lg text-white/90 mb-6 max-w-xl leading-relaxed text-right ml-auto"
+                  className="text-body-lg text-white/90 mb-6 max-w-sm leading-relaxed text-right ml-auto"
                 >
                   Tiedepohjaiset mittaustyökalut ja asiantunteva ohjaus tukevat vastuullista koiranhoitoa ja pennun optimaalista kehitystä.
                 </motion.p>
