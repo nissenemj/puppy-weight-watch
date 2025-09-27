@@ -170,8 +170,8 @@ const Index = () => {
 
       {/* Pan Hero Section */}
       <Section className="full-width-section no-horizontal-scroll mobile-text-wrap responsive-media mobile-container-safe" role="region" aria-labelledby="main-heading">
-        <ScrollPanBackground src={puppyHeroNew} alt="Pentulaskuri - iloinen pentu" panX={40} panY={20} zoom={1.04} minHeightClass="min-h-[60svh]" className="no-horizontal-scroll">
-          <div className="hero-content text-center mobile-grid-1 mobile-container-safe mobile-text-container mobile-hero-container relative z-40 px-8 py-16 bg-black/50 backdrop-blur-sm rounded-2xl border border-white/20 max-w-2xl mx-auto">
+        <ScrollPanBackground src={puppyHeroNew} alt="Pentulaskuri - iloinen pentu" panX={40} panY={20} zoom={1.04} minHeightClass="min-h-[60svh]" className="no-horizontal-scroll" overlayClassName="items-center justify-center p-8">
+          <div className="hero-content text-center mobile-grid-1 mobile-container-safe mobile-text-container mobile-hero-container px-8 py-16 bg-black/50 backdrop-blur-sm rounded-2xl border border-white/20 max-w-2xl">
             <motion.div initial="hidden" animate="visible" variants={entranceAnimations.staggerContainer}>
               <motion.h1 variants={entranceAnimations.staggerChild} className="text-display-1 mb-6 text-white relative z-50 font-display drop-shadow-lg" id="main-heading">
                 Pentulaskuri
