@@ -9,7 +9,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/lib/supabaseClient';
-import { Menu, PawPrint, Scale, Calculator, Book, Info, Home, LogOut, PlusCircle } from 'lucide-react';
+import { Menu, PawPrint, Scale, Calculator, Book, Info, Home, LogOut, PlusCircle, Dog } from 'lucide-react';
 
 interface PrimaryLink {
   href: string;
@@ -104,10 +104,10 @@ const NavigationWithRouter: React.FC = () => {
         .select('id,name')
         .eq('user_id', user.id)
         .order('updated_at', { ascending: false })
-        .limit(1)
-        .maybeSingle();
-      if (!error && data) {
-        setActiveDogName(data.name ?? null);
+        .limit(1);
+      if (!error && data && data.length > 0) {
+        const firstDog = data[0];
+        setActiveDogName(firstDog?.name ?? null);
       } else {
         setActiveDogName(null);
       }
@@ -176,7 +176,7 @@ const NavigationWithRouter: React.FC = () => {
               <span className="hidden md:inline-flex flex-col text-left">
                 <span className="text-sm font-semibold text-brand-ink">{user.email}</span>
                 <span className="text-xs text-muted-foreground">
-                  {isFetchingDog ? 'Haetaan pentua?' : activeDogName ? `Pentu: ${activeDogName}` : 'Ei pentuprofiilia'}
+                  {isFetchingDog ? 'Haetaan pentua...' : activeDogName ? `Pentu: ${activeDogName}` : 'Ei pentuprofiilia'}
                 </span>
               </span>
             </Button>
@@ -275,7 +275,7 @@ const NavigationWithRouter: React.FC = () => {
                   <div className="rounded-xl border border-brand-orange/30 bg-brand-orange/10 p-4">
                     <p className="text-sm font-medium text-brand-ink">{user.email}</p>
                     <p className="text-xs text-muted-foreground">
-                      {isFetchingDog ? 'Haetaan pentua?' : activeDogName ? `Viimeksi katsottu pentu: ${activeDogName}` : 'Lis?? pentuprofiili aloittaaksesi'}
+                      {isFetchingDog ? 'Haetaan pentua...' : activeDogName ? `Viimeksi katsottu pentu: ${activeDogName}` : 'Lis?? pentuprofiili aloittaaksesi'}
                     </p>
                   </div>
                 ) : (
