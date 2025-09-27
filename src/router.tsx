@@ -12,6 +12,8 @@ const WeightTrackerPage = lazy(() => import("./pages/WeightTrackerPage"));
 const OnboardingPage = lazy(() => import("./pages/OnboardingPage"));
 const PuppyBook = lazy(() => import("./pages/PuppyBook"));
 const PuppyBookLanding = lazy(() => import("./pages/PuppyBookLanding"));
+const LoginPage = lazy(() => import("./pages/auth/LoginPage"));
+const AuthCallbackPage = lazy(() => import("./pages/auth/AuthCallback"));
 
 // New consolidated guides structure
 const Guides = lazy(() => import("./pages/Guides"));
@@ -62,6 +64,14 @@ const router = createBrowserRouter([
   {
     path: "/puppy-book",
     element: withSuspense(PuppyBook),
+  },
+  {
+    path: "/login",
+    element: withSuspense(LoginPage),
+  },
+  {
+    path: "/auth/callback",
+    element: withSuspense(AuthCallbackPage),
   },
   
   // Secondary pages
