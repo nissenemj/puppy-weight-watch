@@ -4,9 +4,9 @@ import { beforeEach, expect, test, vi, type MockedFunction } from 'vitest';
 import '@testing-library/jest-dom';
 
 import LoginPage from './LoginPage';
-import { supabase } from '@/lib/supabaseClient';
+import { supabase } from '@/integrations/supabase/client';
 
-vi.mock('@/lib/supabaseClient', () => {
+vi.mock('@/integrations/supabase/client', () => {
   const auth = {
     getSession: vi.fn().mockResolvedValue({ data: { session: null } }),
     signInWithOAuth: vi.fn().mockResolvedValue({ error: null }),
