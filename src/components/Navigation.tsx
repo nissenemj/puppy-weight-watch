@@ -103,7 +103,7 @@ const NavigationWithRouter: React.FC = () => {
         .from('dogs')
         .select('id,name')
         .eq('user_id', user.id)
-        .order('updated_at', { ascending: false })
+        .order('created_at', { ascending: false })
         .limit(1);
       if (!error && data && data.length > 0) {
         const firstDog = data[0];
