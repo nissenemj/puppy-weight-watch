@@ -9,7 +9,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/lib/supabaseClient';
-import { Menu, PawPrint, Scale, Calculator, Book, Info, Home, LogOut, Dog, PlusCircle } from 'lucide-react';
+import { Menu, PawPrint, Scale, Calculator, Book, Info, Home, LogOut, PlusCircle } from 'lucide-react';
 
 interface PrimaryLink {
   href: string;
