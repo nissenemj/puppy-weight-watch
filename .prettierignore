@@ -1,0 +1,10 @@
+# Generated to unblock formatting until legacy files are cleaned up
+node_modules
+build
+coverage
+dist
+public
+scripts
+src
+supabase/migrations
+supabase/seed
