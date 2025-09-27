@@ -1,14 +1,13 @@
-name: Deploy to IONOS Environments
+name: Deploy to IONOS - Disabled
+
+# Disabled - switching to Vercel deployment
+# IONOS deployment replaced with Vercel automatic deployment
 
 on:
-  push:
-    branches:
-      - develop
-      - main
-  workflow_dispatch:
+  workflow_dispatch: # Manual trigger only
     inputs:
       environment:
-        description: 'Target environment to deploy'
+        description: 'Environment to deploy to (DISABLED - using Vercel)'
         required: true
         default: production
         type: choice
@@ -18,173 +17,11 @@ on:
           - production
 
 jobs:
-  prepare:
+  disabled:
     runs-on: ubuntu-latest
-    outputs:
-      environment: ${{ steps.set-env.outputs.environment }}
-      run_deploy: ${{ steps.set-env.outputs.run_deploy }}
     steps:
-      - id: set-env
+      - name: Deployment Disabled
         run: |
-          EVENT="${{ github.event_name }}"
-          REF="${{ github.ref }}"
-          INPUT_ENV="${{ github.event.inputs.environment }}"
-
-          if [ "$EVENT" = "workflow_dispatch" ]; then
-            TARGET="$INPUT_ENV"
-          elif [ "$REF" = "refs/heads/develop" ]; then
-            TARGET="development"
-          elif [ "$REF" = "refs/heads/main" ]; then
-            TARGET="staging"
-          else
-            TARGET=""
-          fi
-
-          if [ -z "$TARGET" ]; then
-            echo "run_deploy=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "run_deploy=true" >> "$GITHUB_OUTPUT"
-          fi
-
-          echo "environment=$TARGET" >> "$GITHUB_OUTPUT"
-
-  build-test:
-    runs-on: ubuntu-latest
-    needs: prepare
-    if: needs.prepare.outputs.run_deploy == 'true'
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci --legacy-peer-deps
-
-      - name: Check formatting
-        run: npm run format:check
-
-      - name: Lint
-        run: npm run lint
-
-      - name: Type check
-        run: npm run type-check
-
-      - name: Unit tests
-        run: npm run test
-
-      - name: E2E tests
-        run: npm run test:e2e
-
-      - name: Accessibility tests
-        run: npm run a11y-test
-
-      - name: Build project
-        run: npm run build
-        env:
-          NODE_ENV: production
-
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: web-dist
-          path: dist
-          if-no-files-found: error
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs:
-      - prepare
-      - build-test
-    if: needs.prepare.outputs.run_deploy == 'true'
-    environment:
-      name: ${{ needs.prepare.outputs.environment }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: web-dist
-          path: dist
-
-      - name: Configure environment secrets
-        run: |
-          TARGET_ENV="${{ needs.prepare.outputs.environment }}"
-          if [ "$TARGET_ENV" = "development" ]; then
-            echo "FTP_HOST=${{ secrets.IONOS_DEV_FTP_HOST }}" >> "$GITHUB_ENV"
-            echo "FTP_USERNAME=${{ secrets.IONOS_DEV_FTP_USERNAME }}" >> "$GITHUB_ENV"
-            echo "FTP_PASSWORD=${{ secrets.IONOS_DEV_FTP_PASSWORD }}" >> "$GITHUB_ENV"
-            echo "TARGET_URL=${{ secrets.IONOS_DEV_URL }}" >> "$GITHUB_ENV"
-          elif [ "$TARGET_ENV" = "staging" ]; then
-            echo "FTP_HOST=${{ secrets.IONOS_STAGING_FTP_HOST }}" >> "$GITHUB_ENV"
-            echo "FTP_USERNAME=${{ secrets.IONOS_STAGING_FTP_USERNAME }}" >> "$GITHUB_ENV"
-            echo "FTP_PASSWORD=${{ secrets.IONOS_STAGING_FTP_PASSWORD }}" >> "$GITHUB_ENV"
-            echo "TARGET_URL=${{ secrets.IONOS_STAGING_URL }}" >> "$GITHUB_ENV"
-          else
-            echo "FTP_HOST=${{ secrets.IONOS_FTP_HOST }}" >> "$GITHUB_ENV"
-            echo "FTP_USERNAME=${{ secrets.IONOS_FTP_USERNAME }}" >> "$GITHUB_ENV"
-            echo "FTP_PASSWORD=${{ secrets.IONOS_FTP_PASSWORD }}" >> "$GITHUB_ENV"
-            PROD_URL='${{ secrets.IONOS_PROD_URL }}'
-            if [ -z "$PROD_URL" ]; then
-              PROD_URL='https://pentulaskuri.com'
-            fi
-            echo "TARGET_URL=$PROD_URL" >> "$GITHUB_ENV"
-          fi
-
-      - name: Deploy via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          server: ${{ env.FTP_HOST }}
-          username: ${{ env.FTP_USERNAME }}
-          password: ${{ env.FTP_PASSWORD }}
-          local-dir: ./dist/
-          server-dir: /
-          state-name: ionos-${{ needs.prepare.outputs.environment }}-state
-          dry-run: false
-          log-level: verbose
-          dangerous-clean-slate: false
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
-            **/.env*
-
-      - name: Semantic release (production only)
-        if: needs.prepare.outputs.environment == 'production'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release
-
-      - name: Verify deployment
-        run: |
-          TARGET_URL=${TARGET_URL:-https://pentulaskuri.com}
-          echo "Deployment completed to $TARGET_URL"
-          sleep 10
-          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$TARGET_URL")
-          if [ "$HTTP_CODE" != "200" ]; then
-            echo "? Deployment health check failed with HTTP $HTTP_CODE"
-            exit 1
-          fi
-          echo "? Target responded with HTTP 200"
-
-      - name: Notify Slack
-        if: always()
-        uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          channel: '#deployments'
-          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
-          text: |
-            Deployment to ${{ needs.prepare.outputs.environment }}: ${{ job.status }}
-            Branch/Ref: ${{ github.ref }}
-            Commit: ${{ github.sha }}
-            Actor: ${{ github.actor }}
-        env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-        continue-on-error: true
+          echo "IONOS deployment disabled - using Vercel automatic deployment"
+          echo "Vercel will automatically deploy from GitHub repository"
+          echo "Check Vercel dashboard for deployment status"
