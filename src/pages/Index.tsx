@@ -219,14 +219,14 @@ const Index = () => {
             {/* Overlay for better text readability */}
             <div className="absolute inset-0 bg-black/40"></div>
             
-            {/* Left Content - positioned at 1/3 from left */}
+            {/* Right Content - positioned on right side, not crossing center line */}
             <motion.div
               initial="hidden"
               animate="visible"
               variants={entranceAnimations.staggerContainer}
-              className="relative z-10 h-full flex items-center"
+              className="relative z-10 h-full flex items-center justify-end"
             >
-              <div className="w-full max-w-2xl ml-[8.33%] lg:ml-[16.67%] px-6 py-12">
+              <div className="w-full max-w-2xl mr-[8.33%] lg:mr-[16.67%] px-6 py-12 text-right">
                 <motion.div
                   variants={entranceAnimations.staggerChild}
                   className="mb-4"
@@ -256,7 +256,7 @@ const Index = () => {
 
                 <motion.div
                   variants={entranceAnimations.staggerChild}
-                  className="flex flex-col sm:flex-row gap-3 mb-6 mobile-button"
+                  className="flex flex-col sm:flex-row gap-3 mb-6 mobile-button justify-end"
                 >
                   <Link to="/weight-tracker" aria-label="Aloita pennun painonseuranta – siirry painonseurantasivulle">
                     <Button size="lg" className="w-full sm:w-auto touch-target focus-enhanced bg-white text-primary hover:bg-white/90">
@@ -275,7 +275,7 @@ const Index = () => {
 
                 <motion.div
                   variants={entranceAnimations.staggerChild}
-                  className="flex flex-wrap gap-4"
+                  className="flex flex-wrap gap-4 justify-end"
                 >
                   {benefits.map((benefit, index) => (
                     <div key={index} className="flex items-center gap-2 text-body-sm text-white/80">
