@@ -63,7 +63,7 @@ export default function ScrollPanBackground({
       
       {/* Overlay slot */}
       {children && (
-        <div className={`relative z-30 w-full h-full flex items-center justify-center ${overlayClassName}`}>
+        <div className={`absolute inset-0 z-30 flex items-center justify-center ${overlayClassName}`}>
           {children}
         </div>
       )}
