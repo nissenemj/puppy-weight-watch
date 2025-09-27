@@ -171,12 +171,12 @@ const Index = () => {
       {/* Pan Hero Section */}
       <Section className="full-width-section no-horizontal-scroll mobile-text-wrap responsive-media mobile-container-safe" role="region" aria-labelledby="main-heading">
         <ScrollPanBackground src={puppyHeroNew} alt="Pentulaskuri - iloinen pentu" panX={40} panY={20} zoom={1.04} minHeightClass="min-h-[50svh]" className="no-horizontal-scroll">
-          <div className="hero-content text-center mobile-grid-1 mobile-container-safe mobile-text-container mobile-hero-container relative z-40 px-8 py-12 bg-black/40 backdrop-blur-sm rounded-lg border border-white/10">
+          <div className="hero-content text-left mobile-grid-1 mobile-container-safe mobile-text-container mobile-hero-container relative z-40 px-8 py-12 bg-black/40 backdrop-blur-sm rounded-lg border border-white/10 max-w-md">
             <motion.div initial="hidden" animate="visible" variants={entranceAnimations.staggerContainer}>
               <motion.h1 variants={entranceAnimations.staggerChild} className="text-display-1 mb-2 text-white relative z-50 font-display" id="main-heading">
                 Pentulaskuri
               </motion.h1>
-              <motion.p variants={entranceAnimations.staggerChild} className="text-body-xl text-white/90 max-w-2xl mx-auto relative z-50 leading-relaxed">
+              <motion.p variants={entranceAnimations.staggerChild} className="text-body-xl text-white/90 relative z-50 leading-relaxed">
                 Pentusi parhaaksi
               </motion.p>
             </motion.div>
