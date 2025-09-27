@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { beforeEach, expect, test, vi } from 'vitest';
+import { beforeEach, expect, test, vi, type MockedFunction } from 'vitest';
+import '@testing-library/jest-dom';
 
 import LoginPage from './LoginPage';
 import { supabase } from '@/lib/supabaseClient';
@@ -20,7 +21,7 @@ vi.mock('@/lib/supabaseClient', () => {
 beforeEach(() => {
   Object.values(supabase.auth).forEach((value) => {
     if (typeof value === 'function' && 'mockClear' in value) {
-      (value as vi.Mock).mockClear();
+      (value as any).mockClear();
     }
   });
 });
