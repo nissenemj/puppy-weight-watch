@@ -40,12 +40,15 @@ import heroMainIllustration from '@/assets/abstract-hero-main.svg'
 import growthChartHero from '@/assets/abstract-growth-chart.svg'
 import heroPuppyCartoon from '@/assets/hero-puppy-cartoon.jpg'
 import appIcon from '@/assets/app-icon.png'
-import dogscaleImage from '@/assets/dogscale.jpg'
+import dogscaleImage from '@/assets/calculator-hero-bg.jpg'
 
 const Index = () => {
   // Initialize mobile enhancements and onboarding
   useMobileEnhancements();
   const { showOnboarding, completeOnboarding } = useOnboarding();
+
+  // Debug: verify image import
+  console.log('dogscaleImage path:', dogscaleImage);
 
   const faqs = [
     {
@@ -166,7 +169,7 @@ const Index = () => {
       />
 
       {/* Pan Hero Section */}
-      <section className="full-width-section no-horizontal-scroll mobile-text-wrap responsive-media mobile-container-safe" role="region" aria-labelledby="main-heading">
+      <Section className="full-width-section no-horizontal-scroll mobile-text-wrap responsive-media mobile-container-safe" role="region" aria-labelledby="main-heading">
         <ScrollPanBackground src={dogscaleImage} alt="Pentulaskuri - koirankuvia laskimen kanssa" panX={40} panY={20} zoom={1.04} minHeightClass="min-h-[50svh]" className="no-horizontal-scroll">
           <div className="hero-content text-center mobile-grid-1 mobile-container-safe mobile-text-container mobile-hero-container relative z-40 px-8 py-12 bg-black/40 backdrop-blur-sm rounded-lg border border-white/10">
             <motion.div initial="hidden" animate="visible" variants={entranceAnimations.staggerContainer}>
@@ -178,7 +181,7 @@ const Index = () => {
               {/* Deployment test indicator */}
               <motion.div variants={entranceAnimations.staggerChild} className="inline-flex items-center gap-2 px-3 py-1 bg-green-500/20 border border-green-400/30 rounded-full text-green-100 text-sm mb-4">
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                Vercel + Supabase deployment test ✓
+                Image & SW Cache Fix Applied ✓
               </motion.div>
               <motion.p variants={entranceAnimations.staggerChild} className="text-body-xl text-white/90 max-w-2xl mx-auto relative z-50 leading-relaxed">
                 Ammattitasoinen seuranta ja ohjaus pennun terveelle kasvulle ja hyvinvoinnille.
@@ -186,7 +189,7 @@ const Index = () => {
             </motion.div>
           </div>
         </ScrollPanBackground>
-      </section>
+      </Section>
 
       {/* How it works: sticky horizontal steps */}
       <Section className="full-width-section mobile-container-safe" role="region" aria-labelledby="how-it-works-heading">
