@@ -38,6 +38,9 @@ export const LazyImage: React.FC<LazyImageProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const img = imgRef.current;
+    if (!img) return;
+
     // Priority images (above fold) should load immediately
     if (priority) {
       setIsIntersecting(true);
@@ -61,7 +64,7 @@ export const LazyImage: React.FC<LazyImageProps> = ({
       }
     );
 
-    observer.observe(target);
+    observer.observe(img);
 
     return () => {
       observer.disconnect();
