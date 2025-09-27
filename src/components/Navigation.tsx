@@ -1,293 +1,383 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Link, useLocation, useInRouterContext } from 'react-router-dom';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Link, useLocation, useNavigate, useInRouterContext } from 'react-router-dom';
+import type { User } from '@supabase/supabase-js';
 import { Button } from '@/components/ui/button';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Info, Scale, Dog, ShieldCheck, Menu, X, MoreHorizontal, UtensilsCrossed, Database, Book, Calculator, Home, TrendingUp } from '@/utils/iconImports';
-import { Sparkles } from 'lucide-react';
-import { componentAnimations, hoverAnimations } from '@/animations';
-const NavigationWithRouter = () => {
-  const location = useLocation();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const isActive = (path: string) => {
-    if (path === '/') return location.pathname === '/';
-    return location.pathname.startsWith(path);
-  };
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Separator } from '@/components/ui/separator';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
+import { supabase } from '@/lib/supabaseClient';
+import { Menu, PawPrint, Scale, Calculator, Book, Info, Home, LogOut, Dog, PlusCircle } from 'lucide-react';
 
-  // Handle scroll effect
+interface PrimaryLink {
+  href: string;
+  title: string;
+  description: string;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+}
+
+const primaryLinks: PrimaryLink[] = [
+  {
+    href: '/weight-tracker',
+    title: 'Painonseuranta',
+    description: 'Kirjaa mittaukset ja seuraa kasvua',
+    icon: Scale,
+  },
+  {
+    href: '/calculator',
+    title: 'Ruokalaskuri',
+    description: 'Laske sopivat annoskoot',
+    icon: Calculator,
+  },
+  {
+    href: '/puppy-book',
+    title: 'Pentukirja',
+    description: 'Tallenna muistot ja milestone-tapahtumat',
+    icon: Book,
+  },
+  {
+    href: '/guides',
+    title: 'Tietopankki',
+    description: 'Oppaat, artikkelit ja vinkit',
+    icon: Info,
+  },
+];
+
+const NavigationWithRouter: React.FC = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [activeDogName, setActiveDogName] = useState<string | null>(null);
+  const [isFetchingDog, setIsFetchingDog] = useState(false);
+
+  const isActive = useMemo(
+    () => (path: string) => {
+      if (path === '/') {
+        return location.pathname === '/';
+      }
+      return location.pathname === path || location.pathname.startsWith(`${path}/`);
+    },
+    [location.pathname],
+  );
+
   useEffect(() => {
     const handleScroll = () => {
-      const isScrolled = window.scrollY > 50;
-      setScrolled(isScrolled);
+      setIsScrolled(window.scrollY > 40);
     };
-    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Navigation items
-  const navItems = [{
-    href: '/',
-    icon: Home,
-    label: 'Koti'
-  }, {
-    href: '/weight-tracker',
-    icon: Scale,
-    label: 'Paino'
-  }, {
-    href: '/calculator',
-    icon: Calculator,
-    label: 'Laskuri'
-  }, {
-    href: '/puppy-book',
-    icon: Book,
-    label: 'Kirja'
-  }, {
-    href: '/info',
-    icon: Info,
-    label: 'Info'
-  }];
-  const panelRef = useRef<HTMLDivElement | null>(null);
-  const closeBtnRef = useRef<HTMLButtonElement | null>(null);
-
-  // Focus trap and initial focus for mobile menu
   useEffect(() => {
-    if (!isMobileMenuOpen) return;
-    // Delay to ensure panel mounts
-    const t = setTimeout(() => {
-      closeBtnRef.current?.focus();
-    }, 0);
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (!panelRef.current) return;
-      if (e.key === 'Escape') {
-        setIsMobileMenuOpen(false);
+    let isMounted = true;
+    const loadSession = async () => {
+      const { data } = await supabase.auth.getSession();
+      if (!isMounted) return;
+      setUser(data.session?.user ?? null);
+    };
+    loadSession();
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+    return () => {
+      isMounted = false;
+      listener.subscription.unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    const fetchActiveDog = async () => {
+      if (!user) {
+        setActiveDogName(null);
         return;
       }
-      if (e.key !== 'Tab') return;
-      const focusable = panelRef.current.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])');
-      if (focusable.length === 0) return;
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      const active = document.activeElement as HTMLElement | null;
-      if (e.shiftKey) {
-        if (active === first) {
-          e.preventDefault();
-          (last as HTMLElement).focus();
-        }
+      setIsFetchingDog(true);
+      const { data, error } = await supabase
+        .from('dogs')
+        .select('id,name')
+        .eq('user_id', user.id)
+        .order('updated_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (!error && data) {
+        setActiveDogName(data.name ?? null);
       } else {
-        if (active === last) {
-          e.preventDefault();
-          (first as HTMLElement).focus();
-        }
+        setActiveDogName(null);
       }
+      setIsFetchingDog(false);
     };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      clearTimeout(t);
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isMobileMenuOpen]);
-  return <>
-      <header role="banner" aria-label="Sivun ylätunniste">
-        {/* Skip to content link */}
-        
+    fetchActiveDog();
+  }, [user]);
 
-        {/* Floating Navigation */}
-        <motion.nav role="navigation" aria-label="Päänavigointi" initial={{
-        y: -100,
-        opacity: 0
-      }} animate={{
-        y: 0,
-        opacity: 1
-      }} transition={{
-        duration: 0.6,
-        delay: 0.2
-      }} className={`site-header-transparent fixed top-4 left-4 right-4 z-[1000] transition-all duration-500 mobile-optimized mobile-touch-target ${scrolled ? 'top-2 scale-98' : 'top-4'}`}>
-          <div className="mx-auto max-w-6xl bg-transparent">
-            <div className={`glass-nav bg-transparent rounded-2xl px-4 py-3 flex items-center justify-between w-full ${scrolled ? 'shadow-md' : 'shadow-xl'}`}>
-              {/* Logo */}
-              <motion.div whileHover={hoverAnimations.scale.whileHover} whileTap={hoverAnimations.scale.whileTap}>
-                <Link to="/" className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-white/20 transition-all duration-200" aria-current={isActive('/') ? 'page' : undefined}>
-                  <motion.div animate={{
-                  rotate: [0, 5, -5, 0]
-                }} transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }} className="w-8 h-8 bg-[var(--color-accent)] rounded-lg flex items-center justify-center shadow-md">
-                    <Dog className="w-4 h-4 text-white" aria-hidden="true" />
-                  </motion.div>
-                  <span className="hidden sm:block text-base font-semibold text-[var(--color-text)]">Pentulaskuri</span>
-                </Link>
-              </motion.div>
+  const initials = user?.email?.slice(0, 1).toUpperCase() ?? 'P';
 
-              {/* Desktop Navigation */}
-              <div className="hidden md:flex items-center gap-1">
-                {navItems.slice(1).map(item => {
-                const Icon = item.icon;
-                const isItemActive = isActive(item.href);
-                return <motion.div key={item.href} whileHover={hoverAnimations.lift.whileHover} whileTap={hoverAnimations.lift.whileTap}>
-                      <Link to={item.href} className={`relative px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 flex items-center gap-2 ${isItemActive ? 'bg-[var(--color-accent)] text-white shadow-md' : 'text-[var(--color-text)] hover:bg-white/10'}`} aria-current={isItemActive ? 'page' : undefined} aria-label={`${item.label} - siirry sivulle`}>
-                        <Icon className="w-4 h-4" />
-                        <span className="text-sm font-medium">{item.label}</span>
-                        
-                        {isItemActive && <motion.div layoutId="activeNavItem" className="absolute inset-0 bg-[var(--color-accent)] rounded-lg -z-10" transition={{
-                      type: "spring",
-                      bounce: 0.2,
-                      duration: 0.6
-                    }} />}
-                      </Link>
-                    </motion.div>;
-              })}
-              </div>
+  const handleSignOut = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      toast({ title: 'Uloskirjautuminen ep?onnistui', description: error.message, variant: 'destructive' });
+      return;
+    }
+    toast({ title: 'Uloskirjauduttu', description: 'Tervetuloa takaisin milloin tahansa!' });
+    navigate('/');
+  };
 
-              {/* Mobile Menu Button */}
-              <div className="md:hidden">
-                <Button variant="ghost" size="sm" onClick={() => setIsMobileMenuOpen(true)} className="rounded-lg hover:bg-white/10" aria-haspopup="dialog" aria-expanded={isMobileMenuOpen} aria-controls="mobile-menu-panel" aria-label="Avaa valikko">
-                  <Menu className="w-5 h-5" />
-                </Button>
-              </div>
-            </div>
+  const renderPrimaryNav = (className?: string) => (
+    <ul className={cn('flex items-center gap-2', className)}>
+      <li>
+        <Link
+          to="/"
+          className={cn(
+            'rounded-xl px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/60 focus-visible:ring-offset-2',
+            isActive('/') ? 'bg-brand-orange text-white shadow-soft' : 'text-brand-ink/80 hover:bg-brand-orange/10',
+          )}
+          aria-current={isActive('/') ? 'page' : undefined}
+        >
+          Koti
+        </Link>
+      </li>
+      {primaryLinks.map((item) => {
+        const Icon = item.icon;
+        const active = isActive(item.href);
+        return (
+          <li key={item.href}>
+            <Link
+              to={item.href}
+              className={cn(
+                'flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/60 focus-visible:ring-offset-2',
+                active ? 'bg-white text-brand-ink shadow-soft' : 'text-brand-ink/80 hover:bg-white/80',
+              )}
+              aria-current={active ? 'page' : undefined}
+            >
+              <Icon className="h-4 w-4 text-brand-orange" aria-hidden="true" />
+              <span>{item.title}</span>
+            </Link>
+          </li>
+        );
+      })}
+    </ul>
+  );
+
+  const renderAuthActions = () => {
+    if (user) {
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="flex items-center gap-3 px-2 text-sm font-medium">
+              <Avatar className="h-9 w-9 border border-brand-orange/30">
+                <AvatarFallback className="bg-brand-yellow/40 text-brand-ink">{initials}</AvatarFallback>
+              </Avatar>
+              <span className="hidden md:inline-flex flex-col text-left">
+                <span className="text-sm font-semibold text-brand-ink">{user.email}</span>
+                <span className="text-xs text-muted-foreground">
+                  {isFetchingDog ? 'Haetaan pentua?' : activeDogName ? `Pentu: ${activeDogName}` : 'Ei pentuprofiilia'}
+                </span>
+              </span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-64">
+            <DropdownMenuLabel>Tilin asetukset</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link to="/weight-tracker">Hallinnoi painonseurantaa</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link to="/puppy-book">Pentukirja</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link to="/onboarding">Lis??/valitse pentu</Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onSelect={handleSignOut} className="text-red-600 focus:text-red-600">
+              <LogOut className="mr-2 h-4 w-4" />
+              Kirjaudu ulos
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    }
+    return (
+      <div className="flex items-center gap-3">
+        <Button asChild variant="ghost" className="hidden sm:inline-flex">
+          <Link to="/guides" className="flex items-center gap-2">
+            <Info className="h-4 w-4" />
+            Tutustu palveluun
+          </Link>
+        </Button>
+        <Button asChild variant="outline" className="border-brand-orange text-brand-ink">
+          <Link to="/login">Kirjaudu / Luo profiili</Link>
+        </Button>
+      </div>
+    );
+  };
+
+  return (
+    <header className="fixed left-0 right-0 top-0 z-50">
+      <div
+        className={cn(
+          'mx-auto flex w-full max-w-6xl items-center justify-between gap-4 rounded-2xl border border-white/40 bg-white/80 px-4 py-3 shadow-soft backdrop-blur-md transition-all duration-300 md:px-6',
+          isScrolled ? 'mt-2' : 'mt-4',
+        )}
+      >
+        <Link to="/" className="flex items-center gap-3 rounded-xl px-2 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/60 focus-visible:ring-offset-2">
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-orange text-white shadow-soft">
+            <PawPrint className="h-5 w-5" />
+          </span>
+          <div className="hidden sm:flex flex-col">
+            <span className="text-sm font-semibold text-brand-ink">Pentulaskuri</span>
+            <span className="text-xs text-muted-foreground">Kasvun ja hyvinvoinnin seurantaan</span>
           </div>
-        </motion.nav>
-      </header>
+        </Link>
 
-      {/* Mobile Menu Overlay */}
-      <AnimatePresence>
-        {isMobileMenuOpen && <>
-            {/* Backdrop */}
-            <motion.div initial={{
-          opacity: 0
-        }} animate={{
-          opacity: 1
-        }} exit={{
-          opacity: 0
-        }} transition={{
-          duration: 0.3
-        }} className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[250]" onClick={() => setIsMobileMenuOpen(false)} />
+        <div className="hidden lg:flex items-center gap-4">
+          {renderPrimaryNav()}
+        </div>
 
-            {/* Mobile Menu */}
-            <motion.div initial={{
-          x: '100%'
-        }} animate={{
-          x: 0
-        }} exit={{
-          x: '100%'
-        }} transition={{
-          type: "spring",
-          damping: 25,
-          stiffness: 300
-        }} className="fixed top-0 right-0 h-full w-80 max-w-[90vw] mobile-menu-panel border-l border-white/30 z-[251] p-6" role="dialog" aria-modal="true" aria-labelledby="mobile-menu-title" id="mobile-menu-panel" ref={panelRef}>
-              {/* Header */}
-              <div className="flex items-center justify-between mb-8">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-primary rounded-full flex items-center justify-center">
-                    <Dog className="w-5 h-5 text-white" />
+        <div className="hidden md:flex items-center gap-4">
+          {renderAuthActions()}
+          <Button asChild variant="secondary" className="hidden lg:inline-flex bg-brand-green/90 text-white hover:bg-brand-green">
+            <Link to={user ? '/onboarding' : '/login'}>
+              <PlusCircle className="mr-2 h-4 w-4" /> Luo profiili
+            </Link>
+          </Button>
+        </div>
+
+        <div className="flex items-center gap-2 md:hidden">
+          {user ? (
+            <Button onClick={() => navigate('/login')} variant="ghost" className="px-2">
+              <Dog className="h-5 w-5 text-brand-orange" />
+            </Button>
+          ) : null}
+          <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-brand-orange/30">
+                <Menu className="h-5 w-5" />
+                <span className="sr-only">Avaa valikko</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-full max-w-sm bg-white px-0">
+              <SheetHeader className="px-6 pb-4 pt-8 text-left">
+                <SheetTitle className="flex items-center gap-3 text-brand-ink">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-orange text-white">
+                    <PawPrint className="h-5 w-5" />
+                  </span>
+                  Pentulaskuri
+                </SheetTitle>
+              </SheetHeader>
+              <div className="space-y-4 px-6 pb-10">
+                {user ? (
+                  <div className="rounded-xl border border-brand-orange/30 bg-brand-orange/10 p-4">
+                    <p className="text-sm font-medium text-brand-ink">{user.email}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {isFetchingDog ? 'Haetaan pentua?' : activeDogName ? `Viimeksi katsottu pentu: ${activeDogName}` : 'Lis?? pentuprofiili aloittaaksesi'}
+                    </p>
                   </div>
-                  <div>
-                    <h3 id="mobile-menu-title" className="font-bold text-white text-lg text-[var(--color-text-primary)]">Pentulaskuri</h3>
-                    <p className="text-gray-300 text-sm">Koiran kasvun seuranta</p>
+                ) : (
+                  <div className="rounded-xl border border-brand-orange/20 bg-brand-yellow/20 p-4 text-sm text-brand-ink">
+                    <p className="font-semibold">Uusi k?ytt?j??</p>
+                    <p>Luo ilmainen profiili ja aloita pentusi kasvun seuranta.</p>
                   </div>
+                )}
+
+                <nav aria-label="P??valikko" className="space-y-2">
+                  <Link
+                    to="/"
+                    onClick={() => setIsMobileOpen(false)}
+                    className={cn(
+                      'flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium',
+                      isActive('/') ? 'bg-brand-orange text-white shadow-soft' : 'bg-brand-orange/10 text-brand-ink',
+                    )}
+                    aria-current={isActive('/') ? 'page' : undefined}
+                  >
+                    <Home className="h-4 w-4" /> Etusivu
+                  </Link>
+                  <Separator />
+                  {primaryLinks.map((item) => {
+                    const Icon = item.icon;
+                    const active = isActive(item.href);
+                    return (
+                      <Link
+                        key={item.href}
+                        to={item.href}
+                        onClick={() => setIsMobileOpen(false)}
+                        className={cn(
+                          'flex flex-col gap-1 rounded-xl px-4 py-3 text-left transition-colors',
+                          active ? 'bg-white text-brand-ink shadow-soft' : 'hover:bg-brand-orange/10',
+                        )}
+                        aria-current={active ? 'page' : undefined}
+                      >
+                        <span className="flex items-center gap-2 text-sm font-semibold">
+                          <Icon className="h-4 w-4 text-brand-orange" aria-hidden="true" />
+                          {item.title}
+                        </span>
+                        <span className="text-xs text-muted-foreground">{item.description}</span>
+                      </Link>
+                    );
+                  })}
+                </nav>
+
+                <div className="space-y-3">
+                  {user ? (
+                    <>
+                      <Button onClick={handleSignOut} variant="outline" className="w-full justify-start text-red-600">
+                        <LogOut className="mr-2 h-4 w-4" /> Kirjaudu ulos
+                      </Button>
+                      <Button asChild variant="secondary" className="w-full justify-start bg-brand-green/90 text-white hover:bg-brand-green">
+                        <Link to="/onboarding" onClick={() => setIsMobileOpen(false)}>
+                          <PlusCircle className="mr-2 h-4 w-4" /> Lis?? pentu
+                        </Link>
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button asChild className="w-full" onClick={() => setIsMobileOpen(false)}>
+                        <Link to="/login">Kirjaudu / Luo profiili</Link>
+                      </Button>
+                      <Button asChild variant="outline" className="w-full" onClick={() => setIsMobileOpen(false)}>
+                        <Link to="/guides">Tutustu ominaisuuksiin</Link>
+                      </Button>
+                    </>
+                  )}
                 </div>
-                
-                <motion.button onClick={() => setIsMobileMenuOpen(false)} className="p-2 rounded-full hover:bg-white/10 transition-all duration-300" whileHover={{
-              scale: 1.1
-            }} whileTap={{
-              scale: 0.95
-            }} aria-label="Sulje valikko" ref={closeBtnRef}>
-                  <X className="w-5 h-5 text-gray-300" />
-                </motion.button>
               </div>
-
-              {/* Navigation Items */}
-              <div className="space-y-2">
-                {navItems.map((item, index) => {
-              const Icon = item.icon;
-              return <motion.div key={item.href} initial={{
-                opacity: 0,
-                x: 20
-              }} animate={{
-                opacity: 1,
-                x: 0
-              }} transition={{
-                delay: index * 0.1
-              }}>
-                      <Link to={item.href} onClick={() => setIsMobileMenuOpen(false)} className={`w-full flex items-center gap-4 p-4 rounded-2xl font-medium transition-all duration-300 ${isActive(item.href) ? 'bg-gradient-primary text-white shadow-lg' : 'text-white hover:bg-white/10'}`} aria-current={isActive(item.href) ? 'page' : undefined} aria-label={`${item.label} - siirry sivulle`}>
-                        <Icon className="w-5 h-5" aria-hidden="true" />
-                        <span className="text-lg">{item.label}</span>
-                        
-                        {isActive(item.href) && <motion.div className="ml-auto flex items-center gap-1" animate={{
-                    scale: [1, 1.2, 1]
-                  }} transition={{
-                    duration: 2,
-                    repeat: Infinity
-                  }}>
-                            <Sparkles className="w-4 h-4" />
-                          </motion.div>}
-                      </Link>
-                    </motion.div>;
-            })}
-              </div>
-
-            </motion.div>
-          </>}
-      </AnimatePresence>
-
-      {/* Mobile body lock */}
-      {isMobileMenuOpen && <style>{`
-          body {
-            overflow: hidden;
-          }
-        `}</style>}
-    </>;
+            </SheetContent>
+          </Sheet>
+        </div>
+      </div>
+    </header>
+  );
 };
+
 const NavigationStatic: React.FC = () => {
-  const [scrolled, setScrolled] = useState(false);
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-  return <>
-      <header role="banner" aria-label="Sivun ylätunniste" className="site-header-transparent">
-        <a href="#main-content" className="skip-link fixed left-[-9999px] top-4 z-[300] glass px-4 py-2 rounded-xl focus:left-4 transition-all duration-300 text-gray-800 font-medium">
-          Siirry suoraan sisältöön
-        </a>
-        <motion.nav role="navigation" aria-label="Päänavigointi" initial={{
-        y: -100,
-        opacity: 0
-      }} animate={{
-        y: 0,
-        opacity: 1
-      }} transition={{
-        duration: 0.6,
-        delay: 0.2
-      }} className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-[1000] transition-all duration-500 mobile-optimized mobile-touch-target ${scrolled ? 'top-2 scale-95' : 'top-4'}`}>
-          <div className="glass-nav rounded-2xl px-3 py-3 shadow-xl">
-            <div className="flex items-center gap-2">
-              <motion.div whileHover={hoverAnimations.scale.whileHover} whileTap={hoverAnimations.scale.whileTap}>
-                <a href="/" className="flex items-center gap-3 px-4 py-2 rounded-xl hover:bg-white/20 transition-all duration-200">
-                  <motion.div animate={{
-                  rotate: [0, 5, -5, 0]
-                }} transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }} className="w-10 h-10 bg-[var(--color-accent)] rounded-xl flex items-center justify-center shadow-md">
-                    <Dog className="w-5 h-5 text-white" />
-                  </motion.div>
-                  <span className="hidden sm:block text-h6 font-semibold text-[var(--color-text)]">Pentulaskuri</span>
-                </a>
-              </motion.div>
-            </div>
+  return (
+    <header className="bg-white/90 shadow-sm">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
+        <div className="flex items-center gap-3">
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-orange text-white">
+            <PawPrint className="h-5 w-5" />
+          </span>
+          <div className="flex flex-col">
+            <span className="text-sm font-semibold text-brand-ink">Pentulaskuri</span>
+            <span className="text-xs text-muted-foreground">Kasvun ja hyvinvoinnin seurantaan</span>
           </div>
-        </motion.nav>
-      </header>
-    </>;
+        </div>
+        <Button asChild variant="outline">
+          <a href="/">Siirry sovellukseen</a>
+        </Button>
+      </div>
+    </header>
+  );
 };
+
 const NavigationWrapper: React.FC = () => {
   const inRouter = useInRouterContext();
   return inRouter ? <NavigationWithRouter /> : <NavigationStatic />;
 };
+
 export default NavigationWrapper;
