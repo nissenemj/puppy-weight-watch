@@ -178,11 +178,6 @@ const Index = () => {
                 <br />
                 <span className="text-[var(--color-primary-500)]">pennun hoitoa</span>
               </motion.h1>
-              {/* Deployment test indicator */}
-              <motion.div variants={entranceAnimations.staggerChild} className="inline-flex items-center gap-2 px-3 py-1 bg-green-500/20 border border-green-400/30 rounded-full text-green-100 text-sm mb-4">
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                Image & SW Cache Fix Applied ✓
-              </motion.div>
               <motion.p variants={entranceAnimations.staggerChild} className="text-body-xl text-white/90 max-w-2xl mx-auto relative z-50 leading-relaxed">
                 Ammattitasoinen seuranta ja ohjaus pennun terveelle kasvulle ja hyvinvoinnille.
               </motion.p>

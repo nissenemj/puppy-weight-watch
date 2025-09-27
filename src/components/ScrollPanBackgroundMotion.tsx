@@ -24,8 +24,17 @@ export default function ScrollPanBackgroundMotion({
   const y = useTransform(scrollYProgress, [0, 1], [-panY / 2, panY / 2])
   const scale = useTransform(scrollYProgress, [0, 1], [1, zoom])
 
-  // Respect reduced motion: render nothing here (static fallback is shown by Suspense in parent)
-  if (reduceMotion) return null
+  // Respect reduced motion: show static image without transforms
+  if (reduceMotion) {
+    return (
+      <img
+        src={src}
+        alt={alt}
+        aria-hidden={alt === ''}
+        className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
+      />
+    )
+  }
 
   return (
     <motion.img
