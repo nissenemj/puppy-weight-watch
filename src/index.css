@@ -78,30 +78,12 @@ body {
     min-height: 44px;
   }
 
-  /* Ensure flex items wrap on small screens */
-  .flex {
-    flex-wrap: wrap !important;
-  }
-
-  /* Simplify grids to one column on small screens */
-  .grid {
-    grid-template-columns: 1fr !important;
-  }
-
   /* Ensure cards and gradient blocks are full width on mobile */
   .card, .bg-white, .bg-gradient-to-br {
     width: 100% !important;
     max-width: 100% !important;
     margin-left: 0 !important;
     margin-right: 0 !important;
-  }
-
-  /* Buttons should not overflow and should wrap text */
-  button, .btn {
-    width: 100% !important;
-    max-width: 100% !important;
-    white-space: normal !important;
-    word-wrap: break-word !important;
   }
 
   /* Inputs should fill available width */

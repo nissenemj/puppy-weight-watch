@@ -10,11 +10,6 @@
     box-sizing: border-box !important;
   }
 
-  * {
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-  }
-
   /* Global responsive images */
   img {
     max-width: 100% !important;
@@ -107,11 +102,11 @@
   }
 
   /* Input elements - enhanced for better touch */
+  /* Base touch sizing; use .mobile-form-full for full-width controls */
   input, select, textarea, .input {
     min-height: 48px !important;
     padding: var(--spacing-3) var(--spacing-4) !important;
     font-size: 16px !important; /* Prevent iOS zoom */
-    width: 100% !important;
     box-sizing: border-box !important;
     border-radius: var(--radius-md) !important;
   }
