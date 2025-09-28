@@ -56,6 +56,72 @@ export function GuestAuthProvider({ children }: GuestAuthProviderProps) {
 
   const isGuest = !user
 
+  const syncGuestDataToUser = async (): Promise<void> => {
+    if (!user || guestWeightEntries.length === 0) return
+
+    try {
+      // First, create a dog profile if guest has one
+      let dogId: string | null = null
+
+      if (guestDogProfile) {
+        const { data: dogData, error: dogError } = await supabase
+          .from('dogs')
+          .insert({
+            user_id: user.id,
+            name: guestDogProfile.name,
+            breed: guestDogProfile.breed,
+          })
+          .select()
+          .single()
+
+        if (dogError) {
+          console.error('Error creating dog profile:', dogError)
+        } else {
+          dogId = dogData.id
+        }
+      }
+
+      // Sync weight entries
+      const weightEntriesToSync = guestWeightEntries.map(entry => ({
+        user_id: user.id,
+        dog_id: dogId,
+        date: entry.date,
+        weight: entry.weight
+      }))
+
+      const { error: weightError } = await supabase
+        .from('weight_entries')
+        .insert(weightEntriesToSync)
+
+      if (weightError) {
+        console.error('Error syncing weight entries:', weightError)
+        throw weightError
+      }
+
+      // Create a puppy book if we created a dog
+      if (dogId && guestDogProfile) {
+        const { error: bookError } = await supabase
+          .from('puppy_books')
+          .insert({
+            owner_id: user.id,
+            dog_id: dogId,
+            title: `${guestDogProfile.name}n elämäntarina`,
+            birth_date: guestDogProfile.birthDate || null
+          })
+
+        if (bookError) {
+          console.error('Error creating puppy book:', bookError)
+        }
+      }
+
+      // Clear guest data after successful sync
+      clearGuestData()
+    } catch (error) {
+      console.error('Error syncing guest data to user:', error)
+      throw error
+    }
+  }
+
   // Load guest data from localStorage on mount
   useEffect(() => {
     const savedEntries = localStorage.getItem(GUEST_DATA_KEY)
@@ -204,55 +270,6 @@ export function GuestAuthProvider({ children }: GuestAuthProviderProps) {
       // Keep guest data when signing out
     } catch (error) {
       console.error('Sign out error:', error)
-    }
-  }
-
-  const syncGuestDataToUser = async (): Promise<void> => {
-    if (!user || guestWeightEntries.length === 0) return
-
-    try {
-      // First, create a dog profile if guest has one
-      let dogId: string | null = null
-
-      if (guestDogProfile) {
-        const { data: dogData, error: dogError } = await supabase
-          .from('dogs')
-          .insert({
-            user_id: user.id,
-            name: guestDogProfile.name || 'Pentuni',
-            breed: guestDogProfile.breed,
-            birth_date: guestDogProfile.birthDate,
-            gender: guestDogProfile.gender
-          })
-          .select('id')
-          .single()
-
-        if (dogError) throw dogError
-        dogId = dogData.id
-      }
-
-      // Sync weight entries
-      const weightEntriesToSync = guestWeightEntries.map(entry => ({
-        user_id: user.id,
-        dog_id: dogId,
-        date: entry.date,
-        weight: entry.weight,
-        created_at: entry.created_at
-      }))
-
-      const { error: weightError } = await supabase
-        .from('weight_entries')
-        .insert(weightEntriesToSync)
-
-      if (weightError) throw weightError
-
-      // Clear guest data after successful sync
-      clearGuestData()
-
-      console.log('Guest data synced successfully')
-    } catch (error) {
-      console.error('Failed to sync guest data:', error)
-      throw error
     }
   }
 

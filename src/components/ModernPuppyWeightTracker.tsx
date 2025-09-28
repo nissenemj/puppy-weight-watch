@@ -385,13 +385,15 @@ export default function ModernPuppyWeightTracker() {
         
         <div className="w-full mx-auto p-3 sm:p-4 max-w-full overflow-x-hidden">
           {/* Dog Selector */}
-          <div className="mb-6">
-            <DogSelector 
-              user={user} 
-              selectedDogId={selectedDog?.id} 
-              onDogSelect={(dogId, dog) => setSelectedDog(dog)} 
-            />
-          </div>
+          {user && (
+            <div className="mb-6">
+              <DogSelector 
+                user={user} 
+                selectedDogId={selectedDog?.id} 
+                onDogSelect={(dogId, dog) => setSelectedDog(dog)} 
+              />
+            </div>
+          )}
 
         {/* Weight Entry Section - Always Visible */}
         {(selectedDog || isGuest) && (
@@ -591,7 +593,13 @@ export default function ModernPuppyWeightTracker() {
           </TabsContent>
 
           <TabsContent value="puppy-feeding" className="animate-fade-in">
-            <AdvancedFoodCalculator currentWeight={getLatestWeight()} user={user} />
+            {user ? (
+              <AdvancedFoodCalculator currentWeight={getLatestWeight()} user={user} />
+            ) : (
+              <div className="text-center p-8">
+                <p className="text-gray-600">Kirjaudu sisään käyttääksesi ruokalaskuria</p>
+              </div>
+            )}
           </TabsContent>
 
           <TabsContent value="news-feed" className="animate-fade-in">
