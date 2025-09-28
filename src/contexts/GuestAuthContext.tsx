@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react'
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef, ReactNode } from 'react'
 import { User } from '@supabase/supabase-js'
 import { supabase } from '@/integrations/supabase/client'
 
@@ -56,6 +56,33 @@ export function GuestAuthProvider({ children }: GuestAuthProviderProps) {
 
   const isGuest = !user
 
+  // Refs to hold latest values for effects
+  const latestGuestEntriesRef = useRef(guestWeightEntries)
+  const syncRef = useRef<(() => Promise<void>) | null>(null)
+
+  // Helper actions (defined before syncGuestDataToUser to avoid TDZ)
+  const clearGuestData = useCallback(() => {
+    setGuestWeightEntries([])
+    setGuestDogProfile(null)
+    localStorage.removeItem(GUEST_DATA_KEY)
+    localStorage.removeItem(GUEST_PROFILE_KEY)
+  }, [])
+
+  const addGuestWeightEntry = useCallback((weight: number) => {
+    const newEntry: GuestWeightEntry = {
+      id: `guest-${Date.now()}`,
+      date: new Date().toISOString().split('T')[0],
+      weight,
+      created_at: new Date().toISOString()
+    }
+
+    setGuestWeightEntries(prev => [newEntry, ...prev].slice(0, 50)) // Keep max 50 entries
+  }, [])
+
+  const updateGuestDogProfile = useCallback((profile: GuestDogProfile) => {
+    setGuestDogProfile(profile)
+  }, [])
+
   const syncGuestDataToUser = useCallback(async (): Promise<void> => {
     if (!user || guestWeightEntries.length === 0) return
 
@@ -72,11 +99,11 @@ export function GuestAuthProvider({ children }: GuestAuthProviderProps) {
             breed: guestDogProfile.breed,
           })
           .select()
-          .single()
+          .maybeSingle()
 
         if (dogError) {
           console.error('Error creating dog profile:', dogError)
-        } else {
+        } else if (dogData) {
           dogId = dogData.id
         }
       }
@@ -120,7 +147,16 @@ export function GuestAuthProvider({ children }: GuestAuthProviderProps) {
       console.error('Error syncing guest data to user:', error)
       throw error
     }
-  }, [user, guestWeightEntries, guestDogProfile])
+  }, [user, guestWeightEntries, guestDogProfile, clearGuestData])
+
+  // Update refs when values change
+  useEffect(() => {
+    latestGuestEntriesRef.current = guestWeightEntries
+  }, [guestWeightEntries])
+
+  useEffect(() => {
+    syncRef.current = syncGuestDataToUser
+  }, [syncGuestDataToUser])
 
   // Load guest data from localStorage on mount
   useEffect(() => {
@@ -166,11 +202,14 @@ export function GuestAuthProvider({ children }: GuestAuthProviderProps) {
         sessionStorage.removeItem('pentulaskuri-oauth-guest-sync')
         sessionStorage.removeItem('pentulaskuri-oauth-guest-count')
 
-        // Attempt to sync guest data if available
-        if (guestWeightEntries.length > 0) {
+        // Attempt to sync guest data if available using refs
+        const currentEntries = latestGuestEntriesRef.current
+        const currentSync = syncRef.current
+        
+        if (currentEntries.length > 0 && currentSync) {
           try {
-            await syncGuestDataToUser()
-            console.log(`OAuth login: Successfully synced ${guestWeightEntries.length} guest weight entries`)
+            await currentSync()
+            console.log(`OAuth login: Successfully synced ${currentEntries.length} guest weight entries`)
           } catch (error) {
             console.error('OAuth login: Failed to sync guest data:', error)
           }
@@ -179,7 +218,7 @@ export function GuestAuthProvider({ children }: GuestAuthProviderProps) {
     })
 
     return () => subscription.unsubscribe()
-  }, [guestWeightEntries, syncGuestDataToUser])
+  }, []) // Empty dependency array using refs instead
 
   // Save guest data to localStorage whenever it changes
   useEffect(() => {
@@ -193,28 +232,6 @@ export function GuestAuthProvider({ children }: GuestAuthProviderProps) {
       localStorage.setItem(GUEST_PROFILE_KEY, JSON.stringify(guestDogProfile))
     }
   }, [guestDogProfile])
-
-  const addGuestWeightEntry = (weight: number) => {
-    const newEntry: GuestWeightEntry = {
-      id: `guest-${Date.now()}`,
-      date: new Date().toISOString().split('T')[0],
-      weight,
-      created_at: new Date().toISOString()
-    }
-
-    setGuestWeightEntries(prev => [newEntry, ...prev].slice(0, 50)) // Keep max 50 entries
-  }
-
-  const updateGuestDogProfile = (profile: GuestDogProfile) => {
-    setGuestDogProfile(profile)
-  }
-
-  const clearGuestData = () => {
-    setGuestWeightEntries([])
-    setGuestDogProfile(null)
-    localStorage.removeItem(GUEST_DATA_KEY)
-    localStorage.removeItem(GUEST_PROFILE_KEY)
-  }
 
   const signInWithEmail = async (email: string, password: string): Promise<boolean> => {
     try {
