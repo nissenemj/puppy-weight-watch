@@ -1,6 +1,9 @@
 import React, { ReactNode, Suspense, useRef } from 'react'
+import { Link } from 'react-router-dom'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { LazyImage } from '@/components/LazyImage'
+import { Button } from '@/components/ui/button'
+import { Scale, Calculator } from 'lucide-react'
 
 const MotionBG = React.lazy(() => import('./ScrollPanBackgroundMotion'))
 
@@ -62,6 +65,31 @@ export default function ScrollPanBackground({
       {/* Gradient overlay for better text readability */}
       <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/40 via-black/20 to-black/60 pointer-events-none" style={{ zIndex: 10 }} />
       
+      {/* Hero Content */}
+      <div className="absolute inset-0 z-20 flex items-center justify-center px-4" style={{ zIndex: 20 }}>
+        <div className="text-center max-w-4xl">
+          <h1 className="text-5xl md:text-7xl font-bold text-white drop-shadow-2xl mb-6 font-display">
+            Pentulaskuri
+          </h1>
+          <p className="text-xl md:text-2xl text-white/90 drop-shadow-lg mb-8 leading-relaxed">
+            Pentusi parhaaksi – ammattitasoinen seuranta ja hoito-ohjaus koiran terveelle kasvulle
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link to="/weight-tracker" aria-label="Aloita pennun painonseuranta">
+              <Button size="lg" className="w-full sm:w-auto bg-white text-primary hover:bg-white/90 font-semibold">
+                <Scale className="w-5 h-5 mr-2" aria-hidden="true" />
+                Aloita seuranta
+              </Button>
+            </Link>
+            <Link to="/calculator" aria-label="Avaa ruokalaskuri">
+              <Button variant="outline" size="lg" className="w-full sm:w-auto border-white text-white hover:bg-white/10 font-semibold">
+                <Calculator className="w-5 h-5 mr-2" aria-hidden="true" />
+                Ruokalaskuri
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>
       
       {/* Overlay slot */}
       {children && (

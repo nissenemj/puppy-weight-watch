@@ -177,33 +177,7 @@ const Index = () => {
         zoom={1.04}
         minHeightClass="min-h-[60svh]"
         className="no-horizontal-scroll mobile-text-wrap responsive-media mobile-container-safe"
-        overlayClassName="items-center justify-center p-8"
-      >
-        <div className="text-center px-8 py-16 bg-black/50 backdrop-blur-sm rounded-2xl border border-white/20 max-w-2xl relative z-40">
-          <motion.div initial="hidden" animate="visible" variants={entranceAnimations.staggerContainer}>
-            <motion.h1 variants={entranceAnimations.staggerChild} className="text-display-1 mb-6 text-white relative z-50 font-display drop-shadow-lg" id="main-heading">
-              Pentulaskuri
-            </motion.h1>
-            <motion.p variants={entranceAnimations.staggerChild} className="text-body-xl text-white/95 relative z-50 leading-relaxed drop-shadow-md mb-8">
-              Pentusi parhaaksi – ammattitasoinen seuranta ja hoito-ohjaus koiran terveelle kasvulle
-            </motion.p>
-            <motion.div variants={entranceAnimations.staggerChild} className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/weight-tracker" aria-label="Aloita pennun painonseuranta">
-                <Button size="lg" className="w-full sm:w-auto touch-target focus-enhanced bg-white text-primary hover:bg-white/90 font-semibold">
-                  <Scale className="w-5 h-5 mr-2" aria-hidden="true" />
-                  Aloita seuranta
-                </Button>
-              </Link>
-              <Link to="/calculator" aria-label="Avaa ruokalaskuri">
-                <Button variant="outline" size="lg" className="w-full sm:w-auto touch-target focus-enhanced border-white text-white hover:bg-white/10 font-semibold">
-                  <Calculator className="w-5 h-5 mr-2" aria-hidden="true" />
-                  Ruokalaskuri
-                </Button>
-              </Link>
-            </motion.div>
-          </motion.div>
-        </div>
-      </ScrollPanBackground>
+      />
 
       {/* How it works: sticky horizontal steps */}
       <Section className="full-width-section mobile-container-safe" role="region" aria-labelledby="how-it-works-heading">
