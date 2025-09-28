@@ -61,11 +61,26 @@ export default function ScrollPanBackground({
       </ErrorBoundary>
 
       {/* Gradient overlay for better text readability */}
-      <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/30 via-black/10 to-black/50 pointer-events-none" style={{ zIndex: 10 }} />
+      <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/40 via-black/20 to-black/60 pointer-events-none" style={{ zIndex: 10 }} />
       
-      {/* Title overlay */}
-      <div className="absolute inset-0 z-20 flex items-center justify-center" style={{ zIndex: 20 }}>
-        <h1 className="text-6xl font-bold text-white drop-shadow-2xl">Pentulaskuri</h1>
+      {/* Hero Content */}
+      <div className="absolute inset-0 z-20 flex items-center justify-center px-4" style={{ zIndex: 20 }}>
+        <div className="text-center max-w-4xl">
+          <h1 className="text-5xl md:text-7xl font-bold text-white drop-shadow-2xl mb-6 font-display">
+            Pentulaskuri
+          </h1>
+          <p className="text-xl md:text-2xl text-white/90 drop-shadow-lg mb-8 leading-relaxed">
+            Pentusi parhaaksi – ammattitasoinen seuranta ja hoito-ohjaus koiran terveelle kasvulle
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button className="bg-white text-primary hover:bg-white/90 px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-200 transform hover:scale-105 shadow-lg">
+              Aloita seuranta
+            </button>
+            <button className="border-2 border-white text-white hover:bg-white/10 px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-200 transform hover:scale-105">
+              Ruokalaskuri
+            </button>
+          </div>
+        </div>
       </div>
       
       {/* Overlay slot */}
