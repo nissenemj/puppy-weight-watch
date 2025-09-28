@@ -42,6 +42,7 @@ export default function ScrollPanBackground({
           alt={alt}
           aria-hidden={alt === ''}
           className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
+          style={{ zIndex: 1 }}
         />
       )}>
         <Suspense
@@ -51,6 +52,7 @@ export default function ScrollPanBackground({
               alt={alt}
               aria-hidden={alt === ''}
               className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
+              style={{ zIndex: 1 }}
             />
           }
         >
@@ -59,11 +61,11 @@ export default function ScrollPanBackground({
       </ErrorBoundary>
 
       {/* Gradient overlay for better text readability */}
-      <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/30 via-black/10 to-black/50 pointer-events-none" />
+      <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/30 via-black/10 to-black/50 pointer-events-none" style={{ zIndex: 10 }} />
       
       {/* Overlay slot */}
       {children && (
-        <div className={`absolute inset-0 z-30 flex items-center justify-center ${overlayClassName}`}>
+        <div className={`absolute inset-0 z-30 flex ${overlayClassName}`} style={{ zIndex: 30 }}>
           {children}
         </div>
       )}
