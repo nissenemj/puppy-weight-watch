@@ -6,19 +6,26 @@ import AuthenticationWrapper from '@/components/AuthenticationWrapper'
 import Navigation from '@/components/Navigation'
 import ModernPuppyWeightTracker from '@/components/ModernPuppyWeightTracker'
 import { MobileOptimizedLayout } from '@/components/MobileOptimizedLayout'
+import { useGuestAuth } from '@/contexts/GuestAuthContext'
+import GuestModeBar, { GuestModeBarMobile } from '@/components/GuestModeBar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { PageLayout, Container, Section } from '@/components/ui/Layout'
-import { Dog, RefreshCw, Plus } from 'lucide-react'
+import { Dog, RefreshCw, Plus, User as UserIcon, Download } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useToast } from '@/hooks/use-toast'
+import { useIsMobile } from '@/hooks/use-mobile'
 
 const WeightTrackerPage = () => {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
+  const [showAuthModal, setShowAuthModal] = useState(false)
+  const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signup')
   const navigate = useNavigate()
   const location = useLocation()
   const { toast } = useToast()
+  const isMobile = useIsMobile()
+  const { isGuest, guestWeightEntries, syncGuestDataToUser } = useGuestAuth()
 
   useEffect(() => {
     // Check if user is logged in
@@ -107,12 +114,31 @@ const WeightTrackerPage = () => {
     }
   }, [user, loading, navigate])
 
-  const handleAuthSuccess = (user: User) => {
+  const handleAuthSuccess = async (user: User) => {
     setUser(user)
-    toast({
-      title: "Sisäänkirjautuminen onnistui!",
-      description: "Tervetuloa takaisin!",
-    })
+    setShowAuthModal(false)
+
+    // Sync guest data if available
+    if (guestWeightEntries.length > 0) {
+      try {
+        await syncGuestDataToUser()
+        toast({
+          title: "Sisäänkirjautuminen onnistui!",
+          description: `Tervetuloa takaisin! ${guestWeightEntries.length} mittausta synkronoitu.`,
+        })
+      } catch (error) {
+        toast({
+          title: "Sisäänkirjautuminen onnistui!",
+          description: "Tervetuloa takaisin! Huom: vanhoja mittauksia ei voitu synkronoida.",
+          variant: "destructive"
+        })
+      }
+    } else {
+      toast({
+        title: "Sisäänkirjautuminen onnistui!",
+        description: "Tervetuloa takaisin!",
+      })
+    }
   }
 
   const handleSignOut = () => {
@@ -121,6 +147,16 @@ const WeightTrackerPage = () => {
       title: "Uloskirjautuminen onnistui",
       description: "Nähdään pian!",
     })
+  }
+
+  const handleSignUpClick = () => {
+    setAuthMode('signup')
+    setShowAuthModal(true)
+  }
+
+  const handleSignInClick = () => {
+    setAuthMode('signin')
+    setShowAuthModal(true)
   }
 
   if (loading) {
@@ -148,11 +184,11 @@ const WeightTrackerPage = () => {
     )
   }
 
-  if (!user) {
-    return <AuthenticationWrapper onAuthSuccess={handleAuthSuccess} />
-  }
+  // Guest mode: Allow access without authentication
+  // Show weight tracker with guest mode UI
 
-  if (checkingData) {
+  // Only show loading for authenticated users
+  if (user && checkingData) {
     return (
       <PageLayout variant="default">
         <Section className="min-h-screen flex items-center justify-center">
@@ -177,15 +213,15 @@ const WeightTrackerPage = () => {
     )
   }
 
-  // Show helpful message if user doesn't have dogs
-  if (!hasDogs) {
+  // Show helpful message if authenticated user doesn't have dogs
+  if (user && !hasDogs) {
     return (
       <div className="min-h-screen bg-gradient-primary flex items-center justify-center p-4 mobile-text-wrap mobile-container-safe">
         <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-6 text-center mobile-card-safe">
           <h2 className="text-xl font-semibold mb-4 text-gray-800">
             Painonseuranta edellyttää koiran lisäämistä
           </h2>
-          
+
           <div className="mb-4 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
             <p className="text-yellow-800 mb-3">
               🐕 Sinulla ei ole vielä koiria lisättynä
@@ -197,7 +233,7 @@ const WeightTrackerPage = () => {
               Lisää koira
             </button>
           </div>
-          
+
           <div className="mt-4 pt-4 border-t">
             <button
               onClick={retryDataLoad}
@@ -214,7 +250,36 @@ const WeightTrackerPage = () => {
   return (
     <MobileOptimizedLayout>
       <Navigation />
+
+      {/* Show guest mode bar for non-authenticated users */}
+      {isGuest && guestWeightEntries.length > 0 && (
+        <>
+          {isMobile ? (
+            <GuestModeBarMobile
+              onSignUpClick={handleSignUpClick}
+              onSignInClick={handleSignInClick}
+            />
+          ) : (
+            <div className="px-4 py-2">
+              <GuestModeBar
+                onSignUpClick={handleSignUpClick}
+                onSignInClick={handleSignInClick}
+              />
+            </div>
+          )}
+        </>
+      )}
+
       <ModernPuppyWeightTracker />
+
+      {/* Auth Modal */}
+      {showAuthModal && (
+        <AuthenticationWrapper
+          onAuthSuccess={handleAuthSuccess}
+          mode={authMode}
+          onClose={() => setShowAuthModal(false)}
+        />
+      )}
     </MobileOptimizedLayout>
   )
 }

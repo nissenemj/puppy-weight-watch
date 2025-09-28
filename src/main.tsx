@@ -3,6 +3,7 @@ import { StrictMode } from 'react'
 import { HelmetProvider } from 'react-helmet-async'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ThemeProvider } from './contexts/ThemeContext'
+import { GuestAuthProvider } from './contexts/GuestAuthContext'
 import Router from './router'
 import CriticalCSS from './components/CriticalCSS'
 import './index.css'
@@ -64,14 +65,16 @@ createRoot(document.getElementById("root")!).render(
         <CriticalCSS />
         <ScrollProgressBar />
         <AccessibilityEnhancer />
-        <ThemeProvider>
-          <QueryClientProvider client={queryClient}>
-            <HelmetProvider>
-              <ProductionReadiness />
-              <Router />
-            </HelmetProvider>
-          </QueryClientProvider>
-        </ThemeProvider>
+        <GuestAuthProvider>
+          <ThemeProvider>
+            <QueryClientProvider client={queryClient}>
+              <HelmetProvider>
+                <ProductionReadiness />
+                <Router />
+              </HelmetProvider>
+            </QueryClientProvider>
+          </ThemeProvider>
+        </GuestAuthProvider>
       </ErrorBoundary>
     </ModuleLoadingErrorBoundary>
   </StrictMode>

@@ -12,6 +12,7 @@ import { useIsMobile } from '@/hooks/use-mobile'
 import { supabase } from '@/integrations/supabase/client'
 import { dbToAppTypes } from '@/utils/typeConverters'
 import { User } from '@supabase/supabase-js'
+import { useGuestAuth } from '@/contexts/GuestAuthContext'
 import WeightChart from './EnhancedWeightChart'
 import AdvancedFoodCalculator from './AdvancedFoodCalculator'
 import PuppyFeeding from './PuppyFeeding'
@@ -21,12 +22,11 @@ import DogSelector from '@/components/DogSelector'
 import WeightEntry from '@/features/weight-tracking/components/WeightEntry'
 import GrowthDevelopmentSection from './GrowthDevelopmentSection'
 import AchievementSystem from './AchievementSystem'
-import { Scale, TrendingUp, Calculator, Utensils, Bell, LogIn, UserPlus, RefreshCw } from 'lucide-react'
+import AuthModal from './AuthModal'
+import { Scale, TrendingUp, Calculator, Utensils, Bell, RefreshCw } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-// Import the generated assets
-import appIcon from '@/assets/app-icon.png'
-import welcomeIllustration from '@/assets/welcome-illustration.png'
+// Import the generated assets (used in AuthModal)
 import heroIllustration from '@/assets/hero-illustration.png'
 
 interface WeightEntry {
@@ -40,11 +40,7 @@ interface WeightEntry {
 export default function ModernPuppyWeightTracker() {
   const [currentWeight, setCurrentWeight] = useState('')
   const [entries, setEntries] = useState<WeightEntry[]>([])
-  const [user, setUser] = useState<User | null>(null)
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
   const [isLogin, setIsLogin] = useState(true)
-  const [loading, setLoading] = useState(false)
   const [showOnboarding, setShowOnboarding] = useState(false)
   const [checkingOnboarding, setCheckingOnboarding] = useState(false)
   const [activeTab, setActiveTab] = useState('weight-tracking')
@@ -52,6 +48,19 @@ export default function ModernPuppyWeightTracker() {
   const [selectedDogBirthDate, setSelectedDogBirthDate] = useState<string | null>(null)
   const { toast } = useToast()
   const isMobile = useIsMobile()
+
+  // Guest auth context
+  const {
+    user,
+    isGuest,
+    guestWeightEntries,
+    guestDogProfile,
+    addGuestWeightEntry,
+    updateGuestDogProfile,
+    signInWithEmail,
+    signUpWithEmail,
+    syncGuestDataToUser
+  } = useGuestAuth()
 
   // Pull to refresh hook
   const { containerRef, isRefreshing, pullDistance, shouldShowIndicator } = usePullToRefresh({
@@ -64,24 +73,31 @@ export default function ModernPuppyWeightTracker() {
         })
       }
     },
-    disabled: !user
+    disabled: false // Allow refresh for both authenticated and guest users
   })
 
+  // Load guest data when in guest mode
   useEffect(() => {
-    // Check if user is logged in
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null)
-    })
+    if (isGuest && guestWeightEntries.length > 0) {
+      // Convert guest entries to chart format
+      const convertedEntries = guestWeightEntries.map(entry => ({
+        id: entry.id,
+        user_id: 'guest',
+        date: entry.date,
+        weight: entry.weight,
+        created_at: entry.created_at
+      }))
+      setEntries(convertedEntries)
 
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null)
-    })
-
-    return () => subscription.unsubscribe()
-  }, [])
+      // Set guest dog profile if available
+      if (guestDogProfile && !selectedDog) {
+        setSelectedDog({
+          id: 'guest-dog',
+          name: guestDogProfile.name || 'Pentuni'
+        })
+      }
+    }
+  }, [isGuest, guestWeightEntries, guestDogProfile, selectedDog])
 
   useEffect(() => {
     if (user) {
@@ -175,49 +191,11 @@ export default function ModernPuppyWeightTracker() {
     }
   }
 
-  const handleAuth = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-
-    try {
-      if (isLogin) {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        })
-        if (error) throw error
-        toast({
-          title: "Sisäänkirjautuminen onnistui!",
-          description: "Tervetuloa takaisin!",
-        })
-      } else {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            emailRedirectTo: `${window.location.origin}/`
-          }
-        })
-        if (error) throw error
-        toast({
-          title: "Rekisteröityminen onnistui!",
-          description: "Tarkista sähköpostisi vahvistuslinkin saamiseksi.",
-        })
-      }
-    } catch (error: any) {
-      toast({
-        title: "Virhe",
-        description: error.message,
-        variant: "destructive",
-      })
-    } finally {
-      setLoading(false)
-    }
-  }
 
   const handleSignOut = async () => {
     await supabase.auth.signOut()
     setEntries([])
+    setSelectedDog(null)
     toast({
       title: "Uloskirjautuminen onnistui",
       description: "Nähdään pian!",
@@ -225,15 +203,42 @@ export default function ModernPuppyWeightTracker() {
   }
 
   const addWeightEntry = async () => {
-    if (!currentWeight || !user) return
+    if (!currentWeight) return
 
-    const today = new Date().toISOString().split('T')[0]
-    
-    // Check if entry for today already exists
-    const existingEntry = entries.find(entry => entry.date === today)
-    
-    // Check if dog is selected
-    if (!selectedDog) {
+    const weight = parseFloat(currentWeight)
+    if (isNaN(weight) || weight <= 0) {
+      toast({
+        title: "Virheellinen paino",
+        description: "Anna kelvollinen painon arvo",
+        variant: "destructive",
+      })
+      return
+    }
+
+    if (isGuest) {
+      // Guest mode: save to localStorage
+      addGuestWeightEntry(weight)
+
+      // Update guest dog profile if not set
+      if (!guestDogProfile) {
+        updateGuestDogProfile({
+          name: 'Pentuni',
+          breed: undefined,
+          birthDate: undefined,
+          gender: undefined
+        })
+      }
+
+      toast({
+        title: "Paino lisätty!",
+        description: `Uusi painomerkintä: ${currentWeight} kg (väliaikainen tallentus)`,
+      })
+      setCurrentWeight('')
+      return
+    }
+
+    // Authenticated user: save to database
+    if (!user || !selectedDog) {
       toast({
         title: "Valitse koira",
         description: "Valitse ensin koira painon lisäämiseen",
@@ -242,18 +247,21 @@ export default function ModernPuppyWeightTracker() {
       return
     }
 
+    const today = new Date().toISOString().split('T')[0]
+    const existingEntry = entries.find(entry => entry.date === today)
+
     const weightData = {
       user_id: user.id,
       dog_id: selectedDog.id,
       date: today,
-      weight: parseFloat(currentWeight),
+      weight: weight,
     }
 
     if (existingEntry) {
       // Update existing entry
       const { error } = await supabase
         .from('weight_entries')
-        .update({ weight: parseFloat(currentWeight) })
+        .update({ weight: weight })
         .eq('id', existingEntry.id)
 
       if (error) {
@@ -291,7 +299,7 @@ export default function ModernPuppyWeightTracker() {
         fetchWeightEntries()
       }
     }
-    
+
     setCurrentWeight('')
   }
 
@@ -307,94 +315,15 @@ export default function ModernPuppyWeightTracker() {
     return latest - previous
   }
 
-  if (!user) {
+  if (!user && !isGuest) {
     return (
-      <div className="min-h-screen bg-gradient-primary p-4 relative overflow-hidden">
-        {/* Background decorations */}
-        <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-warm rounded-full blur-3xl opacity-20 animate-bounce-gentle"></div>
-        <div className="absolute bottom-20 right-10 w-40 h-40 bg-gradient-cool rounded-full blur-3xl opacity-20 animate-bounce-gentle" style={{ animationDelay: '1s' }}></div>
-        
-        <div className="max-w-sm sm:max-w-md mx-auto pt-16 sm:pt-20 px-4">
-          {/* Welcome illustration - Mobile Responsive */}
-          <div className="text-center mb-6 sm:mb-8 animate-fade-in">
-            <img 
-              src={welcomeIllustration} 
-              alt="Tervetuloa" 
-              className="w-48 h-36 sm:w-64 sm:h-48 mx-auto mb-4 object-contain max-w-full"
-            />
-          </div>
-
-          <Card className="backdrop-blur-sm bg-white/80 shadow-2xl border-0 animate-scale-in">
-            <CardHeader className="text-center">
-              <div className="flex items-center justify-center gap-3 mb-4">
-                <img src={appIcon} alt="Pentulaskuri" className="w-12 h-12 rounded-2xl shadow-lg" />
-                <CardTitle className="text-3xl text-foreground font-semibold">
-                  Pentulaskuri
-                </CardTitle>
-              </div>
-              <CardDescription className="text-lg">
-                Kirjaudu sisään seurataksesi pentusi kasvua ja ruokintaa
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleAuth} className="space-y-6">
-                <div className="space-y-3">
-                  <Label htmlFor="email" className="text-base font-medium">Sähköposti</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    className="h-12 text-base rounded-xl border-2 focus:border-primary focus:ring-primary"
-                  />
-                </div>
-                
-                <div className="space-y-3">
-                  <Label htmlFor="password" className="text-base font-medium">Salasana</Label>
-                  <Input
-                    id="password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    className="h-12 text-base rounded-xl border-2 focus:border-primary focus:ring-primary"
-                  />
-                </div>
-
-                <Button 
-                  type="submit" 
-                  size="mobile"
-                  className="w-full rounded-xl bg-gradient-warm hover:opacity-90 transition-all duration-200 hover:scale-105 shadow-lg" 
-                  disabled={loading}
-                >
-                  {loading ? 'Odota...' : isLogin ? (
-                    <>
-                      <LogIn className="mr-2 h-5 w-5" />
-                      Kirjaudu sisään
-                    </>
-                  ) : (
-                    <>
-                      <UserPlus className="mr-2 h-5 w-5" />
-                      Rekisteröidy
-                    </>
-                  )}
-                </Button>
-
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full h-12 text-base rounded-xl border-2 hover:bg-secondary transition-all duration-200"
-                  onClick={() => setIsLogin(!isLogin)}
-                >
-                  {isLogin ? 'Luo uusi tili' : 'Kirjaudu sisään olemassa olevalla tilillä'}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
-        </div>
-        <Toaster />
-      </div>
+      <AuthModal
+        isOpen={true}
+        mode={isLogin ? 'signin' : 'signup'}
+        onModeChange={(mode) => setIsLogin(mode === 'signin')}
+        onAuthSuccess={() => {}} // Auth state will be handled by GuestAuthContext
+        fullScreen={true}
+      />
     )
   }
 
@@ -465,13 +394,17 @@ export default function ModernPuppyWeightTracker() {
           </div>
 
         {/* Weight Entry Section - Always Visible */}
-        {selectedDog && (
+        {(selectedDog || isGuest) && (
           <div className="mb-6">
             <Card className="backdrop-blur-sm bg-white/80 border-0 shadow-xl animate-scale-in">
               <CardHeader className="pb-3">
                 <CardTitle className="flex items-center gap-2 text-foreground">
                   <Scale className="h-6 w-6 text-primary" />
-                  Lisää painomittaus
+                  Lisää painomittaus {isGuest && (
+                    <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-300 ml-2">
+                      Väliaikainen
+                    </Badge>
+                  )}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -565,7 +498,7 @@ export default function ModernPuppyWeightTracker() {
           </TabsList>
 
           <TabsContent value="weight-tracking" className="space-y-6 animate-fade-in">
-            {selectedDog ? (
+            {(selectedDog || isGuest) ? (
               <>
                 {/* Stats Cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
@@ -636,8 +569,15 @@ export default function ModernPuppyWeightTracker() {
               <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
                 <CardContent className="text-center py-12">
                   <Scale className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-[var(--color-text-primary)] mb-2">Valitse koira</h3>
-                  <p className="text-gray-500">Valitse ensin koira aloittaaksesi painonseurannan</p>
+                  <h3 className="text-xl font-semibold text-[var(--color-text-primary)] mb-2">
+                    {isGuest ? 'Aloita painonseuranta' : 'Valitse koira'}
+                  </h3>
+                  <p className="text-gray-500">
+                    {isGuest
+                      ? 'Lisää ensimmäinen painomittaus pentullesi'
+                      : 'Valitse ensin koira aloittaaksesi painonseurannan'
+                    }
+                  </p>
                 </CardContent>
               </Card>
             )}
