@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react'
 import { User } from '@supabase/supabase-js'
 import { supabase } from '@/integrations/supabase/client'
 
@@ -56,7 +56,7 @@ export function GuestAuthProvider({ children }: GuestAuthProviderProps) {
 
   const isGuest = !user
 
-  const syncGuestDataToUser = async (): Promise<void> => {
+  const syncGuestDataToUser = useCallback(async (): Promise<void> => {
     if (!user || guestWeightEntries.length === 0) return
 
     try {
@@ -120,7 +120,7 @@ export function GuestAuthProvider({ children }: GuestAuthProviderProps) {
       console.error('Error syncing guest data to user:', error)
       throw error
     }
-  }
+  }, [user, guestWeightEntries, guestDogProfile])
 
   // Load guest data from localStorage on mount
   useEffect(() => {
