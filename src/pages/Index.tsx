@@ -177,9 +177,9 @@ const Index = () => {
         zoom={1.04}
         minHeightClass="min-h-[60svh]"
         className="no-horizontal-scroll mobile-text-wrap responsive-media mobile-container-safe"
-        overlayClassName="items-center justify-center p-8"
+        overlayClassName="justify-start items-center pl-8"
       >
-        <div className="text-center px-8 py-16 bg-black/50 backdrop-blur-sm rounded-2xl border border-white/20 max-w-2xl relative z-40">
+        <div className="text-left px-6 py-8 max-w-md relative z-40">
           <motion.div initial="hidden" animate="visible" variants={entranceAnimations.staggerContainer}>
             <motion.h1 variants={entranceAnimations.staggerChild} className="text-display-1 mb-6 text-white relative z-50 font-display drop-shadow-lg" id="main-heading">
               Pentulaskuri
