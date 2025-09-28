@@ -1,5 +1,6 @@
 import React, { ReactNode, Suspense, useRef } from 'react'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
+import { LazyImage } from '@/components/LazyImage'
 
 const MotionBG = React.lazy(() => import('./ScrollPanBackgroundMotion'))
 
@@ -37,22 +38,20 @@ export default function ScrollPanBackground({
     <section ref={sectionRef} className={`relative w-full overflow-hidden ${minHeightClass} ${className}`}>
       {/* Background image: Suspense fallback shows static image until Motion chunk loads */}
       <ErrorBoundary fallback={() => (
-        <img
+        <LazyImage
           src={src}
           alt={alt}
-          aria-hidden={alt === ''}
           className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
-          style={{ zIndex: 1 }}
+          priority={true}
         />
       )}>
         <Suspense
           fallback={
-            <img
+            <LazyImage
               src={src}
               alt={alt}
-              aria-hidden={alt === ''}
               className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
-              style={{ zIndex: 1 }}
+              priority={true}
             />
           }
         >
