@@ -35,17 +35,26 @@ npm run build
 # Development build (with console logs)
 npm run build:dev
 
-# Lint code
-npm run lint
+# Code Quality
+npm run lint             # ESLint with TypeScript strict mode
+npm run type-check       # TypeScript type checking only
+npm run format           # Prettier formatting
+npm run format:check     # Check formatting without fixing
 
-# Preview production build locally
-npm run preview
+# Testing
+npm run test             # Vitest unit tests
+npm run test:watch       # Vitest watch mode for development
+npm run test:e2e         # Playwright E2E tests
+npm run a11y-test        # Accessibility tests with axe-core
 
-# Mobile optimization check  
-npm run mobile-check
+# Preview and validation
+npm run preview          # Preview production build locally
+npm run mobile-check     # Mobile optimization validation script
+npm run test:mobile      # Mobile testing with validation
 
-# Mobile testing with validation
-npm run test:mobile
+# Utilities
+npm run generate-icons   # Icon generation script
+npm run release          # Semantic release
 
 # MCP server management
 claude mcp list              # List configured MCP servers
@@ -60,9 +69,45 @@ claude mcp add <name> <cmd>  # Add new MCP server
 - **Test mobile responsiveness** at 320px, 768px, 1024px, 1440px breakpoints
 - **No horizontal scroll allowed** - test thoroughly on mobile devices
 
+## Testing Configuration
+
+### Unit Testing (Vitest)
+
+- **Framework**: Vitest with jsdom environment
+- **Config**: `vitest.config.ts` with @testing-library/jest-dom setup
+- **Coverage**: Text and lcov reporters enabled
+- **Location**: `tests/unit/` and `src/**/*.{test,spec}.{ts,tsx}`
+
+### E2E Testing (Playwright)
+
+- **Base URL**: http://127.0.0.1:4173 (configurable via PLAYWRIGHT_BASE_URL env)
+- **Browser**: Desktop Chrome (1280x720)
+- **Timeout**: 30s test, 5s expect
+- **Location**: `tests/e2e/`
+
+### Accessibility Testing
+
+- **Framework**: @axe-core/playwright for WCAG 2.1 AA compliance
+- **Integration**: Separate project in playwright.config.ts
+- **Location**: `tests/a11y/`
+
+### Running Single Tests
+
+```bash
+# Single unit test file
+npm run test src/components/Calculator.test.tsx
+
+# Single E2E test
+npm run test:e2e tests/e2e/smoke.spec.ts
+
+# Watch mode for development
+npm run test:watch
+```
+
 ## MCP Integration
 
 ### Playwright MCP Server
+
 - **Status**: Installed and configured ✓
 - **Command**: `npx @playwright/mcp@latest`
 - **Scope**: Local project configuration
@@ -72,14 +117,16 @@ claude mcp add <name> <cmd>  # Add new MCP server
 ## Project Architecture
 
 ### High-Level Architecture
+
 This is a **React SPA with lazy-loaded routes** using a **component consolidation strategy**. The app follows a **mobile-first, full-width layout system** with **unified design tokens**.
 
 ### Core Directory Structure
+
 ```
 src/
 ├── components/          # Reusable React components
 │   ├── ui/             # shadcn/ui base components (Button, Card, etc.)
-│   ├── PuppyBook/      # Puppy book feature components  
+│   ├── PuppyBook/      # Puppy book feature components
 │   ├── Navigation.tsx  # Main navigation (added recently)
 │   ├── AdvancedFoodCalculator.tsx    # CONSOLIDATED food calculator
 │   ├── ModernPuppyWeightTracker.tsx  # CONSOLIDATED weight tracker
@@ -101,6 +148,7 @@ src/
 ```
 
 ### Bundle Architecture (Vite Configuration)
+
 - **Route-based lazy loading** for all non-critical pages
 - **Feature-based code splitting**: PuppyBook (52kB), Calculator (3kB), Weight tracking (11kB)
 - **Vendor chunk optimization**: React core, UI components, animations, data libraries split intelligently
@@ -109,21 +157,25 @@ src/
 ### Key Components Architecture
 
 **Weight Tracking Flow:**
+
 - `ModernPuppyWeightTracker.tsx` - Main weight tracking interface
 - `WeightChart.tsx` - Data visualization
 - `WeightEntry.tsx` - Form for adding weight entries
 - `DogSelector.tsx` - Dog selection interface
 
 **Food Calculation:**
+
 - `AdvancedFoodCalculator.tsx` - Main food calculation component (consolidated)
 - Contains breed-specific algorithms and feeding recommendations
 
 **Authentication & Onboarding:**
+
 - `AuthenticationWrapper.tsx` - Handles login/register
 - `OnboardingWizard.tsx` - New user setup flow
 
 **Mobile Optimization:**
-- `src/styles/mobile-optimizations.css` - Mobile-specific CSS rules (253 lines, comprehensive)
+
+- `src/styles/mobile-optimizations.css` - Mobile-specific CSS rules (159 lines, optimized)
 - Mobile-first responsive design with utility classes (`mobile-grid-1`, `mobile-text-wrap`, `mobile-container-safe`)
 - Critical mobile rules prevent horizontal scroll and ensure proper touch targets
 - Performance optimizations (GPU acceleration, smooth scrolling)
@@ -133,15 +185,17 @@ src/
 ## Styling Conventions
 
 ### CSS Architecture
+
 - **Primary**: Tailwind CSS utility classes
 - **Components**: shadcn/ui components with Tailwind customization
 - **Mobile**: Dedicated mobile-optimizations.css file with responsive breakpoints
 - **Animations**: Framer Motion for transitions and micro-interactions
 
 ### Design System
+
 - **Colors**: Anthropic-inspired warm palette with CSS custom properties
   - Primary: `var(--color-primary-500)` (#e07856 warm terracotta)
-  - Secondary: `var(--color-secondary-500)` (#60a5fa calm blue)  
+  - Secondary: `var(--color-secondary-500)` (#60a5fa calm blue)
   - Tertiary: `var(--color-tertiary-500)` (#4ade80 vibrant green)
   - Neutrals: `var(--color-neutral-*)` warm beiges and grays
 - **Typography**: Inter + Source Serif Pro, mobile-first with minimum 14px font sizes
@@ -151,6 +205,7 @@ src/
 - **Glassmorphism**: backdrop-blur effects with transparency and white borders
 
 ### Critical Mobile Rules
+
 ```css
 /* Prevent horizontal scroll - NEVER allow this */
 overflow-x: hidden !important;
@@ -167,15 +222,17 @@ font-size: 16px !important; /* for input elements */
 ## Supabase Integration
 
 ### Database Schema (Key Tables)
+
 - `dogs` - Dog profiles with breed, age, activity level
 - `weight_entries` - Weight measurements with timestamps
 - `puppy_books` - Puppy book entries with photos and notes
 - User authentication via Supabase Auth
 
 ### Client Configuration
+
 ```typescript
 // Located in src/integrations/supabase/client.ts
-import { createClient } from '@supabase/supabase-js'
+import { createClient } from "@supabase/supabase-js";
 
 // Environment variables required:
 // VITE_SUPABASE_URL
@@ -183,21 +240,24 @@ import { createClient } from '@supabase/supabase-js'
 ```
 
 ### Row Level Security (RLS)
+
 All tables implement RLS policies ensuring users can only access their own data.
 
 ## State Management Patterns
 
 ### Server State (React Query)
+
 ```typescript
 // Pattern for data fetching
 const { data, error, isLoading } = useQuery({
-  queryKey: ['dogs', userId],
+  queryKey: ["dogs", userId],
   queryFn: () => fetchUserDogs(userId),
   staleTime: 5 * 60 * 1000, // 5 minutes
 });
 ```
 
 ### Local State
+
 - React useState for component-level state
 - React Context for theme and auth state
 - No global state management library (Zustand mentioned in old docs but not implemented)
@@ -205,11 +265,13 @@ const { data, error, isLoading } = useQuery({
 ## Component Development Guidelines
 
 ### TypeScript Standards
+
 - **Strict mode enabled** - no `any` types allowed
 - All props interfaces must be explicitly typed
 - Use `React.FC<PropsInterface>` for component definitions
 
 ### Component Pattern
+
 ```typescript
 interface ComponentProps {
   required: string;
@@ -220,13 +282,14 @@ interface ComponentProps {
 export const Component: React.FC<ComponentProps> = ({
   required,
   optional = defaultValue,
-  onCallback
+  onCallback,
 }) => {
   // Implementation
 };
 ```
 
 ### Accessibility Requirements
+
 - **WCAG 2.1 AA compliance mandatory**
 - Semantic HTML elements (`<main>`, `<nav>`, `<header>`, `<footer>`)
 - ARIA labels for interactive elements
@@ -236,6 +299,7 @@ export const Component: React.FC<ComponentProps> = ({
 - Color contrast ratio 4.5:1 minimum
 
 ### Performance Optimization
+
 - Lazy loading with `LazyImage.tsx` component
 - Code splitting via dynamic imports
 - Optimized bundle chunks (configured in vite.config.ts)
@@ -244,12 +308,14 @@ export const Component: React.FC<ComponentProps> = ({
 ## Mobile-First Development
 
 ### Critical Rules
+
 1. **NO horizontal scroll ever** - test on 320px width minimum
 2. Touch targets minimum 44px x 44px
 3. Test on iPhone SE, iPad, and desktop breakpoints
 4. Use `mobile-optimizations.css` for mobile-specific styles
 
 ### Testing Process
+
 ```bash
 npm run mobile-check  # Automated mobile optimization check script
 npm run dev           # Development server - then test manually in Chrome DevTools device mode
@@ -259,18 +325,21 @@ npm run dev           # Development server - then test manually in Chrome DevToo
 ## Business Logic Constraints
 
 ### Food Calculations
+
 - Based on real veterinary feeding guidelines
 - Age, weight, breed size, and activity level factors
 - Include disclaimer about consulting veterinarian
 - Support for 200+ food brands in database
 
 ### Weight Tracking
-- Metric system (kg) for measurements  
+
+- Metric system (kg) for measurements
 - Growth curve comparisons by breed
 - Historical data visualization
 - Export capabilities for vet visits
 
 ### Social Features (Puppy Book)
+
 - Privacy controls (public/private sharing)
 - Photo uploads with metadata
 - Timeline view with chronological ordering
@@ -279,12 +348,14 @@ npm run dev           # Development server - then test manually in Chrome DevToo
 ## Development Workflow
 
 ### Before Making Changes
+
 1. Understand the existing component architecture
 2. Check mobile-optimizations.css for responsive patterns
 3. Review related components for consistency
 4. Ensure TypeScript strict compliance
 
 ### Code Quality Checklist
+
 - [ ] TypeScript strict mode passes
 - [ ] Mobile responsive (test at 320px width)
 - [ ] Accessibility compliant (semantic HTML, ARIA)
@@ -293,6 +364,7 @@ npm run dev           # Development server - then test manually in Chrome DevToo
 - [ ] Performance optimized (lazy loading, etc.)
 
 ### Testing Requirements
+
 - Manual mobile testing in Chrome DevTools required
 - Test keyboard navigation
 - Verify screen reader compatibility
@@ -301,14 +373,17 @@ npm run dev           # Development server - then test manually in Chrome DevToo
 ## Common Gotchas
 
 ### Import Path Aliases
+
 ```typescript
 // Use @ alias for all src imports
-import { Component } from '@/components/Component'
-import { helper } from '@/utils/helper'
+import { Component } from "@/components/Component";
+import { helper } from "@/utils/helper";
 ```
 
 ### Mobile Optimization Utilities
+
 The `mobile-optimizations.css` file contains comprehensive mobile rules with utility classes:
+
 - `mobile-grid-1` - Forces single column layout on mobile
 - `mobile-text-wrap` - Ensures proper text wrapping to prevent overflow
 - `mobile-container-safe` - Safe container padding for mobile
@@ -319,44 +394,68 @@ The `mobile-optimizations.css` file contains comprehensive mobile rules with uti
 - Global overflow-x: hidden to prevent horizontal scroll
 
 ### Component Consolidation Strategy
+
 **CRITICAL**: The codebase has been recently refactored to remove duplicate components:
+
 - **Food Calculation**: Use `AdvancedFoodCalculator.tsx` ONLY (not FoodCalculator or EnhancedPuppyCalculator)
 - **Weight Tracking**: Use `ModernPuppyWeightTracker.tsx` ONLY (not WeightTracker or PuppyWeightTracker)
 - **Navigation**: All main pages now include `<Navigation />` component for consistent navigation
 - **Layout System**: Converted to full-width layout with proper content centering
 
 ### Recent Navigation & Layout Improvements
+
 - **Navigation z-index fixed**: Navigation components use z-[200], mobile menu z-[250]
 - **Full-width layout system**: All pages converted to full-width sections with centered content
 - **Design system unification**: All background gradients now use unified CSS classes from design-system.css
 
 ### Supabase Environment
+
+**Project Configuration:**
+
+- **Project ID**: ckwwxuyteyaaxfcvozvb
+- **URL**: https://ckwwxuyteyaaxfcvozvb.supabase.co
+
 Ensure environment variables are set:
+
 ```
-VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_URL=https://ckwwxuyteyaaxfcvozvb.supabase.co
 VITE_SUPABASE_ANON_KEY=your_anon_key
+```
+
+**Database Management:**
+
+```bash
+# Reset database with seed data
+npm run supabase:reset
+
+# Seed database only
+npm run supabase:seed
 ```
 
 ## Performance Optimizations
 
 ### Bundle Optimization
+
 - **Initial load**: ~18.3 kB JS + 21.6 kB CSS (gzipped) - Excellent performance!
 - **Route-based lazy loading**: All non-critical pages lazy loaded with Suspense
 - **Feature-based chunking**: PuppyBook (52 kB), Calculator (3 kB), Weight tracking (11 kB)
 - **Vendor splitting**: React core, data, UI, animations split intelligently
 - **Critical path**: Only homepage + essential chunks loaded initially
 
-### Image Optimization  
+### Image Optimization
+
 - **LazyImage component**: WebP support, responsive images, priority loading
 - **Intersection Observer**: 100px margin for optimal loading
 - **Progressive enhancement**: Fallbacks for older browsers
 
 ### CSS Performance
-- **Critical CSS**: Inline styles for above-the-fold content  
+
+- **Critical CSS**: Inline styles for above-the-fold content
 - **Deferred loading**: Non-critical CSS loaded after initial render
 - **Mobile-first**: 253 lines of optimized mobile CSS rules
 
 ### PWA Features
+
 - **Service Worker**: Cache-first for static, network-first for API, stale-while-revalidate for dynamic
 - **Offline support**: Basic offline functionality for cached resources
 - **Install prompts**: Full PWA manifest with shortcuts and screenshots
@@ -365,33 +464,39 @@ VITE_SUPABASE_ANON_KEY=your_anon_key
 ## Deployment & Build Configuration
 
 ### Development Environment
+
 - **Local Server**: Configured for port 8080 (strictPort: true) in vite.config.ts
 - **Fallback Port**: 5173 if 8080 is busy
 - **Host Configuration**: "0.0.0.0" for network access
 
 ### Production Build
-- **Base Path**: `/puppy-weight-watch/` for GitHub Pages deployment
-- **Build Optimization**: Manual vendor chunk splitting for optimal loading
+
+- **Base Path**: `/` (serves from domain root)
+- **Build Optimization**: Automatic vendor chunk splitting for optimal loading
 - **Performance**: Initial bundle ~18.3kB JS + 21.6kB CSS (gzipped)
-- **Tree Shaking**: Aggressive optimization with Terser in production
+- **Tree Shaking**: Aggressive optimization with esbuild in production
 - **Console Cleanup**: All console.log/debugger statements removed in production
 
 ### CI/CD Pipeline
-- **GitHub Actions**: `.github/workflows/deploy-ionos.yml` for automated deployment
+
+- **Current Deployment**: Vercel (recommended)
+- **GitHub Actions**: CI/CD workflows currently disabled for Vercel integration
+- **Previous Setup**: IONOS deployment via `.github/workflows/deploy-ionos.yml` (disabled)
 - **Performance**: Lighthouse Performance Score target >95 (Core Web Vitals optimized)
-- **Assets**: Proper base path handling for production deployment
 
 ## Finnish Language Context
 
 This is a Finnish application (`pentulaskuri` = puppy calculator). Maintain Finnish terminology in:
+
 - User interface text
 - Comments when appropriate
 - Error messages
 - Placeholder text
 
 Common terms:
+
 - `pentu` = puppy
-- `paino` = weight  
+- `paino` = weight
 - `ruoka` = food
 - `kasvu` = growth
 - `rotu` = breed
@@ -401,25 +506,30 @@ Common terms:
 The codebase was recently simplified to remove redundant components and improve maintainability:
 
 ### Removed Components
+
 - `DesignSystemDemo.tsx`, `ViralDemo.tsx` - Demo components
 - `MobileTestingDashboard.tsx`, `ResponsiveTestRunner.tsx` - Development tools
 - `FoodCalculator.tsx`, `EnhancedPuppyCalculator.tsx` - Duplicate calculators
 - `PuppyWeightTracker.tsx`, `WeightTracker.tsx` - Duplicate trackers
 
 ### Consolidated Components
+
 - **Food Calculation**: Use `AdvancedFoodCalculator.tsx` only
 - **Weight Tracking**: Use `ModernPuppyWeightTracker.tsx` only
 - **Mobile CSS**: Optimized `mobile-optimizations.css` (159 lines, organized sections)
 
 ### Import Updates Required
+
 When working with weight tracking or food calculation features, ensure imports reference the correct consolidated components to avoid build errors.
 
 ### TypeScript Configuration
+
 - **Strict mode enabled** in both `tsconfig.json` and `tsconfig.app.json`
 - Path aliases configured: `@/*` maps to `src/*`
 - **IMPORTANT**: Always run `npm run lint` before committing to catch TypeScript errors
 
 ### Critical Mobile & Layout CSS Classes
+
 Apply these classes from `mobile-optimizations.css` and `design-system.css` when building components:
 
 ```css
@@ -446,20 +556,48 @@ Apply these classes from `mobile-optimizations.css` and `design-system.css` when
 ```
 
 ### Navigation Implementation Pattern
+
 When adding navigation to new pages, follow this pattern:
+
 ```tsx
-import Navigation from '@/components/Navigation'
+import Navigation from "@/components/Navigation";
 
 export default function NewPage() {
   return (
     <MobileOptimizedLayout>
       <Navigation /> {/* Add after MobileOptimizedLayout */}
       <div className="full-width-section bg-gradient-primary">
-        <div className="full-width-content">
-          {/* Your page content */}
-        </div>
+        <div className="full-width-content">{/* Your page content */}</div>
       </div>
     </MobileOptimizedLayout>
-  )
+  );
 }
 ```
+
+### Recent Hero Section Fixes (Critical)
+
+**ScrollPanBackground Component Usage:**
+
+- Hero content MUST be nested as children within ScrollPanBackground component
+- Do NOT render hero content as sibling sections - this causes overlay positioning issues
+- Fixed reduced motion handling to show static image instead of null
+- Proper z-index hierarchy: background (1), gradient (10), content (30)
+
+**Correct Pattern:**
+
+```tsx
+<ScrollPanBackground
+  src={image}
+  alt="..."
+  overlayClassName="items-center justify-center"
+>
+  <div className="hero-content">{/* Title, subtitle, buttons go here */}</div>
+</ScrollPanBackground>
+```
+
+# important-instruction-reminders
+
+Do what has been asked; nothing more, nothing less.
+NEVER create files unless they're absolutely necessary for achieving your goal.
+ALWAYS prefer editing an existing file to creating a new one.
+NEVER proactively create documentation files (\*.md) or README files. Only create documentation files if explicitly requested by the User.
