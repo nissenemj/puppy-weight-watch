@@ -63,6 +63,11 @@ export default function ScrollPanBackground({
       {/* Gradient overlay for better text readability */}
       <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/30 via-black/10 to-black/50 pointer-events-none" style={{ zIndex: 10 }} />
       
+      {/* Title overlay */}
+      <div className="absolute inset-0 z-20 flex items-center justify-center" style={{ zIndex: 20 }}>
+        <h1 className="text-6xl font-bold text-white drop-shadow-2xl">Pentulaskuri</h1>
+      </div>
+      
       {/* Overlay slot */}
       {children && (
         <div className={`absolute inset-0 z-30 flex ${overlayClassName}`} style={{ zIndex: 30 }}>
