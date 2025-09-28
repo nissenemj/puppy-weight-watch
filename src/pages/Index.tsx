@@ -39,8 +39,8 @@ import { useMobileEnhancements, TouchTarget } from '@/components/MobileEnhanceme
 import heroMainIllustration from '@/assets/abstract-hero-main.svg'
 import growthChartHero from '@/assets/abstract-growth-chart.svg'
 import heroPuppyCartoon from '@/assets/hero-puppy-cartoon.jpg'
+import pentulaskuriHero from '@/assets/pentulaskuri-hero.png'
 import appIcon from '@/assets/app-icon.png'
-import puppyHeroNew from '@/assets/puppy-hero-new.jpg'
 
 const Index = () => {
   // Initialize mobile enhancements and onboarding
@@ -48,7 +48,7 @@ const Index = () => {
   const { showOnboarding, completeOnboarding } = useOnboarding();
 
   // Debug: verify image import
-  console.log('puppyHeroNew path:', puppyHeroNew);
+  console.log('pentulaskuriHero path:', pentulaskuriHero);
 
   const faqs = [
     {
@@ -170,7 +170,7 @@ const Index = () => {
 
       {/* Pan Hero Section */}
       <ScrollPanBackground
-        src={puppyHeroNew}
+        src={pentulaskuriHero}
         alt="Pentulaskuri - iloinen pentu"
         panX={40}
         panY={20}
