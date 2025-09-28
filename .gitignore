@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# MCP artifacts
+.playwright-mcp/
+.cache/
+test-results/
