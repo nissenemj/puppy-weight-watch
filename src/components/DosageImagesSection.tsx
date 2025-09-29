@@ -10,7 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Plus, Upload, Trash2, Eye, Save, X } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { supabase } from '@/integrations/supabase/client'
-import { dbToAppTypes } from '@/utils/typeConverters'
+import { dbToAppTypes } from '@/utils/typeUtils'
 import { useToast } from '@/hooks/use-toast'
 import { Badge } from '@/components/ui/badge'
 

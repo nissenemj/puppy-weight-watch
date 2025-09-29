@@ -1,5 +1,5 @@
 import { supabase } from "@/integrations/supabase/client"
-import { convertNullToUndefined } from "@/utils/typeConverters"
+import { convertNullToUndefined } from "@/utils/typeUtils"
 
 export interface FoodIngredient {
   id: string

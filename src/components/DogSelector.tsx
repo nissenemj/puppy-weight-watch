@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { User } from '@supabase/supabase-js'
 import { supabase } from '@/integrations/supabase/client'
-import { dbToAppTypes } from '@/utils/typeConverters'
+import { dbToAppTypes } from '@/utils/typeUtils'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
@@ -36,9 +36,9 @@ export default function DogSelector({ user, selectedDogId, onDogSelect }: DogSel
 
   useEffect(() => {
     loadDogs()
-  }, [user.id])
+  }, [loadDogs])
 
-  const loadDogs = async () => {
+  const loadDogs = useCallback(async () => {
     try {
       setLoading(true)
       const { data, error } = await supabase
@@ -50,7 +50,7 @@ export default function DogSelector({ user, selectedDogId, onDogSelect }: DogSel
       if (error) throw error
 
       setDogs(dbToAppTypes.dog(data) || [])
-      
+
       // Auto-select first dog if none selected and dogs exist
       if (data && data.length > 0 && !selectedDogId) {
         // Small delay to ensure parent component is ready
@@ -68,7 +68,7 @@ export default function DogSelector({ user, selectedDogId, onDogSelect }: DogSel
     } finally {
       setLoading(false)
     }
-  }
+  }, [user.id, selectedDogId, onDogSelect, toast])
 
   const addDog = async () => {
     if (!newDogName.trim()) return

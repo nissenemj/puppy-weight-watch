@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -10,7 +10,7 @@ import { useToast } from '@/hooks/use-toast'
 import { usePullToRefresh } from '@/hooks/usePullToRefresh'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { supabase } from '@/integrations/supabase/client'
-import { dbToAppTypes } from '@/utils/typeConverters'
+import { dbToAppTypes } from '@/utils/typeUtils'
 import { User } from '@supabase/supabase-js'
 import { useGuestAuth } from '@/contexts/GuestAuthContext'
 import WeightChart from './EnhancedWeightChart'
@@ -103,18 +103,18 @@ export default function ModernPuppyWeightTracker() {
     if (user) {
       checkForOnboarding()
     }
-  }, [user])
+  }, [user, checkForOnboarding])
 
   useEffect(() => {
     if (user && selectedDog) {
       fetchWeightEntries()
       fetchDogBirthDate()
     }
-  }, [user, selectedDog])
+  }, [user, selectedDog, fetchWeightEntries, fetchDogBirthDate])
 
-  const checkForOnboarding = async () => {
+  const checkForOnboarding = useCallback(async () => {
     if (!user) return
-    
+
     setCheckingOnboarding(true)
     try {
       // Check if user has any dogs (indicating they've completed onboarding)
@@ -138,7 +138,7 @@ export default function ModernPuppyWeightTracker() {
     } finally {
       setCheckingOnboarding(false)
     }
-  }
+  }, [user])
 
   const handleOnboardingComplete = () => {
     setShowOnboarding(false)
@@ -149,7 +149,7 @@ export default function ModernPuppyWeightTracker() {
     })
   }
 
-  const fetchWeightEntries = async () => {
+  const fetchWeightEntries = useCallback(async () => {
     if (!user || !selectedDog) return
 
     const { data, error } = await supabase
@@ -169,9 +169,9 @@ export default function ModernPuppyWeightTracker() {
     } else if (data) {
       setEntries(dbToAppTypes.dogFood(data))
     }
-  }
+  }, [user, selectedDog, toast])
 
-  const fetchDogBirthDate = async () => {
+  const fetchDogBirthDate = useCallback(async () => {
     if (!user || !selectedDog) return
 
     const { data, error } = await supabase
@@ -189,7 +189,7 @@ export default function ModernPuppyWeightTracker() {
     } else {
       setSelectedDogBirthDate(null)
     }
-  }
+  }, [user, selectedDog])
 
 
   const handleSignOut = async () => {

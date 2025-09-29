@@ -1,7 +1,7 @@
 
 import { supabase } from "@/integrations/supabase/client"
 import { WeightEntrySchema } from "@/lib/validationSchemas"
-import { convertNullToUndefined } from "@/utils/typeConverters"
+import { convertNullToUndefined } from "@/utils/typeUtils"
 import { z } from "zod"
 
 export interface WeightEntry {

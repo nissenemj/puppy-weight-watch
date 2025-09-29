@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { supabase } from '@/integrations/supabase/client'
-import { dbToAppTypes } from '@/utils/typeConverters'
+import { dbToAppTypes } from '@/utils/typeUtils'
 import { User } from '@supabase/supabase-js'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'

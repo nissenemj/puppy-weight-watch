@@ -17,7 +17,7 @@ import { AllergenEditor } from './admin/AllergenEditor'
 import { NutritionEditor } from './admin/NutritionEditor'
 import { ManufacturerEditor } from './admin/ManufacturerEditor'
 import { supabase } from '@/integrations/supabase/client'
-import { dbToAppTypes, appToDbTypes } from '@/utils/typeConverters'
+import { dbToAppTypes, appToDbTypes } from '@/utils/typeUtils'
 import { toast } from 'sonner'
 
 // Component to show linked dosage images

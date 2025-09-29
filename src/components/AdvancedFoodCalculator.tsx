@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { Calculator, Dog, Scale } from 'lucide-react'
 import { User } from '@supabase/supabase-js'
 import { supabase } from '@/integrations/supabase/client'
-import { dbToAppTypes } from '@/utils/typeConverters'
+import { dbToAppTypes } from '@/utils/typeUtils'
 import { toast } from 'sonner'
 
 // Database types

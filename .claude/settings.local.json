@@ -43,9 +43,16 @@
       "Bash(npx kill-port:*)",
       "Bash(git reset:*)",
       "Bash(netstat:*)",
-      "Bash(findstr:*)"
+      "Bash(findstr:*)",
+      "Bash(git restore:*)",
+      "Bash(claude update)",
+      "Bash(npm outdated)",
+      "Bash(npm update:*)",
+      "Bash(find:*)"
     ],
     "deny": [],
-    "additionalDirectories": ["C:\\c\\Users\\nisse"]
+    "additionalDirectories": [
+      "C:\\c\\Users\\nisse"
+    ]
   }
 }
