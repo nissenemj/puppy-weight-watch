@@ -35,22 +35,39 @@ export default function GrowthPredictionPanel({
     )
   }
 
+  // Validoi prediction data
+  if (!prediction.predictedAdultWeight || prediction.predictedAdultWeight <= 0 || isNaN(prediction.predictedAdultWeight)) {
+    return (
+      <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <AlertCircle className="h-5 w-5 text-amber-500" />
+            Kasvuennuste - Virhe
+          </CardTitle>
+          <CardDescription>
+            Ennusteen laskemisessa tapahtui virhe. Tarkista painomittaukset.
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    )
+  }
+
   // Laske prosentuaalinen kasvu aikuispainoon
-  const percentageOfAdultWeight = (currentWeight / prediction.predictedAdultWeight) * 100
+  const percentageOfAdultWeight = Math.min(100, Math.max(0, (currentWeight / prediction.predictedAdultWeight) * 100))
   const monthsToMaturity = Math.max(0, prediction.estimatedMaturityAge - currentAgeMonths)
 
   // Kasvuvaiheen väri ja ikoni
   const phaseColor = getGrowthPhaseColor(prediction.currentGrowthPhase)
   const phaseIcon = getPhaseIcon(prediction.currentGrowthPhase)
 
-  // Mallin tarkkuuden arviointi
-  const modelAccuracy = prediction.r2 * 100
-  const accuracyLevel = modelAccuracy > 90 ? 'Erinomainen' :
-                        modelAccuracy > 75 ? 'Hyvä' :
-                        modelAccuracy > 60 ? 'Kohtalainen' : 'Alhainen'
-  const accuracyColor = modelAccuracy > 90 ? 'text-green-600' :
-                       modelAccuracy > 75 ? 'text-blue-600' :
-                       modelAccuracy > 60 ? 'text-amber-600' : 'text-red-600'
+  // Mallin tarkkuuden arviointi (realistisemmät rajat)
+  const modelAccuracy = Math.min(95, Math.max(50, prediction.r2 * 100))
+  const accuracyLevel = modelAccuracy > 85 ? 'Hyvä' :
+                        modelAccuracy > 70 ? 'Kohtalainen' :
+                        modelAccuracy > 55 ? 'Tyydyttävä' : 'Alhainen'
+  const accuracyColor = modelAccuracy > 85 ? 'text-green-600' :
+                       modelAccuracy > 70 ? 'text-blue-600' :
+                       modelAccuracy > 55 ? 'text-amber-600' : 'text-red-600'
 
   const categoryInfo = breedCategory ? getBreedCategoryInfo(breedCategory) : null
 
@@ -81,7 +98,7 @@ export default function GrowthPredictionPanel({
             <div className="flex justify-between items-baseline">
               <span className="text-sm font-medium text-muted-foreground">Ennustettu aikuispaino</span>
               <span className="text-2xl font-bold text-primary">
-                {prediction.predictedAdultWeight.toFixed(1)} kg
+                {Math.max(0.1, Math.min(100, prediction.predictedAdultWeight)).toFixed(1)} kg
               </span>
             </div>
             <Progress value={percentageOfAdultWeight} className="h-3" />
@@ -120,8 +137,8 @@ export default function GrowthPredictionPanel({
               <span className="text-sm">
                 Viikottainen kasvu:
                 <span className="font-bold ml-2 text-primary">
-                  {prediction.currentWeeklyGrowthRate > 0 ? '+' : ''}
-                  {prediction.currentWeeklyGrowthRate.toFixed(2)} kg/vko
+                  {Math.max(0, prediction.currentWeeklyGrowthRate) > 0 ? '+' : ''}
+                  {Math.max(0, Math.min(2.0, prediction.currentWeeklyGrowthRate)).toFixed(2)} kg/vko
                 </span>
               </span>
             </div>

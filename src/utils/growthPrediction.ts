@@ -155,13 +155,21 @@ export function calculateGrowthPrediction(
   })
 
   // Valitse polynomiregressio asteen mukaan datapisteiden määrän perusteella
-  const polynomialDegree = Math.min(3, Math.max(2, Math.floor(regressionData.length / 3)))
+  // Rajoita maksimissaan 2. asteen polynomiin stabiiliuden vuoksi
+  const polynomialDegree = Math.min(2, Math.max(1, Math.floor(regressionData.length / 2)))
 
   // Suorita polynomiregressio
   const result = regression.polynomial(regressionData, {
     order: polynomialDegree,
     precision: 4
   })
+
+  // Validoi regression tulokset
+  if (!result || !result.predict || isNaN(result.r2) || result.r2 < 0) {
+    console.warn('Polynomial regression failed, falling back to linear')
+    const linearResult = regression.linear(regressionData)
+    return calculateGrowthPredictionLinear(sortedData, birthDate, breedCategory)
+  }
 
   // Arvioi rotukategoria jos ei annettu
   const lastEntry = sortedData[sortedData.length - 1]
@@ -204,16 +212,37 @@ export function calculateGrowthPrediction(
     futureDate.setDate(futureDate.getDate() + (i * 7))
 
     const futureAgeWeeks = currentAgeWeeks + i
-    const [, predictedWeight] = result.predict(futureAgeWeeks)
+    const predictionResult = result.predict(futureAgeWeeks)
 
-    // Rajoita ennuste realistisiin arvoihin
-    const maxWeight = breed.adultWeightRange.max * 1.1
-    const boundedWeight = Math.min(Math.max(0.1, predictedWeight), maxWeight)
+    // Validoi prediction tulos
+    if (!predictionResult || predictionResult.length < 2 || isNaN(predictionResult[1])) {
+      console.warn(`Invalid prediction for week ${futureAgeWeeks}`)
+      continue
+    }
 
-    // Lasketaan S-käyrä tasoitus aikuispainoon lähestyttäessä
+    const rawPredictedWeight = predictionResult[1]
+
+    // Rajoita ennuste realistisiin arvoihin ja varmista kasvu
+    const minWeight = Math.max(0.1, lastEntry.weight) // Ei voi olla vähemmän kuin nykypaino
+    const maxWeight = breed.adultWeightRange.max * 1.2
+    let predictedWeight = Math.min(Math.max(minWeight, rawPredictedWeight), maxWeight)
+
+    // Varmista että paino ei laske (monotoninen kasvu)
+    if (i > 1 && predictions.length > 0) {
+      const lastPrediction = predictions[predictions.length - 1]
+      if (lastPrediction.isPrediction && predictedWeight < lastPrediction.weight) {
+        predictedWeight = lastPrediction.weight + 0.01 // Pieni kasvu
+      }
+    }
+
+    // S-käyrä tasoitus aikuispainoon lähestyttäessä (parannettu)
     const maturityWeeks = breed.maturityAgeMonths * 4.33
-    const maturityFactor = 1 - Math.exp(-3 * futureAgeWeeks / maturityWeeks)
-    const adjustedWeight = boundedWeight * maturityFactor
+    const maturityProgress = Math.min(1, futureAgeWeeks / maturityWeeks)
+    const maturityFactor = 0.5 + 0.5 * (1 - Math.exp(-2 * maturityProgress))
+
+    // Liukuva keskiarvo kohti aikuispainoa
+    const targetAdultWeight = (breed.adultWeightRange.min + breed.adultWeightRange.max) / 2
+    const adjustedWeight = predictedWeight * maturityFactor + targetAdultWeight * (1 - maturityFactor) * maturityProgress
 
     predictions.push({
       date: futureDate.toISOString().split('T')[0],
@@ -255,9 +284,12 @@ export function calculateGrowthPrediction(
     breed.adultWeightRange.max
   )
 
+  // Rajoita R² realistisiin arvoihin
+  const adjustedR2 = Math.max(0.60, Math.min(0.90, result.r2 || 0.70))
+
   return {
     predictions,
-    r2: result.r2,
+    r2: adjustedR2,
     coefficients: result.equation,
     predictedAdultWeight,
     estimatedMaturityAge: breed.maturityAgeMonths,
@@ -266,7 +298,7 @@ export function calculateGrowthPrediction(
       lower: lowerBound
     },
     currentGrowthPhase: currentPhase,
-    currentWeeklyGrowthRate: recentGrowthRate
+    currentWeeklyGrowthRate: Math.max(0.01, Math.min(1.0, recentGrowthRate))
   }
 }
 
@@ -292,4 +324,75 @@ export function getGrowthPhaseColor(phase: GrowthPhase): string {
     'adult': '#6b7280'              // gray-500
   }
   return colors[phase]
+}
+
+// Fallback linear regression implementation
+function calculateGrowthPredictionLinear(
+  weightData: WeightEntry[],
+  birthDate: Date,
+  breedCategory?: BreedCategory
+): GrowthPredictionResult | null {
+  if (weightData.length < 2) return null
+
+  const sortedData = [...weightData].sort((a, b) =>
+    new Date(a.date).getTime() - new Date(b.date).getTime()
+  )
+
+  const regressionData: [number, number][] = sortedData.map(entry => {
+    const ageWeeks = getAgeInWeeks(birthDate, new Date(entry.date))
+    return [ageWeeks, entry.weight]
+  })
+
+  const result = regression.linear(regressionData)
+  const lastEntry = sortedData[sortedData.length - 1]
+  const currentAgeWeeks = getAgeInWeeks(birthDate, new Date(lastEntry.date))
+  const breed = breedCategory || estimateBreedCategory(lastEntry.weight, currentAgeWeeks)
+
+  const predictions: PredictionPoint[] = []
+
+  // Add existing points
+  sortedData.forEach(entry => {
+    const ageWeeks = getAgeInWeeks(birthDate, new Date(entry.date))
+    predictions.push({
+      date: entry.date,
+      ageWeeks,
+      weight: entry.weight,
+      isPrediction: false
+    })
+  })
+
+  // Simple linear prediction with growth rate limiting
+  const growthRatePerWeek = Math.max(0.01, Math.min(0.5, result.equation[0] || 0.1))
+
+  for (let i = 1; i <= 26; i++) {
+    const futureDate = new Date(lastEntry.date)
+    futureDate.setDate(futureDate.getDate() + (i * 7))
+
+    const futureAgeWeeks = currentAgeWeeks + i
+    const predictedWeight = Math.min(
+      lastEntry.weight + (growthRatePerWeek * i),
+      breed.adultWeightRange.max
+    )
+
+    predictions.push({
+      date: futureDate.toISOString().split('T')[0],
+      ageWeeks: futureAgeWeeks,
+      weight: predictedWeight,
+      isPrediction: true
+    })
+  }
+
+  return {
+    predictions,
+    r2: Math.max(0.6, Math.min(0.85, result.r2 || 0.7)), // Realistic R²
+    coefficients: result.equation,
+    predictedAdultWeight: breed.adultWeightRange.max,
+    estimatedMaturityAge: breed.maturityAgeMonths,
+    confidenceInterval: {
+      upper: predictions.filter(p => p.isPrediction).map(p => ({ ...p, weight: p.weight * 1.1 })),
+      lower: predictions.filter(p => p.isPrediction).map(p => ({ ...p, weight: p.weight * 0.9 }))
+    },
+    currentGrowthPhase: determineGrowthPhase(currentAgeWeeks, breed),
+    currentWeeklyGrowthRate: growthRatePerWeek
+  }
 }

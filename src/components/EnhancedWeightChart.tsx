@@ -175,6 +175,12 @@ export default function EnhancedWeightChart({ weightData, birthDate, breed }: We
     return allData.sort((a, b) => a.timestamp - b.timestamp)
   }, [growthPrediction, sortedData])
 
+  // Calculate chart domain for Y-axis
+  const allWeights = chartData.map(d => [d.actualWeight, d.avgGrowthLine, d.upperBound, d.lowerBound]).flat().filter(w => w != null && !isNaN(w) && w > 0)
+  const minWeight = allWeights.length > 0 ? Math.max(0, Math.min(...allWeights) - 0.5) : 0
+  const maxWeight = allWeights.length > 0 ? Math.max(...allWeights) + 0.5 : 10
+  const yAxisDomain = [minWeight, maxWeight]
+
   // Calculate insights
   const totalGrowth = sortedData.length > 1 ? sortedData[sortedData.length - 1].weight - sortedData[0].weight : 0
   const avgWeight = sortedData.reduce((sum, entry) => sum + entry.weight, 0) / sortedData.length
@@ -299,10 +305,10 @@ export default function EnhancedWeightChart({ weightData, birthDate, breed }: We
                 fontSize={11}
                 stroke="hsl(var(--muted-foreground))"
               />
-              <YAxis 
+              <YAxis
                 fontSize={11}
-                domain={['dataMin - 0.5', 'dataMax + 0.5']}
-                tickFormatter={(value) => `${value} kg`}
+                domain={yAxisDomain}
+                tickFormatter={(value) => `${Number(value).toFixed(1)} kg`}
                 stroke="hsl(var(--muted-foreground))"
               />
               <Tooltip content={<CustomTooltip />} />
