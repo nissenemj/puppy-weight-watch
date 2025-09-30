@@ -26,11 +26,6 @@
       "VITE_SUPABASE_ANON_KEY": "@supabase_anon_key"
     }
   },
-  "functions": {
-    "app/api/**/*.js": {
-      "runtime": "nodejs18.x"
-    }
-  },
   "headers": [
     {
       "source": "/sw.js",
