@@ -1,14 +1,18 @@
-import { useState } from 'react'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine } from 'recharts'
+import { useState, useMemo } from 'react'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine, Area, ComposedChart } from 'recharts'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { format, parseISO, subDays, subWeeks, subMonths } from 'date-fns'
-import { Calendar, TrendingUp, Target, Award } from 'lucide-react'
+import { Calendar, TrendingUp, Target, Award, Brain, Activity } from 'lucide-react'
 import type { WeightEntry } from '@/services/weightService'
+import { calculateGrowthPrediction, estimateBreedCategory, getGrowthPhaseColor } from '@/utils/growthPrediction'
+import GrowthPredictionPanel from '@/components/GrowthPredictionPanel'
 
 interface WeightChartProps {
   weightData: WeightEntry[]
+  birthDate?: Date
+  breed?: string
 }
 
 interface ChartDataPoint {
@@ -18,6 +22,19 @@ interface ChartDataPoint {
   actualWeight: number
   avgGrowthLine: number
   milestone?: string
+  upperBound?: number
+  lowerBound?: number
+}
+
+interface TooltipProps {
+  active?: boolean
+  payload?: Array<{
+    name: string
+    value: number
+    color: string
+    payload: ChartDataPoint
+  }>
+  label?: string | number
 }
 
 type TimeRange = '1m' | '3m' | '6m' | '1y' | 'all'
@@ -30,9 +47,173 @@ const TIME_RANGES = {
   'all': { label: 'Kaikki', days: 0 }
 }
 
-export default function EnhancedWeightChart({ weightData }: WeightChartProps) {
+export default function EnhancedWeightChart({ weightData, birthDate, breed }: WeightChartProps) {
   const [timeRange, setTimeRange] = useState<TimeRange>('3m')
-  
+
+  // Calculate puppy birth date if not provided (estimate from first entry)
+  const estimatedBirthDate = useMemo(() => {
+    if (birthDate) return birthDate
+    if (weightData.length === 0) return new Date()
+
+    // Estimate birth date assuming first measurement at ~8 weeks old
+    const firstEntry = [...weightData].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())[0]
+    const estimatedBirth = new Date(firstEntry.date)
+    estimatedBirth.setDate(estimatedBirth.getDate() - 56) // Subtract 8 weeks
+    return estimatedBirth
+  }, [birthDate, weightData])
+
+  // Filter data based on time range
+  const filterDataByTimeRange = (data: WeightEntry[], range: TimeRange) => {
+    if (range === 'all') return data
+
+    const cutoffDate = new Date()
+    switch (range) {
+      case '1m': cutoffDate.setMonth(cutoffDate.getMonth() - 1); break
+      case '3m': cutoffDate.setMonth(cutoffDate.getMonth() - 3); break
+      case '6m': cutoffDate.setMonth(cutoffDate.getMonth() - 6); break
+      case '1y': cutoffDate.setFullYear(cutoffDate.getFullYear() - 1); break
+    }
+
+    return data.filter(entry => new Date(entry.date) >= cutoffDate)
+  }
+
+  const filteredData = filterDataByTimeRange(weightData, timeRange)
+  const sortedData = [...filteredData].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+
+  // Calculate current age in months
+  const currentAgeMonths = useMemo(() => {
+    if (sortedData.length === 0) return 0
+    const lastEntry = sortedData[sortedData.length - 1]
+    const ageMs = new Date(lastEntry.date).getTime() - estimatedBirthDate.getTime()
+    return Math.floor(ageMs / (1000 * 60 * 60 * 24 * 30.44))
+  }, [sortedData, estimatedBirthDate])
+
+  // Estimate breed category if not specified
+  const breedCategory = useMemo(() => {
+    if (sortedData.length === 0) return undefined
+    const lastEntry = sortedData[sortedData.length - 1]
+    const ageWeeks = (new Date(lastEntry.date).getTime() - estimatedBirthDate.getTime()) / (1000 * 60 * 60 * 24 * 7)
+    return estimateBreedCategory(lastEntry.weight, ageWeeks)
+  }, [sortedData, estimatedBirthDate])
+
+  // Calculate growth prediction using polynomial regression
+  const growthPrediction = useMemo(() => {
+    if (sortedData.length < 2) return null
+    return calculateGrowthPrediction(sortedData, estimatedBirthDate, breedCategory)
+  }, [sortedData, estimatedBirthDate, breedCategory])
+
+  // Calculate weekly growth rate from prediction
+  const weeklyGrowth = growthPrediction?.currentWeeklyGrowthRate || 0.42
+
+  // Add milestones based on weight ranges
+  const getMilestone = (weight: number): string | undefined => {
+    if (weight >= 1 && weight < 2) return "Ensimmäinen kuukausi"
+    if (weight >= 5 && weight < 7) return "Rokotusikä"
+    if (weight >= 10 && weight < 12) return "Hihnakävelyikä"
+    if (weight >= 15 && weight < 18) return "Nuoruuskasvupiikki"
+    return undefined
+  }
+
+  // Create enhanced chart data including predictions
+  const chartData: ChartDataPoint[] = useMemo(() => {
+    if (!growthPrediction) {
+      // Fallback to simple linear if no prediction available
+      return sortedData.map((entry) => {
+        const entryDate = parseISO(entry.date)
+        return {
+          date: entry.date,
+          timestamp: entryDate.getTime(),
+          dateFormatted: format(entryDate, 'dd.MM'),
+          actualWeight: entry.weight,
+          avgGrowthLine: entry.weight, // Simple line
+          milestone: getMilestone(entry.weight)
+        }
+      })
+    }
+
+    // Map prediction data to chart format
+    const allData: ChartDataPoint[] = []
+
+    // Add actual measurements
+    growthPrediction.predictions.forEach(point => {
+      if (!point.isPrediction) {
+        const entryDate = parseISO(point.date)
+        allData.push({
+          date: point.date,
+          timestamp: entryDate.getTime(),
+          dateFormatted: format(entryDate, 'dd.MM'),
+          actualWeight: point.weight,
+          avgGrowthLine: undefined,
+          milestone: getMilestone(point.weight)
+        })
+      }
+    })
+
+    // Add predicted values (only showing next 3 months)
+    const futureLimit = new Date()
+    futureLimit.setMonth(futureLimit.getMonth() + 3)
+
+    growthPrediction.predictions.forEach(point => {
+      if (point.isPrediction && new Date(point.date) <= futureLimit) {
+        const entryDate = parseISO(point.date)
+        const existing = allData.find(d => d.date === point.date)
+        if (existing) {
+          existing.avgGrowthLine = point.weight
+        } else {
+          allData.push({
+            date: point.date,
+            timestamp: entryDate.getTime(),
+            dateFormatted: format(entryDate, 'dd.MM'),
+            actualWeight: undefined,
+            avgGrowthLine: point.weight,
+            milestone: undefined
+          })
+        }
+      }
+    })
+
+    return allData.sort((a, b) => a.timestamp - b.timestamp)
+  }, [growthPrediction, sortedData])
+
+  // Calculate insights
+  const totalGrowth = sortedData.length > 1 ? sortedData[sortedData.length - 1].weight - sortedData[0].weight : 0
+  const avgWeight = sortedData.reduce((sum, entry) => sum + entry.weight, 0) / sortedData.length
+  const recentTrend = growthPrediction?.currentWeeklyGrowthRate ||
+    (sortedData.length >= 3 ? (sortedData[sortedData.length - 1].weight - sortedData[sortedData.length - 3].weight) / 2 : 0)
+
+  // Custom tooltip
+  const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload
+      return (
+        <div className="bg-white p-4 border border-border rounded-xl shadow-lg">
+          <p className="font-semibold text-foreground mb-2">
+            {format(new Date(Number(label)), 'dd.MM.yyyy')}
+          </p>
+          {payload.map((entry, index: number) => (
+            <div key={index} className="flex items-center gap-2 text-sm">
+              <div
+                className="w-3 h-3 rounded-full"
+                style={{ backgroundColor: entry.color }}
+              />
+              <span className="text-muted-foreground">{entry.name}:</span>
+              <span className="font-medium">{entry.value.toFixed(1)} kg</span>
+            </div>
+          ))}
+          {data.milestone && (
+            <div className="mt-2 p-2 bg-primary/10 rounded-lg">
+              <div className="flex items-center gap-2 text-sm">
+                <Award className="h-4 w-4 text-primary" />
+                <span className="font-medium text-primary">{data.milestone}</span>
+              </div>
+            </div>
+          )}
+        </div>
+      )
+    }
+    return null
+  }
+
   if (weightData.length === 0) {
     return (
       <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
@@ -54,110 +235,18 @@ export default function EnhancedWeightChart({ weightData }: WeightChartProps) {
     )
   }
 
-  // Filter data based on time range
-  const filterDataByTimeRange = (data: WeightEntry[], range: TimeRange) => {
-    if (range === 'all') return data
-    
-    const cutoffDate = new Date()
-    switch (range) {
-      case '1m': cutoffDate.setMonth(cutoffDate.getMonth() - 1); break
-      case '3m': cutoffDate.setMonth(cutoffDate.getMonth() - 3); break
-      case '6m': cutoffDate.setMonth(cutoffDate.getMonth() - 6); break
-      case '1y': cutoffDate.setFullYear(cutoffDate.getFullYear() - 1); break
-    }
-    
-    return data.filter(entry => new Date(entry.date) >= cutoffDate)
-  }
-
-  const filteredData = filterDataByTimeRange(weightData, timeRange)
-  const sortedData = [...filteredData].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-  
-  // Calculate weekly growth rate
-  let weeklyGrowth = 0.42
-  if (sortedData.length >= 2) {
-    const firstEntry = sortedData[0]
-    const lastEntry = sortedData[sortedData.length - 1]
-    const daysDiff = Math.max(1, (new Date(lastEntry.date).getTime() - new Date(firstEntry.date).getTime()) / (1000 * 60 * 60 * 24))
-    const weightDiff = lastEntry.weight - firstEntry.weight
-    weeklyGrowth = Math.max(0.1, (weightDiff / daysDiff) * 7)
-  }
-  
-  // Add milestones based on weight ranges
-  const getMilestone = (weight: number): string | undefined => {
-    if (weight >= 1 && weight < 2) return "Ensimmäinen kuukausi"
-    if (weight >= 5 && weight < 7) return "Rokotusikä"
-    if (weight >= 10 && weight < 12) return "Hihnakävelyikä"
-    if (weight >= 15 && weight < 18) return "Nuoruuskasvupiikki"
-    return undefined
-  }
-
-  // Create enhanced chart data
-  const chartData: ChartDataPoint[] = sortedData.map((entry, index) => {
-    const baseWeight = sortedData[0].weight
-    const entryDate = parseISO(entry.date)
-    const startDate = parseISO(sortedData[0].date)
-    const daysFromStart = (entryDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
-    const avgWeight = baseWeight + (weeklyGrowth * daysFromStart / 7)
-    
-    return {
-      date: entry.date,
-      timestamp: entryDate.getTime(),
-      dateFormatted: format(entryDate, 'dd.MM'),
-      actualWeight: entry.weight,
-      avgGrowthLine: Math.round(avgWeight * 100) / 100,
-      milestone: getMilestone(entry.weight)
-    }
-  })
-  
-  // Calculate insights
-  const totalGrowth = sortedData.length > 1 ? sortedData[sortedData.length - 1].weight - sortedData[0].weight : 0
-  const avgWeight = sortedData.reduce((sum, entry) => sum + entry.weight, 0) / sortedData.length
-  const recentTrend = sortedData.length >= 3 ? 
-    (sortedData[sortedData.length - 1].weight - sortedData[sortedData.length - 3].weight) / 2 : 0
-
-  // Custom tooltip
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      const data = payload[0].payload
-      return (
-        <div className="bg-white p-4 border border-border rounded-xl shadow-lg">
-          <p className="font-semibold text-foreground mb-2">
-            {format(new Date(Number(label)), 'dd.MM.yyyy')}
-          </p>
-          {payload.map((entry: any, index: number) => (
-            <div key={index} className="flex items-center gap-2 text-sm">
-              <div 
-                className="w-3 h-3 rounded-full" 
-                style={{ backgroundColor: entry.color }}
-              />
-              <span className="text-muted-foreground">{entry.name}:</span>
-              <span className="font-medium">{entry.value.toFixed(1)} kg</span>
-            </div>
-          ))}
-          {data.milestone && (
-            <div className="mt-2 p-2 bg-primary/10 rounded-lg">
-              <div className="flex items-center gap-2 text-sm">
-                <Award className="h-4 w-4 text-primary" />
-                <span className="font-medium text-primary">{data.milestone}</span>
-              </div>
-            </div>
-          )}
-        </div>
-      )
-    }
-    return null
-  }
-
   return (
     <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
       <CardHeader>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
           <div>
             <CardTitle className="text-xl flex items-center gap-2">
-              <TrendingUp className="h-5 w-5 text-primary" />
-              Interaktiivinen Kasvukäyrä
+              <Brain className="h-5 w-5 text-primary" />
+              Älykäs Kasvukäyrä & Ennuste
             </CardTitle>
-            <CardDescription>Pentusi painon kehitys ja virstanpylväät</CardDescription>
+            <CardDescription>
+              Polynomiregressio-pohjainen ennuste {growthPrediction ? `(R² ${(growthPrediction.r2 * 100).toFixed(0)}%)` : ''}
+            </CardDescription>
           </div>
           <div className="flex flex-wrap gap-2">
             <Badge variant="outline" className="bg-gradient-to-r from-primary/10 to-primary/20 border-primary/30">
@@ -192,7 +281,7 @@ export default function EnhancedWeightChart({ weightData }: WeightChartProps) {
         {/* Enhanced Chart */}
         <div className="h-80 w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart 
+            <ComposedChart
               data={chartData}
               margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
             >
@@ -223,28 +312,53 @@ export default function EnhancedWeightChart({ weightData }: WeightChartProps) {
                   paddingTop: '15px'
                 }}
               />
-              
+
+              {/* Confidence interval area (if available) */}
+              {growthPrediction && chartData.some((d) => d.upperBound) && (
+                <>
+                  <Area
+                    type="monotone"
+                    dataKey="upperBound"
+                    stackId="1"
+                    stroke="none"
+                    fill="hsl(var(--primary))"
+                    fillOpacity={0.1}
+                    name="Luotettavuusväli"
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="lowerBound"
+                    stackId="2"
+                    stroke="none"
+                    fill="hsl(var(--background))"
+                    fillOpacity={1}
+                  />
+                </>
+              )}
+
               {/* Actual weight line with gradient */}
-              <Line 
-                type="monotone" 
-                dataKey="actualWeight" 
-                stroke="hsl(var(--primary))" 
+              <Line
+                type="monotone"
+                dataKey="actualWeight"
+                stroke="hsl(var(--primary))"
                 strokeWidth={3}
                 name="Mitattu paino"
                 dot={{ fill: 'hsl(var(--primary))', strokeWidth: 2, r: 5 }}
                 activeDot={{ r: 7, fill: 'hsl(var(--primary))', stroke: 'white', strokeWidth: 2 }}
+                connectNulls={false}
               />
-              
-              {/* Growth trend line */}
-              <Line 
-                type="monotone" 
-                dataKey="avgGrowthLine" 
-                stroke="hsl(var(--secondary))" 
+
+              {/* Predicted growth line */}
+              <Line
+                type="monotone"
+                dataKey="avgGrowthLine"
+                stroke="hsl(var(--secondary))"
                 strokeWidth={2}
                 strokeDasharray="8 4"
-                name="Kasvutrendi"
+                name={growthPrediction ? "Ennuste (polynomiregressio)" : "Kasvutrendi"}
                 dot={false}
                 activeDot={{ r: 5, fill: 'hsl(var(--secondary))' }}
+                connectNulls={true}
               />
 
               {/* Add reference lines for milestones */}
@@ -256,59 +370,50 @@ export default function EnhancedWeightChart({ weightData }: WeightChartProps) {
                   opacity={0.5}
                 />
               )}
-            </LineChart>
+            </ComposedChart>
           </ResponsiveContainer>
         </div>
         
+        {/* Growth Prediction Panel */}
+        {growthPrediction && (
+          <div className="mt-6">
+            <GrowthPredictionPanel
+              prediction={growthPrediction}
+              currentWeight={sortedData[sortedData.length - 1]?.weight || 0}
+              currentAgeMonths={currentAgeMonths}
+              breedCategory={breedCategory?.category}
+            />
+          </div>
+        )}
+
         {/* Enhanced Insights Panel */}
-        <div className="mt-6 space-y-4">
-          <div className="p-4 bg-gradient-to-r from-primary/5 to-secondary/5 rounded-xl border border-primary/10">
-            <h4 className="font-semibold text-foreground mb-3 flex items-center gap-2">
-              <TrendingUp className="h-4 w-4 text-primary" />
-              Kasvuanalyysi
-            </h4>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
-              <div className="text-center p-3 bg-white/50 rounded-lg">
-                <div className="text-xs text-muted-foreground mb-1">Viikoittainen kasvu</div>
-                <div className="font-bold text-lg text-primary">{weeklyGrowth.toFixed(2)} kg</div>
-              </div>
-              <div className="text-center p-3 bg-white/50 rounded-lg">
-                <div className="text-xs text-muted-foreground mb-1">Viimeaikainen trendi</div>
-                <div className={`font-bold text-lg ${recentTrend > 0 ? 'text-green-600' : recentTrend < 0 ? 'text-red-600' : 'text-gray-600'}`}>
-                  {recentTrend > 0 ? '+' : ''}{recentTrend.toFixed(2)} kg
+        {!growthPrediction && (
+          <div className="mt-6 space-y-4">
+            <div className="p-4 bg-gradient-to-r from-primary/5 to-secondary/5 rounded-xl border border-primary/10">
+              <h4 className="font-semibold text-foreground mb-3 flex items-center gap-2">
+                <Activity className="h-4 w-4 text-primary" />
+                Kasvuanalyysi
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+                <div className="text-center p-3 bg-white/50 rounded-lg">
+                  <div className="text-xs text-muted-foreground mb-1">Kokonaiskasvu</div>
+                  <div className="font-bold text-lg text-primary">{totalGrowth.toFixed(1)} kg</div>
+                </div>
+                <div className="text-center p-3 bg-white/50 rounded-lg">
+                  <div className="text-xs text-muted-foreground mb-1">Keskipaino</div>
+                  <div className="font-bold text-lg text-secondary">{avgWeight.toFixed(1)} kg</div>
+                </div>
+                <div className="text-center p-3 bg-white/50 rounded-lg">
+                  <div className="text-xs text-muted-foreground mb-1">Mittauksia</div>
+                  <div className="font-bold text-lg text-accent">{sortedData.length} kpl</div>
                 </div>
               </div>
-              <div className="text-center p-3 bg-white/50 rounded-lg">
-                <div className="text-xs text-muted-foreground mb-1">Mittauksia</div>
-                <div className="font-bold text-lg text-secondary">{sortedData.length} kpl</div>
-              </div>
+              <p className="text-xs text-muted-foreground mt-3 text-center">
+                Lisää vähintään 2 mittausta nähdäksesi ennusteen
+              </p>
             </div>
           </div>
-
-          {/* Milestones */}
-          {chartData.some(d => d.milestone) && (
-            <div className="p-4 bg-gradient-to-r from-accent/5 to-orange-50 rounded-xl border border-accent/20">
-              <h4 className="font-semibold text-foreground mb-3 flex items-center gap-2">
-                <Award className="h-4 w-4 text-accent" />
-                Saavutetut virstanpylväät
-              </h4>
-              <div className="flex flex-wrap gap-2">
-                {chartData
-                  .filter(d => d.milestone)
-                  .map((data, index) => (
-                    <Badge 
-                      key={index} 
-                      variant="secondary"
-                      className="bg-gradient-to-r from-accent/20 to-orange-100 border-accent/30"
-                    >
-                      <Award className="h-3 w-3 mr-1" />
-                      {data.milestone}
-                    </Badge>
-                  ))}
-              </div>
-            </div>
-          )}
-        </div>
+        )}
       </CardContent>
     </Card>
   )

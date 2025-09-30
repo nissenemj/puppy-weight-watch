@@ -44,7 +44,7 @@ export default function ModernPuppyWeightTracker() {
   const [showOnboarding, setShowOnboarding] = useState(false)
   const [checkingOnboarding, setCheckingOnboarding] = useState(false)
   const [activeTab, setActiveTab] = useState('weight-tracking')
-  const [selectedDog, setSelectedDog] = useState<{ id: string; name: string } | null>(null)
+  const [selectedDog, setSelectedDog] = useState<{ id: string; name: string; breed?: string } | null>(null)
   const [selectedDogBirthDate, setSelectedDogBirthDate] = useState<string | null>(null)
   const { toast } = useToast()
   const isMobile = useIsMobile()
@@ -554,7 +554,11 @@ export default function ModernPuppyWeightTracker() {
                 </div>
 
                 {/* Enhanced Weight Chart */}
-                <WeightChart weightData={entries} />
+                <WeightChart
+                  weightData={entries}
+                  birthDate={selectedDogBirthDate ? new Date(selectedDogBirthDate) : undefined}
+                  breed={selectedDog?.breed}
+                />
 
                 {/* Achievement System */}
                 <AchievementSystem 
