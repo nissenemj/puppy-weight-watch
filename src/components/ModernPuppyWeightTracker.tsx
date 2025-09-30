@@ -99,19 +99,6 @@ export default function ModernPuppyWeightTracker() {
     }
   }, [isGuest, guestWeightEntries, guestDogProfile, selectedDog])
 
-  useEffect(() => {
-    if (user) {
-      checkForOnboarding()
-    }
-  }, [user, checkForOnboarding])
-
-  useEffect(() => {
-    if (user && selectedDog) {
-      fetchWeightEntries()
-      fetchDogBirthDate()
-    }
-  }, [user, selectedDog, fetchWeightEntries, fetchDogBirthDate])
-
   const checkForOnboarding = useCallback(async () => {
     if (!user) return
 
@@ -140,15 +127,6 @@ export default function ModernPuppyWeightTracker() {
     }
   }, [user])
 
-  const handleOnboardingComplete = () => {
-    setShowOnboarding(false)
-    fetchWeightEntries() // Refresh data after onboarding
-    toast({
-      title: "Tervetuloa!",
-      description: "Olet valmis käyttämään Pentulaskuria!",
-    })
-  }
-
   const fetchWeightEntries = useCallback(async () => {
     if (!user || !selectedDog) return
 
@@ -167,7 +145,7 @@ export default function ModernPuppyWeightTracker() {
         variant: "destructive",
       })
     } else if (data) {
-      setEntries(dbToAppTypes.dogFood(data))
+      setEntries(dbToAppTypes.dogFood(data) as WeightEntry[])
     }
   }, [user, selectedDog, toast])
 
@@ -190,6 +168,28 @@ export default function ModernPuppyWeightTracker() {
       setSelectedDogBirthDate(null)
     }
   }, [user, selectedDog])
+
+  useEffect(() => {
+    if (user) {
+      checkForOnboarding()
+    }
+  }, [user, checkForOnboarding])
+
+  useEffect(() => {
+    if (user && selectedDog) {
+      fetchWeightEntries()
+      fetchDogBirthDate()
+    }
+  }, [user, selectedDog, fetchWeightEntries, fetchDogBirthDate])
+
+  const handleOnboardingComplete = () => {
+    setShowOnboarding(false)
+    fetchWeightEntries() // Refresh data after onboarding
+    toast({
+      title: "Tervetuloa!",
+      description: "Olet valmis käyttämään Pentulaskuria!",
+    })
+  }
 
 
   const handleSignOut = async () => {

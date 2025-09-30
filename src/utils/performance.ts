@@ -63,13 +63,13 @@ export const measurePerformance = <T extends (...args: unknown[]) => unknown>(
 };
 
 // Lazy loading utility for components
-export const lazyLoad = <T extends React.ComponentType<Record<string, unknown>>>(
+export const lazyLoad = <T extends React.ComponentType<any>>(
   importFn: () => Promise<{ default: T }>,
   fallback?: React.ComponentType
-) => {
+): React.ComponentType<React.ComponentProps<T>> => {
   const LazyComponent = React.lazy(importFn);
 
-  const WrappedComponent = (props: React.ComponentPropsWithoutRef<T>) => {
+  const WrappedComponent = (props: React.ComponentProps<T>) => {
     const fallbackComponent = fallback
       ? React.createElement(fallback)
       : React.createElement('div', { children: 'Loading...' });
@@ -81,7 +81,7 @@ export const lazyLoad = <T extends React.ComponentType<Record<string, unknown>>>
     );
   };
 
-  return WrappedComponent as T;
+  return WrappedComponent;
 };
 
 // Intersection Observer utility for lazy loading

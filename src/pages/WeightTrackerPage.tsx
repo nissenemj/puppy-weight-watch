@@ -3,9 +3,9 @@ import { User } from '@supabase/supabase-js'
 import { supabase } from '@/integrations/supabase/client'
 import { useNavigate, useLocation } from 'react-router-dom'
 import AuthenticationWrapper from '@/components/AuthenticationWrapper'
-import Navigation from '@/components/Navigation'
 import ModernPuppyWeightTracker from '@/components/ModernPuppyWeightTracker'
 import { MobileOptimizedLayout } from '@/components/MobileOptimizedLayout'
+import LayoutWithNavigation from '@/components/ui/layout-with-navigation'
 import { useGuestAuth } from '@/contexts/GuestAuthContext'
 import GuestModeBar, { GuestModeBarMobile } from '@/components/GuestModeBar'
 import { Button } from '@/components/ui/button'
@@ -247,39 +247,57 @@ const WeightTrackerPage = () => {
     )
   }
 
+  // Custom quick actions for weight tracker
+  const weightTrackerQuickActions = [
+    {
+      id: "add-health-record",
+      label: "Terveysmerkintä",
+      description: "Lisää terveystietoja",
+      icon: <UserIcon className="w-4 h-4" />,
+      action: () => navigate('/puppy-book?tab=health'),
+      color: "success" as const
+    }
+  ];
+
   return (
     <MobileOptimizedLayout>
-      <Navigation />
-
-      {/* Show guest mode bar for non-authenticated users */}
-      {isGuest && guestWeightEntries.length > 0 && (
-        <>
-          {isMobile ? (
-            <GuestModeBarMobile
-              onSignUpClick={handleSignUpClick}
-              onSignInClick={handleSignInClick}
-            />
-          ) : (
-            <div className="px-4 py-2">
-              <GuestModeBar
+      <LayoutWithNavigation
+        showBreadcrumbs={true}
+        stickyNavigation={true}
+        showQuickActions={true}
+        quickActionsVariant="floating"
+        customQuickActions={weightTrackerQuickActions}
+      >
+        {/* Show guest mode bar for non-authenticated users */}
+        {isGuest && guestWeightEntries.length > 0 && (
+          <>
+            {isMobile ? (
+              <GuestModeBarMobile
                 onSignUpClick={handleSignUpClick}
                 onSignInClick={handleSignInClick}
               />
-            </div>
-          )}
-        </>
-      )}
+            ) : (
+              <div className="px-4 py-2">
+                <GuestModeBar
+                  onSignUpClick={handleSignUpClick}
+                  onSignInClick={handleSignInClick}
+                />
+              </div>
+            )}
+          </>
+        )}
 
-      <ModernPuppyWeightTracker />
+        <ModernPuppyWeightTracker />
 
-      {/* Auth Modal */}
-      {showAuthModal && (
-        <AuthenticationWrapper
-          onAuthSuccess={handleAuthSuccess}
-          mode={authMode}
-          onClose={() => setShowAuthModal(false)}
-        />
-      )}
+        {/* Auth Modal */}
+        {showAuthModal && (
+          <AuthenticationWrapper
+            onAuthSuccess={handleAuthSuccess}
+            mode={authMode}
+            onClose={() => setShowAuthModal(false)}
+          />
+        )}
+      </LayoutWithNavigation>
     </MobileOptimizedLayout>
   )
 }

@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
-import { DogFood, DogFoodService } from '@/services/dogFoodService'
+import { DogFood, DogFoodService, FoodNutrition, FoodManufacturer } from '@/services/dogFoodService'
 import { IngredientInfo } from './IngredientInfo'
 import { IngredientEditor } from './admin/IngredientEditor'
 import { AllergenEditor } from './admin/AllergenEditor'
@@ -198,8 +198,8 @@ export function FoodCard({ food, onSelect, isSelected = false, showDetails = fal
       ...food,
       food_ingredients: food.food_ingredients || [],
       allergens: food.allergens || [],
-      nutrition: dbToAppTypes.foodNutrition(food.nutrition),
-      manufacturer_info: dbToAppTypes.foodManufacturer(food.manufacturer_info)
+      nutrition: dbToAppTypes.foodNutrition(food.nutrition) as FoodNutrition,
+      manufacturer_info: dbToAppTypes.foodManufacturer(food.manufacturer_info) as FoodManufacturer
     })
   }
 
@@ -609,7 +609,7 @@ export function FoodCard({ food, onSelect, isSelected = false, showDetails = fal
 
             <TabsContent value="nutrition" className="mt-4">
               <NutritionEditor
-                nutrition={dbToAppTypes.foodNutrition(enhancedEditingFood.nutrition)}
+                nutrition={dbToAppTypes.foodNutrition(enhancedEditingFood.nutrition) as FoodNutrition}
                 onChange={(nutrition) => 
                   setEnhancedEditingFood(prev => prev ? { ...prev, nutrition: appToDbTypes.foodNutrition(nutrition) } : null)
                 }
@@ -618,7 +618,7 @@ export function FoodCard({ food, onSelect, isSelected = false, showDetails = fal
 
             <TabsContent value="manufacturer" className="mt-4">
               <ManufacturerEditor
-                manufacturer={dbToAppTypes.foodManufacturer(enhancedEditingFood.manufacturer_info)}
+                manufacturer={dbToAppTypes.foodManufacturer(enhancedEditingFood.manufacturer_info) as FoodManufacturer}
                 onChange={(manufacturer_info) => 
                   setEnhancedEditingFood(prev => prev ? { ...prev, manufacturer_info: appToDbTypes.foodManufacturer(manufacturer_info) } : null)
                 }

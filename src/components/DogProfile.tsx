@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/integrations/supabase/client'
 import { dbToAppTypes } from '@/utils/typeUtils'
 import { User } from '@supabase/supabase-js'
@@ -39,9 +39,9 @@ export default function DogProfile({ user, onDogSelect, selectedDog }: DogProfil
 
   useEffect(() => {
     loadDogs()
-  }, [user])
+  }, [loadDogs])
 
-  const loadDogs = async () => {
+  const loadDogs = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('dogs')
@@ -50,17 +50,17 @@ export default function DogProfile({ user, onDogSelect, selectedDog }: DogProfil
         .order('created_at', { ascending: false })
 
       if (error) throw error
-      setDogs(dbToAppTypes.dog(data) || [])
-      
+      setDogs(dbToAppTypes.dog(data) as Dog[] || [])
+
       // Auto-select first dog if none selected
       if (data?.length && !selectedDog) {
-        onDogSelect(dbToAppTypes.dog(data[0]))
+        onDogSelect(dbToAppTypes.dog(data[0]) as Dog)
       }
     } catch (error) {
       console.error('Error loading dogs:', error)
       toast.error('Virhe koirien lataamisessa')
     }
-  }
+  }, [user.id, selectedDog, onDogSelect])
 
   const addDog = async () => {
     if (!newDog.name.trim()) {
@@ -98,7 +98,7 @@ export default function DogProfile({ user, onDogSelect, selectedDog }: DogProfil
       toast.success('Koira lisätty!')
       
       if (data) {
-        onDogSelect(dbToAppTypes.dog(data))
+        onDogSelect(dbToAppTypes.dog(data) as Dog)
       }
     } catch (error) {
       console.error('Error adding dog:', error)

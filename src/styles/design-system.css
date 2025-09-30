@@ -3,6 +3,9 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+Pro:ital,wght@0,400;0,600;1,400&display=swap');
 
+/* Component-specific styles */
+@import "./components/breadcrumb.css";
+
 :root {
   /* === COLOR SYSTEM === */
   
@@ -147,10 +150,48 @@
   --letter-spacing-tight: -0.025em;
   --letter-spacing-normal: 0;
   --letter-spacing-wide: 0.025em;
+
+  /* === MODERN EFFECTS (Design System 2.0) === */
+
+  /* Glassmorphism effects */
+  --glass-bg-primary: rgba(255, 255, 255, 0.1);
+  --glass-bg-secondary: rgba(255, 255, 255, 0.05);
+  --glass-bg-tertiary: rgba(255, 255, 255, 0.02);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --glass-backdrop-blur: blur(16px);
+  --glass-backdrop-blur-strong: blur(24px);
+
+  /* Neomorphism shadows */
+  --neo-shadow-light: 8px 8px 16px rgba(163, 177, 198, 0.6), -8px -8px 16px rgba(255, 255, 255, 0.5);
+  --neo-shadow-dark: inset 8px 8px 16px rgba(163, 177, 198, 0.6), inset -8px -8px 16px rgba(255, 255, 255, 0.5);
+  --neo-shadow-hover: 12px 12px 24px rgba(163, 177, 198, 0.4), -12px -12px 24px rgba(255, 255, 255, 0.7);
+
+  /* Enhanced gradients */
+  --gradient-modern-warm: linear-gradient(135deg, var(--color-primary-400) 0%, var(--color-primary-600) 50%, var(--color-secondary-500) 100%);
+  --gradient-modern-cool: linear-gradient(135deg, var(--color-secondary-400) 0%, var(--color-tertiary-500) 100%);
+  --gradient-modern-sunset: linear-gradient(135deg, #ff6b6b 0%, #ffa726 25%, #ffcc02 50%, #8bc34a 75%, #2196f3 100%);
+  --gradient-glass-overlay: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+
+  /* Micro-interaction easing */
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --ease-elastic: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-gentle: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  /* Dark mode support */
+  --dark-bg-primary: #0a0a0a;
+  --dark-bg-secondary: #1a1a1a;
+  --dark-bg-tertiary: #2a2a2a;
+  --dark-text-primary: #ffffff;
+  --dark-text-secondary: #cccccc;
+  --dark-glass-bg: rgba(0, 0, 0, 0.2);
+  --dark-glass-border: rgba(255, 255, 255, 0.1);
+  --dark-neo-shadow: 8px 8px 16px rgba(0, 0, 0, 0.8), -8px -8px 16px rgba(40, 40, 40, 0.8);
   --letter-spacing-wider: 0.05em;
   
   /* === SPACING === */
-  
+
   /* Spacing scale (base 4px) */
   --spacing-0: 0;
   --spacing-1: 0.25rem;   /* 4px */
@@ -166,6 +207,13 @@
   --spacing-20: 5rem;     /* 80px */
   --spacing-24: 6rem;     /* 96px */
   --spacing-32: 8rem;     /* 128px */
+
+  /* Mobile touch targets (enhanced for better mobile UX) */
+  --touch-target-min: 56px;        /* Minimum touch target size */
+  --touch-target-small: 48px;      /* Small touch targets */
+  --touch-target-medium: 56px;     /* Standard touch targets */
+  --touch-target-large: 64px;      /* Large touch targets */
+  --touch-target-xl: 80px;         /* Extra large touch targets */
   
   /* Legacy spacing mappings */
   --space-0: var(--spacing-0);
@@ -383,6 +431,222 @@
 
 .skip-link:focus {
   top: 6px;
+}
+
+/* === MODERN EFFECT UTILITY CLASSES === */
+
+/* Glassmorphism classes */
+.glass-card {
+  background: var(--glass-bg-primary);
+  backdrop-filter: var(--glass-backdrop-blur);
+  -webkit-backdrop-filter: var(--glass-backdrop-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+.glass-card-secondary {
+  background: var(--glass-bg-secondary);
+  backdrop-filter: var(--glass-backdrop-blur);
+  -webkit-backdrop-filter: var(--glass-backdrop-blur);
+  border: 1px solid var(--glass-border);
+}
+
+.glass-overlay {
+  background: var(--gradient-glass-overlay);
+  backdrop-filter: var(--glass-backdrop-blur-strong);
+  -webkit-backdrop-filter: var(--glass-backdrop-blur-strong);
+}
+
+/* Neomorphism classes */
+.neo-card {
+  background: var(--color-neutral-50);
+  box-shadow: var(--neo-shadow-light);
+  border-radius: 20px;
+  transition: box-shadow 0.3s var(--ease-gentle);
+}
+
+.neo-card:hover {
+  box-shadow: var(--neo-shadow-hover);
+}
+
+.neo-card-pressed {
+  box-shadow: var(--neo-shadow-dark);
+}
+
+.neo-button {
+  background: var(--color-neutral-50);
+  box-shadow: var(--neo-shadow-light);
+  border: none;
+  border-radius: 12px;
+  transition: all 0.2s var(--ease-gentle);
+}
+
+.neo-button:hover {
+  box-shadow: var(--neo-shadow-hover);
+  transform: translateY(-1px);
+}
+
+.neo-button:active {
+  box-shadow: var(--neo-shadow-dark);
+  transform: translateY(0);
+}
+
+/* Modern gradient backgrounds */
+.bg-gradient-modern-warm {
+  background: var(--gradient-modern-warm);
+}
+
+.bg-gradient-modern-cool {
+  background: var(--gradient-modern-cool);
+}
+
+.bg-gradient-modern-sunset {
+  background: var(--gradient-modern-sunset);
+}
+
+/* Micro-interaction utilities */
+.micro-bounce {
+  transition: transform 0.2s var(--ease-bounce);
+}
+
+.micro-bounce:hover {
+  transform: scale(1.05);
+}
+
+.micro-elastic {
+  transition: transform 0.3s var(--ease-elastic);
+}
+
+.micro-elastic:hover {
+  transform: scale(1.1);
+}
+
+.smooth-transform {
+  transition: all 0.3s var(--ease-smooth);
+}
+
+/* Hover glow effects */
+.hover-glow {
+  transition: box-shadow 0.3s var(--ease-gentle);
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 20px rgba(224, 120, 86, 0.3), 0 0 40px rgba(224, 120, 86, 0.1);
+}
+
+.hover-glow-secondary:hover {
+  box-shadow: 0 0 20px rgba(96, 165, 250, 0.3), 0 0 40px rgba(96, 165, 250, 0.1);
+}
+
+.hover-glow-success:hover {
+  box-shadow: 0 0 20px rgba(74, 222, 128, 0.3), 0 0 40px rgba(74, 222, 128, 0.1);
+}
+
+/* Floating elements */
+.floating {
+  animation: floating 3s ease-in-out infinite;
+}
+
+@keyframes floating {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.floating-delayed {
+  animation: floating 3s ease-in-out infinite 1.5s;
+}
+
+/* Enhanced focus states */
+.focus-modern:focus,
+.focus-modern:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(224, 120, 86, 0.2),
+              0 0 20px rgba(224, 120, 86, 0.3);
+  transform: scale(1.02);
+}
+
+/* Enhanced animations */
+.morph-in {
+  animation: morphIn 0.6s var(--ease-elastic) forwards;
+}
+
+@keyframes morphIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) rotate(-10deg);
+    filter: blur(10px);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.1) rotate(5deg);
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+    filter: blur(0px);
+  }
+}
+
+.slide-up-elegant {
+  animation: slideUpElegant 0.8s var(--ease-smooth) forwards;
+}
+
+@keyframes slideUpElegant {
+  0% {
+    opacity: 0;
+    transform: translateY(60px) scale(0.95);
+  }
+  60% {
+    opacity: 0.8;
+    transform: translateY(-10px) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.glow-pulse {
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(224, 120, 86, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(224, 120, 86, 0.6), 0 0 60px rgba(224, 120, 86, 0.3);
+  }
+}
+
+.parallax-float {
+  animation: parallaxFloat 6s ease-in-out infinite;
+}
+
+@keyframes parallaxFloat {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33% { transform: translateY(-20px) rotate(1deg); }
+  66% { transform: translateY(-10px) rotate(-1deg); }
+}
+
+/* Dark mode utilities */
+.dark .glass-card {
+  background: var(--dark-glass-bg);
+  border-color: var(--dark-glass-border);
+}
+
+.dark .neo-card {
+  background: var(--dark-bg-secondary);
+  box-shadow: var(--dark-neo-shadow);
+}
+
+.dark .bg-gradient-modern-warm {
+  background: linear-gradient(135deg, #374151 0%, #1f2937 50%, #111827 100%);
+}
+
+.dark .hover-glow:hover {
+  box-shadow: 0 0 20px rgba(147, 197, 253, 0.3), 0 0 40px rgba(147, 197, 253, 0.1);
 }
 
 /* Screen reader only text */

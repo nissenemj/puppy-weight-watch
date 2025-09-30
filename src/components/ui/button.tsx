@@ -5,7 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap font-family-heading transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-5 [&_svg]:shrink-0 relative overflow-hidden btn-design-system touch-pan-y select-none",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap font-family-heading transition-all duration-200 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-5 [&_svg]:shrink-0 relative overflow-hidden btn-design-system touch-pan-y select-none smooth-transform focus-modern",
   {
     variants: {
       variant: {
@@ -28,7 +28,19 @@ const buttonVariants = cva(
         destructive: "bg-[var(--color-error)] text-[var(--color-text-on-primary)] rounded-[var(--radius-md)] shadow-[var(--shadow-sm)] hover:bg-[var(--color-error)]/90 hover:shadow-[var(--shadow-md)] focus-visible:ring-[var(--color-error)] transform hover:translate-y-[-1px] active:translate-y-[0] font-medium",
         
         // Success - Health/positive actions with green
-        success: "bg-[var(--color-success)] text-[var(--color-text-on-primary)] rounded-[var(--radius-md)] shadow-[var(--shadow-sm)] hover:bg-[var(--color-success)]/90 hover:shadow-[var(--shadow-md)] focus-visible:ring-[var(--color-success)] transform hover:translate-y-[-1px] active:translate-y-[0] font-medium",
+        success: "bg-[var(--color-tertiary-500)] text-[var(--color-text-on-primary)] rounded-[var(--radius-md)] shadow-[var(--shadow-sm)] hover:bg-[var(--color-tertiary-600)] hover:shadow-[var(--shadow-md)] focus-visible:ring-[var(--color-tertiary-400)] transform hover:translate-y-[-1px] active:translate-y-[0] font-medium hover-glow-success",
+
+        // Glass - Modern glassmorphism effect
+        glass: "glass-card text-[var(--color-text-primary)] hover:backdrop-blur-xl hover:bg-white/20 micro-bounce font-medium",
+
+        // Neo - Neomorphism style
+        neo: "neo-button text-[var(--color-text-primary)] font-medium",
+
+        // Gradient - Modern gradient backgrounds
+        gradient: "bg-gradient-modern-warm text-white hover:opacity-90 hover-glow micro-elastic font-medium",
+
+        // Floating - Elevated appearance
+        floating: "bg-white text-[var(--color-text-primary)] shadow-xl hover:shadow-2xl transform hover:translate-y-[-2px] transition-all duration-300 floating font-medium",
         
         // Pill - Playful rounded button for special actions
         pill: "bg-[var(--color-interactive-primary)] text-[var(--color-text-on-primary)] rounded-[var(--radius-full)] shadow-[var(--shadow-sm)] hover:bg-[var(--color-interactive-primary-hover)] hover:shadow-[var(--shadow-md)] focus-visible:ring-[var(--color-interactive-secondary)] transform hover:translate-y-[-1px] active:translate-y-[0] px-6 font-medium",

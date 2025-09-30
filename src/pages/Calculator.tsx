@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import Footer from '@/components/Footer';
-import Navigation from '@/components/Navigation';
 import AdvancedFoodCalculator from '@/components/AdvancedFoodCalculator';
 import SEO from '@/components/SEO';
 import FAQ from '@/components/FAQ';
-import Breadcrumb from '@/components/Breadcrumb';
 import { PageLayout, Container, Section } from '@/components/ui/Layout';
 import { MobileOptimizedLayout } from '@/components/MobileOptimizedLayout';
+import LayoutWithNavigation from '@/components/ui/layout-with-navigation';
+import { QuickActions } from '@/components/ui/quick-actions';
 import { Badge } from '@/components/ui/badge';
 import { Calculator as CalculatorIcon, Sparkles, TrendingUp } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -99,8 +99,26 @@ const Calculator = () => {
     name: "Pentulaskuri",
     url: `${window.location.origin}/calculator`
   }])];
+  // Custom quick actions for calculator page
+  const calculatorQuickActions = [
+    {
+      id: "food-types",
+      label: "Ruokatyypit",
+      description: "Selaa ruokavaihtoehtoja",
+      icon: <CalculatorIcon className="w-4 h-4" />,
+      action: () => window.location.href = '/food-types',
+      color: "secondary" as const
+    }
+  ];
+
   return <MobileOptimizedLayout>
-      <Navigation />
+    <LayoutWithNavigation
+      showBreadcrumbs={true}
+      stickyNavigation={true}
+      showQuickActions={true}
+      quickActionsVariant="floating"
+      customQuickActions={calculatorQuickActions}
+    >
     <PageLayout variant="default" animated className="no-horizontal-scroll mobile-text-wrap responsive-media">
       {/* Skip to main content link */}
       <a href="#calculator-main" className="skip-link focus-enhanced">
@@ -179,6 +197,7 @@ const Calculator = () => {
       <Footer />
       
     </PageLayout>
+    </LayoutWithNavigation>
     </MobileOptimizedLayout>;
 };
 export default Calculator;

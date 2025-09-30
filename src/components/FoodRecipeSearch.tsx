@@ -59,7 +59,7 @@ export default function FoodRecipeSearch({ onRecipeSelect, selectedRecipe }: Foo
         .limit(20)
 
       if (error) throw error
-      setRecipes(dbToAppTypes.dogFood(data) || [])
+      setRecipes(dbToAppTypes.dogFood(data) as FoodRecipe[] || [])
     } catch (error) {
       console.error('Error loading recipes:', error)
     }
@@ -75,7 +75,7 @@ export default function FoodRecipeSearch({ onRecipeSelect, selectedRecipe }: Foo
         .limit(20)
 
       if (error) throw error
-      setRecipes(dbToAppTypes.dogFood(data) || [])
+      setRecipes(dbToAppTypes.dogFood(data) as FoodRecipe[] || [])
     } catch (error) {
       console.error('Error searching recipes:', error)
     }
@@ -117,7 +117,7 @@ export default function FoodRecipeSearch({ onRecipeSelect, selectedRecipe }: Foo
       setIsAddingRecipe(false)
       
       if (data) {
-        onRecipeSelect(dbToAppTypes.dogFood(data))
+        onRecipeSelect(dbToAppTypes.dogFood(data) as FoodRecipe)
       }
     } catch (error) {
       console.error('Error adding recipe:', error)

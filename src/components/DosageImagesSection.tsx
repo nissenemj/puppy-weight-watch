@@ -136,7 +136,7 @@ export default function DosageImagesSection() {
         })
       )
 
-      setDosageImages(dbToAppTypes.dosageImage(imagesWithTableData))
+      setDosageImages(dbToAppTypes.dosageImage(imagesWithTableData) as DosageImage[])
     } catch (error) {
       console.error('Error fetching dosage images:', error)
       toast({

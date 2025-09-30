@@ -3,14 +3,15 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const inputVariants = cva(
-  "flex w-full border font-medium transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+  "flex w-full border font-medium transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 smooth-transform focus-modern",
   {
     variants: {
       variant: {
-        default: "bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text)] ring-offset-background focus-visible:ring-[var(--color-accent)] hover:border-[var(--color-accent-200)]",
-        glass: "bg-white/5 border-white/20 text-white ring-offset-transparent focus-visible:ring-white/50 hover:border-white/30 placeholder:text-white/60",
-        filled: "bg-[var(--color-primary-50)] border-transparent text-[var(--color-text)] focus-visible:ring-[var(--color-accent)] hover:bg-[var(--color-primary-100)]",
-        outline: "bg-transparent border-2 border-[var(--color-accent-200)] text-[var(--color-text)] focus-visible:ring-[var(--color-accent)] focus-visible:border-[var(--color-accent)] hover:border-[var(--color-accent-300)]"
+        default: "bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text)] ring-offset-background hover:border-[var(--color-accent-200)] hover:shadow-sm",
+        glass: "glass-card-secondary text-white ring-offset-transparent hover:backdrop-blur-xl placeholder:text-white/60 micro-bounce",
+        filled: "bg-[var(--color-primary-50)] border-transparent text-[var(--color-text)] hover:bg-[var(--color-primary-100)] hover:shadow-sm",
+        outline: "bg-transparent border-2 border-[var(--color-accent-200)] text-[var(--color-text)] hover:border-[var(--color-accent-300)] hover:shadow-sm",
+        neo: "neo-button text-[var(--color-text)] border-0"
       },
       size: {
         sm: "h-11 px-3 py-2 text-sm rounded-lg min-h-[44px]",

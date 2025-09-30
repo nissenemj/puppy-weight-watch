@@ -34,10 +34,6 @@ export default function DogSelector({ user, selectedDogId, onDogSelect }: DogSel
   const [loading, setLoading] = useState(true)
   const { toast } = useToast()
 
-  useEffect(() => {
-    loadDogs()
-  }, [loadDogs])
-
   const loadDogs = useCallback(async () => {
     try {
       setLoading(true)
@@ -49,13 +45,13 @@ export default function DogSelector({ user, selectedDogId, onDogSelect }: DogSel
 
       if (error) throw error
 
-      setDogs(dbToAppTypes.dog(data) || [])
+      setDogs(dbToAppTypes.dog(data) as Dog[] || [])
 
       // Auto-select first dog if none selected and dogs exist
       if (data && data.length > 0 && !selectedDogId) {
         // Small delay to ensure parent component is ready
         setTimeout(() => {
-          onDogSelect(data[0].id, dbToAppTypes.dog(data[0]))
+          onDogSelect(data[0].id, dbToAppTypes.dog(data[0]) as Dog)
         }, 100)
       }
     } catch (error) {
@@ -69,6 +65,10 @@ export default function DogSelector({ user, selectedDogId, onDogSelect }: DogSel
       setLoading(false)
     }
   }, [user.id, selectedDogId, onDogSelect, toast])
+
+  useEffect(() => {
+    loadDogs()
+  }, [loadDogs])
 
   const addDog = async () => {
     if (!newDogName.trim()) return

@@ -88,8 +88,8 @@ export default function AdvancedFoodCalculator({ user, currentWeight: propCurren
 
       if (guidelinesError) throw guidelinesError
 
-      setDogFoods(dbToAppTypes.dogFood(foodsData) || [])
-      setFeedingGuidelines(dbToAppTypes.feedingGuideline(guidelinesData) || [])
+      setDogFoods(dbToAppTypes.dogFood(foodsData) as DogFood[] || [])
+      setFeedingGuidelines(dbToAppTypes.feedingGuideline(guidelinesData) as FeedingGuideline[] || [])
     } catch (error) {
       console.error('Error loading food data:', error)
       toast.error('Virhe ruokien lataamisessa')

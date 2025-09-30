@@ -77,7 +77,7 @@ export default function GeneralDosageSection() {
         })
       )
 
-      setGuidelines(dbToAppTypes.dogFood(guidelinesWithRows))
+      setGuidelines(dbToAppTypes.dogFood(guidelinesWithRows) as DosageGuideline[])
     } catch (error) {
       console.error('Error fetching guidelines:', error)
       toast({

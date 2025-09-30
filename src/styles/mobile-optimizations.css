@@ -65,32 +65,69 @@
 
   /* === INTERACTIVE ELEMENTS === */
 
-  /* Smart Touch targets - Only apply when explicitly requested to avoid conflicts */
+  /* Enhanced Touch targets with proper sizing */
   .mobile-touch-optimize,
   .mobile-touch-optimize button:not(.btn-design-system),
   .mobile-touch-optimize .btn:not(.btn-design-system),
   [role="button"].mobile-touch-target,
   .touch-target {
-    min-height: var(--touch-target-min);
-    min-width: var(--touch-target-min);
+    min-height: var(--touch-target-min, 56px);
+    min-width: var(--touch-target-min, 56px);
+    touch-action: manipulation; /* Improves touch responsiveness */
+    -webkit-tap-highlight-color: transparent; /* Remove iOS tap highlight */
   }
 
-  /* Legacy touch targets - fallback for unoptimized elements */
+  /* Legacy touch targets - enhanced for better usability */
   button:not([class*="btn-"]):not([class*="Button"]),
   [role="button"]:not([class*="btn-"]) {
-    min-height: 44px;
-    min-width: 44px;
+    min-height: 56px;
+    min-width: 56px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
 
   /* Specific touch targets for different element types */
   .touch-target-small {
-    min-height: 40px !important;
-    min-width: 40px !important;
+    min-height: 48px !important;
+    min-width: 48px !important;
+    touch-action: manipulation !important;
+  }
+
+  .touch-target-medium {
+    min-height: 56px !important;
+    min-width: 56px !important;
+    touch-action: manipulation !important;
   }
 
   .touch-target-large {
-    min-height: 48px !important;
-    min-width: 48px !important;
+    min-height: 64px !important;
+    min-width: 64px !important;
+    touch-action: manipulation !important;
+  }
+
+  /* Enhanced gesture support */
+  .gesture-enabled {
+    touch-action: pan-x pan-y; /* Allow panning in both directions */
+    user-select: none; /* Prevent text selection during gestures */
+    -webkit-user-select: none;
+  }
+
+  /* Swipe-enabled elements */
+  .swipe-enabled {
+    touch-action: pan-y; /* Allow vertical scrolling but enable horizontal swipes */
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .swipe-enabled:active {
+    cursor: grabbing;
+  }
+
+  /* Pull-to-refresh support */
+  .pull-to-refresh-enabled {
+    touch-action: pan-x pan-down; /* Enable pull down gesture */
+    overscroll-behavior-y: contain; /* Prevent rubber band effect */
   }
 
   /* Navigation links and menu items */
@@ -104,11 +141,13 @@
   /* Input elements - enhanced for better touch */
   /* Base touch sizing; use .mobile-form-full for full-width controls */
   input, select, textarea, .input {
-    min-height: 48px !important;
+    min-height: 56px !important; /* Increased for better touch */
     padding: var(--spacing-3) var(--spacing-4) !important;
     font-size: 16px !important; /* Prevent iOS zoom */
     box-sizing: border-box !important;
     border-radius: var(--radius-md) !important;
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent !important;
   }
 
   /* Checkbox and radio buttons - larger click area */
@@ -133,10 +172,12 @@
   .mobile-button-full button,
   .mobile-button-full .btn {
     width: 100%;
-    min-height: 48px;
+    min-height: 56px; /* Increased for better touch */
     white-space: normal;
     word-wrap: break-word;
     text-align: center;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
 
   /* Smart mobile button wrapper - only applies styling when explicitly requested */
@@ -396,7 +437,7 @@
   }
 
   /* === DIALOG & MODAL OPTIMIZATIONS === */
-  
+
   /* Full screen modals on mobile */
   .mobile-modal-full [role="dialog"] {
     position: fixed !important;
@@ -410,5 +451,186 @@
     max-height: none !important;
     border-radius: 0 !important;
     margin: 0 !important;
+  }
+
+  /* === ENHANCED MOBILE INTERACTIONS === */
+
+  /* Haptic feedback styles for visual indication */
+  .haptic-light {
+    transition: transform 0.1s ease-out;
+  }
+
+  .haptic-light:active {
+    transform: scale(0.98);
+  }
+
+  .haptic-medium {
+    transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+  }
+
+  .haptic-medium:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .haptic-strong {
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+  }
+
+  .haptic-strong:active {
+    transform: scale(0.92);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Enhanced mobile card interactions */
+  .mobile-card-interactive {
+    transition: all 0.2s ease-out;
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-card-interactive:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  }
+
+  .mobile-card-interactive:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Swipe indicator for swipeable elements */
+  .swipe-indicator {
+    position: relative;
+  }
+
+  .swipe-indicator::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 2px;
+    background: var(--color-text-secondary, #666);
+    border-radius: 1px;
+    opacity: 0.3;
+  }
+
+  .swipe-indicator::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 2px;
+    background: var(--color-text-secondary, #666);
+    border-radius: 1px;
+    opacity: 0.5;
+  }
+
+  /* Pull-to-refresh indicator styles */
+  .pull-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 16px;
+    opacity: 0;
+    transform: translateY(-100%);
+    transition: all 0.3s ease-out;
+  }
+
+  .pull-indicator.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Enhanced focus states for mobile */
+  .mobile-focus-ring:focus-visible {
+    outline: 3px solid var(--color-primary-500, #007bff) !important;
+    outline-offset: 2px !important;
+    box-shadow: 0 0 0 6px rgba(0, 123, 255, 0.25) !important;
+  }
+
+  /* Mobile-optimized loading states */
+  .mobile-loading {
+    position: relative;
+    pointer-events: none;
+    opacity: 0.7;
+  }
+
+  .mobile-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid var(--color-primary-500, #007bff);
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: mobile-spin 1s linear infinite;
+  }
+
+  @keyframes mobile-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* Enhanced mobile scroll indicators */
+  .mobile-scroll-hint {
+    position: relative;
+  }
+
+  .mobile-scroll-hint::after {
+    content: '⟩';
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-text-secondary, #666);
+    font-size: 18px;
+    opacity: 0.6;
+    animation: mobile-scroll-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes mobile-scroll-pulse {
+    0%, 100% { opacity: 0.6; transform: translateY(-50%) translateX(0); }
+    50% { opacity: 1; transform: translateY(-50%) translateX(3px); }
+  }
+
+  /* Mobile-safe sticky elements */
+  .mobile-sticky-safe {
+    position: -webkit-sticky;
+    position: sticky;
+    top: env(safe-area-inset-top, 0);
+    z-index: 100;
+  }
+
+  /* Enhanced mobile list interactions */
+  .mobile-list-item {
+    padding: 16px !important;
+    min-height: 64px !important;
+    border-bottom: 1px solid var(--color-border, #e5e5e5);
+    transition: background-color 0.15s ease-out;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-list-item:active {
+    background-color: var(--color-accent-50, #f8f9fa) !important;
+  }
+
+  /* Mobile-optimized toggles and switches */
+  .mobile-toggle {
+    min-width: 56px !important;
+    min-height: 32px !important;
+    padding: 4px !important;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
 }

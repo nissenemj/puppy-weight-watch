@@ -5,21 +5,25 @@ import { cn } from "@/lib/utils"
 const Card = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & {
-    variant?: 'default' | 'elevated' | 'warm' | 'minimal' | 'puppy';
+    variant?: 'default' | 'elevated' | 'warm' | 'minimal' | 'puppy' | 'glass' | 'neo' | 'gradient' | 'floating';
   }
 >(({ className, variant = 'default', ...props }, ref) => (
   <div
     ref={ref}
     className={cn(
-      // Base styles with Anthropic-inspired design
-      "rounded-[var(--radius-lg)] bg-[var(--color-background-primary)] text-[var(--color-text-primary)] transition-all duration-[var(--transition-base)] overflow-hidden relative",
+      // Base styles with modern design system
+      "rounded-[var(--radius-lg)] bg-[var(--color-background-primary)] text-[var(--color-text-primary)] transition-all duration-[var(--transition-base)] overflow-hidden relative smooth-transform",
       // Variants
       {
         'default': "border border-[var(--color-border-subtle)] shadow-[var(--shadow-sm)] hover:shadow-[var(--shadow-md)] hover:translate-y-[-2px]",
         'elevated': "shadow-[var(--shadow-lg)] hover:shadow-[var(--shadow-xl)] border-0 hover:translate-y-[-2px] bg-[var(--color-background-primary)]/95 backdrop-blur-sm",
         'warm': "border border-[var(--color-border-subtle)] shadow-[var(--shadow-sm)] hover:shadow-[var(--shadow-md)] hover:translate-y-[-2px] before:absolute before:top-0 before:left-0 before:right-0 before:h-1 before:bg-gradient-to-r before:from-[var(--color-primary-400)] before:via-[var(--color-primary-500)] before:to-[var(--color-primary-600)]",
         'minimal': "border-0 shadow-none hover:shadow-[var(--shadow-sm)] hover:translate-y-[-1px] hover:bg-[var(--color-background-secondary)]",
-        'puppy': "border border-[var(--color-border-subtle)] shadow-[var(--shadow-sm)] hover:shadow-[var(--shadow-md)] hover:translate-y-[-2px] overflow-visible"
+        'puppy': "border border-[var(--color-border-subtle)] shadow-[var(--shadow-sm)] hover:shadow-[var(--shadow-md)] hover:translate-y-[-2px] overflow-visible",
+        'glass': "glass-card border-0 hover:backdrop-blur-xl micro-bounce",
+        'neo': "neo-card border-0",
+        'gradient': "bg-gradient-modern-warm text-white border-0 hover-glow micro-elastic",
+        'floating': "bg-white shadow-xl hover:shadow-2xl border-0 hover:translate-y-[-3px] floating"
       }[variant],
       className
     )}
