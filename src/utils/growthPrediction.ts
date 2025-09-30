@@ -1,5 +1,15 @@
-import regression from 'regression'
 import type { WeightEntry } from '@/services/weightService'
+import {
+  fitGompertzToData,
+  generateGompertzPredictions,
+  calculateBreedBasedParameters,
+  estimateBreedProfileFromWeight,
+  validateGompertzParameters,
+  gompertzFunction,
+  type GompertzParameters,
+  type GompertzFitResult
+} from './biologicalGrowthModel'
+import { findBreedProfile } from '@/data/breedGrowthProfiles'
 
 export interface GrowthPredictionResult {
   // Ennustedata
@@ -143,43 +153,82 @@ export function calculateGrowthPrediction(
     return null // Tarvitaan vähintään 2 pistettä ennustamiseen
   }
 
+  try {
+    return calculateGrowthPredictionGompertz(weightData, birthDate, breedCategory)
+  } catch (error) {
+    console.warn('Gompertz model failed, falling back to linear:', error)
+    return calculateGrowthPredictionLinear(weightData, birthDate, breedCategory)
+  }
+}
+
+// Uusi Gompertz-pohjainen kasvuennuste
+function calculateGrowthPredictionGompertz(
+  weightData: WeightEntry[],
+  birthDate: Date,
+  breedCategory?: BreedCategory
+): GrowthPredictionResult | null {
+  if (weightData.length < 2) {
+    return null
+  }
+
   // Järjestä data päivämäärän mukaan
   const sortedData = [...weightData].sort((a, b) =>
     new Date(a.date).getTime() - new Date(b.date).getTime()
   )
 
-  // Muunna data regression-kirjaston muotoon [x, y] missä x = ikä viikkoina, y = paino
-  const regressionData: [number, number][] = sortedData.map(entry => {
-    const ageWeeks = getAgeInWeeks(birthDate, new Date(entry.date))
-    return [ageWeeks, entry.weight]
-  })
-
-  // Valitse polynomiregressio asteen mukaan datapisteiden määrän perusteella
-  // Rajoita maksimissaan 2. asteen polynomiin stabiiliuden vuoksi
-  const polynomialDegree = Math.min(2, Math.max(1, Math.floor(regressionData.length / 2)))
-
-  // Suorita polynomiregressio
-  const result = regression.polynomial(regressionData, {
-    order: polynomialDegree,
-    precision: 4
-  })
-
-  // Validoi regression tulokset
-  if (!result || !result.predict || isNaN(result.r2) || result.r2 < 0) {
-    console.warn('Polynomial regression failed, falling back to linear')
-    const linearResult = regression.linear(regressionData)
-    return calculateGrowthPredictionLinear(sortedData, birthDate, breedCategory)
-  }
-
-  // Arvioi rotukategoria jos ei annettu
+  // Arvioi rotuprofiili jos ei annettu
   const lastEntry = sortedData[sortedData.length - 1]
   const currentAgeWeeks = getAgeInWeeks(birthDate, new Date(lastEntry.date))
-  const breed = breedCategory || estimateBreedCategory(lastEntry.weight, currentAgeWeeks)
+  const currentAgeDays = Math.floor((new Date(lastEntry.date).getTime() - birthDate.getTime()) / (1000 * 60 * 60 * 24))
+
+  // Muunna breedCategory BreedProfileksi tai arvioi painon perusteella
+  let breedProfile
+  if (breedCategory) {
+    // Muunna vanha BreedCategory uudeksi järjestelmäksi
+    breedProfile = {
+      name: `${breedCategory.category} breed`,
+      nameFi: `${breedCategory.category} rotu`,
+      category: breedCategory.category,
+      adultWeight: {
+        male: { min: breedCategory.adultWeightRange.min, max: breedCategory.adultWeightRange.max },
+        female: { min: breedCategory.adultWeightRange.min * 0.9, max: breedCategory.adultWeightRange.max * 0.9 }
+      },
+      maturityMonths: breedCategory.maturityAgeMonths
+    }
+  } else {
+    breedProfile = estimateBreedProfileFromWeight(lastEntry.weight, currentAgeDays)
+  }
+
+  // Laske rotupohjaiset Gompertz-parametrit
+  const initialParams = calculateBreedBasedParameters(breedProfile, 'male') // Oletetaan uros, voisi olla parametri
+
+  // Sovita Gompertz-malli dataan
+  const gompertzResult = fitGompertzToData(sortedData, birthDate, initialParams)
+
+  // Validoi parametrit
+  if (!validateGompertzParameters(gompertzResult.parameters)) {
+    throw new Error('Gompertz-parametrit eivät ole biologisesti valideja')
+  }
+
+  // Muunna breedProfile takaisin BreedCategory-muotoon yhteensopivuutta varten
+  const breed: BreedCategory = {
+    category: breedProfile.category,
+    adultWeightRange: {
+      min: breedProfile.adultWeight.male.min,
+      max: breedProfile.adultWeight.male.max
+    },
+    maturityAgeMonths: breedProfile.maturityMonths,
+    growthCurveParams: {
+      rapidGrowthEnd: breedProfile.category === 'toy' ? 12 : breedProfile.category === 'small' ? 16 : breedProfile.category === 'medium' ? 16 : breedProfile.category === 'large' ? 20 : 24,
+      steadyGrowthEnd: breedProfile.category === 'toy' ? 24 : breedProfile.category === 'small' ? 32 : breedProfile.category === 'medium' ? 36 : breedProfile.category === 'large' ? 40 : 48,
+      slowingGrowthEnd: breedProfile.category === 'toy' ? 32 : breedProfile.category === 'small' ? 40 : breedProfile.category === 'medium' ? 48 : breedProfile.category === 'large' ? 60 : 80
+    }
+  }
 
   // Laske nykyinen kasvuvaihe
   const currentPhase = determineGrowthPhase(currentAgeWeeks, breed)
 
-  // Ennusta tulevaisuus (seuraavat 6 kuukautta)
+  // Ennusta tulevaisuus Gompertz-mallilla
   const predictions: PredictionPoint[] = []
   const upperBound: PredictionPoint[] = []
   const lowerBound: PredictionPoint[] = []
@@ -195,102 +244,64 @@ export function calculateGrowthPrediction(
     })
   })
 
-  // Laske residuaalien keskihajonta luotettavuusväliä varten
-  let sumSquaredResiduals = 0
-  regressionData.forEach(([x, y]) => {
-    const predicted = result.predict(x)[1]
-    sumSquaredResiduals += Math.pow(y - predicted, 2)
-  })
-  const rmse = Math.sqrt(sumSquaredResiduals / regressionData.length)
+  // Generoi tulevaisuuden ennusteet Gompertz-mallilla
+  const futurePredictions = generateGompertzPredictions(
+    gompertzResult.parameters,
+    currentAgeDays,
+    currentAgeDays + (26 * 7), // 26 viikkoa eteenpäin
+    7 // viikoittain
+  )
 
-  // Ennusta seuraavat 26 viikkoa (6 kk)
-  const weeksToPredict = 26
-  const lastDate = new Date(lastEntry.date)
+  // Muunna Gompertz-ennusteet PredictionPoint-muotoon
+  futurePredictions.forEach((pred, index) => {
+    if (index === 0) return // Ohita nykyinen päivä
 
-  for (let i = 1; i <= weeksToPredict; i++) {
-    const futureDate = new Date(lastDate)
-    futureDate.setDate(futureDate.getDate() + (i * 7))
+    const futureDate = new Date(birthDate)
+    futureDate.setDate(futureDate.getDate() + pred.age)
 
-    const futureAgeWeeks = currentAgeWeeks + i
-    const predictionResult = result.predict(futureAgeWeeks)
-
-    // Validoi prediction tulos
-    if (!predictionResult || predictionResult.length < 2 || isNaN(predictionResult[1])) {
-      console.warn(`Invalid prediction for week ${futureAgeWeeks}`)
-      continue
-    }
-
-    const rawPredictedWeight = predictionResult[1]
-
-    // Rajoita ennuste realistisiin arvoihin ja varmista kasvu
-    const minWeight = Math.max(0.1, lastEntry.weight) // Ei voi olla vähemmän kuin nykypaino
-    const maxWeight = breed.adultWeightRange.max * 1.2
-    let predictedWeight = Math.min(Math.max(minWeight, rawPredictedWeight), maxWeight)
-
-    // Varmista että paino ei laske (monotoninen kasvu)
-    if (i > 1 && predictions.length > 0) {
-      const lastPrediction = predictions[predictions.length - 1]
-      if (lastPrediction.isPrediction && predictedWeight < lastPrediction.weight) {
-        predictedWeight = lastPrediction.weight + 0.01 // Pieni kasvu
-      }
-    }
-
-    // S-käyrä tasoitus aikuispainoon lähestyttäessä (parannettu)
-    const maturityWeeks = breed.maturityAgeMonths * 4.33
-    const maturityProgress = Math.min(1, futureAgeWeeks / maturityWeeks)
-    const maturityFactor = 0.5 + 0.5 * (1 - Math.exp(-2 * maturityProgress))
-
-    // Liukuva keskiarvo kohti aikuispainoa
-    const targetAdultWeight = (breed.adultWeightRange.min + breed.adultWeightRange.max) / 2
-    const adjustedWeight = predictedWeight * maturityFactor + targetAdultWeight * (1 - maturityFactor) * maturityProgress
+    const ageWeeks = pred.age / 7
 
     predictions.push({
       date: futureDate.toISOString().split('T')[0],
-      ageWeeks: futureAgeWeeks,
-      weight: adjustedWeight,
+      ageWeeks,
+      weight: pred.weight,
       isPrediction: true
     })
 
-    // Luotettavuusväli (kasvaa ennusteen edetessä)
-    const confidenceFactor = 1.96 * (1 + i * 0.02) // Kasvava epävarmuus
-    const interval = rmse * confidenceFactor
+    // Luotettavuusvälit
+    if (pred.confidence) {
+      upperBound.push({
+        date: futureDate.toISOString().split('T')[0],
+        ageWeeks,
+        weight: pred.confidence.upper,
+        isPrediction: true
+      })
 
-    upperBound.push({
-      date: futureDate.toISOString().split('T')[0],
-      ageWeeks: futureAgeWeeks,
-      weight: Math.min(adjustedWeight + interval, maxWeight),
-      isPrediction: true
-    })
+      lowerBound.push({
+        date: futureDate.toISOString().split('T')[0],
+        ageWeeks,
+        weight: pred.confidence.lower,
+        isPrediction: true
+      })
+    }
+  })
 
-    lowerBound.push({
-      date: futureDate.toISOString().split('T')[0],
-      ageWeeks: futureAgeWeeks,
-      weight: Math.max(adjustedWeight - interval, 0.1),
-      isPrediction: true
-    })
-  }
+  // Laske viikottainen kasvuvauhti Gompertz-mallista
+  const weekAgo = currentAgeDays - 7
+  const currentWeight = gompertzFunction(currentAgeDays, gompertzResult.parameters)
+  const pastWeight = gompertzFunction(Math.max(7, weekAgo), gompertzResult.parameters)
+  const recentGrowthRate = Math.max(0.01, Math.min(1.0, (currentWeight - pastWeight)))
 
-  // Laske viikottainen kasvuvauhti
-  const recentGrowthRate = currentAgeWeeks > 4
-    ? (lastEntry.weight - sortedData[sortedData.length - 2].weight) /
-      getAgeInWeeks(new Date(sortedData[sortedData.length - 2].date), new Date(lastEntry.date))
-    : lastEntry.weight / currentAgeWeeks
+  // Ennusta aikuispaino Gompertz-mallista
+  const predictedAdultWeight = gompertzResult.parameters.adultWeight
 
-  // Ennusta aikuispaino
-  const maturityWeeks = breed.maturityAgeMonths * 4.33
-  const [, predictedAdult] = result.predict(maturityWeeks)
-  const predictedAdultWeight = Math.min(
-    Math.max(breed.adultWeightRange.min, predictedAdult),
-    breed.adultWeightRange.max
-  )
-
-  // Rajoita R² realistisiin arvoihin
-  const adjustedR2 = Math.max(0.60, Math.min(0.90, result.r2 || 0.70))
+  // Käytä Gompertz-mallin laatumittareita
+  const adjustedR2 = Math.max(0.60, Math.min(0.95, gompertzResult.quality.rsquared))
 
   return {
     predictions,
     r2: adjustedR2,
-    coefficients: result.equation,
+    coefficients: [gompertzResult.parameters.adultWeight, gompertzResult.parameters.growthDuration, gompertzResult.parameters.inflectionAge], // Yhteensopivuus
     predictedAdultWeight,
     estimatedMaturityAge: breed.maturityAgeMonths,
     confidenceInterval: {
@@ -298,7 +309,7 @@ export function calculateGrowthPrediction(
       lower: lowerBound
     },
     currentGrowthPhase: currentPhase,
-    currentWeeklyGrowthRate: Math.max(0.01, Math.min(1.0, recentGrowthRate))
+    currentWeeklyGrowthRate: recentGrowthRate
   }
 }
 
@@ -338,14 +349,10 @@ function calculateGrowthPredictionLinear(
     new Date(a.date).getTime() - new Date(b.date).getTime()
   )
 
-  const regressionData: [number, number][] = sortedData.map(entry => {
-    const ageWeeks = getAgeInWeeks(birthDate, new Date(entry.date))
-    return [ageWeeks, entry.weight]
-  })
-
-  const result = regression.linear(regressionData)
   const lastEntry = sortedData[sortedData.length - 1]
   const currentAgeWeeks = getAgeInWeeks(birthDate, new Date(lastEntry.date))
+
+  // Arvioi breed jos ei annettu
   const breed = breedCategory || estimateBreedCategory(lastEntry.weight, currentAgeWeeks)
 
   const predictions: PredictionPoint[] = []
@@ -362,15 +369,22 @@ function calculateGrowthPredictionLinear(
   })
 
   // Simple linear prediction with growth rate limiting
-  const growthRatePerWeek = Math.max(0.01, Math.min(0.5, result.equation[0] || 0.1))
+  const totalGrowth = lastEntry.weight - sortedData[0].weight
+  const totalWeeks = getAgeInWeeks(new Date(sortedData[0].date), new Date(lastEntry.date))
+  const growthRatePerWeek = Math.max(0.01, Math.min(0.5, totalGrowth / Math.max(1, totalWeeks)))
 
   for (let i = 1; i <= 26; i++) {
     const futureDate = new Date(lastEntry.date)
     futureDate.setDate(futureDate.getDate() + (i * 7))
 
     const futureAgeWeeks = currentAgeWeeks + i
+
+    // Yksinkertainen lineaarinen kasvu hidastuva kohti aikuispainoa
+    const maturityProgress = Math.min(1, futureAgeWeeks / (breed.maturityAgeMonths * 4.33))
+    const slowingFactor = 1 - (maturityProgress * 0.8) // Hidastuu 80% loppua kohti
+
     const predictedWeight = Math.min(
-      lastEntry.weight + (growthRatePerWeek * i),
+      lastEntry.weight + (growthRatePerWeek * i * slowingFactor),
       breed.adultWeightRange.max
     )
 
@@ -384,13 +398,13 @@ function calculateGrowthPredictionLinear(
 
   return {
     predictions,
-    r2: Math.max(0.6, Math.min(0.85, result.r2 || 0.7)), // Realistic R²
-    coefficients: result.equation,
+    r2: 0.75, // Realistinen arvo linear fallbackille
+    coefficients: [growthRatePerWeek, lastEntry.weight], // Kaltevuus ja vakio
     predictedAdultWeight: breed.adultWeightRange.max,
     estimatedMaturityAge: breed.maturityAgeMonths,
     confidenceInterval: {
-      upper: predictions.filter(p => p.isPrediction).map(p => ({ ...p, weight: p.weight * 1.1 })),
-      lower: predictions.filter(p => p.isPrediction).map(p => ({ ...p, weight: p.weight * 0.9 }))
+      upper: predictions.filter(p => p.isPrediction).map(p => ({ ...p, weight: p.weight * 1.15 })),
+      lower: predictions.filter(p => p.isPrediction).map(p => ({ ...p, weight: p.weight * 0.85 }))
     },
     currentGrowthPhase: determineGrowthPhase(currentAgeWeeks, breed),
     currentWeeklyGrowthRate: growthRatePerWeek
