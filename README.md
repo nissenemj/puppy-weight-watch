@@ -2,6 +2,8 @@
 
 ## Project info
 
+<!-- Deployment trigger for route fixes -->
+
 **URL**: https://lovable.dev/projects/3219ec70-7c28-4d36-bf27-bfe4d9c39c8b
 
 ## How can I edit this code?
