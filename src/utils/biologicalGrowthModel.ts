@@ -134,7 +134,7 @@ export function fitGompertzToData(
     throw new Error('Tarvitaan vähintään 2 datapistettä mallinnukseen')
   }
 
-  let params = { ...initialParams }
+  const params = { ...initialParams }
   let bestParams = { ...params }
   let bestError = Infinity
 
