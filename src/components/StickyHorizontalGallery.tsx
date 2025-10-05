@@ -114,7 +114,7 @@ export default function StickyHorizontalGallery({
   
   return (
     <section ref={containerRef} className={`w-full ${className}`}>
-      <div className={`sticky top-16 ${heightClassName} overflow-hidden`}>
+      <div className={`sticky top-16 ${heightClassName} overflow-hidden flex items-center justify-center`}>
         <motion.div
           className="flex w-[100vw]"
           style={{ x: xVW }}
