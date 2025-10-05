@@ -14,6 +14,8 @@ import { dbToAppTypes } from '@/utils/typeUtils'
 import { User } from '@supabase/supabase-js'
 import { useGuestAuth } from '@/contexts/GuestAuthContext'
 import WeightChart from './EnhancedWeightChart'
+import GrowthChart from './PuppyBook/GrowthChart'
+import type { SizeClass } from '@/types/veterinary'
 import AdvancedFoodCalculator from './AdvancedFoodCalculator'
 import PuppyFeeding from './PuppyFeeding'
 import SafetyNewsFeed from './SafetyNewsFeed'
@@ -23,7 +25,11 @@ import WeightEntry from '@/features/weight-tracking/components/WeightEntry'
 import GrowthDevelopmentSection from './GrowthDevelopmentSection'
 import AchievementSystem from './AchievementSystem'
 import AuthModal from './AuthModal'
-import { Scale, TrendingUp, Calculator, Utensils, Bell, RefreshCw } from 'lucide-react'
+import { Scale, TrendingUp, Calculator, Utensils, Bell, RefreshCw, Calendar } from 'lucide-react'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Calendar as CalendarComponent } from '@/components/ui/calendar'
+import { format } from 'date-fns'
+import { fi } from 'date-fns/locale'
 import { cn } from '@/lib/utils'
 
 // Import the generated assets (used in AuthModal)
@@ -37,6 +43,12 @@ interface WeightEntry {
   created_at: string
 }
 
+interface WeightPoint {
+  age_weeks: number
+  weight_kg: number
+  date: string
+}
+
 export default function ModernPuppyWeightTracker() {
   const [currentWeight, setCurrentWeight] = useState('')
   const [entries, setEntries] = useState<WeightEntry[]>([])
@@ -46,6 +58,8 @@ export default function ModernPuppyWeightTracker() {
   const [activeTab, setActiveTab] = useState('weight-tracking')
   const [selectedDog, setSelectedDog] = useState<{ id: string; name: string; breed?: string } | null>(null)
   const [selectedDogBirthDate, setSelectedDogBirthDate] = useState<string | null>(null)
+  const [showBirthDatePicker, setShowBirthDatePicker] = useState(false)
+  const [birthDate, setBirthDate] = useState<Date | undefined>(undefined)
   const { toast } = useToast()
   const isMobile = useIsMobile()
 
@@ -315,6 +329,106 @@ export default function ModernPuppyWeightTracker() {
     return latest - previous
   }
 
+  const saveBirthDate = async () => {
+    if (!birthDate || !user || !selectedDog) return
+
+    const birthDateString = birthDate.toISOString().split('T')[0]
+
+    try {
+      // Check if puppy_books entry exists for this dog
+      const { data: existingBook, error: checkError } = await supabase
+        .from('puppy_books')
+        .select('id')
+        .eq('owner_id', user.id)
+        .eq('puppy_id', selectedDog.id)
+        .maybeSingle()
+
+      if (checkError) throw checkError
+
+      if (existingBook) {
+        // Update existing puppy book
+        const { error: updateError } = await supabase
+          .from('puppy_books')
+          .update({ birth_date: birthDateString })
+          .eq('id', existingBook.id)
+
+        if (updateError) throw updateError
+      } else {
+        // Create new puppy book
+        const { error: insertError } = await supabase
+          .from('puppy_books')
+          .insert({
+            owner_id: user.id,
+            puppy_id: selectedDog.id,
+            birth_date: birthDateString
+          })
+
+        if (insertError) throw insertError
+      }
+
+      // Update local state
+      setSelectedDogBirthDate(birthDateString)
+      setShowBirthDatePicker(false)
+
+      toast({
+        title: "Syntymäpäivä tallennettu!",
+        description: `${selectedDog.name}:n syntymäpäivä on nyt ${format(birthDate, 'dd.MM.yyyy', { locale: fi })}`
+      })
+    } catch (error) {
+      console.error('Error saving birth date:', error)
+      toast({
+        title: "Virhe",
+        description: "Syntymäpäivän tallentaminen epäonnistui",
+        variant: "destructive"
+      })
+    }
+  }
+
+  // Convert weight entries to GrowthChart format
+  const convertToWeightPoints = (entries: WeightEntry[], birthDate: string | null): WeightPoint[] => {
+    if (!birthDate) return []
+
+    const birthDateObj = new Date(birthDate)
+    return entries.map(entry => {
+      const entryDate = new Date(entry.date)
+      const ageInWeeks = Math.floor((entryDate.getTime() - birthDateObj.getTime()) / (1000 * 60 * 60 * 24 * 7))
+
+      return {
+        age_weeks: Math.max(0, ageInWeeks),
+        weight_kg: entry.weight,
+        date: entry.date
+      }
+    }).sort((a, b) => a.age_weeks - b.age_weeks)
+  }
+
+  // Determine size class based on breed or current weight
+  const determineSizeClass = (): SizeClass => {
+    if (!selectedDog?.breed) {
+      // Default to medium if no breed specified
+      return 'medium'
+    }
+
+    const breed = selectedDog.breed.toLowerCase()
+
+    // Toy/Small breeds (up to 10kg)
+    if (breed.includes('chihuahua') || breed.includes('yorkshire') ||
+        breed.includes('pomeranian') || breed.includes('maltese') ||
+        breed.includes('toy') || breed.includes('mini')) {
+      return 'toy_small'
+    }
+
+    // Large/Giant breeds (25kg+)
+    if (breed.includes('labrador') || breed.includes('retriever') ||
+        breed.includes('saksanpaimenkoira') || breed.includes('rottweiler') ||
+        breed.includes('mastiff') || breed.includes('saint bernard') ||
+        breed.includes('great dane') || breed.includes('leonberger')) {
+      return 'large_giant'
+    }
+
+    // Medium breeds (default)
+    return 'medium'
+  }
+
   if (!user && !isGuest) {
     return (
       <AuthModal
@@ -553,12 +667,69 @@ export default function ModernPuppyWeightTracker() {
                   </Card>
                 </div>
 
-                {/* Enhanced Weight Chart */}
-                <WeightChart
-                  weightData={entries}
-                  birthDate={selectedDogBirthDate ? new Date(selectedDogBirthDate) : undefined}
-                  breed={selectedDog?.breed}
-                />
+                {/* Growth Chart with Centiles */}
+                {selectedDogBirthDate && entries.length > 0 ? (
+                  <GrowthChart
+                    weightPoints={convertToWeightPoints(entries, selectedDogBirthDate)}
+                    initialSizeClass={determineSizeClass()}
+                  />
+                ) : (
+                  <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
+                    <CardContent className="text-center py-12">
+                      <TrendingUp className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                      <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                        Kasvukäyrä ei saatavilla
+                      </h3>
+                      <p className="text-gray-500 mb-6">
+                        {!selectedDogBirthDate
+                          ? 'Aseta pennun syntymäpäivä nähdäksesi kasvukäyrän centile-viivoilla'
+                          : 'Lisää painomittauksia nähdäksesi kasvukäyrän'}
+                      </p>
+
+                      {!selectedDogBirthDate && user && selectedDog && (
+                        <Popover open={showBirthDatePicker} onOpenChange={setShowBirthDatePicker}>
+                          <PopoverTrigger asChild>
+                            <Button variant="outline" className="gap-2">
+                              <Calendar className="h-4 w-4" />
+                              Aseta syntymäpäivä
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0 bg-white shadow-xl border-2" align="center">
+                            <CalendarComponent
+                              mode="single"
+                              selected={birthDate}
+                              onSelect={(date) => setBirthDate(date)}
+                              disabled={(date) => date > new Date() || date < new Date('1900-01-01')}
+                              initialFocus
+                              locale={fi}
+                            />
+                            <div className="p-3 border-t flex gap-2">
+                              <Button
+                                onClick={saveBirthDate}
+                                disabled={!birthDate}
+                                className="flex-1"
+                                size="sm"
+                              >
+                                Tallenna
+                              </Button>
+                              <Button
+                                variant="outline"
+                                onClick={() => {
+                                  setShowBirthDatePicker(false)
+                                  setBirthDate(undefined)
+                                }}
+                                className="flex-1"
+                                size="sm"
+                              >
+                                Peruuta
+                              </Button>
+                            </div>
+                          </PopoverContent>
+                        </Popover>
+                      )}
+                    </CardContent>
+                  </Card>
+                )}
 
                 {/* Achievement System */}
                 <AchievementSystem 
