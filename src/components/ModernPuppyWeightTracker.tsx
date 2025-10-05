@@ -170,7 +170,7 @@ export default function ModernPuppyWeightTracker() {
       .from('puppy_books')
       .select('birth_date')
       .eq('owner_id', user.id)
-      .eq('dog_id', selectedDog.id)
+      .eq('puppy_id', selectedDog.id)
       .maybeSingle()
 
     if (error) {
