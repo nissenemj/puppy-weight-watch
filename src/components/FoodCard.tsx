@@ -611,7 +611,11 @@ export function FoodCard({ food, onSelect, isSelected = false, showDetails = fal
               <NutritionEditor
                 nutrition={dbToAppTypes.foodNutrition(enhancedEditingFood.nutrition) as FoodNutrition}
                 onChange={(nutrition) => 
-                  setEnhancedEditingFood(prev => prev ? { ...prev, nutrition: appToDbTypes.foodNutrition(nutrition) } : null)
+                  setEnhancedEditingFood(prev => {
+                    if (!prev) return null
+                    const converted = appToDbTypes.foodNutrition(nutrition)
+                    return { ...prev, nutrition: converted as any }
+                  })
                 }
               />
             </TabsContent>
@@ -620,7 +624,11 @@ export function FoodCard({ food, onSelect, isSelected = false, showDetails = fal
               <ManufacturerEditor
                 manufacturer={dbToAppTypes.foodManufacturer(enhancedEditingFood.manufacturer_info) as FoodManufacturer}
                 onChange={(manufacturer_info) => 
-                  setEnhancedEditingFood(prev => prev ? { ...prev, manufacturer_info: appToDbTypes.foodManufacturer(manufacturer_info) } : null)
+                  setEnhancedEditingFood(prev => {
+                    if (!prev) return null
+                    const converted = appToDbTypes.foodManufacturer(manufacturer_info)
+                    return { ...prev, manufacturer_info: converted as any }
+                  })
                 }
               />
             </TabsContent>

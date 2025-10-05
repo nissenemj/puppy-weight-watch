@@ -37,10 +37,6 @@ export default function DogProfile({ user, onDogSelect, selectedDog }: DogProfil
     activity_level: 'medium'
   })
 
-  useEffect(() => {
-    loadDogs()
-  }, [loadDogs])
-
   const loadDogs = useCallback(async () => {
     try {
       const { data, error } = await supabase
@@ -61,6 +57,10 @@ export default function DogProfile({ user, onDogSelect, selectedDog }: DogProfil
       toast.error('Virhe koirien lataamisessa')
     }
   }, [user.id, selectedDog, onDogSelect])
+
+  useEffect(() => {
+    loadDogs()
+  }, [loadDogs])
 
   const addDog = async () => {
     if (!newDog.name.trim()) {

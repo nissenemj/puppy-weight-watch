@@ -143,7 +143,7 @@ export default function EnhancedWeightChart({ weightData, birthDate, breed }: We
           timestamp: entryDate.getTime(),
           dateFormatted: format(entryDate, 'dd.MM'),
           actualWeight: point.weight,
-          avgGrowthLine: undefined,
+          avgGrowthLine: 0,
           milestone: getMilestone(point.weight)
         })
       }
@@ -164,7 +164,7 @@ export default function EnhancedWeightChart({ weightData, birthDate, breed }: We
             date: point.date,
             timestamp: entryDate.getTime(),
             dateFormatted: format(entryDate, 'dd.MM'),
-            actualWeight: undefined,
+            actualWeight: 0,
             avgGrowthLine: point.weight,
             milestone: undefined
           })
@@ -176,7 +176,10 @@ export default function EnhancedWeightChart({ weightData, birthDate, breed }: We
   }, [growthPrediction, sortedData])
 
   // Calculate chart domain for Y-axis
-  const allWeights = chartData.map(d => [d.actualWeight, d.avgGrowthLine, d.upperBound, d.lowerBound]).flat().filter(w => w != null && !isNaN(w) && w > 0)
+  const allWeights = chartData
+    .map(d => [d.actualWeight, d.avgGrowthLine, d.upperBound, d.lowerBound])
+    .flat()
+    .filter((w): w is number => typeof w === 'number' && !isNaN(w) && w > 0)
   const minWeight = allWeights.length > 0 ? Math.max(0, Math.min(...allWeights) - 0.5) : 0
   const maxWeight = allWeights.length > 0 ? Math.max(...allWeights) + 0.5 : 10
   const yAxisDomain = [minWeight, maxWeight]

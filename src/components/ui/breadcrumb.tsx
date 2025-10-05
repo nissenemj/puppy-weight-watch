@@ -173,7 +173,7 @@ const AutoBreadcrumb = React.forwardRef<
   if (breadcrumbs.length === 0) return null
 
   const items = showHome
-    ? [{ label: "Etusivu", href: "/", icon: <Home className="w-4 h-4" /> }, ...breadcrumbs]
+    ? [{ label: "Etusivu", href: "/", icon: <Home className="w-4 h-4" />, current: false }, ...breadcrumbs]
     : breadcrumbs
 
   return (
