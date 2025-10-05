@@ -48,11 +48,12 @@
       "Bash(claude update)",
       "Bash(npm outdated)",
       "Bash(npm update:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(taskkill:*)",
+      "Bash(PORT=5173 npm run dev)",
+      "mcp__playwright__browser_evaluate"
     ],
     "deny": [],
-    "additionalDirectories": [
-      "C:\\c\\Users\\nisse"
-    ]
+    "additionalDirectories": ["C:\\c\\Users\\nisse"]
   }
 }

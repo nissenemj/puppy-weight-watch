@@ -168,19 +168,86 @@ const Index = () => {
         url={window.location.origin}
       />
 
-      {/* Pan Hero Section */}
+      {/* Hero Section with Background */}
       <ScrollPanBackground
         src={pentulaskuriHero}
         alt="Pentulaskuri - iloinen pentu"
         panX={40}
         panY={20}
         zoom={1.04}
-        minHeightClass="min-h-[60svh]"
+        minHeightClass="min-h-[70svh]"
         className="no-horizontal-scroll mobile-text-wrap responsive-media mobile-container-safe"
-      />
+        overlayClassName="items-center justify-center px-4 md:px-6"
+      >
+        {/* Hero Content */}
+        <div className="hero-content max-w-4xl mx-auto text-center text-white">
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={entranceAnimations.staggerContainer}
+          >
+            <motion.div
+              variants={entranceAnimations.staggerChild}
+              className="mb-4"
+            >
+              <Badge className="bg-white/20 text-white border-white/40 mb-3 backdrop-blur-sm">
+                <Sparkles className="w-4 h-4 mr-2" />
+                Uusi ja moderni
+              </Badge>
+            </motion.div>
+
+            <motion.h1
+              variants={entranceAnimations.staggerChild}
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 font-display drop-shadow-lg"
+            >
+              Älykkäät työkalut
+              <br />
+              <span className="text-[var(--color-tertiary-300)]">vastuulliseen hoitoon</span>
+            </motion.h1>
+
+            <motion.p
+              variants={entranceAnimations.staggerChild}
+              className="text-base sm:text-lg md:text-xl mb-8 max-w-2xl mx-auto leading-relaxed drop-shadow-md"
+            >
+              Tiedepohjaiset mittaustyökalut ja asiantunteva ohjaus tukevat vastuullista koiranhoitoa ja pennun optimaalista kehitystä.
+            </motion.p>
+
+            <motion.div
+              variants={entranceAnimations.staggerChild}
+              className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center"
+            >
+              <Link to="/weight-tracker" className="w-full sm:w-auto" aria-label="Aloita pennun painonseuranta">
+                <Button size="lg" className="w-full sm:min-w-[220px] bg-white text-[var(--color-primary-600)] hover:bg-white/90 touch-target focus-enhanced shadow-lg">
+                  <Scale className="w-5 h-5 mr-2" aria-hidden="true" />
+                  Aloita mittaaminen
+                </Button>
+              </Link>
+
+              <Link to="/calculator" className="w-full sm:w-auto" aria-label="Avaa pentulaskuri">
+                <Button variant="outline" size="lg" className="w-full sm:min-w-[220px] bg-white/10 text-white border-white/40 hover:bg-white/20 backdrop-blur-sm touch-target focus-enhanced">
+                  <Calculator className="w-5 h-5 mr-2" aria-hidden="true" />
+                  Ruokalaskuri
+                </Button>
+              </Link>
+            </motion.div>
+
+            <motion.div
+              variants={entranceAnimations.staggerChild}
+              className="flex flex-wrap gap-4 sm:gap-6 justify-center mt-8"
+            >
+              {benefits.map((benefit, index) => (
+                <div key={index} className="flex items-center gap-2 text-sm text-white/90 drop-shadow-md">
+                  <benefit.icon className="w-4 h-4 text-[var(--color-tertiary-300)]" />
+                  <span>{benefit.text}</span>
+                </div>
+              ))}
+            </motion.div>
+          </motion.div>
+        </div>
+      </ScrollPanBackground>
 
       {/* How it works: sticky horizontal steps */}
-      <Section className="full-width-section mobile-container-safe" role="region" aria-labelledby="how-it-works-heading">
+      <Section className="full-width-section mobile-container-safe" role="main" aria-labelledby="how-it-works-heading" id="main-content">
         <div className="full-width-content">
           <h2 className="sr-only" id="how-it-works-heading">Miten palvelu toimii</h2>
           <StickyHorizontalGallery
@@ -198,99 +265,6 @@ const Index = () => {
                 Aloita seuranta – 1 min
               </Button>
             </Link>
-          </div>
-        </div>
-      </Section>
-
-      {/* Hero Section */}
-      <Section className="full-width-section mobile-container-safe" role="main" aria-labelledby="hero-heading" id="main-content">
-        <div className="full-width-content">
-          <div className="grid lg:grid-cols-2 gap-8 items-center">
-
-            {/* Left Content */}
-            <motion.div
-              initial="hidden"
-              animate="visible"
-              variants={entranceAnimations.staggerContainer}
-              className="text-left"
-            >
-              <motion.div
-                variants={entranceAnimations.staggerChild}
-                className="mb-4"
-              >
-                <Badge className="bg-[var(--color-primary-100)] text-[var(--color-primary-600)] border-[var(--color-primary-300)] mb-3">
-                  <Sparkles className="w-4 h-4 mr-2" />
-                  Uusi ja moderni
-                </Badge>
-              </motion.div>
-
-              <motion.h2
-                variants={entranceAnimations.staggerChild}
-                className="text-h1 mb-4 font-display"
-                id="hero-heading"
-              >
-                Älykkäät työkalut
-                <br />
-                <span className="text-accent">vastuulliseen hoitoon</span>
-              </motion.h2>
-
-              <motion.p
-                variants={entranceAnimations.staggerChild}
-                className="text-body-lg text-muted mb-6 max-w-xl leading-relaxed"
-              >
-                Tiedepohjaiset mittaustyökalut ja asiantunteva ohjaus tukevat vastuullista koiranhoitoa ja pennun optimaalista kehitystä.
-              </motion.p>
-
-              <motion.div
-                variants={entranceAnimations.staggerChild}
-                className="flex flex-col sm:flex-row gap-3 mb-6 mobile-button"
-              >
-                <Link to="/weight-tracker" aria-label="Aloita pennun painonseuranta – siirry painonseurantasivulle">
-                  <Button size="lg" className="w-full sm:w-auto touch-target focus-enhanced">
-                    <Scale className="w-5 h-5 mr-2" aria-hidden="true" />
-                    Aloita mittaaminen
-                  </Button>
-                </Link>
-
-                <Link to="/calculator" aria-label="Avaa pentulaskuri – laske ruokamäärät">
-                  <Button variant="outline" size="lg" className="w-full sm:w-auto touch-target focus-enhanced">
-                    <Calculator className="w-5 h-5 mr-2" aria-hidden="true" />
-                    Ruokalaskuri
-                  </Button>
-                </Link>
-              </motion.div>
-
-              <motion.div
-                variants={entranceAnimations.staggerChild}
-                className="flex flex-wrap gap-4"
-              >
-                {benefits.map((benefit, index) => (
-                  <div key={index} className="flex items-center gap-2 text-body-sm text-muted">
-                    <benefit.icon className="w-4 h-4 text-accent" />
-                    <span>{benefit.text}</span>
-                  </div>
-                ))}
-              </motion.div>
-            </motion.div>
-
-            {/* Right Hero Image - optimized and smaller */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="relative"
-            >
-              <div className="relative max-w-md mx-auto">
-                <LazyImage
-                  src={heroPuppyCartoon}
-                  alt="Iloinen sarjakuvapentu vilkuttamassa"
-                  className="w-full h-auto rounded-2xl shadow-lg object-cover"
-                  priority={true}
-                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 400px"
-                />
-              </div>
-            </motion.div>
-
           </div>
         </div>
       </Section>

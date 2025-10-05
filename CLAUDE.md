@@ -150,9 +150,11 @@ src/
 ### Bundle Architecture (Vite Configuration)
 
 - **Route-based lazy loading** for all non-critical pages
+- **Automatic chunking**: Manual chunking disabled to avoid circular dependency issues - Vite handles optimization automatically
 - **Feature-based code splitting**: PuppyBook (52kB), Calculator (3kB), Weight tracking (11kB)
-- **Vendor chunk optimization**: React core, UI components, animations, data libraries split intelligently
 - **Initial bundle**: ~18.3kB JS + 21.6kB CSS (gzipped) - excellent performance
+- **Minification**: esbuild for reliable production minification
+- **Optimization**: React core dependencies explicitly included for proper dependency resolution
 
 ### Key Components Architecture
 
@@ -261,6 +263,19 @@ const { data, error, isLoading } = useQuery({
 - React useState for component-level state
 - React Context for theme and auth state
 - No global state management library (Zustand mentioned in old docs but not implemented)
+
+### Custom Hooks
+
+Key specialized hooks in `src/hooks/`:
+
+- **`useWeightEntries.ts`**: Weight entry data fetching and mutations
+- **`usePWAInstall.ts`**: PWA installation prompt handling
+- **`useMobileAnalytics.ts`**: Mobile-specific analytics tracking
+- **`useVirtualKeyboard.ts`**: Virtual keyboard height management for mobile
+- **`useCoreWebVitals.ts`**: Performance monitoring (LCP, FID, CLS)
+- **`usePullToRefresh.ts`**: Pull-to-refresh gesture on mobile
+- **`use-mobile.tsx`**: Mobile device detection and breakpoint tracking
+- **`use-toast.ts`**: Toast notification system (shadcn/ui)
 
 ## Component Development Guidelines
 
@@ -438,9 +453,10 @@ npm run supabase:seed
 
 - **Initial load**: ~18.3 kB JS + 21.6 kB CSS (gzipped) - Excellent performance!
 - **Route-based lazy loading**: All non-critical pages lazy loaded with Suspense
-- **Feature-based chunking**: PuppyBook (52 kB), Calculator (3 kB), Weight tracking (11 kB)
-- **Vendor splitting**: React core, data, UI, animations split intelligently
+- **Automatic chunking**: Vite handles optimization automatically (manual chunking disabled to avoid circular dependencies)
+- **Feature-based code splitting**: PuppyBook (52 kB), Calculator (3 kB), Weight tracking (11 kB)
 - **Critical path**: Only homepage + essential chunks loaded initially
+- **Minification**: esbuild for production builds
 
 ### Image Optimization
 
@@ -452,7 +468,7 @@ npm run supabase:seed
 
 - **Critical CSS**: Inline styles for above-the-fold content
 - **Deferred loading**: Non-critical CSS loaded after initial render
-- **Mobile-first**: 253 lines of optimized mobile CSS rules
+- **Mobile-first**: 635 lines of comprehensive mobile CSS rules in `mobile-optimizations.css`
 
 ### PWA Features
 
@@ -501,24 +517,69 @@ Common terms:
 - `kasvu` = growth
 - `rotu` = breed
 
-## Recent Refactoring Notes
+## Growth Prediction Architecture
 
-The codebase was recently simplified to remove redundant components and improve maintainability:
+The app implements **dual growth prediction models** for puppy weight forecasting:
 
-### Removed Components
+### Biological Growth Model (`biologicalGrowthModel.ts`)
+
+- **Based on Gompertz Growth Function**: Scientifically validated model for canine growth
+- **Formula**: `Wt = Wmax × exp(-exp(-(t-c)/b))`
+- **Parameters**:
+  - `adultWeight`: Predicted adult weight (kg)
+  - `growthDuration`: Growth rate parameter (days)
+  - `inflectionAge`: Age at maximum growth rate (days)
+- **Quality Metrics**: R², RMSE, MAE for prediction confidence
+- **Usage**: Advanced predictions with confidence intervals
+
+### Veterinary Growth Calculator (`veterinaryGrowthCalculator.ts`)
+
+- **Based on practical veterinary formulas** used by professionals
+- **Breed-specific calculations** for toy, small, medium, large, giant breeds
+- **Multiple formula approach** for different age ranges with confidence scoring
+- **Breed max weights**: toy (5kg), small (15kg), medium (30kg), large (50kg), giant (80kg)
+- **Usage**: Simple, reliable predictions for owners
+
+### Implementation Pattern
+
+```typescript
+import { calculateVeterinaryGrowthEstimate } from "@/utils/veterinaryGrowthCalculator";
+import { fitGompertzModel } from "@/utils/biologicalGrowthModel";
+
+// Veterinary method (simpler, practical)
+const vetEstimate = calculateVeterinaryGrowthEstimate(weightData, birthDate);
+
+// Gompertz model (advanced, with confidence intervals)
+const gompertzFit = fitGompertzModel(weightData, breedProfile);
+```
+
+## Recent Refactoring & Feature Additions
+
+### Recent Growth Prediction Improvements (Latest Commits)
+
+- **Veterinary-based growth calculator** implemented with practical formulas used by veterinarians
+- **Biological Gompertz growth model** added for scientifically-validated predictions
+- **Comprehensive polynomial regression** system with stability improvements
+- **Dual prediction approach**: Both simple (veterinary) and advanced (Gompertz) models available
+
+### Component Consolidation
+
+The codebase was simplified to remove redundant components and improve maintainability:
+
+**Removed Components:**
 
 - `DesignSystemDemo.tsx`, `ViralDemo.tsx` - Demo components
 - `MobileTestingDashboard.tsx`, `ResponsiveTestRunner.tsx` - Development tools
 - `FoodCalculator.tsx`, `EnhancedPuppyCalculator.tsx` - Duplicate calculators
 - `PuppyWeightTracker.tsx`, `WeightTracker.tsx` - Duplicate trackers
 
-### Consolidated Components
+**Consolidated Components:**
 
 - **Food Calculation**: Use `AdvancedFoodCalculator.tsx` only
 - **Weight Tracking**: Use `ModernPuppyWeightTracker.tsx` only
-- **Mobile CSS**: Optimized `mobile-optimizations.css` (159 lines, organized sections)
+- **Mobile CSS**: Comprehensive `mobile-optimizations.css` (635 lines, organized sections)
 
-### Import Updates Required
+**Import Updates Required:**
 
 When working with weight tracking or food calculation features, ensure imports reference the correct consolidated components to avoid build errors.
 

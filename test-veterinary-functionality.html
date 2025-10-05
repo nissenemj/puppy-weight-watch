@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="fi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Veterinaarilaskurin testaus</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+      .test-container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 30px;
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+      }
+      h1 {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .test-case {
+        margin-bottom: 30px;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+      }
+      .result {
+        margin-top: 15px;
+        padding: 15px;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 5px;
+        font-family: monospace;
+      }
+      .success {
+        color: #4ade80;
+        font-weight: bold;
+      }
+      .error {
+        color: #f87171;
+        font-weight: bold;
+      }
+      .info {
+        color: #60a5fa;
+      }
+      button {
+        background: white;
+        color: #764ba2;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        margin: 5px;
+      }
+      button:hover {
+        opacity: 0.9;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="test-container">
+      <h1>🐕 Veterinaarilaskurin testaus</h1>
+
+      <div class="test-case">
+        <h2>Testi 1: Pieni toy-rotu (Chihuahua-tyyppi)</h2>
+        <p>Paino 3 kk: 1.8 kg</p>
+        <button onclick="testToyBreed()">Testaa Toy-rotu</button>
+        <div id="toy-result" class="result"></div>
+      </div>
+
+      <div class="test-case">
+        <h2>Testi 2: Keskikokoinen rotu (Golden Retriever-tyyppi)</h2>
+        <p>Paino 4 kk: 13.2 kg</p>
+        <button onclick="testMediumBreed()">Testaa Keskikokoinen</button>
+        <div id="medium-result" class="result"></div>
+      </div>
+
+      <div class="test-case">
+        <h2>Testi 3: Suuri rotu (mutta nuori pentu)</h2>
+        <p>Paino 2 kk: 5 kg</p>
+        <button onclick="testLargePuppy()">Testaa Suuri pentu</button>
+        <div id="large-result" class="result"></div>
+      </div>
+
+      <div class="test-case">
+        <h2>Testi 4: Vanha pentu (lähes aikuinen)</h2>
+        <p>Paino 8 kk: 22 kg</p>
+        <button onclick="testOldPuppy()">Testaa Vanha pentu</button>
+        <div id="old-result" class="result"></div>
+      </div>
+    </div>
+
+    <script type="module">
+      // Simuloi veterinaarilaskurin logiikkaa
+      window.testToyBreed = function () {
+        const currentWeight = 1.8;
+        const ageWeeks = 12; // 3 kuukautta
+
+        // Veterinaarien kaavat
+        const basicFormula = (currentWeight / ageWeeks) * 52;
+        const percentageFormula = currentWeight / 0.45; // 3kk = ~45% aikuispainosta
+
+        const average = (basicFormula + percentageFormula) / 2;
+        const maxToyWeight = 5; // Biologinen raja
+        const finalEstimate = Math.min(average, maxToyWeight);
+
+        const resultDiv = document.getElementById("toy-result");
+        resultDiv.innerHTML = `
+                <span class="info">Peruskaava: ${basicFormula.toFixed(1)} kg</span><br>
+                <span class="info">%-kaava (45%): ${percentageFormula.toFixed(1)} kg</span><br>
+                <span class="info">Keskiarvo: ${average.toFixed(1)} kg</span><br>
+                <span class="info">Rotukohtainen max: ${maxToyWeight} kg</span><br>
+                <span class="success">Ennustettu aikuispaino: ${finalEstimate.toFixed(1)} kg ✅</span><br>
+                ${finalEstimate <= 5 ? '<span class="success">✅ Realistinen tulos toy-rodulle!</span>' : '<span class="error">❌ Liian suuri toy-rodulle!</span>'}
+            `;
+      };
+
+      window.testMediumBreed = function () {
+        const currentWeight = 13.2;
+        const ageWeeks = 16; // 4 kuukautta
+
+        // 4kk sääntö: paino × 2 (Wisdom Panel)
+        const fourMonthRule = currentWeight * 2;
+        const basicFormula = (currentWeight / ageWeeks) * 52;
+        const percentageFormula = currentWeight / 0.55; // 4kk = ~55% aikuispainosta
+
+        const average =
+          (fourMonthRule * 2 + basicFormula + percentageFormula) / 4; // Painotettu
+        const maxMediumWeight = 30; // Biologinen raja keskikokoisille
+        const finalEstimate = Math.min(average, maxMediumWeight);
+
+        const resultDiv = document.getElementById("medium-result");
+        resultDiv.innerHTML = `
+                <span class="info">4kk sääntö (×2): ${fourMonthRule.toFixed(1)} kg</span><br>
+                <span class="info">Peruskaava: ${basicFormula.toFixed(1)} kg</span><br>
+                <span class="info">%-kaava (55%): ${percentageFormula.toFixed(1)} kg</span><br>
+                <span class="info">Painotettu keskiarvo: ${average.toFixed(1)} kg</span><br>
+                <span class="success">Ennustettu aikuispaino: ${finalEstimate.toFixed(1)} kg ✅</span><br>
+                ${finalEstimate >= 20 && finalEstimate <= 35 ? '<span class="success">✅ Realistinen Golden Retrieverille!</span>' : '<span class="info">ℹ️ Mahdollinen sekarotu tai eri koko</span>'}
+            `;
+      };
+
+      window.testLargePuppy = function () {
+        const currentWeight = 5;
+        const ageWeeks = 8; // 2 kuukautta
+
+        // Nuori pentu, käytä karkeampaa arviota
+        const basicFormula = (currentWeight / ageWeeks) * 52;
+        const percentageFormula = currentWeight / 0.25; // 8vko = ~25% aikuispainosta
+
+        const average = (basicFormula + percentageFormula) / 2;
+        const maxLargeWeight = 50; // Biologinen raja suurille
+        const finalEstimate = Math.min(average, maxLargeWeight);
+
+        const resultDiv = document.getElementById("large-result");
+        resultDiv.innerHTML = `
+                <span class="info">Peruskaava: ${basicFormula.toFixed(1)} kg</span><br>
+                <span class="info">%-kaava (25%): ${percentageFormula.toFixed(1)} kg</span><br>
+                <span class="info">Keskiarvo: ${average.toFixed(1)} kg</span><br>
+                <span class="info">Rotukohtainen max: ${maxLargeWeight} kg</span><br>
+                <span class="success">Ennustettu aikuispaino: ${finalEstimate.toFixed(1)} kg ✅</span><br>
+                <span class="info">⚠️ Nuori pentu - arvio voi muuttua paljon!</span>
+            `;
+      };
+
+      window.testOldPuppy = function () {
+        const currentWeight = 22;
+        const ageWeeks = 32; // 8 kuukautta
+
+        // Vanha pentu, vähän kasvua jäljellä
+        const adultEstimate = currentWeight * 1.1; // Max 10% kasvua
+        const basicFormula = (currentWeight / ageWeeks) * 52;
+
+        const finalEstimate = Math.min(adultEstimate, basicFormula);
+
+        const resultDiv = document.getElementById("old-result");
+        resultDiv.innerHTML = `
+                <span class="info">Nykypaino + 10%: ${adultEstimate.toFixed(1)} kg</span><br>
+                <span class="info">Peruskaava: ${basicFormula.toFixed(1)} kg</span><br>
+                <span class="success">Ennustettu aikuispaino: ${finalEstimate.toFixed(1)} kg ✅</span><br>
+                <span class="success">✅ Lähes aikuinen - vähän kasvua jäljellä</span>
+            `;
+      };
+    </script>
+  </body>
+</html>
