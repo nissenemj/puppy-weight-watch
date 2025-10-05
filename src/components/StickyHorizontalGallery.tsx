@@ -155,8 +155,6 @@ export default function StickyHorizontalGallery({
           ))}
         </motion.div>
       </div>
-      {/* Spacer for scroll height */}
-      <div style={{ height: `${total * 100}vh` }} />
     </section>
   )
 }
