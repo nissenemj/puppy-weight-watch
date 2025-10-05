@@ -31,7 +31,7 @@ export default function BackToTopButton() {
       onClick={scrollToTop}
       size="icon"
       className={cn(
-        "fixed bottom-24 right-6 z-50 shadow-lg transition-all duration-300",
+        "fixed bottom-24 right-6 z-[60] shadow-lg transition-all duration-300",
         "bg-primary hover:bg-primary/90 text-primary-foreground",
         "rounded-full w-12 h-12",
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10 pointer-events-none"
