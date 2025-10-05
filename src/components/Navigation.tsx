@@ -218,7 +218,7 @@ const NavigationWithRouter: React.FC = () => {
   };
 
   return (
-    <header className="fixed left-0 right-0 top-0 z-50">
+    <header className="fixed left-0 right-0 top-0 z-[100]">
       <div
         className={cn(
           'mx-auto flex w-full max-w-6xl items-center justify-between gap-4 rounded-2xl border border-white/40 bg-white/80 px-4 py-3 shadow-soft backdrop-blur-md transition-all duration-300 md:px-6',
