@@ -1,31 +1,10 @@
 {
-  "version": 2,
-  "name": "puppy-weight-watch",
-  "builds": [
+  "rewrites": [
     {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
-  ],
-  "env": {
-    "VITE_SUPABASE_URL": "@supabase_url",
-    "VITE_SUPABASE_ANON_KEY": "@supabase_anon_key"
-  },
-  "build": {
-    "env": {
-      "VITE_SUPABASE_URL": "@supabase_url",
-      "VITE_SUPABASE_ANON_KEY": "@supabase_anon_key"
-    }
-  },
   "headers": [
     {
       "source": "/sw.js",
