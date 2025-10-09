@@ -44,7 +44,7 @@ export default function InfoHome() {
 
   return (
     <MobileOptimizedLayout>
-    <div className="min-h-screen bg-gradient-soft page-with-navigation no-horizontal-scroll mobile-text-wrap responsive-media full-width-section">
+    <div className="min-h-screen bg-gradient-soft page-with-navigation no-horizontal-scroll mobile-text-wrap responsive-media full-width-section pt-20 md:pt-24">
       <SEO
         title="Tietopankki - Penturuoka-opas"
         description="Laaja katsaus koiranpentujen ruokintaan ja ravitsemukseen. Kuiva-, märkä- ja raakaruokien analyysi, annostelutiedot ja turvallisuusohjeet."

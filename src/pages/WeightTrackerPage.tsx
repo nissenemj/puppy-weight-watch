@@ -268,35 +268,37 @@ const WeightTrackerPage = () => {
         quickActionsVariant="floating"
         customQuickActions={weightTrackerQuickActions}
       >
-        {/* Show guest mode bar for non-authenticated users */}
-        {isGuest && guestWeightEntries.length > 0 && (
-          <>
-            {isMobile ? (
-              <GuestModeBarMobile
-                onSignUpClick={handleSignUpClick}
-                onSignInClick={handleSignInClick}
-              />
-            ) : (
-              <div className="px-4 py-2">
-                <GuestModeBar
+        <div className="pt-20 md:pt-24">
+          {/* Show guest mode bar for non-authenticated users */}
+          {isGuest && guestWeightEntries.length > 0 && (
+            <>
+              {isMobile ? (
+                <GuestModeBarMobile
                   onSignUpClick={handleSignUpClick}
                   onSignInClick={handleSignInClick}
                 />
-              </div>
-            )}
-          </>
-        )}
+              ) : (
+                <div className="px-4 py-2">
+                  <GuestModeBar
+                    onSignUpClick={handleSignUpClick}
+                    onSignInClick={handleSignInClick}
+                  />
+                </div>
+              )}
+            </>
+          )}
 
-        <ModernPuppyWeightTracker />
+          <ModernPuppyWeightTracker />
 
-        {/* Auth Modal */}
-        {showAuthModal && (
-          <AuthenticationWrapper
-            onAuthSuccess={handleAuthSuccess}
-            mode={authMode}
-            onClose={() => setShowAuthModal(false)}
-          />
-        )}
+          {/* Auth Modal */}
+          {showAuthModal && (
+            <AuthenticationWrapper
+              onAuthSuccess={handleAuthSuccess}
+              mode={authMode}
+              onClose={() => setShowAuthModal(false)}
+            />
+          )}
+        </div>
       </LayoutWithNavigation>
     </MobileOptimizedLayout>
   )

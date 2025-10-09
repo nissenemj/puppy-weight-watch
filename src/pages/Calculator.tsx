@@ -119,7 +119,7 @@ const Calculator = () => {
       quickActionsVariant="floating"
       customQuickActions={calculatorQuickActions}
     >
-    <PageLayout variant="default" animated className="no-horizontal-scroll mobile-text-wrap responsive-media">
+    <PageLayout variant="default" animated className="no-horizontal-scroll mobile-text-wrap responsive-media pt-20 md:pt-24">
       {/* Skip to main content link */}
       <a href="#calculator-main" className="skip-link focus-enhanced">
         Siirry pääsisältöön

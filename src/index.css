@@ -303,13 +303,6 @@ body {
   background-color: var(--color-background);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  padding-top: 5rem;
-}
-
-@media (min-width: 640px) {
-  body {
-    padding-top: 6rem;
-  }
 }
 
 /* ===== UTILITY CLASSES ===== */
