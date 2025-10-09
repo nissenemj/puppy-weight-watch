@@ -222,7 +222,6 @@ const NavigationWithRouter: React.FC = () => {
       <div
         className={cn(
           'mx-auto flex w-full max-w-6xl items-center justify-between gap-4 rounded-2xl border border-white/40 bg-white/80 px-4 py-3 shadow-soft backdrop-blur-md transition-all duration-300 md:px-6',
-          isScrolled ? 'mt-2' : 'mt-4',
         )}
       >
         <Link to="/" className="flex items-center gap-3 rounded-xl px-2 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/60 focus-visible:ring-offset-2">
