@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine, ScatterChart, Scatter } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine, Scatter, ComposedChart } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -91,21 +91,50 @@ const GrowthChart: React.FC<GrowthChartProps> = ({
   }, [weightPoints, centiles]);
 
   // Merge centile data with weight points for chart
-  const chartData = centiles.map(centile => {
-    const userWeight = weightPoints.find(point => 
-      Math.abs(point.age_weeks - centile.age_weeks) <= 1
-    );
+  // Combine all unique age weeks from both centiles and user weight points
+  const allAgeWeeks = [
+    ...centiles.map(c => c.age_weeks),
+    ...weightPoints.map(w => w.age_weeks)
+  ]
+    .filter((v, i, a) => a.indexOf(v) === i) // Remove duplicates
+    .sort((a, b) => a - b);
+
+  const chartData = allAgeWeeks.map(ageWeeks => {
+    const centile = centiles.find(c => c.age_weeks === ageWeeks);
+    const userWeight = weightPoints.find(w => w.age_weeks === ageWeeks);
+    
+    // For user weight points without exact centile match, interpolate centile values
+    const interpolateCentile = (percentile: 'p3' | 'p10' | 'p50' | 'p90' | 'p97') => {
+      if (centile) return centile[percentile];
+      
+      // Find surrounding centile points for interpolation
+      const before = [...centiles].reverse().find(c => c.age_weeks < ageWeeks);
+      const after = centiles.find(c => c.age_weeks > ageWeeks);
+      
+      if (before && after) {
+        const ratio = (ageWeeks - before.age_weeks) / (after.age_weeks - before.age_weeks);
+        return before[percentile] + ratio * (after[percentile] - before[percentile]);
+      }
+      
+      return null;
+    };
     
     return {
-      age_weeks: centile.age_weeks,
-      p3: centile.p3,
-      p10: centile.p10,
-      p50: centile.p50,
-      p90: centile.p90,
-      p97: centile.p97,
+      age_weeks: ageWeeks,
+      p3: interpolateCentile('p3'),
+      p10: interpolateCentile('p10'),
+      p50: interpolateCentile('p50'),
+      p90: interpolateCentile('p90'),
+      p97: interpolateCentile('p97'),
       user_weight: userWeight?.weight_kg || null
     };
   });
+
+  // Debug logging
+  console.log('GrowthChart - weightPoints:', weightPoints);
+  console.log('GrowthChart - centiles count:', centiles.length);
+  console.log('GrowthChart - chartData:', chartData);
+  console.log('GrowthChart - user weights in chartData:', chartData.filter(d => d.user_weight !== null));
 
   if (loading) {
     return <div className="h-64 flex items-center justify-center">Ladataan kasvukäyrää...</div>;
@@ -140,7 +169,7 @@ const GrowthChart: React.FC<GrowthChartProps> = ({
         
         <div className="h-80 w-full">
           <ResponsiveContainer>
-            <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 20, bottom: 5 }}>
+            <ComposedChart data={chartData} margin={{ top: 10, right: 30, left: 20, bottom: 5 }}>
               <XAxis 
                 dataKey="age_weeks" 
                 tickFormatter={(weeks) => `${weeks} vk`}
@@ -172,6 +201,7 @@ const GrowthChart: React.FC<GrowthChartProps> = ({
                 strokeOpacity={0.3}
                 fill="hsl(var(--muted))" 
                 fillOpacity={0.1} 
+                connectNulls
               />
               <Area 
                 type="monotone" 
@@ -180,7 +210,8 @@ const GrowthChart: React.FC<GrowthChartProps> = ({
                 stroke="hsl(var(--muted-foreground))" 
                 strokeOpacity={0.4}
                 fill="hsl(var(--muted))" 
-                fillOpacity={0.15} 
+                fillOpacity={0.15}
+                connectNulls
               />
               <Area 
                 type="monotone" 
@@ -189,7 +220,8 @@ const GrowthChart: React.FC<GrowthChartProps> = ({
                 stroke="hsl(var(--primary))" 
                 strokeOpacity={0.6}
                 fill="hsl(var(--primary))" 
-                fillOpacity={0.1} 
+                fillOpacity={0.1}
+                connectNulls
               />
               <Area 
                 type="monotone" 
@@ -198,7 +230,8 @@ const GrowthChart: React.FC<GrowthChartProps> = ({
                 stroke="hsl(var(--muted-foreground))" 
                 strokeOpacity={0.4}
                 fill="hsl(var(--muted))" 
-                fillOpacity={0.15} 
+                fillOpacity={0.15}
+                connectNulls
               />
               <Area 
                 type="monotone" 
@@ -207,20 +240,20 @@ const GrowthChart: React.FC<GrowthChartProps> = ({
                 stroke="hsl(var(--muted-foreground))" 
                 strokeOpacity={0.3}
                 fill="hsl(var(--muted))" 
-                fillOpacity={0.1} 
+                fillOpacity={0.1}
+                connectNulls
               />
               
-              {/* User weight line */}
-              <Area 
-                type="monotone" 
+              {/* User weight as scatter points */}
+              <Scatter 
                 dataKey="user_weight" 
-                stroke="hsl(var(--destructive))" 
-                strokeWidth={3}
-                fill="hsl(var(--destructive))" 
-                fillOpacity={0.2}
-                connectNulls={false}
+                fill="hsl(var(--destructive))"
+                stroke="hsl(var(--destructive))"
+                strokeWidth={2}
+                r={6}
+                name="Pennun paino"
               />
-            </AreaChart>
+            </ComposedChart>
           </ResponsiveContainer>
         </div>
         
