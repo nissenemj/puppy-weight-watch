@@ -6,15 +6,7 @@ body, html, .main-bg {
   margin: 0;
   padding: 0;
 }
-
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 2rem;
-  background: #fff;
-  border-radius: 1rem 1rem 0 0;
-}
+/* Header styles removed - Navigation component handles its own styling */
 
 .logo {
   font-size: 2rem;
