@@ -247,7 +247,7 @@ export const QuickActions = React.forwardRef<HTMLDivElement, QuickActionsProps>(
 
           {/* Trigger Button */}
           <Button
-            variant="gradient"
+            variant="default"
             size="icon"
             className={cn(
               "h-14 w-14 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300",

@@ -9,11 +9,7 @@
 @import './styles/components/forms.css';
 @import './styles/components/calculator.css';
 
-/* Legacy font imports - will be replaced by design system fonts */
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@200;300;400;500;600;700;800&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap");
+/* Fonts now loaded via design-system.css (Inter only) */
 
 @tailwind base;
 @tailwind components;

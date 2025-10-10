@@ -67,7 +67,7 @@ export const MobileInteractionDemo: React.FC = () => {
             onSwipeRight={handleSwipeRight}
             className="swipe-indicator"
           >
-            <Card variant="glass" className="p-6 text-center min-h-[200px] mobile-card-interactive">
+            <Card variant="elevated" className="p-6 text-center min-h-[200px] mobile-card-interactive">
               <motion.div
                 key={currentCard}
                 initial={{ opacity: 0, x: 20 }}

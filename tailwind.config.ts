@@ -36,7 +36,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        // Anthropic-inspired typography for pentulaskuri
+        // Single font family - Inter for everything
         sans: [
           "Inter",
           "system-ui",
@@ -44,33 +44,6 @@ export default {
           "BlinkMacSystemFont",
           "sans-serif",
         ],
-        serif: [
-          "Source Serif Pro",
-          "Georgia",
-          "Cambria",
-          "Times New Roman",
-          "serif",
-        ],
-        heading: [
-          "Inter",
-          "system-ui",
-          "-apple-system",
-          "BlinkMacSystemFont",
-          "sans-serif",
-        ],
-        body: [
-          "Source Serif Pro",
-          "Georgia",
-          "Cambria",
-          "Times New Roman",
-          "serif",
-        ],
-        display: ["Source Serif Pro", "Georgia", "serif"], // For elegant headings
-        mono: ["SF Mono", "Monaco", "Cascadia Code", "monospace"],
-        // Legacy fonts (keeping for compatibility)
-        poppins: ["Poppins", "sans-serif"],
-        quicksand: ["Quicksand", "sans-serif"],
-        nunito: ["Nunito Sans", "sans-serif"],
       },
       boxShadow: {
         soft: "0 10px 30px rgba(0,0,0,0.12)",
@@ -125,82 +98,17 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
-        // Anthropic-inspired warm color system
-        warm: {
-          "50": "var(--color-neutral-50)",
-          "100": "var(--color-neutral-100)",
-          "200": "var(--color-neutral-200)",
-          "300": "var(--color-neutral-300)",
-          "400": "var(--color-neutral-400)",
-          "500": "var(--color-neutral-500)",
-          "600": "var(--color-neutral-600)",
-          "700": "var(--color-neutral-700)",
-          "800": "var(--color-neutral-800)",
-          "900": "var(--color-neutral-900)",
-        },
+        // Simplified color system
         terracotta: {
           "100": "var(--color-primary-100)",
-          "200": "var(--color-primary-200)",
-          "300": "var(--color-primary-300)",
-          "400": "var(--color-primary-400)",
           "500": "var(--color-primary-500)",
-          "600": "var(--color-primary-600)",
           "700": "var(--color-primary-700)",
-          "800": "var(--color-primary-800)",
-          "900": "var(--color-primary-900)",
         },
-        trust: {
-          "100": "var(--color-secondary-100)",
-          "200": "var(--color-secondary-200)",
-          "300": "var(--color-secondary-300)",
-          "400": "var(--color-secondary-400)",
-          "500": "var(--color-secondary-500)",
-          "600": "var(--color-secondary-600)",
-          "700": "var(--color-secondary-700)",
-          "800": "var(--color-secondary-800)",
-          "900": "var(--color-secondary-900)",
-        },
-        health: {
-          "100": "var(--color-tertiary-100)",
-          "200": "var(--color-tertiary-200)",
-          "300": "var(--color-tertiary-300)",
-          "400": "var(--color-tertiary-400)",
-          "500": "var(--color-tertiary-500)",
-          "600": "var(--color-tertiary-600)",
-          "700": "var(--color-tertiary-700)",
-          "800": "var(--color-tertiary-800)",
-          "900": "var(--color-tertiary-900)",
-        },
-
-        // Semantic color mappings
-        "surface-warm": "var(--color-surface-warm)",
-        "text-primary": "var(--color-text-primary)",
-        "text-muted": "var(--color-text-secondary)",
-        "text-light": "var(--color-text-tertiary)",
-
-        // Data visualization (refined, professional)
-        "chart-primary": "var(--color-primary-600)",
-        "chart-accent": "var(--color-primary-500)",
-        "chart-secondary": "var(--color-secondary-500)",
-        "chart-success": "var(--color-success)",
-        "chart-warning": "var(--color-warning)",
       },
       backgroundImage: {
-        // Anthropic-inspired minimal gradients
-        "gradient-warm":
-          "linear-gradient(135deg, var(--color-neutral-50), var(--color-neutral-100))",
-        "gradient-terracotta":
-          "linear-gradient(135deg, var(--color-primary-500), var(--color-primary-600))",
-        "gradient-trust":
-          "linear-gradient(135deg, var(--color-secondary-500), var(--color-secondary-600))",
+        // Single hero gradient
         "gradient-primary":
-          "linear-gradient(135deg, var(--color-primary-400), var(--color-primary-600))",
-        "gradient-accent":
-          "linear-gradient(135deg, var(--color-primary-500), var(--color-primary-700))",
-        "gradient-subtle":
-          "linear-gradient(180deg, var(--color-background-primary), var(--color-background-secondary))",
-        "gradient-surface":
-          "linear-gradient(135deg, var(--color-neutral-00), var(--color-neutral-50))",
+          "linear-gradient(135deg, var(--color-primary-100), var(--color-primary-500))",
       },
       borderRadius: {
         xl2: "1.25rem",
@@ -210,57 +118,22 @@ export default {
       },
       keyframes: {
         "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
-          },
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
-          },
-          to: {
-            height: "0",
-          },
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
         },
-        // Pentu-themed animations
         fadeIn: {
           "0%": { opacity: "0", transform: "translateY(10px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
-        },
-        scaleIn: {
-          "0%": { transform: "scale(0.95)", opacity: "0" },
-          "100%": { transform: "scale(1)", opacity: "1" },
-        },
-        bounceGentle: {
-          "0%, 100%": { transform: "translateY(0)" },
-          "50%": { transform: "translateY(-5px)" },
-        },
-        "paw-wiggle": {
-          "0%, 100%": { transform: "rotate(0deg)" },
-          "25%": { transform: "rotate(-3deg)" },
-          "75%": { transform: "rotate(3deg)" },
-        },
-        "puppy-bounce": {
-          "0%, 100%": { transform: "translateY(0px) scale(1)" },
-          "50%": { transform: "translateY(-8px) scale(1.05)" },
-        },
-        "growth-line": {
-          "0%": { transform: "scaleX(0)" },
-          "100%": { transform: "scaleX(1)" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in": "fadeIn 0.3s ease-out",
-        "scale-in": "scaleIn 0.2s ease-out",
-        "bounce-gentle": "bounceGentle 2s ease-in-out infinite",
-        "paw-wiggle": "paw-wiggle 1.5s ease-in-out infinite",
-        "puppy-bounce": "puppy-bounce 2s ease-in-out infinite",
-        "growth-line": "growth-line 1s ease-out",
       },
     },
   },
