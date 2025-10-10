@@ -69,10 +69,10 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onMenuClick 
               key={item.href}
               to={item.href}
               className={cn(
-                'flex min-h-[56px] touch-target flex-col items-center justify-center gap-1 px-2 py-2 text-xs font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-inset',
+                'flex min-h-[56px] touch-target flex-col items-center justify-center gap-1 px-2 py-2 text-xs font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/60 focus-visible:ring-offset-2',
                 active
-                  ? 'text-brand-orange'
-                  : 'text-brand-ink/60 hover:text-brand-ink/80 active:scale-95',
+                  ? 'text-brand-orange scale-105'
+                  : 'text-brand-ink/60 hover:text-brand-orange/80 hover:scale-105 active:scale-95',
               )}
               aria-label={item.ariaLabel}
               aria-current={active ? 'page' : undefined}
@@ -92,7 +92,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onMenuClick 
         })}
         <button
           onClick={onMenuClick}
-          className="flex min-h-[56px] touch-target flex-col items-center justify-center gap-1 px-2 py-2 text-xs font-medium text-brand-ink/60 transition-all duration-200 hover:text-brand-ink/80 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-inset"
+          className="flex min-h-[56px] touch-target flex-col items-center justify-center gap-1 px-2 py-2 text-xs font-medium text-brand-ink/60 transition-all duration-200 hover:text-brand-orange/80 hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/60 focus-visible:ring-offset-2"
           aria-label="Avaa valikko"
         >
           <Menu className="h-5 w-5" aria-hidden={true} />

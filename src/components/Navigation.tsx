@@ -135,8 +135,8 @@ const NavigationWithRouter: React.FC = () => {
         <Link
           to="/"
           className={cn(
-            'rounded-xl px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/60 focus-visible:ring-offset-2',
-            isActive('/') ? 'bg-brand-orange text-white shadow-soft' : 'text-brand-ink/80 hover:bg-brand-orange/10',
+            'rounded-xl px-3 py-2 text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/60 focus-visible:ring-offset-2',
+            isActive('/') ? 'bg-brand-orange text-white shadow-soft' : 'text-brand-ink/80 hover:bg-brand-orange/10 hover:scale-105',
           )}
           aria-current={isActive('/') ? 'page' : undefined}
         >
@@ -151,8 +151,8 @@ const NavigationWithRouter: React.FC = () => {
             <Link
               to={item.href}
               className={cn(
-                'flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/60 focus-visible:ring-offset-2',
-                active ? 'bg-white text-brand-ink shadow-soft' : 'text-brand-ink/80 hover:bg-white/80',
+                'flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/60 focus-visible:ring-offset-2',
+                active ? 'bg-white text-brand-ink shadow-soft' : 'text-brand-ink/80 hover:bg-white/80 hover:scale-105',
               )}
               aria-current={active ? 'page' : undefined}
             >
@@ -250,7 +250,7 @@ const NavigationWithRouter: React.FC = () => {
 
         <div className="hidden md:flex items-center gap-4">
           {renderAuthActions()}
-          <Button asChild variant="secondary" className="hidden lg:inline-flex bg-brand-green/90 text-white hover:bg-brand-green">
+        <Button asChild variant="secondary" className="hidden lg:inline-flex bg-brand-green/90 text-white hover:bg-brand-green transition-all duration-200 hover:scale-105">
             <Link to={user ? '/onboarding' : '/login'}>
               <PlusCircle className="mr-2 h-4 w-4" /> Luo profiili
             </Link>
@@ -304,8 +304,8 @@ const NavigationWithRouter: React.FC = () => {
                     to="/"
                     onClick={() => setIsMobileOpen(false)}
                     className={cn(
-                      'flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium',
-                      isActive('/') ? 'bg-brand-orange text-white shadow-soft' : 'bg-brand-orange/10 text-brand-ink',
+                      'flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200',
+                      isActive('/') ? 'bg-brand-orange text-white shadow-soft' : 'bg-brand-orange/10 text-brand-ink hover:bg-brand-orange/20',
                     )}
                     aria-current={isActive('/') ? 'page' : undefined}
                   >
@@ -321,8 +321,8 @@ const NavigationWithRouter: React.FC = () => {
                         to={item.href}
                         onClick={() => setIsMobileOpen(false)}
                         className={cn(
-                          'flex flex-col gap-1 rounded-xl px-4 py-3 text-left transition-colors',
-                          active ? 'bg-white text-brand-ink shadow-soft' : 'hover:bg-brand-orange/10',
+                          'flex flex-col gap-1 rounded-xl px-4 py-3 text-left transition-all duration-200',
+                          active ? 'bg-white text-brand-ink shadow-soft' : 'hover:bg-brand-orange/10 active:bg-brand-orange/20',
                         )}
                         aria-current={active ? 'page' : undefined}
                       >
