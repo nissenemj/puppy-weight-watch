@@ -14,13 +14,28 @@
   --color-primary-500: #e07856;  /* Main brand */
   --color-primary-700: #a04a2a;  /* Dark */
 
+  /* Secondary palette - Calm blue (3 shades) */
+  --color-secondary-100: #dbeafe;  /* Light blue */
+  --color-secondary-500: #3b82f6;  /* Main blue */
+  --color-secondary-700: #1d4ed8;  /* Dark blue */
+
+  /* Tertiary palette - Vibrant green (3 shades) */
+  --color-tertiary-100: #dcfce7;  /* Light green */
+  --color-tertiary-500: #22c55e;  /* Main green */
+  --color-tertiary-700: #15803d;  /* Dark green */
+
+  /* Accent palette - Warm amber (3 shades) */
+  --color-accent-100: #fef3c7;  /* Light amber */
+  --color-accent-500: #f59e0b;  /* Main amber */
+  --color-accent-700: #b45309;  /* Dark amber */
+
   /* Neutral palette - Simple grays (5 shades only) */
   --color-neutral-50: #fafafa;   /* Lightest */
   --color-neutral-200: #e5e5e5;  /* Light */
   --color-neutral-500: #737373;  /* Medium */
   --color-neutral-700: #404040;  /* Dark */
   --color-neutral-900: #171717;  /* Darkest */
-  
+
   /* Success and error colors */
   --color-success: #22c55e;  /* Green for positive feedback */
   --color-error: #dc2626;    /* Red for errors */

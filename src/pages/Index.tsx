@@ -202,7 +202,7 @@ const Index = () => {
             >
               Älykkäät työkalut
               <br />
-              <span className="text-[var(--color-tertiary-300)]">vastuulliseen hoitoon</span>
+              <span className="text-[var(--color-tertiary-500)]">vastuulliseen hoitoon</span>
             </motion.h1>
 
             <motion.p
@@ -217,7 +217,7 @@ const Index = () => {
               className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center"
             >
               <Link to="/weight-tracker" className="w-full sm:w-auto" aria-label="Aloita pennun painonseuranta">
-                <Button size="lg" className="w-full sm:min-w-[220px] bg-white text-[var(--color-primary-600)] hover:bg-white/90 touch-target focus-enhanced shadow-lg">
+                <Button size="lg" className="w-full sm:min-w-[220px] bg-white text-[var(--color-primary-700)] hover:bg-white/90 touch-target focus-enhanced shadow-lg">
                   <Scale className="w-5 h-5 mr-2" aria-hidden="true" />
                   Aloita mittaaminen
                 </Button>
@@ -237,7 +237,7 @@ const Index = () => {
             >
               {benefits.map((benefit, index) => (
                 <div key={index} className="flex items-center gap-2 text-sm text-white/90 drop-shadow-md">
-                  <benefit.icon className="w-4 h-4 text-[var(--color-tertiary-300)]" />
+                  <benefit.icon className="w-4 h-4 text-[var(--color-tertiary-500)]" />
                   <span>{benefit.text}</span>
                 </div>
               ))}

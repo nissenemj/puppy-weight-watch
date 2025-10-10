@@ -8,12 +8,11 @@ const fabVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-[var(--color-primary-500)] text-white hover:bg-[var(--color-primary-600)] hover-glow shadow-xl hover:shadow-2xl",
-        secondary: "bg-[var(--color-secondary-500)] text-white hover:bg-[var(--color-secondary-600)] hover-glow-secondary shadow-xl hover:shadow-2xl",
-        success: "bg-[var(--color-tertiary-500)] text-white hover:bg-[var(--color-tertiary-600)] hover-glow-success shadow-xl hover:shadow-2xl",
-        glass: "glass-card text-[var(--color-text-primary)] hover:backdrop-blur-xl micro-bounce",
-        neo: "neo-button text-[var(--color-text-primary)]",
-        gradient: "bg-gradient-modern-warm text-white hover:opacity-90 hover-glow micro-elastic"
+        default: "bg-[var(--color-primary-500)] text-white hover:bg-[var(--color-primary-700)] shadow-xl hover:shadow-2xl",
+        secondary: "bg-[var(--color-secondary-500)] text-white hover:bg-[var(--color-secondary-700)] shadow-xl hover:shadow-2xl",
+        success: "bg-[var(--color-tertiary-500)] text-white hover:bg-[var(--color-tertiary-700)] shadow-xl hover:shadow-2xl",
+        glass: "bg-white/10 backdrop-blur-md text-[var(--color-text-primary)] hover:bg-white/20",
+        gradient: "bg-gradient-primary text-white hover:opacity-90"
       },
       size: {
         sm: "w-12 h-12",

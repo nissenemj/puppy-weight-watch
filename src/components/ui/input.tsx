@@ -3,27 +3,22 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const inputVariants = cva(
-  "flex w-full border font-medium transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 smooth-transform focus-modern",
+  "flex w-full border font-medium transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
   {
     variants: {
       variant: {
-        default: "bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text)] ring-offset-background hover:border-[var(--color-accent-200)] hover:shadow-sm",
-        glass: "glass-card-secondary text-white ring-offset-transparent hover:backdrop-blur-xl placeholder:text-white/60 micro-bounce",
-        filled: "bg-[var(--color-primary-50)] border-transparent text-[var(--color-text)] hover:bg-[var(--color-primary-100)] hover:shadow-sm",
-        outline: "bg-transparent border-2 border-[var(--color-accent-200)] text-[var(--color-text)] hover:border-[var(--color-accent-300)] hover:shadow-sm",
-        neo: "neo-button text-[var(--color-text)] border-0"
+        default: "bg-white border-[var(--color-border)] text-[var(--color-text-primary)] hover:border-[var(--color-primary-500)] hover:shadow-sm focus-visible:ring-2 focus-visible:ring-[var(--color-primary-500)]",
+        outline: "bg-transparent border-2 border-[var(--color-primary-500)] text-[var(--color-text-primary)] hover:border-[var(--color-primary-700)] hover:shadow-sm focus-visible:ring-2 focus-visible:ring-[var(--color-primary-500)]"
       },
       size: {
         sm: "h-11 px-3 py-2 text-sm rounded-lg min-h-[44px]",
-        default: "h-11 px-4 py-2 text-body rounded-xl min-h-[44px]",
-        lg: "h-12 px-4 py-3 text-body-lg rounded-xl min-h-[44px]",
-        xl: "h-14 px-6 py-4 text-body-lg rounded-2xl min-h-[44px]"
+        default: "h-11 px-4 py-2 text-base rounded-xl min-h-[44px]",
+        lg: "h-12 px-4 py-3 text-lg rounded-xl min-h-[44px]"
       },
       state: {
         default: "",
-        error: "border-red-300 focus-visible:ring-red-500 text-red-900 placeholder:text-red-400",
-        success: "border-green-300 focus-visible:ring-green-500 text-green-900",
-        warning: "border-yellow-300 focus-visible:ring-yellow-500 text-yellow-900"
+        error: "border-[var(--color-error)] focus-visible:ring-[var(--color-error)]",
+        success: "border-[var(--color-success)] focus-visible:ring-[var(--color-success)]"
       }
     },
     defaultVariants: {

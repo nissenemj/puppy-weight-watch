@@ -95,7 +95,7 @@ const Guides = () => {
             className="text-center"
           >
             <motion.div variants={entranceAnimations.staggerChild} className="mb-4">
-              <Badge className="bg-[var(--color-primary-100)] text-[var(--color-primary-600)] border-[var(--color-primary-300)]">
+              <Badge className="bg-[var(--color-primary-100)] text-[var(--color-primary-700)] border-[var(--color-primary-500)]">
                 <BookOpen className="w-4 h-4 mr-2" aria-hidden="true" />
                 Asiantuntija-oppaat
               </Badge>
@@ -173,7 +173,7 @@ const Guides = () => {
 
                     <Link to={guide.href} aria-describedby={`guide-${index}-title`}>
                       <Button 
-                        className="w-full group-hover:bg-[var(--color-primary-600)] transition-colors touch-target focus-enhanced"
+                        className="w-full group-hover:bg-[var(--color-primary-700)] transition-colors touch-target focus-enhanced"
                         aria-label={`Lue ${guide.title} -opas`}
                       >
                         Lue opas

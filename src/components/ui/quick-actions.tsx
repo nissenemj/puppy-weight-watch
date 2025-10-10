@@ -299,10 +299,10 @@ export const QuickActions = React.forwardRef<HTMLDivElement, QuickActionsProps>(
                   >
                     <div className={cn(
                       "p-3 rounded-xl",
-                      action.color === "primary" && "bg-[var(--color-primary-100)] text-[var(--color-primary-600)]",
-                      action.color === "secondary" && "bg-[var(--color-secondary-100)] text-[var(--color-secondary-600)]",
-                      action.color === "success" && "bg-[var(--color-tertiary-100)] text-[var(--color-tertiary-600)]",
-                      !action.color && "bg-[var(--color-accent-100)] text-[var(--color-text-primary)]"
+                      action.color === "primary" && "bg-[var(--color-primary-100)] text-[var(--color-primary-700)]",
+                      action.color === "secondary" && "bg-[var(--color-secondary-100)] text-[var(--color-secondary-700)]",
+                      action.color === "success" && "bg-[var(--color-tertiary-100)] text-[var(--color-tertiary-700)]",
+                      !action.color && "bg-[var(--color-accent-100)] text-[var(--color-accent-700)]"
                     )}>
                       {action.icon}
                     </div>
@@ -354,10 +354,10 @@ export const QuickActions = React.forwardRef<HTMLDivElement, QuickActionsProps>(
             >
               <span className={cn(
                 "flex items-center justify-center w-8 h-8 rounded-lg",
-                action.color === "primary" && "bg-[var(--color-primary-100)] text-[var(--color-primary-600)]",
-                action.color === "secondary" && "bg-[var(--color-secondary-100)] text-[var(--color-secondary-600)]",
-                action.color === "success" && "bg-[var(--color-tertiary-100)] text-[var(--color-tertiary-600)]",
-                !action.color && "bg-[var(--color-accent-100)] text-[var(--color-text-primary)]"
+                action.color === "primary" && "bg-[var(--color-primary-100)] text-[var(--color-primary-700)]",
+                action.color === "secondary" && "bg-[var(--color-secondary-100)] text-[var(--color-secondary-700)]",
+                action.color === "success" && "bg-[var(--color-tertiary-100)] text-[var(--color-tertiary-700)]",
+                !action.color && "bg-[var(--color-accent-100)] text-[var(--color-accent-700)]"
               )}>
                 {action.icon}
               </span>
