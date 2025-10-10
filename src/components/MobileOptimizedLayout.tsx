@@ -19,7 +19,7 @@ export function MobileOptimizedLayout({
   floatingActionLabel = 'Lisää'
 }: MobileOptimizedLayoutProps) {
   return (
-    <div className={`min-h-screen bg-background pt-24 sm:pt-28 ${className}`}>
+    <div className={`min-h-screen bg-background ${className}`}>
       {children}
       
       {/* Floating Action Button for mobile */}

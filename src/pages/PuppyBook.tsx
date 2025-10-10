@@ -11,7 +11,9 @@ const PuppyBookPage: React.FC = () => {
         description="Luo ainutlaatuinen muistokirja pennustasi. Tallenna virstanpylväitä, muistoja ja seuraa kasvua henkilökohtaisessa pentukirjassa."
         keywords="pentukirja, pentu, koira, muistot, virstanpylväät, kasvuseuranta"
       />
-      <PuppyBook />
+      <div className="pt-20 md:pt-24">
+        <PuppyBook />
+      </div>
     </MobileOptimizedLayout>
   );
 };

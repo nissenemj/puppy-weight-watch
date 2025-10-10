@@ -98,8 +98,14 @@ const WeightGrowthSection: React.FC<WeightGrowthSectionProps> = ({
       });
 
       setWeightPoints(points.sort((a, b) => a.age_weeks - b.age_weeks));
+      
+      // Debug logging
+      console.log('WeightGrowthSection - birthDate:', birthDate);
+      console.log('WeightGrowthSection - dogId:', dogId);
+      console.log('WeightGrowthSection - weightEntries:', weightEntries);
+      console.log('WeightGrowthSection - converted weightPoints:', points);
     }
-  }, [weightEntries, birthDate]);
+  }, [weightEntries, birthDate, dogId]);
 
   if (loading) {
     return (

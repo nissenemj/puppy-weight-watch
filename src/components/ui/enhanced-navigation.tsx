@@ -39,8 +39,6 @@ export const EnhancedNavigation = React.forwardRef<
       ref={ref}
       className={cn(
         "w-full",
-        sticky && "sticky top-0 z-50",
-        sticky && isScrolled && "shadow-lg",
         className
       )}
       {...props}

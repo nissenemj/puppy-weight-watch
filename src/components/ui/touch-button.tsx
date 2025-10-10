@@ -40,7 +40,7 @@ const touchButtonVariants = cva(
 )
 
 export interface TouchButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'onAnimationStart' | 'onDrag' | 'onDragEnd' | 'onDragStart' | 'style'>,
     VariantProps<typeof touchButtonVariants>,
     Omit<MotionProps, "children"> {
   asChild?: boolean
@@ -64,8 +64,6 @@ const TouchButton = React.forwardRef<HTMLButtonElement, TouchButtonProps>(
     children,
     ...props
   }, ref) => {
-    const Comp = asChild ? Slot : motion.button
-
     const triggerHapticFeedback = () => {
       if (hapticFeedback && 'vibrate' in navigator) {
         navigator.vibrate(30) // Light haptic feedback
@@ -94,19 +92,48 @@ const TouchButton = React.forwardRef<HTMLButtonElement, TouchButtonProps>(
     const motionProps = {
       whileTap: getWhileTapEffect(),
       transition: {
-        type: "spring",
+        type: "spring" as const,
         stiffness: 400,
         damping: 25
       }
     }
 
+    // If asChild, use Slot without motion props
+    if (asChild) {
+      // Filter out motion-specific props for Slot
+      const { 
+        whileTap, whileHover, animate, initial, exit, variants, 
+        transition, drag, dragConstraints, dragElastic, dragMomentum,
+        onDrag, onDragStart, onDragEnd, onAnimationStart, onAnimationComplete,
+        ...buttonProps 
+      } = props as any
+      
+      return (
+        <Slot
+          className={cn(touchButtonVariants({ variant, size, fullWidth, className }))}
+          ref={ref}
+          onClick={handleClick}
+          {...buttonProps}
+        >
+          {loading ? (
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+              <span className="opacity-70">Lataa...</span>
+            </div>
+          ) : (
+            children
+          )}
+        </Slot>
+      )
+    }
+
     return (
-      <Comp
+      <motion.button
         className={cn(touchButtonVariants({ variant, size, fullWidth, className }))}
         ref={ref}
         disabled={disabled || loading}
         onClick={handleClick}
-        {...(asChild ? {} : motionProps)}
+        {...motionProps}
         {...props}
       >
         {loading ? (
@@ -125,7 +152,7 @@ const TouchButton = React.forwardRef<HTMLButtonElement, TouchButtonProps>(
         ) : (
           children
         )}
-      </Comp>
+      </motion.button>
     )
   }
 )

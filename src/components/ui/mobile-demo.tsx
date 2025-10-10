@@ -41,6 +41,16 @@ export const MobileInteractionDemo: React.FC = () => {
     threshold: 50
   })
 
+  // Wrap handlers to convert DOM TouchEvent to React TouchEvent
+  const reactSwipeHandlers = {
+    onTouchStart: (e: React.TouchEvent<HTMLDivElement>) => {
+      swipeHandlers.onTouchStart(e.nativeEvent)
+    },
+    onTouchEnd: (e: React.TouchEvent<HTMLDivElement>) => {
+      swipeHandlers.onTouchEnd(e.nativeEvent)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-subtle p-4">
       {/* Pull to refresh wrapper */}
@@ -146,7 +156,7 @@ export const MobileInteractionDemo: React.FC = () => {
           </h2>
 
           <Card className="p-0 overflow-hidden">
-            <div {...swipeHandlers}>
+            <div {...reactSwipeHandlers}>
               {[
                 { icon: "🐕", text: "Painon mittaus", action: "Tallenna" },
                 { icon: "🥘", text: "Ruokinta", action: "Laske" },
