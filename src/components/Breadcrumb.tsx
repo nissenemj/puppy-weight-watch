@@ -1,6 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { ChevronRight, Home } from '@/utils/iconImports';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { ChevronRight, Home, ArrowLeft } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface BreadcrumbItem {
   name: string;
@@ -10,40 +11,68 @@ interface BreadcrumbItem {
 
 interface BreadcrumbProps {
   items: BreadcrumbItem[];
+  showBackButton?: boolean; // Show back button on mobile instead of full breadcrumbs
 }
 
-const Breadcrumb: React.FC<BreadcrumbProps> = ({ items }) => {
+const Breadcrumb: React.FC<BreadcrumbProps> = ({ items, showBackButton = true }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Don't show breadcrumbs on home page
+  if (location.pathname === '/') {
+    return null;
+  }
+
   return (
-    <nav aria-label="Breadcrumb" className="mb-6 mobile-text-wrap">
-      <ol className="flex items-center flex-wrap gap-2 text-sm text-muted-foreground mobile-focus-enhanced">
-        <li>
-          <Link 
-            to="/" 
-            className="hover:text-foreground transition-colors flex items-center"
-            aria-label="Etusivu"
+    <>
+      {/* Mobile: Back button */}
+      {showBackButton && (
+        <div className="mb-4 md:hidden">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-2 text-brand-ink/80 hover:text-brand-ink transition-all duration-200 hover:scale-105"
+            aria-label="Takaisin edelliselle sivulle"
           >
-            <Home className="h-4 w-4" />
-          </Link>
-        </li>
-        {items.map((item, index) => (
-          <li key={index} className="flex items-center">
-            <ChevronRight className="h-4 w-4 mx-1 sm:mx-2 flex-shrink-0" aria-hidden="true" />
-            {item.current ? (
-              <span className="font-medium text-foreground" aria-current="page">
-                {item.name}
-              </span>
-            ) : (
-              <Link 
-                to={item.href} 
-                className="hover:text-foreground transition-colors min-h-[44px] flex items-center touch-manipulation"
-              >
-                {item.name}
-              </Link>
-            )}
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+            <span>Takaisin</span>
+          </Button>
+        </div>
+      )}
+
+      {/* Desktop: Full breadcrumbs */}
+      <nav aria-label="Breadcrumb" className="hidden md:block mb-6">
+        <ol className="flex items-center flex-wrap gap-2 text-sm text-muted-foreground">
+          <li>
+            <Link 
+              to="/" 
+              className="hover:text-brand-orange transition-all duration-200 flex items-center hover:scale-105"
+              aria-label="Etusivu"
+            >
+              <Home className="h-4 w-4" />
+            </Link>
           </li>
-        ))}
-      </ol>
-    </nav>
+          {items.map((item, index) => (
+            <li key={index} className="flex items-center">
+              <ChevronRight className="h-4 w-4 mx-2 flex-shrink-0" aria-hidden="true" />
+              {item.current ? (
+                <span className="font-medium text-brand-ink" aria-current="page">
+                  {item.name}
+                </span>
+              ) : (
+                <Link 
+                  to={item.href} 
+                  className="hover:text-brand-orange transition-all duration-200 hover:scale-105"
+                >
+                  {item.name}
+                </Link>
+              )}
+            </li>
+          ))}
+        </ol>
+      </nav>
+    </>
   );
 };
 

@@ -248,12 +248,12 @@ const NavigationWithRouter: React.FC = () => {
           )}
         >
         <Link to="/" className="flex items-center gap-3 rounded-xl px-2 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/60 focus-visible:ring-offset-2">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-orange text-white shadow-soft">
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-orange text-white shadow-soft" aria-hidden="true">
             <PawPrint className="h-5 w-5" />
           </span>
           <div className="hidden sm:flex flex-col">
             <span className="text-sm font-semibold text-brand-ink">Pentulaskuri</span>
-            <span className="text-xs text-muted-foreground">Kasvun ja hyvinvoinnin seurantaan</span>
+            <span className="hidden md:inline text-xs text-muted-foreground">Kasvun ja hyvinvoinnin seurantaan</span>
           </div>
         </Link>
 
