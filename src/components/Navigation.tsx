@@ -93,7 +93,9 @@ const NavigationWithRouter: React.FC = () => {
     };
   }, []);
 
+  // Optimized dog data fetching with useMemo to prevent unnecessary re-fetches
   useEffect(() => {
+    let isMounted = true;
     const fetchActiveDog = async () => {
       if (!user) {
         setActiveDogName(null);
@@ -106,15 +108,20 @@ const NavigationWithRouter: React.FC = () => {
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
         .limit(1);
-      if (!error && data && data.length > 0) {
+      if (isMounted && !error && data && data.length > 0) {
         const firstDog = data[0];
         setActiveDogName(firstDog?.name ?? null);
-      } else {
+      } else if (isMounted) {
         setActiveDogName(null);
       }
-      setIsFetchingDog(false);
+      if (isMounted) {
+        setIsFetchingDog(false);
+      }
     };
     fetchActiveDog();
+    return () => {
+      isMounted = false;
+    };
   }, [user]);
 
   const initials = user?.email?.slice(0, 1).toUpperCase() ?? 'P';
@@ -170,7 +177,11 @@ const NavigationWithRouter: React.FC = () => {
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="flex items-center gap-3 px-2 text-sm font-medium">
+            <Button 
+              variant="ghost" 
+              className="flex items-center gap-3 px-2 text-sm font-medium"
+              aria-label="Käyttäjävalikko - Avaa käyttäjän asetukset"
+            >
               <Avatar className="h-9 w-9 border border-brand-orange/30">
                 <AvatarFallback className="bg-brand-yellow/40 text-brand-ink">{initials}</AvatarFallback>
               </Avatar>
@@ -182,21 +193,21 @@ const NavigationWithRouter: React.FC = () => {
               </span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-64">
+          <DropdownMenuContent align="end" className="w-64" role="menu" aria-label="Käyttäjän valikko">
             <DropdownMenuLabel>Tilin asetukset</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <Link to="/weight-tracker">Hallinnoi painonseurantaa</Link>
+              <Link to="/weight-tracker" role="menuitem">Hallinnoi painonseurantaa</Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link to="/puppy-book">Pentukirja</Link>
+              <Link to="/puppy-book" role="menuitem">Pentukirja</Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link to="/onboarding">Lis??/valitse pentu</Link>
+              <Link to="/onboarding" role="menuitem">Lisää/valitse pentu</Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onSelect={handleSignOut} className="text-red-600 focus:text-red-600">
-              <LogOut className="mr-2 h-4 w-4" />
+            <DropdownMenuItem onSelect={handleSignOut} className="text-red-600 focus:text-red-600" role="menuitem">
+              <LogOut className="mr-2 h-4 w-4" aria-hidden="true" />
               Kirjaudu ulos
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -228,8 +239,10 @@ const NavigationWithRouter: React.FC = () => {
         Siirry sisältöön
       </a>
 
-      <header className="fixed left-0 right-0 top-0 z-[100]">
-        <div
+      <header className="fixed left-0 right-0 top-0 z-[100]" role="banner">
+        <nav
+          role="navigation"
+          aria-label="Päänavigaatio"
           className={cn(
             'mx-auto flex w-full max-w-6xl items-center justify-between gap-4 rounded-2xl border border-white/40 bg-white/80 px-4 py-3 shadow-soft backdrop-blur-md transition-all duration-300 md:px-6',
           )}
@@ -244,7 +257,7 @@ const NavigationWithRouter: React.FC = () => {
           </div>
         </Link>
 
-        <div className="hidden lg:flex items-center gap-4">
+        <div className="hidden lg:flex items-center gap-4" role="navigation" aria-label="Sivulinkit">
           {renderPrimaryNav()}
         </div>
 
@@ -275,16 +288,31 @@ const NavigationWithRouter: React.FC = () => {
                 <span className="sr-only">Avaa valikko</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-full max-w-sm bg-white px-0" id="mobile-menu">
+            <SheetContent 
+              side="right" 
+              className="w-full max-w-sm bg-white px-0" 
+              id="mobile-menu"
+              onOpenAutoFocus={(e) => {
+                e.preventDefault();
+                // Focus first interactive element (home link)
+                const target = e.currentTarget;
+                if (target && 'querySelector' in target) {
+                  const firstLink = (target as HTMLElement).querySelector('a[href="/"]');
+                  if (firstLink instanceof HTMLElement) {
+                    setTimeout(() => firstLink.focus(), 0);
+                  }
+                }
+              }}
+            >
               <SheetHeader className="px-6 pb-4 pt-8 text-left">
                 <SheetTitle className="flex items-center gap-3 text-brand-ink">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-orange text-white">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-orange text-white" aria-hidden="true">
                     <PawPrint className="h-5 w-5" />
                   </span>
                   Pentulaskuri
                 </SheetTitle>
               </SheetHeader>
-              <div className="space-y-4 px-6 pb-10">
+              <div className="space-y-4 px-6 pb-10" role="menu">
                 {user ? (
                   <div className="rounded-xl border border-brand-orange/30 bg-brand-orange/10 p-4">
                     <p className="text-sm font-medium text-brand-ink">{user.email}</p>
@@ -363,7 +391,7 @@ const NavigationWithRouter: React.FC = () => {
             </SheetContent>
           </Sheet>
         </div>
-      </div>
+      </nav>
       </header>
 
       {/* Bottom Navigation for Mobile */}
