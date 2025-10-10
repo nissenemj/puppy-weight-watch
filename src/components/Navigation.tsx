@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import { Menu, PawPrint, Scale, Calculator, Book, Info, Home, LogOut, PlusCircle, Dog } from 'lucide-react';
+import { BottomNavigation } from './BottomNavigation';
 
 interface PrimaryLink {
   href: string;
@@ -218,12 +219,21 @@ const NavigationWithRouter: React.FC = () => {
   };
 
   return (
-    <header className="fixed left-0 right-0 top-0 z-[100]">
-      <div
-        className={cn(
-          'mx-auto flex w-full max-w-6xl items-center justify-between gap-4 rounded-2xl border border-white/40 bg-white/80 px-4 py-3 shadow-soft backdrop-blur-md transition-all duration-300 md:px-6',
-        )}
+    <>
+      {/* Skip to main content link for accessibility */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[110] focus:rounded-xl focus:bg-brand-orange focus:px-4 focus:py-2 focus:text-white focus:shadow-soft focus:outline-none focus:ring-2 focus:ring-brand-orange focus:ring-offset-2"
       >
+        Siirry sisältöön
+      </a>
+
+      <header className="fixed left-0 right-0 top-0 z-[100]">
+        <div
+          className={cn(
+            'mx-auto flex w-full max-w-6xl items-center justify-between gap-4 rounded-2xl border border-white/40 bg-white/80 px-4 py-3 shadow-soft backdrop-blur-md transition-all duration-300 md:px-6',
+          )}
+        >
         <Link to="/" className="flex items-center gap-3 rounded-xl px-2 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/60 focus-visible:ring-offset-2">
           <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-orange text-white shadow-soft">
             <PawPrint className="h-5 w-5" />
@@ -255,12 +265,17 @@ const NavigationWithRouter: React.FC = () => {
           ) : null}
           <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-brand-orange/30">
+              <Button
+                variant="ghost"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-brand-orange/30"
+                aria-expanded={isMobileOpen}
+                aria-controls="mobile-menu"
+              >
                 <Menu className="h-5 w-5" />
                 <span className="sr-only">Avaa valikko</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-full max-w-sm bg-white px-0">
+            <SheetContent side="right" className="w-full max-w-sm bg-white px-0" id="mobile-menu">
               <SheetHeader className="px-6 pb-4 pt-8 text-left">
                 <SheetTitle className="flex items-center gap-3 text-brand-ink">
                   <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-orange text-white">
@@ -349,7 +364,14 @@ const NavigationWithRouter: React.FC = () => {
           </Sheet>
         </div>
       </div>
-    </header>
+      </header>
+
+      {/* Bottom Navigation for Mobile */}
+      <BottomNavigation onMenuClick={() => setIsMobileOpen(true)} />
+
+      {/* Spacer for bottom navigation on mobile */}
+      <div className="h-20 md:hidden" aria-hidden="true" />
+    </>
   );
 };
 
