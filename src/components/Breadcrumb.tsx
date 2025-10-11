@@ -23,21 +23,32 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ items, showBackButton = true })
     return null;
   }
 
+  // Get current page name for mobile
+  const currentPage = items.find(item => item.current);
+  const currentPageName = currentPage?.name || items[items.length - 1]?.name;
+
   return (
     <>
-      {/* Mobile: Back button */}
+      {/* Mobile: Back button with current page name */}
       {showBackButton && (
         <div className="mb-4 md:hidden">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate(-1)}
-            className="flex items-center gap-2 text-brand-ink/80 hover:text-brand-ink transition-all duration-200 hover:scale-105"
-            aria-label="Takaisin edelliselle sivulle"
-          >
-            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-            <span>Takaisin</span>
-          </Button>
+          <div className="flex flex-col gap-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate(-1)}
+              className="flex items-center gap-2 text-brand-ink/80 hover:text-brand-ink transition-all duration-200 hover:scale-105 self-start"
+              aria-label="Takaisin edelliselle sivulle"
+            >
+              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+              <span>Takaisin</span>
+            </Button>
+            {currentPageName && (
+              <h1 className="text-xl font-bold text-brand-ink ml-1">
+                {currentPageName}
+              </h1>
+            )}
+          </div>
         </div>
       )}
 

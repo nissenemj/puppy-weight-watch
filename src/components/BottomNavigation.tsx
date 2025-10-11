@@ -54,6 +54,13 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onMenuClick 
     [location.pathname],
   );
 
+  // Haptic feedback helper
+  const triggerHaptic = () => {
+    if ('vibrate' in navigator) {
+      navigator.vibrate(10); // Light haptic feedback (10ms)
+    }
+  };
+
   return (
     <nav
       className="fixed bottom-0 left-0 right-0 z-50 border-t border-brand-orange/20 bg-white/95 backdrop-blur-md safe-area-padding-bottom md:hidden"
@@ -68,6 +75,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onMenuClick 
             <Link
               key={item.href}
               to={item.href}
+              onClick={triggerHaptic}
               className={cn(
                 'flex min-h-[56px] touch-target flex-col items-center justify-center gap-1 px-2 py-2 text-xs font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/60 focus-visible:ring-offset-2',
                 active
@@ -91,7 +99,10 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onMenuClick 
           );
         })}
         <button
-          onClick={onMenuClick}
+          onClick={() => {
+            triggerHaptic();
+            onMenuClick?.();
+          }}
           className="flex min-h-[56px] touch-target flex-col items-center justify-center gap-1 px-2 py-2 text-xs font-medium text-brand-ink/60 transition-all duration-200 hover:text-brand-orange/80 hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/60 focus-visible:ring-offset-2"
           aria-label="Avaa valikko"
         >

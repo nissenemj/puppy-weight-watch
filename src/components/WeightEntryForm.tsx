@@ -1,11 +1,13 @@
 
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Calendar, Scale } from 'lucide-react'
 import { useAddWeightEntry } from '@/hooks/useWeightEntries'
+import { useVirtualKeyboard } from '@/hooks/useVirtualKeyboard'
+import { useIsMobile } from '@/hooks/use-mobile'
 import type { WeightEntry } from '@/services/weightService'
 
 interface WeightEntryFormProps {
@@ -18,8 +20,21 @@ export default function WeightEntryForm({ userId, dogId, previousWeights }: Weig
   const [weight, setWeight] = useState('')
   const [date, setDate] = useState(new Date().toISOString().split('T')[0])
   const [errors, setErrors] = useState<{ weight?: string; date?: string }>({})
+  const weightInputRef = useRef<HTMLInputElement>(null)
 
   const addWeightMutation = useAddWeightEntry()
+  const { isKeyboardOpen, keyboardHeight } = useVirtualKeyboard()
+  const isMobile = useIsMobile()
+
+  // Auto-focus weight input on mobile
+  useEffect(() => {
+    if (isMobile && weightInputRef.current) {
+      // Delay to ensure the component is fully mounted
+      setTimeout(() => {
+        weightInputRef.current?.focus()
+      }, 300)
+    }
+  }, [isMobile])
 
   const validateForm = () => {
     const newErrors: { weight?: string; date?: string } = {}
@@ -70,7 +85,7 @@ export default function WeightEntryForm({ userId, dogId, previousWeights }: Weig
   }
 
   return (
-    <Card>
+    <Card style={isKeyboardOpen ? { paddingBottom: `${keyboardHeight}px` } : undefined}>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Scale className="h-5 w-5" />
@@ -83,13 +98,16 @@ export default function WeightEntryForm({ userId, dogId, previousWeights }: Weig
             <div className="space-y-2">
               <Label htmlFor="weight">Paino (kg)</Label>
               <Input
+                ref={weightInputRef}
                 id="weight"
                 type="number"
+                inputMode="decimal"
                 step="0.1"
                 value={weight}
                 onChange={(e) => setWeight(e.target.value)}
                 placeholder="esim. 3.2"
                 className={errors.weight ? 'border-red-500' : ''}
+                style={{ fontSize: '16px' }}
               />
               {errors.weight && (
                 <p className="text-sm text-red-500">{errors.weight}</p>
