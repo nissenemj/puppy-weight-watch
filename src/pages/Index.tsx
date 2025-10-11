@@ -181,7 +181,7 @@ const Index = () => {
         overlayClassName="items-center justify-center px-4 md:px-6"
       >
         {/* Hero Content */}
-        <div className="hero-content max-w-4xl mx-auto text-center text-white">
+        <div className="hero-content max-w-4xl mx-auto text-center text-white mobile-text-shadow">
           <motion.div
             initial="hidden"
             animate="visible"
@@ -215,17 +215,17 @@ const Index = () => {
 
             <motion.div
               variants={entranceAnimations.staggerChild}
-              className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center"
+              className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mobile-button-wrapper"
             >
               <Link to="/weight-tracker" className="w-full sm:w-auto" aria-label="Aloita pennun painonseuranta">
-                <Button size="lg" className="w-full sm:min-w-[220px] bg-white text-[var(--color-primary-700)] hover:bg-white/90 touch-target focus-enhanced shadow-lg">
+                <Button size="lg" className="w-full sm:min-w-[220px] bg-white text-[var(--color-primary-700)] hover:bg-white/90 touch-target mobile-focus-enhanced shadow-lg haptic-medium">
                   <Scale className="w-5 h-5 mr-2" aria-hidden="true" />
                   Aloita mittaaminen
                 </Button>
               </Link>
 
               <Link to="/calculator" className="w-full sm:w-auto" aria-label="Avaa pentulaskuri">
-                <Button variant="outline" size="lg" className="w-full sm:min-w-[220px] bg-white/10 text-white border-white/40 hover:bg-white/20 backdrop-blur-sm touch-target focus-enhanced">
+                <Button variant="outline" size="lg" className="w-full sm:min-w-[220px] bg-white/10 text-white border-white/40 hover:bg-white/20 backdrop-blur-sm touch-target mobile-focus-enhanced haptic-light">
                   <Calculator className="w-5 h-5 mr-2" aria-hidden="true" />
                   Ruokalaskuri
                 </Button>

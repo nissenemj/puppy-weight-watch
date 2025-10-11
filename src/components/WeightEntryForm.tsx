@@ -20,6 +20,7 @@ export default function WeightEntryForm({ userId, dogId, previousWeights }: Weig
   const [weight, setWeight] = useState('')
   const [date, setDate] = useState(new Date().toISOString().split('T')[0])
   const [errors, setErrors] = useState<{ weight?: string; date?: string }>({})
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const weightInputRef = useRef<HTMLInputElement>(null)
 
   const addWeightMutation = useAddWeightEntry()
@@ -65,6 +66,7 @@ export default function WeightEntryForm({ userId, dogId, previousWeights }: Weig
     
     if (!validateForm()) return
 
+    setIsSubmitting(true)
     try {
       await addWeightMutation.mutateAsync({
         weight: parseFloat(weight),
@@ -81,11 +83,16 @@ export default function WeightEntryForm({ userId, dogId, previousWeights }: Weig
     } catch (error) {
       // Error is handled by the mutation hook
       console.error('Weight entry submission failed:', error)
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
   return (
-    <Card style={isKeyboardOpen ? { paddingBottom: `${keyboardHeight}px` } : undefined}>
+    <Card 
+      className="mobile-card-safe"
+      style={isKeyboardOpen ? { paddingBottom: `${keyboardHeight}px` } : undefined}
+    >
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Scale className="h-5 w-5" />
@@ -93,7 +100,7 @@ export default function WeightEntryForm({ userId, dogId, previousWeights }: Weig
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 mobile-form-spacing">
           <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
             <div className="space-y-2">
               <Label htmlFor="weight">Paino (kg)</Label>
@@ -134,10 +141,17 @@ export default function WeightEntryForm({ userId, dogId, previousWeights }: Weig
 
           <Button 
             type="submit" 
-            className="w-full"
-            disabled={addWeightMutation.isPending}
+            className="w-full haptic-medium mobile-touch-optimize"
+            disabled={isSubmitting || addWeightMutation.isPending}
           >
-            {addWeightMutation.isPending ? 'Tallennetaan...' : 'Lisää mittaus'}
+            {isSubmitting || addWeightMutation.isPending ? (
+              <>
+                <span className="animate-spin mr-2">⏳</span>
+                Tallennetaan...
+              </>
+            ) : (
+              'Lisää mittaus'
+            )}
           </Button>
         </form>
       </CardContent>
