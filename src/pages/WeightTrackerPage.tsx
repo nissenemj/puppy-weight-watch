@@ -299,6 +299,9 @@ const WeightTrackerPage = () => {
             />
           )}
         </div>
+
+        {/* Spacer for bottom navigation - prevents content from being hidden */}
+        <div className="h-20 md:hidden" aria-hidden="true" />
       </LayoutWithNavigation>
     </MobileOptimizedLayout>
   )

@@ -126,7 +126,7 @@ export const MobileInteractionDemo: React.FC = () => {
             </TouchButton>
 
             <TouchButton
-              variant="glass"
+              variant="outline"
               size="default"
               fullWidth
               hapticFeedback
@@ -137,7 +137,7 @@ export const MobileInteractionDemo: React.FC = () => {
             </TouchButton>
 
             <TouchButton
-              variant="neo"
+              variant="default"
               size="lg"
               fullWidth
               loading={false}

@@ -12,6 +12,9 @@ const buttonVariants = cva(
         // Primary - Warm terracotta brand color
         default: "bg-[var(--color-interactive-primary)] text-white shadow-sm hover:bg-[var(--color-interactive-primary-hover)] hover:shadow-md active:scale-95",
 
+        // Secondary - Soft background style
+        secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 active:scale-95",
+
         // Outline - Border style
         outline: "border-2 border-[var(--color-interactive-primary)] bg-transparent text-[var(--color-interactive-primary)] hover:bg-[var(--color-primary-100)] active:scale-95",
 
@@ -29,6 +32,7 @@ const buttonVariants = cva(
         sm: "h-11 px-4 text-sm min-h-[44px]",
         default: "h-12 px-6 text-base min-h-[44px]",
         lg: "h-14 px-8 text-lg min-h-[48px]",
+        mobile: "h-14 px-6 text-base min-h-[56px]",
 
         // Icon buttons
         icon: "h-12 w-12 p-0 min-h-[44px] min-w-[44px]",

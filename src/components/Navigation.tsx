@@ -239,7 +239,11 @@ const NavigationWithRouter: React.FC = () => {
         Siirry sisältöön
       </a>
 
-      <header className="fixed left-0 right-0 top-0 z-[100]" role="banner">
+      <header 
+        className="fixed left-0 right-0 top-0 z-[100]" 
+        role="banner"
+        style={{ contain: 'layout' }}
+      >
         <nav
           role="navigation"
           aria-label="Päänavigaatio"

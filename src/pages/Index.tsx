@@ -172,6 +172,7 @@ const Index = () => {
       <ScrollPanBackground
         src={pentulaskuriHero}
         alt="Pentulaskuri - iloinen pentu"
+        aspectRatio="16/9"
         panX={40}
         panY={20}
         zoom={1.04}
@@ -293,6 +294,9 @@ const Index = () => {
         show={showOnboarding}
         onComplete={completeOnboarding}
       />
+
+      {/* Spacer for bottom navigation - prevents content from being hidden */}
+      <div className="h-20 md:hidden" aria-hidden="true" />
     </MobileOptimizedLayout>
   )
 }

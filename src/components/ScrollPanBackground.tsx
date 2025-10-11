@@ -16,6 +16,7 @@ interface ScrollPanBackgroundProps {
   minHeightClass?: string
   className?: string
   overlayClassName?: string
+  aspectRatio?: string
   children?: ReactNode
 }
 
@@ -33,12 +34,17 @@ export default function ScrollPanBackground({
   minHeightClass = 'min-h-[80svh]',
   className = '',
   overlayClassName = '',
+  aspectRatio,
   children
 }: ScrollPanBackgroundProps) {
   const sectionRef = useRef<HTMLDivElement | null>(null)
 
   return (
-    <section ref={sectionRef} className={`relative w-full overflow-hidden ${minHeightClass} ${className}`}>
+    <section 
+      ref={sectionRef} 
+      className={`relative w-full overflow-hidden ${minHeightClass} ${className}`}
+      style={aspectRatio ? { aspectRatio } : undefined}
+    >
       {/* Background image: Suspense fallback shows static image until Motion chunk loads */}
       <ErrorBoundary fallback={() => (
         <LazyImage
