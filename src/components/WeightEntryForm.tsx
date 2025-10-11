@@ -9,6 +9,7 @@ import { useAddWeightEntry } from '@/hooks/useWeightEntries'
 import { useVirtualKeyboard } from '@/hooks/useVirtualKeyboard'
 import { useIsMobile } from '@/hooks/use-mobile'
 import type { WeightEntry } from '@/services/weightService'
+import { trackWeightEntryStarted, trackWeightEntryCompleted, trackFormValidationError } from '@/utils/analytics'
 
 interface WeightEntryFormProps {
   userId: string
@@ -21,6 +22,7 @@ export default function WeightEntryForm({ userId, dogId, previousWeights }: Weig
   const [date, setDate] = useState(new Date().toISOString().split('T')[0])
   const [errors, setErrors] = useState<{ weight?: string; date?: string }>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [hasStartedEntry, setHasStartedEntry] = useState(false)
   const weightInputRef = useRef<HTMLInputElement>(null)
 
   const addWeightMutation = useAddWeightEntry()
@@ -39,22 +41,28 @@ export default function WeightEntryForm({ userId, dogId, previousWeights }: Weig
 
   const validateForm = () => {
     const newErrors: { weight?: string; date?: string } = {}
-    
+
     const weightNum = parseFloat(weight)
     if (!weight) {
       newErrors.weight = 'Paino on pakollinen'
+      trackFormValidationError('WeightEntryForm', 'weight', 'required')
     } else if (isNaN(weightNum)) {
       newErrors.weight = 'Paino tulee olla numero'
+      trackFormValidationError('WeightEntryForm', 'weight', 'invalid_number')
     } else if (weightNum < 0.1) {
       newErrors.weight = 'Painon tulee olla vähintään 0.1 kg'
+      trackFormValidationError('WeightEntryForm', 'weight', 'min_value')
     } else if (weightNum > 100) {
       newErrors.weight = 'Painon tulee olla alle 100 kg'
+      trackFormValidationError('WeightEntryForm', 'weight', 'max_value')
     }
 
     if (!date) {
       newErrors.date = 'Päivämäärä on pakollinen'
+      trackFormValidationError('WeightEntryForm', 'date', 'required')
     } else if (new Date(date) > new Date()) {
       newErrors.date = 'Päivämäärä ei voi olla tulevaisuudessa'
+      trackFormValidationError('WeightEntryForm', 'date', 'future_date')
     }
 
     setErrors(newErrors)
@@ -63,28 +71,43 @@ export default function WeightEntryForm({ userId, dogId, previousWeights }: Weig
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!validateForm()) return
 
     setIsSubmitting(true)
     try {
+      const weightValue = parseFloat(weight)
       await addWeightMutation.mutateAsync({
-        weight: parseFloat(weight),
+        weight: weightValue,
         date,
         userId,
         dogId,
         previousWeights
       })
-      
+
+      // Track successful weight entry
+      trackWeightEntryCompleted(weightValue, { dogId, date })
+
       // Reset form on success
       setWeight('')
       setDate(new Date().toISOString().split('T')[0])
       setErrors({})
+      setHasStartedEntry(false)
     } catch (error) {
       // Error is handled by the mutation hook
       console.error('Weight entry submission failed:', error)
     } finally {
       setIsSubmitting(false)
+    }
+  }
+
+  const handleWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setWeight(e.target.value)
+
+    // Track when user starts entering weight for the first time
+    if (!hasStartedEntry && e.target.value.length > 0) {
+      trackWeightEntryStarted({ dogId })
+      setHasStartedEntry(true)
     }
   }
 
@@ -111,7 +134,7 @@ export default function WeightEntryForm({ userId, dogId, previousWeights }: Weig
                 inputMode="decimal"
                 step="0.1"
                 value={weight}
-                onChange={(e) => setWeight(e.target.value)}
+                onChange={handleWeightChange}
                 placeholder="esim. 3.2"
                 className={errors.weight ? 'border-red-500' : ''}
                 style={{ fontSize: '16px' }}

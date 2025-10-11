@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Footer from '@/components/Footer'
 import Navigation from '@/components/Navigation'
 import SEO from '@/components/SEO'
@@ -8,6 +8,7 @@ import { PageLayout, Container, Section, Stack } from '@/components/ui/Layout'
 import { createWebApplicationSchema, createWeightTrackingSchema, createFAQSchema } from '@/utils/structuredData'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { trackHeroCTAClicked, trackPageViewed, trackSecondaryCTAClicked } from '@/utils/analytics'
 import { 
   Scale, 
   Calculator, 
@@ -46,6 +47,11 @@ const Index = () => {
   // Initialize mobile enhancements and onboarding
   useMobileEnhancements();
   const { showOnboarding, completeOnboarding } = useOnboarding();
+
+  // Track page view
+  useEffect(() => {
+    trackPageViewed('Homepage', '/');
+  }, []);
 
   // Debug: verify image import
   console.log('pentulaskuriHero path:', pentulaskuriHero);
@@ -215,19 +221,17 @@ const Index = () => {
 
             <motion.div
               variants={entranceAnimations.staggerChild}
-              className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mobile-button-wrapper"
+              className="flex justify-center items-center"
             >
-              <Link to="/weight-tracker" className="w-full sm:w-auto" aria-label="Aloita pennun painonseuranta">
-                <Button size="lg" className="w-full sm:min-w-[220px] bg-white text-[var(--color-primary-700)] hover:bg-white/90 touch-target mobile-focus-enhanced shadow-lg haptic-medium">
-                  <Scale className="w-5 h-5 mr-2" aria-hidden="true" />
-                  Aloita mittaaminen
-                </Button>
-              </Link>
-
-              <Link to="/calculator" className="w-full sm:w-auto" aria-label="Avaa pentulaskuri">
-                <Button variant="outline" size="lg" className="w-full sm:min-w-[220px] bg-white/10 text-white border-white/40 hover:bg-white/20 backdrop-blur-sm touch-target mobile-focus-enhanced haptic-light">
-                  <Calculator className="w-5 h-5 mr-2" aria-hidden="true" />
-                  Ruokalaskuri
+              <Link
+                to="/weight-tracker"
+                className="w-full sm:w-auto"
+                aria-label="Aloita pennun painonseuranta"
+                onClick={() => trackHeroCTAClicked('Aloita seuranta ilmaiseksi', '/weight-tracker')}
+              >
+                <Button variant="hero" size="lg" className="w-full sm:min-w-[280px] touch-target mobile-focus-enhanced haptic-medium text-lg">
+                  <Scale className="w-6 h-6 mr-2" aria-hidden="true" />
+                  Aloita seuranta ilmaiseksi
                 </Button>
               </Link>
             </motion.div>
@@ -261,7 +265,11 @@ const Index = () => {
           />
 
           <div className="mt-6 text-center">
-            <Link to="/weight-tracker" aria-label="Aloita seuranta – siirry painonseurantaan">
+            <Link
+              to="/weight-tracker"
+              aria-label="Aloita seuranta – siirry painonseurantaan"
+              onClick={() => trackSecondaryCTAClicked('Aloita seuranta – 1 min', '/weight-tracker', 'how-it-works-section')}
+            >
               <Button size="lg" className="w-full sm:min-w-[220px] sm:w-auto touch-target focus-enhanced">
                 Aloita seuranta – 1 min
               </Button>

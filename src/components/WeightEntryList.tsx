@@ -10,6 +10,7 @@ import { fi } from 'date-fns/locale'
 import { useUpdateWeightEntry, useDeleteWeightEntry } from '@/hooks/useWeightEntries'
 import type { WeightEntry } from '@/services/weightService'
 import { EmptyState } from '@/components/EmptyState'
+import { trackWeightEntryDeleted } from '@/utils/analytics'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -84,6 +85,8 @@ export default function WeightEntryList({ entries, userId }: WeightEntryListProp
   const handleDelete = async (id: string) => {
     try {
       await deleteMutation.mutateAsync({ id, userId })
+      // Track successful deletion
+      trackWeightEntryDeleted(id, { userId })
     } catch (error) {
       console.error('Delete failed:', error)
     }

@@ -1,5 +1,6 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
+import { AlertCircle, CheckCircle2, Info } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const inputVariants = cva(
@@ -37,12 +38,55 @@ export interface InputProps
   label?: string
   helperText?: string
   errorText?: string
+  successText?: string
   htmlSize?: number
+  showStateIcon?: boolean
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, variant, size, state, icon, suffix, label, helperText, errorText, htmlSize, type, ...props }, ref) => {
-    const finalState = errorText ? "error" : state
+  ({
+    className,
+    variant,
+    size,
+    state,
+    icon,
+    suffix,
+    label,
+    helperText,
+    errorText,
+    successText,
+    htmlSize,
+    type,
+    showStateIcon = true,
+    ...props
+  }, ref) => {
+    // Determine final state
+    const finalState = errorText ? "error" : successText ? "success" : state
+
+    // Determine state icon
+    const stateIcon = React.useMemo(() => {
+      if (!showStateIcon) return null
+
+      if (errorText) {
+        return <AlertCircle className="h-4 w-4 text-[var(--color-error)]" aria-hidden="true" />
+      }
+
+      if (successText) {
+        return <CheckCircle2 className="h-4 w-4 text-[var(--color-success)]" aria-hidden="true" />
+      }
+
+      return null
+    }, [errorText, successText, showStateIcon])
+
+    // Determine helper text to display
+    const displayText = errorText || successText || helperText
+    const displayIcon = errorText
+      ? <AlertCircle className="h-3 w-3 flex-shrink-0" aria-hidden="true" />
+      : successText
+      ? <CheckCircle2 className="h-3 w-3 flex-shrink-0" aria-hidden="true" />
+      : helperText
+      ? <Info className="h-3 w-3 flex-shrink-0" aria-hidden="true" />
+      : null
 
     return (
       <div className="space-y-2">
@@ -51,40 +95,49 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             {label}
           </label>
         )}
-        
+
         <div className="relative">
           {icon && (
             <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">
               {icon}
             </div>
           )}
-          
+
           <input
             type={type}
             size={htmlSize}
             className={cn(
               inputVariants({ variant, size, state: finalState }),
               icon && "pl-10",
-              suffix && "pr-10",
+              (suffix || stateIcon) && "pr-10",
               className
             )}
             ref={ref}
+            aria-invalid={!!errorText}
+            aria-describedby={displayText ? `${props.id}-hint` : undefined}
             {...props}
           />
-          
-          {suffix && (
+
+          {(suffix || stateIcon) && (
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">
-              {suffix}
+              {stateIcon || suffix}
             </div>
           )}
         </div>
 
-        {(helperText || errorText) && (
-          <div className={cn(
-            "text-caption",
-            errorText ? "text-red-600" : "text-muted-foreground"
-          )}>
-            {errorText || helperText}
+        {displayText && (
+          <div
+            id={props.id ? `${props.id}-hint` : undefined}
+            className={cn(
+              "flex items-start gap-1.5 text-caption animate-in fade-in duration-200",
+              errorText && "text-[var(--color-error)]",
+              successText && "text-[var(--color-success)]",
+              !errorText && !successText && "text-muted-foreground"
+            )}
+            role={errorText ? "alert" : "status"}
+          >
+            {displayIcon}
+            <span>{displayText}</span>
           </div>
         )}
       </div>
@@ -93,4 +146,5 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 )
 Input.displayName = "Input"
 
+// eslint-disable-next-line react-refresh/only-export-components
 export { Input, inputVariants }

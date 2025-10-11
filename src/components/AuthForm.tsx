@@ -11,6 +11,7 @@ import { supabase } from '@/integrations/supabase/client'
 import { toast } from 'sonner'
 import { LoginSchema, RegisterSchema } from '@/lib/validationSchemas'
 import { ZodError } from 'zod'
+import { trackLoginStarted, trackLoginCompleted, trackSignupStarted, trackSignupCompleted } from '@/utils/analytics'
 
 interface AuthFormProps {
   onAuthSuccess: () => void
@@ -36,7 +37,10 @@ export default function AuthForm({ onAuthSuccess }: AuthFormProps) {
       const validatedData = LoginSchema.parse(loginData)
       setIsLoading(true)
 
-      const { error } = await supabase.auth.signInWithPassword({
+      // Track login attempt
+      trackLoginStarted('email')
+
+      const { data, error } = await supabase.auth.signInWithPassword({
         email: validatedData.email,
         password: validatedData.password
       })
@@ -48,6 +52,8 @@ export default function AuthForm({ onAuthSuccess }: AuthFormProps) {
           toast.error('Kirjautuminen epäonnistui: ' + error.message)
         }
       } else {
+        // Track successful login
+        trackLoginCompleted('email', data.user?.id)
         toast.success('Kirjautuminen onnistui!')
         onAuthSuccess()
       }
@@ -74,7 +80,10 @@ export default function AuthForm({ onAuthSuccess }: AuthFormProps) {
       const validatedData = RegisterSchema.parse(registerData)
       setIsLoading(true)
 
-      const { error } = await supabase.auth.signUp({
+      // Track signup attempt
+      trackSignupStarted('email')
+
+      const { data, error } = await supabase.auth.signUp({
         email: validatedData.email,
         password: validatedData.password,
         options: {
@@ -89,6 +98,8 @@ export default function AuthForm({ onAuthSuccess }: AuthFormProps) {
           toast.error('Rekisteröityminen epäonnistui: ' + error.message)
         }
       } else {
+        // Track successful signup
+        trackSignupCompleted('email', data.user?.id)
         toast.success('Rekisteröityminen onnistui! Tarkista sähköpostisi vahvistuslinkkiä varten.')
       }
     } catch (error) {

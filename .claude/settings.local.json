@@ -54,11 +54,14 @@
       "mcp__playwright__browser_evaluate",
       "Bash(awk:*)",
       "Bash(cat:*)",
-      "Bash(git log:*)"
+      "Bash(git log:*)",
+      "Bash(npx eslint:*)",
+      "Bash(if [ -d \"public/fonts\" ])",
+      "Bash(then echo \"Fonts directory exists\")",
+      "Bash(else echo \"Fonts directory does not exist\")",
+      "Bash(fi)"
     ],
     "deny": [],
-    "additionalDirectories": [
-      "C:\\c\\Users\\nisse"
-    ]
+    "additionalDirectories": ["C:\\c\\Users\\nisse"]
   }
 }

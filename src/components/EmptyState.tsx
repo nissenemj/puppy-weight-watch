@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { LucideIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { trackEmptyStateViewed, trackEmptyStateActionClicked } from '@/utils/analytics';
 
 export interface EmptyStateProps {
   /** Icon to display */
@@ -70,6 +71,25 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
 }) => {
   const styles = variantStyles[variant];
 
+  // Track empty state view on mount
+  useEffect(() => {
+    trackEmptyStateViewed('EmptyState', title);
+  }, [title]);
+
+  const handleActionClick = () => {
+    if (onAction) {
+      trackEmptyStateActionClicked('EmptyState', actionLabel || 'primary');
+      onAction();
+    }
+  };
+
+  const handleSecondaryActionClick = () => {
+    if (onSecondaryAction) {
+      trackEmptyStateActionClicked('EmptyState', secondaryActionLabel || 'secondary');
+      onSecondaryAction();
+    }
+  };
+
   return (
     <div
       className={cn(
@@ -105,7 +125,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
         <div className="flex flex-col gap-3 sm:flex-row sm:gap-4 mobile-button-wrapper">
           {actionLabel && onAction && (
             <Button
-              onClick={onAction}
+              onClick={handleActionClick}
               size="lg"
               className="touch-target"
               aria-label={actionLabel}
@@ -115,7 +135,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
           )}
           {secondaryActionLabel && onSecondaryAction && (
             <Button
-              onClick={onSecondaryAction}
+              onClick={handleSecondaryActionClick}
               variant="outline"
               size="lg"
               className="touch-target"

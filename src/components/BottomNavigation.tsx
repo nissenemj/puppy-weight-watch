@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Home, Scale, Book, Calculator, Menu, type LucideIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { trackTabChanged } from '@/utils/analytics';
 
 interface NavItem {
   href: string;
@@ -48,6 +49,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onMenuClick,
   const location = useLocation();
   const [activeIndex, setActiveIndex] = useState(0);
   const [mounted, setMounted] = useState(false);
+  const [previousTab, setPreviousTab] = useState<string | undefined>(undefined);
 
   const isActive = useMemo(
     () => (path: string) => {
@@ -69,10 +71,14 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onMenuClick,
   }, [location.pathname, isActive]);
 
   // Haptic feedback on tab change
-  const handleTabClick = (e: React.MouseEvent) => {
+  const handleTabClick = (tabLabel: string, tabHref: string) => (e: React.MouseEvent) => {
     if ('vibrate' in navigator) {
       navigator.vibrate(10);
     }
+
+    // Track tab change
+    trackTabChanged(tabLabel, previousTab);
+    setPreviousTab(tabLabel);
   };
 
   const indicatorWidth = 100 / 5; // 5 items total (4 nav items + 1 menu button)
@@ -111,7 +117,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onMenuClick,
             <Link
               key={item.href}
               to={item.href}
-              onClick={handleTabClick}
+              onClick={handleTabClick(item.label, item.href)}
               className={cn(
                 'relative flex min-h-[56px] touch-target flex-col items-center justify-center gap-1 px-2 py-2 text-xs font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/60 focus-visible:ring-offset-2',
                 active
@@ -170,7 +176,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onMenuClick,
         })}
         <button
           onClick={(e) => {
-            handleTabClick(e);
+            handleTabClick('Valikko', '/menu')(e);
             onMenuClick?.();
           }}
           className="flex min-h-[56px] touch-target flex-col items-center justify-center gap-1 px-2 py-2 text-xs font-medium text-brand-ink/60 transition-all duration-200 hover:text-brand-orange/80 hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/60 focus-visible:ring-offset-2"

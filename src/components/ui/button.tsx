@@ -1,6 +1,7 @@
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
+import { Loader2, Check } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
@@ -11,6 +12,9 @@ const buttonVariants = cva(
       variant: {
         // Primary - Warm terracotta brand color
         default: "bg-[var(--color-interactive-primary)] text-white shadow-sm hover:bg-[var(--color-interactive-primary-hover)] hover:shadow-md active:scale-95",
+
+        // Hero - Large, prominent CTA for hero sections
+        hero: "bg-white text-[var(--color-primary-700)] shadow-lg hover:bg-white/90 hover:shadow-xl active:scale-95 font-semibold border-2 border-white/20",
 
         // Secondary - Soft background style
         secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 active:scale-95",
@@ -49,20 +53,67 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
+  isLoading?: boolean
+  isSuccess?: boolean
+  loadingText?: string
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  ({
+    className,
+    variant,
+    size,
+    asChild = false,
+    isLoading = false,
+    isSuccess = false,
+    loadingText,
+    children,
+    disabled,
+    ...props
+  }, ref) => {
     const Comp = asChild ? Slot : "button"
+
+    // Disable button when loading
+    const isDisabled = disabled || isLoading
+
+    // Determine what to show
+    const content = React.useMemo(() => {
+      if (isSuccess) {
+        return (
+          <>
+            <Check className="h-4 w-4 animate-in zoom-in duration-200" aria-hidden="true" />
+            <span className="animate-in fade-in duration-200">Tallennettu!</span>
+          </>
+        )
+      }
+
+      if (isLoading) {
+        return (
+          <>
+            <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+            <span className="animate-in fade-in duration-200">{loadingText || "Ladataan..."}</span>
+          </>
+        )
+      }
+
+      return children
+    }, [isSuccess, isLoading, loadingText, children])
+
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
+        disabled={isDisabled}
+        aria-busy={isLoading}
+        aria-live={isLoading || isSuccess ? "polite" : undefined}
         {...props}
-      />
+      >
+        {content}
+      </Comp>
     )
   }
 )
 Button.displayName = "Button"
 
+// eslint-disable-next-line react-refresh/only-export-components
 export { Button, buttonVariants }

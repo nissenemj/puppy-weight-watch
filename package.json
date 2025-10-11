@@ -12,6 +12,7 @@
     "mobile-check": "node scripts/mobile-check.js",
     "test:mobile": "npm run mobile-check && echo 'Mobiilitestaus valmis'",
     "generate-icons": "node scripts/generate-icons.js",
+    "convert-images": "node scripts/convert-images.js",
     "format": "prettier --write \"{src,public,supabase,scripts,docs,tests}/**/*.{ts,tsx,js,jsx,json,md,css,html,sql}\"",
     "format:check": "prettier --check \"{src,public,supabase,scripts,docs,tests}/**/*.{ts,tsx,js,jsx,json,md,css,html,sql}\"",
     "type-check": "tsc --noEmit",
