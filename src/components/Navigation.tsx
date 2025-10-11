@@ -261,13 +261,13 @@ const NavigationWithRouter: React.FC = () => {
           </div>
         </Link>
 
-        <div className="hidden lg:flex items-center gap-4" role="navigation" aria-label="Sivulinkit">
+        <div className="hidden md:flex lg:flex items-center gap-4" role="navigation" aria-label="Sivulinkit">
           {renderPrimaryNav()}
         </div>
 
         <div className="hidden md:flex items-center gap-4">
           {renderAuthActions()}
-        <Button asChild variant="secondary" className="hidden lg:inline-flex bg-brand-green/90 text-white hover:bg-brand-green transition-all duration-200 hover:scale-105">
+          <Button asChild variant="secondary" className="hidden lg:inline-flex bg-brand-green/90 text-white hover:bg-brand-green transition-all duration-200 hover:scale-105">
             <Link to={user ? '/onboarding' : '/login'}>
               <PlusCircle className="mr-2 h-4 w-4" /> Luo profiili
             </Link>

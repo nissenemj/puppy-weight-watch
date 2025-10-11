@@ -9,6 +9,7 @@ import { format } from 'date-fns'
 import { fi } from 'date-fns/locale'
 import { useUpdateWeightEntry, useDeleteWeightEntry } from '@/hooks/useWeightEntries'
 import type { WeightEntry } from '@/services/weightService'
+import { EmptyState } from '@/components/EmptyState'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -96,11 +97,12 @@ export default function WeightEntryList({ entries, userId }: WeightEntryListProp
     return (
       <Card>
         <CardContent className="pt-6">
-          <div className="text-center text-gray-500">
-            <Scale className="mx-auto h-12 w-12 mb-4 text-gray-300" />
-            <p>Ei painomittauksia vielä.</p>
-            <p className="text-sm">Lisää ensimmäinen mittaus yllä olevalla lomakkeella.</p>
-          </div>
+          <EmptyState
+            icon={Scale}
+            title="Ei painomittauksia vielä"
+            description="Aloita seuraamalla pentusi painoa ensimmäisen kerran. Säännöllinen painonseuranta auttaa varmistamaan, että pentusi kasvaa terveellisesti."
+            variant="default"
+          />
         </CardContent>
       </Card>
     )

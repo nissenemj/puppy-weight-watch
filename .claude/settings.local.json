@@ -51,9 +51,14 @@
       "Bash(find:*)",
       "Bash(taskkill:*)",
       "Bash(PORT=5173 npm run dev)",
-      "mcp__playwright__browser_evaluate"
+      "mcp__playwright__browser_evaluate",
+      "Bash(awk:*)",
+      "Bash(cat:*)",
+      "Bash(git log:*)"
     ],
     "deny": [],
-    "additionalDirectories": ["C:\\c\\Users\\nisse"]
+    "additionalDirectories": [
+      "C:\\c\\Users\\nisse"
+    ]
   }
 }

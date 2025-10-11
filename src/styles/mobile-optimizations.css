@@ -401,11 +401,12 @@
 
   /* === ACCESSIBILITY ENHANCEMENTS === */
   
-  /* Larger focus indicators for mobile */
+  /* Enhanced focus indicators for mobile - WCAG AAA */
   .mobile-focus-enhanced:focus,
   .mobile-focus-enhanced:focus-visible {
     outline: 3px solid var(--color-primary-500) !important;
-    outline-offset: var(--spacing-0-5) !important;
+    outline-offset: 3px !important;
+    box-shadow: 0 0 0 6px rgba(232, 90, 40, 0.15) !important; /* Extra visual ring */
   }
 
   /* High contrast mode support */
@@ -548,11 +549,11 @@
     transform: translateY(0);
   }
 
-  /* Enhanced focus states for mobile */
+  /* Enhanced focus states for mobile - WCAG AAA */
   .mobile-focus-ring:focus-visible {
-    outline: 3px solid var(--color-primary-500, #007bff) !important;
-    outline-offset: 2px !important;
-    box-shadow: 0 0 0 6px rgba(0, 123, 255, 0.25) !important;
+    outline: 3px solid var(--color-primary-500) !important;
+    outline-offset: 3px !important;
+    box-shadow: 0 0 0 6px rgba(232, 90, 40, 0.15) !important; /* Consistent with design system */
   }
 
   /* Mobile-optimized loading states */

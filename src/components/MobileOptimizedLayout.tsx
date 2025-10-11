@@ -1,5 +1,5 @@
-import { ReactNode } from 'react'
-import { motion } from 'framer-motion'
+import { ReactNode, useEffect, useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 
 interface MobileOptimizedLayoutProps {
   children: ReactNode
@@ -8,6 +8,49 @@ interface MobileOptimizedLayoutProps {
   onFloatingActionClick?: () => void
   floatingActionIcon?: ReactNode
   floatingActionLabel?: string
+  enableKeyboardHandling?: boolean
+  enableSafeAreas?: boolean
+}
+
+// Hook for detecting virtual keyboard
+function useVirtualKeyboard() {
+  const [keyboardHeight, setKeyboardHeight] = useState(0)
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
+
+  useEffect(() => {
+    // Modern Keyboard API
+    if ('visualViewport' in window && window.visualViewport) {
+      const handleResize = () => {
+        const viewport = window.visualViewport!
+        const keyboardHeight = window.innerHeight - viewport.height
+
+        setKeyboardHeight(keyboardHeight)
+        setIsKeyboardVisible(keyboardHeight > 100) // Threshold for keyboard detection
+      }
+
+      window.visualViewport.addEventListener('resize', handleResize)
+      window.visualViewport.addEventListener('scroll', handleResize)
+
+      return () => {
+        window.visualViewport?.removeEventListener('resize', handleResize)
+        window.visualViewport?.removeEventListener('scroll', handleResize)
+      }
+    } else {
+      // Fallback for older browsers
+      const handleFocus = () => setIsKeyboardVisible(true)
+      const handleBlur = () => setIsKeyboardVisible(false)
+
+      window.addEventListener('focusin', handleFocus)
+      window.addEventListener('focusout', handleBlur)
+
+      return () => {
+        window.removeEventListener('focusin', handleFocus)
+        window.removeEventListener('focusout', handleBlur)
+      }
+    }
+  }, [])
+
+  return { keyboardHeight, isKeyboardVisible }
 }
 
 export function MobileOptimizedLayout({
@@ -16,30 +59,55 @@ export function MobileOptimizedLayout({
   showFloatingAction = false,
   onFloatingActionClick,
   floatingActionIcon,
-  floatingActionLabel = 'Lisää'
+  floatingActionLabel = 'Lisää',
+  enableKeyboardHandling = true,
+  enableSafeAreas = true
 }: MobileOptimizedLayoutProps) {
+  const { keyboardHeight, isKeyboardVisible } = useVirtualKeyboard()
+
   return (
-    <div className={`min-h-screen bg-background ${className}`}>
+    <div
+      className={`min-h-screen bg-background ${enableSafeAreas ? 'safe-area' : ''} ${className}`}
+      style={{
+        paddingBottom: enableKeyboardHandling && isKeyboardVisible ? keyboardHeight : undefined
+      }}
+    >
       {children}
-      
+
       {/* Floating Action Button for mobile */}
-      {showFloatingAction && (
-        <motion.button
-          className="fixed bottom-6 right-6 w-14 h-14 bg-primary text-primary-foreground rounded-full shadow-lg flex items-center justify-center z-50 touch-manipulation"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={onFloatingActionClick}
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ type: "spring", stiffness: 300, damping: 20 }}
-        >
-          {floatingActionIcon}
-          <span className="sr-only">{floatingActionLabel}</span>
-        </motion.button>
-      )}
-      
+      <AnimatePresence>
+        {showFloatingAction && !isKeyboardVisible && (
+          <motion.button
+            className="fixed w-14 h-14 bg-primary text-primary-foreground rounded-full shadow-lg flex items-center justify-center z-50 touch-manipulation"
+            style={{
+              bottom: `max(calc(env(safe-area-inset-bottom, 0px) + 1.5rem), 1.5rem)`,
+              right: `max(env(safe-area-inset-right, 0px), 1.5rem)`
+            }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={onFloatingActionClick}
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+          >
+            {floatingActionIcon}
+            <span className="sr-only">{floatingActionLabel}</span>
+          </motion.button>
+        )}
+      </AnimatePresence>
+
       {/* Bottom safe area for devices with home indicators */}
-      <footer role="contentinfo" aria-label="Alatunniste" className="h-8 bg-background" />
+      {enableSafeAreas && (
+        <footer
+          role="contentinfo"
+          aria-label="Alatunniste"
+          className="bg-background"
+          style={{
+            height: `max(env(safe-area-inset-bottom, 0px), 2rem)`
+          }}
+        />
+      )}
     </div>
   )
 }
@@ -140,3 +208,6 @@ export function MobileSection({ title, children, className = '' }: MobileSection
     </div>
   )
 }
+
+// Export the hook for external use
+export { useVirtualKeyboard }

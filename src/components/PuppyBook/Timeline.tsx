@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Calendar, Plus, Clock, MapPin, Star, Scale, Activity } from '@/utils/iconImports';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { EmptyState } from '@/components/EmptyState';
 import AddTimelineDialog from './AddTimelineDialog';
 
 interface TimelineEntry {
@@ -12,7 +13,7 @@ interface TimelineEntry {
   title: string;
   description?: string;
   entry_date: string;
-  metadata: any;
+  metadata: Record<string, unknown>;
   is_highlight: boolean;
   created_by?: string;
   created_at: string;
@@ -31,7 +32,7 @@ const Timeline: React.FC<TimelineProps> = ({ bookId }) => {
 
   useEffect(() => {
     loadTimelineEntries();
-  }, [bookId]);
+  }, [bookId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadTimelineEntries = async () => {
     try {
@@ -51,7 +52,7 @@ const Timeline: React.FC<TimelineProps> = ({ bookId }) => {
         return;
       }
 
-      setEntries((data as any) || []);
+      setEntries((data as TimelineEntry[]) || []);
     } catch (error) {
       console.error('Error:', error);
     } finally {
@@ -102,22 +103,14 @@ const Timeline: React.FC<TimelineProps> = ({ bookId }) => {
 
       <div className="space-y-4">
         {entries.length === 0 ? (
-          <div className="text-center py-12">
-            <Calendar className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-gray-500 mb-2">
-              Ei vielä merkintöjä
-            </h3>
-            <p className="text-gray-400 mb-4">
-              Aloita pennun tarinan tallentaminen
-            </p>
-            <button 
-              onClick={() => setShowAddDialog(true)}
-              className="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition-colors"
-            >
-              <Plus className="w-4 h-4 inline mr-2" />
-              Lisää ensimmäinen merkintä
-            </button>
-          </div>
+          <EmptyState
+            icon={Calendar}
+            title="Ei vielä merkintöjä"
+            description="Aloita pennun tarinan tallentaminen lisäämällä ensimmäinen aikajanan merkintä. Voit tallentaa tärkeitä hetkiä, virstanpylväitä ja muistoja."
+            actionLabel="Lisää ensimmäinen merkintä"
+            onAction={() => setShowAddDialog(true)}
+            variant="info"
+          />
         ) : (
           entries.map((entry) => (
             <motion.div

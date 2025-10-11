@@ -7,7 +7,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
-import { Search, Plus } from 'lucide-react'
+import { Search, Plus, Utensils } from 'lucide-react'
+import { EmptyState } from '@/components/EmptyState'
 
 interface FoodRecipe {
   id: string
@@ -263,38 +264,54 @@ export default function FoodRecipeSearch({ onRecipeSelect, selectedRecipe }: Foo
         )}
 
         <div className="max-h-60 overflow-y-auto space-y-2">
-          {recipes.map((recipe) => (
-            <div
-              key={recipe.id}
-              className={`p-3 border rounded-lg cursor-pointer transition-colors ${
-                selectedRecipe?.id === recipe.id
-                  ? 'border-green-500 bg-green-50'
-                  : 'border-gray-200 hover:border-gray-300'
-              }`}
-              onClick={() => onRecipeSelect(recipe)}
-            >
-              <div className="flex justify-between items-start">
-                <div>
-                  <h4 className="font-medium">{recipe.name}</h4>
-                  {recipe.brand && (
-                    <p className="text-sm text-gray-600">{recipe.brand}</p>
-                  )}
-                </div>
-                <div className="flex gap-1">
-                  {recipe.calories_per_100g && (
-                    <Badge variant="secondary" className="text-xs">
-                      {recipe.calories_per_100g} kcal
-                    </Badge>
-                  )}
-                  {recipe.source && (
-                    <Badge variant="outline" className="text-xs">
-                      {recipe.source}
-                    </Badge>
-                  )}
+          {recipes.length === 0 ? (
+            <EmptyState
+              icon={Utensils}
+              title={searchQuery ? "Ei hakutuloksia" : "Ei ruokaohjeita vielä"}
+              description={
+                searchQuery
+                  ? `Hakusanalla "${searchQuery}" ei löytynyt ruokaohjeita. Kokeile toista hakusanaa tai lisää uusi ruokaohje.`
+                  : "Aloita lisäämällä ensimmäinen ruokaohje koirallesi."
+              }
+              actionLabel="Lisää uusi ruokaohje"
+              onAction={() => setIsAddingRecipe(true)}
+              variant="default"
+              className="py-8"
+            />
+          ) : (
+            recipes.map((recipe) => (
+              <div
+                key={recipe.id}
+                className={`p-3 border rounded-lg cursor-pointer transition-colors ${
+                  selectedRecipe?.id === recipe.id
+                    ? 'border-green-500 bg-green-50'
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
+                onClick={() => onRecipeSelect(recipe)}
+              >
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h4 className="font-medium">{recipe.name}</h4>
+                    {recipe.brand && (
+                      <p className="text-sm text-gray-600">{recipe.brand}</p>
+                    )}
+                  </div>
+                  <div className="flex gap-1">
+                    {recipe.calories_per_100g && (
+                      <Badge variant="secondary" className="text-xs">
+                        {recipe.calories_per_100g} kcal
+                      </Badge>
+                    )}
+                    {recipe.source && (
+                      <Badge variant="outline" className="text-xs">
+                        {recipe.source}
+                      </Badge>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </CardContent>
     </Card>

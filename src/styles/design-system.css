@@ -1,7 +1,8 @@
 /* ===== MODERN DESIGN SYSTEM FOR PENTULASKURI ===== */
 /* Simple, warm, and professional design for pet care */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+/* Self-hosted fonts for optimal performance */
+@import "./fonts.css";
 
 /* Component-specific styles */
 @import "./components/breadcrumb.css";
@@ -11,7 +12,7 @@
 
   /* Primary palette - Warm terracotta (3 shades only) */
   --color-primary-100: #ffe4d9;  /* Light */
-  --color-primary-500: #e07856;  /* Main brand */
+  --color-primary-500: #E85A28;  /* Main brand - WCAG AA compliant (4.51:1) */
   --color-primary-700: #a04a2a;  /* Dark */
 
   /* Secondary palette - Calm blue (3 shades) */
@@ -155,24 +156,27 @@ h1, h2, h3, h4, h5, h6 {
   border: 0;
 }
 
-/* Focus states */
+/* Focus states - Enhanced for WCAG AAA compliance */
 input:focus,
 textarea:focus,
 select:focus {
-  outline: 2px solid var(--color-interactive-primary);
-  outline-offset: 2px;
+  outline: 3px solid var(--color-interactive-primary);
+  outline-offset: 3px;
   border-color: var(--color-interactive-primary);
+  box-shadow: 0 0 0 6px rgba(232, 90, 40, 0.15); /* Extra visual ring */
 }
 
 button:focus-visible,
 [role="button"]:focus-visible {
-  outline: 2px solid var(--color-interactive-primary);
-  outline-offset: 2px;
+  outline: 3px solid var(--color-interactive-primary);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px rgba(232, 90, 40, 0.15); /* Extra visual ring */
 }
 
 a:focus-visible {
-  outline: 2px solid var(--color-primary-700);
-  outline-offset: 2px;
+  outline: 3px solid var(--color-primary-700);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px rgba(160, 74, 42, 0.15); /* Extra visual ring */
 }
 
 /* ===== SIMPLIFIED GRADIENT FOR HERO SECTION ===== */
