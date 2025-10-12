@@ -68,7 +68,10 @@ const Footer = () => {
   }];
   return <footer className="relative">
       {/* Newsletter Section */}
-      <section className="full-width-section bg-gradient-warm py-16 mobile-container-safe">
+      <section
+        className="full-width-section py-16 mobile-container-safe"
+        style={{ background: 'linear-gradient(135deg, #FF6B35 0%, #FF8E72 100%)' }}
+      >
         <div className="full-width-content">
           <motion.div initial={{
           opacity: 0,
@@ -141,7 +144,10 @@ const Footer = () => {
       </section>
 
       {/* Main Footer */}
-      <div className="bg-gradient-to-br from-[var(--color-neutral-900)] via-[var(--color-neutral-800)] to-[var(--color-primary-900)] text-white">
+      <div
+        className="text-white"
+        style={{ background: 'linear-gradient(135deg, #171717 0%, #262626 50%, #7c2d12 100%)' }}
+      >
         <div className="full-width-section py-16 mobile-container-safe">
           <div className="full-width-content">
             <div className="grid lg:grid-cols-12 gap-12">

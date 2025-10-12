@@ -178,11 +178,10 @@ const Index = () => {
       <ScrollPanBackground
         src={pentulaskuriHero}
         alt="Pentulaskuri - iloinen pentu"
-        aspectRatio="16/9"
-        panX={40}
-        panY={20}
-        zoom={1.04}
-        minHeightClass="min-h-[70svh]"
+        panX={15}
+        panY={10}
+        zoom={1.02}
+        minHeightClass="min-h-[80vh]"
         className="no-horizontal-scroll mobile-text-wrap responsive-media mobile-container-safe pt-20 md:pt-24"
         overlayClassName="items-center justify-center px-4 md:px-6"
       >

@@ -162,6 +162,8 @@ body {
   --color-primary: #FF6B35;
   --color-primary-dark: #E55A2B;
   --color-primary-light: #FF8E72;
+  --color-primary-600: #ea580c;  /* Medium orange */
+  --color-primary-900: #7c2d12;  /* Dark brown-red */
   --color-secondary: #4A90E2;
   --color-accent: #FFD93D;
   --color-success: #4CAF50;
@@ -373,6 +375,10 @@ body {
 
 .bg-gradient-primary {
   background: linear-gradient(135deg, #FF6B35 0%, #FF8E72 100%);
+}
+
+.bg-gradient-soft {
+  background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
 }
 
 /* ===== BUTTON STYLES ===== */

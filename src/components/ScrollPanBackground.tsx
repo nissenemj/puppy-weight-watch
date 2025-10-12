@@ -50,7 +50,7 @@ export default function ScrollPanBackground({
         <LazyImage
           src={src}
           alt={alt}
-          className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
+          className="absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none"
           priority={true}
         />
       )}>
@@ -59,7 +59,7 @@ export default function ScrollPanBackground({
             <LazyImage
               src={src}
               alt={alt}
-              className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
+              className="absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none"
               priority={true}
             />
           }
