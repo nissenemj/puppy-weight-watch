@@ -724,14 +724,4 @@ h1, h2, h3, h4, h5, h6 { scroll-margin-top: 80px; }
   box-shadow: none !important;
 }
 
-/* Hero background image cover-mode override - ensures full viewport coverage */
-@media (max-width: 768px) {
-  /* Target ScrollPanBackground images and motion.img elements */
-  section[class*="overflow-hidden"] img,
-  section.relative.overflow-hidden img,
-  [class*="ScrollPan"] img {
-    object-fit: cover !important;
-  }
-}
-
 /* (moved) mobile utilities imported at top to satisfy CSS import ordering */
