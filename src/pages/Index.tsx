@@ -182,7 +182,7 @@ const Index = () => {
         panY={10}
         zoom={1.02}
         minHeightClass="min-h-[80vh]"
-        className="no-horizontal-scroll mobile-text-wrap responsive-media mobile-container-safe pt-20 md:pt-24"
+        className="no-horizontal-scroll mobile-text-wrap responsive-media mobile-container-safe -mt-20 md:-mt-24"
         overlayClassName="items-center justify-center px-4 md:px-6"
       >
         {/* Hero Content */}
