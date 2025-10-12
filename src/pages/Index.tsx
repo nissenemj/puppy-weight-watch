@@ -53,9 +53,6 @@ const Index = () => {
     trackPageViewed('Homepage', '/');
   }, []);
 
-  // Debug: verify image import
-  console.log('pentulaskuriHero path:', pentulaskuriHero);
-
   const faqs = [
     {
       question: "Kuinka usein minun pitäisi punnita pentuni?",
@@ -182,7 +179,7 @@ const Index = () => {
         panY={10}
         zoom={1.08}
         minHeightClass="min-h-[100svh]"
-        className="no-horizontal-scroll mobile-text-wrap mobile-container-safe"
+        className="no-horizontal-scroll mobile-text-wrap mobile-container-safe -mt-20 md:-mt-24"
         overlayClassName="items-center justify-center px-4 md:px-6"
       >
         {/* Hero Content */}

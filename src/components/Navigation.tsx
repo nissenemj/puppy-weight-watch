@@ -239,8 +239,8 @@ const NavigationWithRouter: React.FC = () => {
         Siirry sisältöön
       </a>
 
-      <header 
-        className="fixed left-0 right-0 top-0 z-[100]" 
+      <header
+        className="fixed left-0 right-0 top-0 z-[100] h-20 md:h-24"
         role="banner"
         style={{ contain: 'layout' }}
       >
@@ -292,9 +292,9 @@ const NavigationWithRouter: React.FC = () => {
                 <span className="sr-only">Avaa valikko</span>
               </Button>
             </SheetTrigger>
-            <SheetContent 
-              side="right" 
-              className="w-full max-w-sm bg-white px-0" 
+            <SheetContent
+              side="right"
+              className="w-full max-w-sm bg-white px-0 z-[250]"
               id="mobile-menu"
               onOpenAutoFocus={(e) => {
                 e.preventDefault();
