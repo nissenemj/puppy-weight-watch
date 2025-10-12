@@ -89,11 +89,7 @@ body {
     box-sizing: border-box !important;
   }
 
-  /* Images should never overflow and keep aspect ratio */
-  img {
-    max-width: 100% !important;
-    height: auto !important;
-  }
+  /* Removed: conflicting global img rule that overrode absolute background images */
 }
 
 /* Accessible skip link and sr-only helpers */
@@ -725,3 +721,12 @@ h1, h2, h3, h4, h5, h6 { scroll-margin-top: 80px; }
 }
 
 /* (moved) mobile utilities imported at top to satisfy CSS import ordering */
+
+/* Protective rule: ensure hero pan-background images always cover viewport on mobile */
+@media (max-width: 768px) {
+  .bg-pan-image {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+}

@@ -31,7 +31,7 @@ export default function ScrollPanBackgroundMotion({
         src={src}
         alt={alt}
         aria-hidden={alt === ''}
-        className="absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none"
+        className="bg-pan-image absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none"
         style={{ zIndex: 1 }}
       />
     )
@@ -42,7 +42,7 @@ export default function ScrollPanBackgroundMotion({
       src={src}
       alt={alt}
       aria-hidden={alt === ''}
-      className="absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none will-change-transform"
+      className="bg-pan-image absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none will-change-transform"
       style={{ x, y, scale, zIndex: 1 }}
     />
   )
