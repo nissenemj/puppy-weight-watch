@@ -517,13 +517,6 @@ body {
     animation: none !important;
   }
   
-  .absolute {
-    position: relative !important;
-    top: auto !important;
-    left: auto !important;
-    right: auto !important;
-    bottom: auto !important;
-  }
 }
 
 /* ===== MOBILE OPTIMIZATION CLASSES ===== */
@@ -736,6 +729,8 @@ h1, h2, h3, h4, h5, h6 { scroll-margin-top: 80px; }
   .bg-pan-image,
   .bg-pan-image > img,
   .bg-pan-image picture > img {
+    position: absolute !important;
+    inset: 0 !important;
     width: 100% !important;
     height: 100% !important;
     object-fit: cover !important;
