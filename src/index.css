@@ -722,6 +722,15 @@ h1, h2, h3, h4, h5, h6 { scroll-margin-top: 80px; }
 
 /* (moved) mobile utilities imported at top to satisfy CSS import ordering */
 
+/* Global rule: ensure .bg-pan-image always covers with object-fit on all devices */
+.bg-pan-image,
+.bg-pan-image > img,
+.bg-pan-image picture > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 /* Protective rule: ensure hero pan-background images always cover viewport on mobile */
 @media (max-width: 768px) {
   .bg-pan-image,

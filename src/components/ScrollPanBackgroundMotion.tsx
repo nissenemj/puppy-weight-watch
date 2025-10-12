@@ -22,7 +22,7 @@ export default function ScrollPanBackgroundMotion({
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] })
   const x = useTransform(scrollYProgress, [0, 1], [-panX / 2, panX / 2])
   const y = useTransform(scrollYProgress, [0, 1], [-panY / 2, panY / 2])
-  const scale = useTransform(scrollYProgress, [0, 1], [1, zoom])
+  const scale = useTransform(scrollYProgress, [0, 1], [zoom, zoom])
 
   // Respect reduced motion: show static image without transforms
   if (reduceMotion) {
@@ -43,7 +43,7 @@ export default function ScrollPanBackgroundMotion({
       alt={alt}
       aria-hidden={alt === ''}
       className="bg-pan-image absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none will-change-transform"
-      style={{ x, y, scale, zIndex: 1 }}
+      style={{ x, y, scale, zIndex: 1, transformOrigin: '50% 50%' }}
     />
   )
 }

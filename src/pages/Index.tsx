@@ -177,7 +177,7 @@ const Index = () => {
         alt="Pentulaskuri - iloinen pentu"
         panX={15}
         panY={10}
-        zoom={1.10}
+        zoom={1.12}
         minHeightClass="min-h-[100svh]"
         className="no-horizontal-scroll mobile-text-wrap mobile-container-safe"
         overlayClassName="items-center justify-center px-4 md:px-6"
