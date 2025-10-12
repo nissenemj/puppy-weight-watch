@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Footer from '@/components/Footer';
 import AdvancedFoodCalculator from '@/components/AdvancedFoodCalculator';
 import SEO from '@/components/SEO';
@@ -15,53 +15,8 @@ import { createCalculatorSchema, createFAQSchema, createBreadcrumbSchema } from 
 import ScrollPanBackground from '@/components/ScrollPanBackground';
 import StickyHorizontalGallery from '@/components/StickyHorizontalGallery';
 import CountUp from '@/components/CountUp';
-import ComingSoon from '@/components/ComingSoon';
-import { supabase } from '@/integrations/supabase/client';
 import calculatorHeroBg from '@/assets/calculator-hero-bg.jpg';
 const Calculator = () => {
-  const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Check current user
-    const checkUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
-      setLoading(false);
-    };
-
-    checkUser();
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  // Check if user is admin
-  const isAdmin = user?.email === 'nissenemj@gmail.com';
-
-  if (loading) {
-    return (
-      <MobileOptimizedLayout>
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-orange-500"></div>
-        </div>
-      </MobileOptimizedLayout>
-    );
-  }
-
-  // Show coming soon for non-admin users
-  if (!isAdmin) {
-    return (
-      <MobileOptimizedLayout>
-        <ComingSoon />
-      </MobileOptimizedLayout>
-    );
-  }
   const faqs = [{
     question: "Kuinka paljon ruokaa pentu tarvitsee painon mukaan?",
     answer: "Ruokamäärä lasketaan elopainokiloa kohden. Pienet rodut (1-5 kg): 42g/kg 6 viikon iässä, vähennetään 31g/kg 7 kuukauteen mennessä. Suuret rodut (10-20 kg): 26g/kg 6 viikon iässä, vähennetään 19g/kg 8 kuukauteen mennessä. Esimerkki: 4kg, 5kk ikäinen pentu tarvitsee noin 136g päivässä."
@@ -176,7 +131,7 @@ const Calculator = () => {
       {/* Calculator Section + trust stats */}
       <Section className="full-width-section py-16 mobile-text-wrap mobile-container-safe" role="main" id="calculator-main">
         <div className="full-width-content py-16">
-          <AdvancedFoodCalculator user={null as any} />
+          <AdvancedFoodCalculator user={null} />
         </div>
       </Section>
         

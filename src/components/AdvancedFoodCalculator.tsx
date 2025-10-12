@@ -43,7 +43,7 @@ const ACTIVITY_MULTIPLIERS = {
 }
 
 interface AdvancedFoodCalculatorProps {
-  user: User
+  user: User | null
   currentWeight?: number
 }
 
