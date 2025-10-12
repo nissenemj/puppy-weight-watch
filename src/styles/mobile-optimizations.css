@@ -10,10 +10,21 @@
     box-sizing: border-box !important;
   }
 
-  /* Global responsive images */
-  img {
+  /* Global responsive images - exclude absolutely positioned background images */
+  img:not([class*="absolute"]):not([style*="position: absolute"]) {
     max-width: 100% !important;
     height: auto !important;
+  }
+
+  /* Background images (absolutely positioned) should fill their containers */
+  img.absolute,
+  img[class*="absolute"],
+  section img[class*="absolute"] {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
   }
 
   /* === TEXT OPTIMIZATION === */
@@ -353,7 +364,7 @@
   .responsive-media canvas {
     max-width: 100% !important;
     height: auto !important;
-    object-fit: contain !important;
+    /* Removed object-fit: contain - let components define their own object-fit behavior */
   }
 
   /* Flex wrapping */

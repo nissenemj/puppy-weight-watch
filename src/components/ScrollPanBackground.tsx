@@ -1,7 +1,6 @@
 import React, { ReactNode, Suspense, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
-import { LazyImage } from '@/components/LazyImage'
 import { Button } from '@/components/ui/button'
 import { Scale, Calculator } from 'lucide-react'
 
@@ -47,20 +46,22 @@ export default function ScrollPanBackground({
     >
       {/* Background image: Suspense fallback shows static image until Motion chunk loads */}
       <ErrorBoundary fallback={() => (
-        <LazyImage
+        <img
           src={src}
           alt={alt}
           className="absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none"
-          priority={true}
+          loading="eager"
+          style={{ zIndex: 1 }}
         />
       )}>
         <Suspense
           fallback={
-            <LazyImage
+            <img
               src={src}
               alt={alt}
               className="absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none"
-              priority={true}
+              loading="eager"
+              style={{ zIndex: 1 }}
             />
           }
         >
