@@ -141,12 +141,12 @@ const Timeline: React.FC<TimelineProps> = ({ bookId }) => {
                     <p className="text-gray-600 text-sm mt-1">{entry.description}</p>
                   )}
                   {/* Näytä ylimääräistä tietoa painomittauksille */}
-                  {entry.entry_type === 'weight_measurement' && entry.metadata?.weight_kg && (
+                  {entry.entry_type === 'weight_measurement' && entry.metadata?.weight_kg !== undefined && (
                     <div className="mt-2 p-2 bg-blue-50 rounded-lg">
                       <div className="flex items-center gap-2 text-sm text-blue-700">
                         <Activity className="w-4 h-4" />
-                        <span className="font-medium">{entry.metadata.weight_kg} kg</span>
-                        {entry.metadata.auto_generated && (
+                        <span className="font-medium">{entry.metadata.weight_kg as number} kg</span>
+                        {!!entry.metadata.auto_generated && (
                           <span className="text-xs text-blue-500">(Automaattinen merkintä)</span>
                         )}
                       </div>

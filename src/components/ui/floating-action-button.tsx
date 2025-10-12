@@ -181,7 +181,7 @@ const FloatingActionButton = React.forwardRef<
             onMouseLeave={() => setIsHovered(false)}
             onClick={onClick}
             aria-label={label}
-            {...props}
+            {...(props as any)}
           >
             {/* Icon with rotation animation on hover */}
             <motion.div

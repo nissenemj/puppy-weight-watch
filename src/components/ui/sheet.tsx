@@ -79,7 +79,7 @@ const SheetContent = React.forwardRef<
     const [isDragging, setIsDragging] = React.useState(false)
 
     const handleDragEnd = React.useCallback(
-      (event, info) => {
+      (event: MouseEvent | TouchEvent | PointerEvent, info: { offset: { y: number }; velocity: { y: number } }) => {
         const threshold = 100
         const velocity = info.velocity.y
 
