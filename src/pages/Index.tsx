@@ -181,12 +181,12 @@ const Index = () => {
         panX={15}
         panY={10}
         zoom={1.02}
-        minHeightClass="min-h-[80vh]"
-        className="no-horizontal-scroll mobile-text-wrap responsive-media mobile-container-safe pt-16 md:pt-20"
+        minHeightClass="min-h-[100svh]"
+        className="no-horizontal-scroll mobile-text-wrap responsive-media mobile-container-safe"
         overlayClassName="items-center justify-center px-4 md:px-6"
       >
         {/* Hero Content */}
-        <div className="hero-content max-w-4xl mx-auto text-center text-white mobile-text-shadow">
+        <div className="hero-content max-w-4xl mx-auto text-center text-white mobile-text-shadow pt-16 md:pt-20">
           <motion.div
             initial="hidden"
             animate="visible"
