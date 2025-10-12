@@ -42,25 +42,29 @@ export default function ScrollPanBackground({
   return (
     <section 
       ref={sectionRef} 
-      className={`relative w-full overflow-hidden ${minHeightClass} ${className}`}
+      className={`relative w-full overflow-hidden bg-black ${minHeightClass} ${className}`}
       style={aspectRatio ? { aspectRatio } : undefined}
     >
       {/* Background image: Suspense fallback shows static image until Motion chunk loads */}
       <ErrorBoundary fallback={() => (
-        <LazyImage
+        <img
           src={src}
           alt={alt}
           className="bg-pan-image absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none"
-          priority={true}
+          loading="eager"
+          decoding="async"
+          fetchPriority="high"
         />
       )}>
         <Suspense
           fallback={
-            <LazyImage
+            <img
               src={src}
               alt={alt}
               className="bg-pan-image absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none"
-              priority={true}
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
             />
           }
         >

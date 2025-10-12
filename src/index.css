@@ -724,7 +724,9 @@ h1, h2, h3, h4, h5, h6 { scroll-margin-top: 80px; }
 
 /* Protective rule: ensure hero pan-background images always cover viewport on mobile */
 @media (max-width: 768px) {
-  .bg-pan-image {
+  .bg-pan-image,
+  .bg-pan-image > img,
+  .bg-pan-image picture > img {
     width: 100% !important;
     height: 100% !important;
     object-fit: cover !important;
