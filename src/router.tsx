@@ -26,6 +26,12 @@ const InfoHome = lazy(() => import("./pages/InfoHome"));
 const FeedingData = lazy(() => import("./pages/FeedingData"));
 const FoodTypes = lazy(() => import("./pages/FoodTypes"));
 
+// Legal pages
+const PrivacyPolicy = lazy(() => import("./pages/legal/PrivacyPolicy"));
+const TermsOfService = lazy(() => import("./pages/legal/TermsOfService"));
+const CookiePolicy = lazy(() => import("./pages/legal/CookiePolicy"));
+const AccessibilityStatement = lazy(() => import("./pages/legal/AccessibilityStatement"));
+
 // Loading component
 const PageLoader = () => (
   <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-pink-25 to-purple-50">
@@ -127,7 +133,25 @@ const router = createBrowserRouter([
     path: "/info/safety",
     element: withSuspense(SafetyPage),
   },
-  
+
+  // Legal pages
+  {
+    path: "/privacy",
+    element: withSuspense(PrivacyPolicy),
+  },
+  {
+    path: "/terms",
+    element: withSuspense(TermsOfService),
+  },
+  {
+    path: "/cookies",
+    element: withSuspense(CookiePolicy),
+  },
+  {
+    path: "/accessibility",
+    element: withSuspense(AccessibilityStatement),
+  },
+
   // 404 page
   {
     path: "*",

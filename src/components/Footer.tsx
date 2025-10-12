@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { entranceAnimations, hoverAnimations } from '@/animations';
 import { useNewsletterSubscription } from '@/hooks/useNewsletterSubscription';
+import { trackNewsletterSubscription, trackFooterLinkClicked } from '@/utils/analytics';
 const Footer = () => {
   const { subscribe, isLoading, isSubscribed } = useNewsletterSubscription();
   const [email, setEmail] = useState('');
@@ -14,7 +15,8 @@ const Footer = () => {
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (email.trim()) {
-      await subscribe(email);
+      const success = await subscribe(email);
+      trackNewsletterSubscription(email, !!success);
       if (isSubscribed) {
         setEmail('');
       }
@@ -64,22 +66,6 @@ const Footer = () => {
     href: '/accessibility',
     label: 'Saavutettavuus'
   }];
-  const socialLinks = [{
-    href: '#',
-    icon: Instagram,
-    label: 'Instagram',
-    color: 'from-pink-500 to-purple-600'
-  }, {
-    href: '#',
-    icon: Twitter,
-    label: 'Twitter',
-    color: 'from-blue-400 to-blue-600'
-  }, {
-    href: '#',
-    icon: Github,
-    label: 'Github',
-    color: 'from-gray-600 to-gray-800'
-  }];
   return <footer className="relative">
       {/* Newsletter Section */}
       <section className="full-width-section bg-gradient-warm py-16 mobile-container-safe">
@@ -104,14 +90,16 @@ const Footer = () => {
               
               
               <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-                <input 
-                  type="email" 
+                <input
+                  type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="sinun@email.fi" 
-                  className="flex-1 px-6 py-3 rounded-xl bg-white/90 backdrop-blur text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50 disabled:opacity-50" 
+                  placeholder="sinun@email.fi"
+                  className="flex-1 px-6 py-3 rounded-xl bg-white/90 backdrop-blur text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50 disabled:opacity-50"
                   disabled={isLoading || isSubscribed}
                   required
+                  aria-label="Sähköpostiosoite uutiskirjettä varten"
+                  aria-describedby="newsletter-description"
                 />
                 <Button 
                   type="submit"
@@ -138,7 +126,12 @@ const Footer = () => {
                 </Button>
               </form>
               
-              <p className="text-body-sm text-white/70 mt-4">
+              <p
+                id="newsletter-description"
+                className="text-body-sm text-white/70 mt-4"
+                role="status"
+                aria-live="polite"
+              >
                 <CheckCircle className="w-4 h-4 inline mr-1" />
                 Ei roskapostia. Voit peruuttaa milloin tahansa.
               </p>
@@ -168,29 +161,24 @@ const Footer = () => {
                     <Dog className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="text-h4 font-bold text-white text-[var(--color-text-primary)]">Pentulaskuri.com</h3>
+                    <h3 className="text-h4 font-bold text-white">Pentulaskuri.com</h3>
                     <p className="text-body-sm text-white/70">Moderni pennunhoito</p>
                   </div>
                 </div>
 
                 <p className="text-body text-white/80 mb-6 max-w-md leading-relaxed">
-                  Suomen johtava digitaalinen alusta koiran kasvun seuraamiseen. 
+                  Suomen johtava digitaalinen alusta koiran kasvun seuraamiseen.
                   Yhdistämme tieteellisen tiedon ja modernin teknologian.
                 </p>
 
-                {/* Social Links */}
+                {/* Contact */}
                 <div className="flex gap-3 mb-8">
-                  {socialLinks.map((social, index) => {
-                  const Icon = social.icon;
-                  return <motion.a key={index} href={social.href} target="_blank" rel="noopener noreferrer" className={`w-10 h-10 rounded-xl bg-gradient-to-br ${social.color} flex items-center justify-center text-white shadow-lg`} whileHover={{
-                    scale: 1.1
-                  }} whileTap={{
-                    scale: 0.95
-                  }}>
-                        <Icon className="w-5 h-5" />
-                      </motion.a>;
-                })}
-                  <a href="mailto:info@pentulaskuri.fi" className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center text-white shadow-lg hover:scale-110 transition-transform">
+                  <a
+                    href="mailto:nissenemj@gmail.com"
+                    className="min-w-[44px] min-h-[44px] w-11 h-11 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center text-white shadow-lg hover:scale-110 transition-transform touch-target"
+                    aria-label="Lähetä sähköposti: nissenemj@gmail.com"
+                    onClick={() => trackFooterLinkClicked('contact', 'Email', 'mailto:nissenemj@gmail.com')}
+                  >
                     <Mail className="w-5 h-5" />
                   </a>
                 </div>
@@ -214,7 +202,11 @@ const Footer = () => {
                   {quickLinks.map((link, index) => {
                   const Icon = link.icon;
                   return <li key={index}>
-                        <Link to={link.href} className="flex items-center gap-3 text-white/70 hover:text-white transition-colors group">
+                        <Link
+                          to={link.href}
+                          className="flex items-center gap-3 text-white/70 hover:text-white transition-colors group"
+                          onClick={() => trackFooterLinkClicked('quick-links', link.label, link.href)}
+                        >
                           <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
                             <Icon className="w-4 h-4" />
                           </div>
@@ -243,7 +235,11 @@ const Footer = () => {
                 <h4 className="text-h5 font-semibold mb-6 text-white/90">Oppaat</h4>
                 <ul className="space-y-3">
                   {supportLinks.map((link, index) => <li key={index}>
-                      <Link to={link.href} className="text-white/70 hover:text-white transition-colors text-body-sm">
+                      <Link
+                        to={link.href}
+                        className="text-white/70 hover:text-white transition-colors text-body-sm"
+                        onClick={() => trackFooterLinkClicked('guides', link.label, link.href)}
+                      >
                         {link.label}
                       </Link>
                     </li>)}
@@ -265,7 +261,11 @@ const Footer = () => {
                 <h4 className="text-h5 font-semibold mb-6 text-white/90">Juridiset</h4>
                 <ul className="space-y-3">
                   {legalLinks.map((link, index) => <li key={index}>
-                      <Link to={link.href} className="text-white/70 hover:text-white transition-colors text-body-sm">
+                      <Link
+                        to={link.href}
+                        className="text-white/70 hover:text-white transition-colors text-body-sm"
+                        onClick={() => trackFooterLinkClicked('legal', link.label, link.href)}
+                      >
                         {link.label}
                       </Link>
                     </li>)}

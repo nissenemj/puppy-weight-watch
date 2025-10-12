@@ -290,6 +290,26 @@ export const trackFormValidationError = (formName: string, fieldName: string, er
   });
 };
 
+// Footer Events
+export const trackNewsletterSubscription = (email: string, success: boolean) => {
+  analytics.track({
+    name: 'newsletter_subscribed',
+    category: 'user_engagement',
+    metadata: {
+      email: email.split('@')[1], // Only track domain for privacy
+      success
+    },
+  });
+};
+
+export const trackFooterLinkClicked = (category: string, label: string, destination: string) => {
+  analytics.track({
+    name: 'footer_link_clicked',
+    category: 'navigation',
+    metadata: { category, label, destination },
+  });
+};
+
 // Auto-track performance metrics
 if (typeof window !== 'undefined') {
   // Track Core Web Vitals
