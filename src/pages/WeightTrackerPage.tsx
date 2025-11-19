@@ -51,7 +51,7 @@ const WeightTrackerPage = () => {
   const checkUserData = async (user: User) => {
     try {
       setCheckingData(true)
-      
+
       // Check if user has puppy books
       const { data: books, error: booksError } = await supabase
         .from('puppy_books')
@@ -80,14 +80,14 @@ const WeightTrackerPage = () => {
       if (dogsError) {
         console.error('Error checking dogs:', dogsError)
         toast({
-          title: "Virhe tietojen haussa", 
+          title: "Virhe tietojen haussa",
           description: "Koirien tarkistaminen epäonnistui",
           variant: "destructive"
         })
       } else {
         const dogsExist = dogs && dogs.length > 0
         setHasDogs(dogsExist)
-        
+
         // Remove automatic redirect - let user choose what to do
       }
     } catch (error) {
@@ -301,7 +301,7 @@ const WeightTrackerPage = () => {
         </div>
 
         {/* Spacer for bottom navigation - prevents content from being hidden */}
-        <div className="h-20 md:hidden" aria-hidden="true" />
+
       </LayoutWithNavigation>
     </MobileOptimizedLayout>
   )

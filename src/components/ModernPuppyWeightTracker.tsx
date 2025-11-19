@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { SkeletonMobileCard } from '@/components/ui/skeleton'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -94,7 +95,7 @@ export default function ModernPuppyWeightTracker() {
   useEffect(() => {
     if (isGuest && guestWeightEntries.length > 0) {
       // Convert guest entries to chart format
-      const convertedEntries = guestWeightEntries.map(entry => ({
+      const convertedEntries = guestWeightEntries.map((entry: any) => ({
         id: entry.id,
         user_id: 'guest',
         date: entry.date,
@@ -412,16 +413,16 @@ export default function ModernPuppyWeightTracker() {
 
     // Toy/Small breeds (up to 10kg)
     if (breed.includes('chihuahua') || breed.includes('yorkshire') ||
-        breed.includes('pomeranian') || breed.includes('maltese') ||
-        breed.includes('toy') || breed.includes('mini')) {
+      breed.includes('pomeranian') || breed.includes('maltese') ||
+      breed.includes('toy') || breed.includes('mini')) {
       return 'toy_small'
     }
 
     // Large/Giant breeds (25kg+)
     if (breed.includes('labrador') || breed.includes('retriever') ||
-        breed.includes('saksanpaimenkoira') || breed.includes('rottweiler') ||
-        breed.includes('mastiff') || breed.includes('saint bernard') ||
-        breed.includes('great dane') || breed.includes('leonberger')) {
+      breed.includes('saksanpaimenkoira') || breed.includes('rottweiler') ||
+      breed.includes('mastiff') || breed.includes('saint bernard') ||
+      breed.includes('great dane') || breed.includes('leonberger')) {
       return 'large_giant'
     }
 
@@ -435,7 +436,7 @@ export default function ModernPuppyWeightTracker() {
         isOpen={true}
         mode={isLogin ? 'signin' : 'signup'}
         onModeChange={(mode) => setIsLogin(mode === 'signin')}
-        onAuthSuccess={() => {}} // Auth state will be handled by GuestAuthContext
+        onAuthSuccess={() => { }} // Auth state will be handled by GuestAuthContext
         fullScreen={true}
       />
     )
@@ -461,7 +462,7 @@ export default function ModernPuppyWeightTracker() {
   const handleTabSwipe = (direction: 'left' | 'right') => {
     const tabs = ['weight-tracking', 'growth-chart', 'puppy-feeding', 'news-feed']
     const currentIndex = tabs.indexOf(activeTab)
-    
+
     if (direction === 'left' && currentIndex < tabs.length - 1) {
       setActiveTab(tabs[currentIndex + 1])
     } else if (direction === 'right' && currentIndex > 0) {
@@ -470,44 +471,44 @@ export default function ModernPuppyWeightTracker() {
   }
 
   return (
-      <div 
-        ref={containerRef}
-        className="min-h-screen bg-gradient-primary relative"
-        style={{
-          transform: shouldShowIndicator ? `translateY(${Math.min(pullDistance * 0.5, 40)}px)` : 'none',
-          transition: shouldShowIndicator ? 'none' : 'transform 0.2s ease-out',
-          scrollbarGutter: 'stable'
-        }}
-      >
-        {/* Pull to refresh indicator */}
-        {shouldShowIndicator && (
-          <div 
-            className="absolute top-0 left-0 right-0 flex items-center justify-center py-4 bg-white/80 backdrop-blur-sm z-50"
-            style={{
-              opacity: Math.min(pullDistance / 80, 1),
-              transform: `translateY(${-40 + Math.min(pullDistance * 0.5, 40)}px)`
-            }}
-          >
-            <RefreshCw 
-              className={`h-6 w-6 text-primary ${isRefreshing ? 'animate-spin' : ''}`}
+    <div
+      ref={containerRef}
+      className="min-h-screen bg-gradient-primary relative"
+      style={{
+        transform: shouldShowIndicator ? `translateY(${Math.min(pullDistance * 0.5, 40)}px)` : 'none',
+        transition: shouldShowIndicator ? 'none' : 'transform 0.2s ease-out',
+        scrollbarGutter: 'stable'
+      }}
+    >
+      {/* Pull to refresh indicator */}
+      {shouldShowIndicator && (
+        <div
+          className="absolute top-0 left-0 right-0 flex items-center justify-center py-4 bg-white/80 backdrop-blur-sm z-50"
+          style={{
+            opacity: Math.min(pullDistance / 80, 1),
+            transform: `translateY(${-40 + Math.min(pullDistance * 0.5, 40)}px)`
+          }}
+        >
+          <RefreshCw
+            className={`h-6 w-6 text-primary ${isRefreshing ? 'animate-spin' : ''}`}
+          />
+          <span className="ml-2 text-sm text-gray-600">
+            {isRefreshing ? 'Päivitetään...' : pullDistance > 80 ? 'Päästä päivittääksesi' : 'Vedä alas päivittääksesi'}
+          </span>
+        </div>
+      )}
+
+      <div className="w-full mx-auto p-3 sm:p-4 max-w-full overflow-x-hidden">
+        {/* Dog Selector */}
+        {user && (
+          <div className="mb-6">
+            <DogSelector
+              user={user}
+              selectedDogId={selectedDog?.id}
+              onDogSelect={(dogId, dog) => setSelectedDog(dog)}
             />
-            <span className="ml-2 text-sm text-gray-600">
-              {isRefreshing ? 'Päivitetään...' : pullDistance > 80 ? 'Päästä päivittääksesi' : 'Vedä alas päivittääksesi'}
-            </span>
           </div>
         )}
-        
-        <div className="w-full mx-auto p-3 sm:p-4 max-w-full overflow-x-hidden">
-          {/* Dog Selector */}
-          {user && (
-            <div className="mb-6">
-              <DogSelector 
-                user={user} 
-                selectedDogId={selectedDog?.id} 
-                onDogSelect={(dogId, dog) => setSelectedDog(dog)} 
-              />
-            </div>
-          )}
 
         {/* Weight Entry Section - Always Visible */}
         {(selectedDog || isGuest) && (
@@ -540,7 +541,7 @@ export default function ModernPuppyWeightTracker() {
                     />
                   </div>
                   <div className="flex items-end">
-                    <Button 
+                    <Button
                       onClick={addWeightEntry}
                       disabled={!currentWeight}
                       size="mobile"
@@ -550,7 +551,7 @@ export default function ModernPuppyWeightTracker() {
                     </Button>
                   </div>
                 </div>
-                
+
                 {/* Quick Stats */}
                 <div className="grid grid-cols-2 gap-4 pt-2">
                   <div className="text-center p-3 bg-white/60 rounded-xl backdrop-blur-sm">
@@ -571,8 +572,8 @@ export default function ModernPuppyWeightTracker() {
 
         <Tabs value={activeTab} onValueChange={setActiveTab} onSwipe={handleTabSwipe} className="space-y-6">
           <TabsList className="grid w-full grid-cols-4 h-16 md:h-14 rounded-2xl bg-white/50 backdrop-blur-sm overflow-x-auto">
-            <TabsTrigger 
-              value="weight-tracking" 
+            <TabsTrigger
+              value="weight-tracking"
               className={cn(
                 "flex flex-col sm:flex-row items-center gap-1 sm:gap-2 rounded-xl transition-all duration-200 hover:scale-105 px-2 sm:px-4 text-white font-medium",
                 activeTab === "weight-tracking" ? "bg-gradient-cool !important" : "text-muted-foreground hover:text-foreground"
@@ -581,8 +582,8 @@ export default function ModernPuppyWeightTracker() {
               <Scale className="h-5 w-5 sm:h-4 sm:w-4" />
               <span className="text-xs sm:text-sm">Paino</span>
             </TabsTrigger>
-            <TabsTrigger 
-              value="growth-chart" 
+            <TabsTrigger
+              value="growth-chart"
               className={cn(
                 "flex flex-col sm:flex-row items-center gap-1 sm:gap-2 rounded-xl transition-all duration-200 hover:scale-105 px-2 sm:px-4 text-white font-medium",
                 activeTab === "growth-chart" ? "bg-gradient-purple !important" : "text-muted-foreground hover:text-foreground"
@@ -591,8 +592,8 @@ export default function ModernPuppyWeightTracker() {
               <TrendingUp className="h-5 w-5 sm:h-4 sm:w-4" />
               <span className="text-xs sm:text-sm">Kasvu</span>
             </TabsTrigger>
-            <TabsTrigger 
-              value="puppy-feeding" 
+            <TabsTrigger
+              value="puppy-feeding"
               className={cn(
                 "flex flex-col sm:flex-row items-center gap-1 sm:gap-2 rounded-xl transition-all duration-200 hover:scale-105 px-2 sm:px-4 text-white font-medium",
                 activeTab === "puppy-feeding" ? "bg-gradient-warm !important" : "text-muted-foreground hover:text-foreground"
@@ -601,8 +602,8 @@ export default function ModernPuppyWeightTracker() {
               <Utensils className="h-5 w-5 sm:h-4 sm:w-4" />
               <span className="text-xs sm:text-sm">Ruokinta</span>
             </TabsTrigger>
-            <TabsTrigger 
-              value="news-feed" 
+            <TabsTrigger
+              value="news-feed"
               className={cn(
                 "flex flex-col sm:flex-row items-center gap-1 sm:gap-2 rounded-xl transition-all duration-200 hover:scale-105 px-2 sm:px-4 text-white font-medium",
                 activeTab === "news-feed" ? "bg-gradient-purple !important" : "text-muted-foreground hover:text-foreground"
@@ -633,7 +634,7 @@ export default function ModernPuppyWeightTracker() {
                       </div>
                     </CardContent>
                   </Card>
-                  
+
                   <Card className="bg-white/80 backdrop-blur-sm shadow-xl rounded-2xl border-0 hover-3d">
                     <CardContent className="p-4 sm:p-6">
                       <div className="flex items-center space-x-3 sm:space-x-4">
@@ -649,7 +650,7 @@ export default function ModernPuppyWeightTracker() {
                       </div>
                     </CardContent>
                   </Card>
-                  
+
                   <Card className="bg-white/80 backdrop-blur-sm shadow-xl rounded-2xl border-0 hover-3d">
                     <CardContent className="p-4 sm:p-6">
                       <div className="flex items-center space-x-3 sm:space-x-4">
@@ -732,7 +733,7 @@ export default function ModernPuppyWeightTracker() {
                 )}
 
                 {/* Achievement System */}
-                <AchievementSystem 
+                <AchievementSystem
                   weightData={entries}
                   onCelebration={() => {
                     toast({
@@ -761,7 +762,7 @@ export default function ModernPuppyWeightTracker() {
           </TabsContent>
 
           <TabsContent value="growth-chart" className="animate-fade-in">
-            <GrowthDevelopmentSection 
+            <GrowthDevelopmentSection
               weightData={entries}
               birthDate={selectedDogBirthDate || undefined}
             />
@@ -782,7 +783,7 @@ export default function ModernPuppyWeightTracker() {
           </TabsContent>
         </Tabs>
       </div>
-      
+
       <Toaster />
     </div>
   )

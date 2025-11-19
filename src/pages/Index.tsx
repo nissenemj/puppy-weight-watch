@@ -9,11 +9,11 @@ import { createWebApplicationSchema, createWeightTrackingSchema, createFAQSchema
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { trackHeroCTAClicked, trackPageViewed, trackSecondaryCTAClicked } from '@/utils/analytics'
-import { 
-  Scale, 
-  Calculator, 
-  Book, 
-  TrendingUp, 
+import {
+  Scale,
+  Calculator,
+  Book,
+  TrendingUp,
   Heart,
   Award,
   Users,
@@ -157,8 +157,8 @@ const Index = () => {
     <MobileOptimizedLayout>
       <Navigation />
       {/* Skip to main content link for screen readers */}
-      <a 
-        href="#main-content" 
+      <a
+        href="#main-content"
         className="skip-link focus-enhanced"
       >
         Siirry pääsisältöön
@@ -292,15 +292,15 @@ const Index = () => {
 
       {/* Footer */}
       <Footer />
-      
+
       {/* User Onboarding */}
-      <UserOnboarding 
+      <UserOnboarding
         show={showOnboarding}
         onComplete={completeOnboarding}
       />
 
       {/* Spacer for bottom navigation - prevents content from being hidden */}
-      <div className="h-20 md:hidden" aria-hidden="true" />
+
     </MobileOptimizedLayout>
   )
 }

@@ -10,6 +10,7 @@ interface MobileOptimizedLayoutProps {
   floatingActionLabel?: string
   enableKeyboardHandling?: boolean
   enableSafeAreas?: boolean
+  withBottomNav?: boolean
 }
 
 // Hook for detecting virtual keyboard
@@ -61,15 +62,26 @@ export function MobileOptimizedLayout({
   floatingActionIcon,
   floatingActionLabel = 'Lisää',
   enableKeyboardHandling = true,
-  enableSafeAreas = true
+  enableSafeAreas = true,
+  withBottomNav = true // Default to true as most pages will have it
 }: MobileOptimizedLayoutProps) {
   const { keyboardHeight, isKeyboardVisible } = useVirtualKeyboard()
 
   return (
     <div
-      className={`min-h-screen bg-background ${enableSafeAreas ? 'safe-area' : ''} ${className}`}
+      className={`
+        min-h-screen bg-background 
+        ${enableSafeAreas ? 'pt-[env(safe-area-inset-top)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]' : ''}
+        ${className}
+      `}
       style={{
-        paddingBottom: enableKeyboardHandling && isKeyboardVisible ? keyboardHeight : undefined
+        paddingBottom: enableKeyboardHandling && isKeyboardVisible
+          ? keyboardHeight
+          : withBottomNav
+            ? 'calc(4rem + env(safe-area-inset-bottom))' // 4rem (64px) for bottom nav + safe area
+            : enableSafeAreas
+              ? 'env(safe-area-inset-bottom)'
+              : undefined
       }}
     >
       {children}
@@ -78,9 +90,11 @@ export function MobileOptimizedLayout({
       <AnimatePresence>
         {showFloatingAction && !isKeyboardVisible && (
           <motion.button
-            className="fixed w-14 h-14 bg-primary text-primary-foreground rounded-full shadow-lg flex items-center justify-center z-50 touch-manipulation"
+            className="fixed w-14 h-14 bg-primary text-primary-foreground rounded-full shadow-lg flex items-center justify-center z-40 touch-manipulation"
             style={{
-              bottom: `max(calc(env(safe-area-inset-bottom, 0px) + 1.5rem), 1.5rem)`,
+              bottom: withBottomNav
+                ? `calc(4.5rem + env(safe-area-inset-bottom))` // Above bottom nav
+                : `max(calc(env(safe-area-inset-bottom, 0px) + 1.5rem), 1.5rem)`,
               right: `max(env(safe-area-inset-right, 0px), 1.5rem)`
             }}
             whileHover={{ scale: 1.1 }}
@@ -97,15 +111,11 @@ export function MobileOptimizedLayout({
         )}
       </AnimatePresence>
 
-      {/* Bottom safe area for devices with home indicators */}
-      {enableSafeAreas && (
-        <footer
-          role="contentinfo"
-          aria-label="Alatunniste"
-          className="bg-background"
-          style={{
-            height: `max(env(safe-area-inset-bottom, 0px), 2rem)`
-          }}
+      {/* Bottom safe area spacer if no bottom nav but safe areas enabled */}
+      {enableSafeAreas && !withBottomNav && (
+        <div
+          aria-hidden="true"
+          className="h-[env(safe-area-inset-bottom)] w-full"
         />
       )}
     </div>
@@ -158,11 +168,11 @@ interface MobileListItemProps {
   showArrow?: boolean
 }
 
-export function MobileListItem({ 
-  children, 
-  className = '', 
-  onClick, 
-  showArrow = false 
+export function MobileListItem({
+  children,
+  className = '',
+  onClick,
+  showArrow = false
 }: MobileListItemProps) {
   return (
     <motion.div
