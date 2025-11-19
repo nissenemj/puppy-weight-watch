@@ -34,7 +34,8 @@ import { fi } from 'date-fns/locale'
 import { cn } from '@/lib/utils'
 
 // Import the generated assets (used in AuthModal)
-import heroIllustration from '@/assets/hero-illustration.png'
+import heroIllustration from '@/assets/hero-3d.png'
+import emptyStateIllustration from '@/assets/empty-state-3d.png'
 
 interface WeightEntry {
   id: string
