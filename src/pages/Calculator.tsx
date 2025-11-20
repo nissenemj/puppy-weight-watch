@@ -1,22 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Footer from '@/components/Footer';
 import AdvancedFoodCalculator from '@/components/AdvancedFoodCalculator';
 import SEO from '@/components/SEO';
 import FAQ from '@/components/FAQ';
-import { PageLayout, Container, Section } from '@/components/ui/Layout';
-import { MobileOptimizedLayout } from '@/components/MobileOptimizedLayout';
-import LayoutWithNavigation from '@/components/ui/layout-with-navigation';
-import { QuickActions } from '@/components/ui/quick-actions';
-import { Badge } from '@/components/ui/badge';
-import { Calculator as CalculatorIcon, Sparkles, TrendingUp } from 'lucide-react';
+import { createCalculatorSchema, createFAQSchema, createBreadcrumbSchema } from '@/utils/structuredData';
+import { trackPageViewed } from '@/utils/analytics';
+import { Calculator as CalculatorIcon, Sparkles, TrendingUp, CheckCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { entranceAnimations } from '@/animations';
-import { createCalculatorSchema, createFAQSchema, createBreadcrumbSchema } from '@/utils/structuredData';
-import ScrollPanBackground from '@/components/ScrollPanBackground';
-import StickyHorizontalGallery from '@/components/StickyHorizontalGallery';
-import CountUp from '@/components/CountUp';
-import calculatorHeroBg from '@/assets/calculator-hero-bg.jpg';
+import { Badge } from '@/components/ui/badge';
+
 const Calculator = () => {
+  useEffect(() => {
+    trackPageViewed('Calculator', '/calculator');
+  }, []);
+
   const faqs = [{
     question: "Kuinka paljon ruokaa pentu tarvitsee painon mukaan?",
     answer: "Ruokamäärä lasketaan elopainokiloa kohden. Pienet rodut (1-5 kg): 42g/kg 6 viikon iässä, vähennetään 31g/kg 7 kuukauteen mennessä. Suuret rodut (10-20 kg): 26g/kg 6 viikon iässä, vähennetään 19g/kg 8 kuukauteen mennessä. Esimerkki: 4kg, 5kk ikäinen pentu tarvitsee noin 136g päivässä."
@@ -42,117 +40,95 @@ const Calculator = () => {
     question: "Mitä hyötyä kuivien nappuloiden syömisestä on?",
     answer: "Kuivat nappulat auttavat tukemaan suuhygieniaa nappuloiden mekaanisen harjausvaikutuksen ansiosta. Aikuinen koira voi syödä kuivaruokaa kuivana, kunhan vettä on jatkuvasti saatavilla. Kuivat nappulat ovat parempia koiran hampaille kuin turvonneet."
   }];
-  const breadcrumbItems = [{
-    name: "Pentulaskuri",
-    href: "/calculator",
-    current: true
-  }];
-  const structuredData = [createCalculatorSchema(), createFAQSchema(faqs), createBreadcrumbSchema([{
-    name: "Etusivu",
-    url: window.location.origin
-  }, {
-    name: "Pentulaskuri",
-    url: `${window.location.origin}/calculator`
-  }])];
-  // Custom quick actions for calculator page
-  const calculatorQuickActions = [
-    {
-      id: "food-types",
-      label: "Ruokatyypit",
-      description: "Selaa ruokavaihtoehtoja",
-      icon: <CalculatorIcon className="w-4 h-4" />,
-      action: () => window.location.href = '/food-types',
-      color: "secondary" as const
-    }
+
+  const structuredData = [
+    createCalculatorSchema(),
+    createFAQSchema(faqs),
+    createBreadcrumbSchema([{
+      name: "Etusivu",
+      url: window.location.origin
+    }, {
+      name: "Pentulaskuri",
+      url: `${window.location.origin}/calculator`
+    }])
   ];
 
-  return <MobileOptimizedLayout>
-    <LayoutWithNavigation
-      showBreadcrumbs={true}
-      stickyNavigation={true}
-      showQuickActions={true}
-      quickActionsVariant="floating"
-      customQuickActions={calculatorQuickActions}
-    >
-    <PageLayout variant="default" animated className="no-horizontal-scroll mobile-text-wrap responsive-media pt-20 md:pt-24">
-      {/* Skip to main content link */}
-      <a href="#calculator-main" className="skip-link focus-enhanced">
-        Siirry pääsisältöön
-      </a>
-      <SEO title="Pentulaskuri - Ruokamäärä" description="Laske koiranpentusi optimaalinen päivittäinen ruokamäärä. Huomioi rodun, iän, painon ja aktiivisuuden. Käytä virallisia annostelutaulukoita." keywords="pentulaskuri, ruokalaskuri, koiranpennun ruokinta, annostelu, ruokamäärä, penturuoka" structuredData={structuredData} />
-      
-      {/* Hero Section with dog food background */}
-      <ScrollPanBackground src={calculatorHeroBg} alt="" panX={30} panY={20} zoom={1.03} minHeightClass="min-h-[70svh]">
-        <div className="hero-content text-left max-w-lg ml-0">
-          <motion.div initial="hidden" animate="visible" variants={entranceAnimations.staggerContainer}>
-            <motion.div variants={entranceAnimations.staggerChild} className="mb-4 flex justify-start">
-              
+  return (
+    <div className="flex flex-col gap-16 pb-20">
+      <SEO
+        title="Pentulaskuri - Ruokamäärä"
+        description="Laske koiranpentusi optimaalinen päivittäinen ruokamäärä. Huomioi rodun, iän, painon ja aktiivisuuden. Käytä virallisia annostelutaulukoita."
+        keywords="pentulaskuri, ruokalaskuri, koiranpennun ruokinta, annostelu, ruokamäärä, penturuoka"
+        structuredData={structuredData}
+      />
+
+      {/* Hero Section */}
+      <section className="relative pt-8 md:pt-16 pb-12 overflow-hidden bg-stone-50">
+        <div className="container px-4 md:px-6 mx-auto text-center">
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={entranceAnimations.staggerContainer}
+            className="max-w-3xl mx-auto space-y-6"
+          >
+            <motion.div variants={entranceAnimations.staggerChild}>
+              <Badge variant="secondary" className="bg-white border-stone-200 text-stone-600 px-4 py-1.5 text-sm shadow-sm">
+                <CalculatorIcon className="w-3.5 h-3.5 mr-2 text-terracotta-500" />
+                Tarkka ruokalaskuri
+              </Badge>
             </motion.div>
-            <motion.h1 variants={entranceAnimations.staggerChild} className="text-h1 mb-4">
-              Pentulaskuri
-              <br />
-              <span className="text-[var(--color-primary-500)]">Ruokamäärät</span>
+
+            <motion.h1
+              variants={entranceAnimations.staggerChild}
+              className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-stone-900 tracking-tight"
+            >
+              Pentulaskuri <br />
+              <span className="text-terracotta-500">Ruokamäärät</span>
             </motion.h1>
-            <motion.p variants={entranceAnimations.staggerChild} className="text-body-md text-muted max-w-xs">
+
+            <motion.p
+              variants={entranceAnimations.staggerChild}
+              className="text-lg text-stone-600 leading-relaxed max-w-xl mx-auto"
+            >
               Laske koiranpentusi optimaalinen päivittäinen ruokamäärä huomioiden rodun, iän, painon ja aktiivisuustason.
             </motion.p>
-            <motion.div variants={entranceAnimations.staggerChild} className="mt-6 flex items-start justify-start gap-6 text-body-sm text-muted mobile-flex-wrap flex-col sm:flex-row">
-              <div className="flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-accent" />
+
+            <motion.div
+              variants={entranceAnimations.staggerChild}
+              className="flex flex-wrap justify-center gap-6 pt-4"
+            >
+              <div className="flex items-center gap-2 text-stone-600 font-medium">
+                <CheckCircle className="w-5 h-5 text-sage-500" />
                 <span>Tarkat tulokset</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-accent" />
+              <div className="flex items-center gap-2 text-stone-600 font-medium">
+                <CheckCircle className="w-5 h-5 text-sage-500" />
                 <span>Ammattimaiset suositukset</span>
               </div>
             </motion.div>
           </motion.div>
         </div>
-      </ScrollPanBackground>
+      </section>
 
-      {/* How it works: sticky horizontal steps */}
-      <Section className="full-width-section py-12">
-        <StickyHorizontalGallery items={[{
-          id: '1',
-          content: <div><h3 className="text-h2 mb-2">1. Rotu & ikä</h3><p className="text-muted">Valitse rotu tai sekarotu ja ikä viikoissa.</p></div>
-        }, {
-          id: '2',
-          content: <div><h3 className="text-h2 mb-2">2. Paino</h3><p className="text-muted">Syötä ajantasainen paino ja aktiivisuustaso.</p></div>
-        }, {
-          id: '3',
-          content: <div><h3 className="text-h2 mb-2">3. Kasvukäyrä</h3><p className="text-muted">Saat yksilöllisen kasvukäyrän ja vertailun.</p></div>
-        }, {
-          id: '4',
-          content: <div><h3 className="text-h2 mb-2">4. Ruokamäärä</h3><p className="text-muted">Näet päivittäisen ruokasuosituksen ja jaon aterioihin.</p></div>
-        }]} />
-      </Section>
+      {/* Calculator Section */}
+      <section className="container px-4 md:px-6 mx-auto max-w-4xl">
+        <AdvancedFoodCalculator user={null} />
+      </section>
 
-      
-      {/* Calculator Section + trust stats */}
-      <Section className="full-width-section py-16 mobile-text-wrap mobile-container-safe" role="main" id="calculator-main">
-        <div className="full-width-content py-16">
-          <AdvancedFoodCalculator user={null} />
-        </div>
-      </Section>
-        
       {/* FAQ Section */}
-      <Section className="full-width-section py-20 bg-[var(--color-surface-alt)]">
-        <div className="full-width-content py-16">
-          <div className="text-center mb-16">
-            <h2 className="text-h1 mb-6">Usein kysytyt kysymykset</h2>
-            <p className="text-body-lg text-muted max-w-2xl mx-auto">
-              Kattava opas koiranpennun ruokintaan ja ruokamäärien laskentaan
-            </p>
-          </div>
-          <FAQ items={faqs} />
+      <section className="container px-4 md:px-6 mx-auto max-w-3xl">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-serif font-bold text-stone-900 mb-4">Usein kysytyt kysymykset</h2>
+          <p className="text-lg text-stone-600">
+            Kattava opas koiranpennun ruokintaan ja ruokamäärien laskentaan
+          </p>
         </div>
-      </Section>
+        <FAQ items={faqs} />
+      </section>
 
-      {/* Footer */}
       <Footer />
-      
-    </PageLayout>
-    </LayoutWithNavigation>
-    </MobileOptimizedLayout>;
+    </div>
+  );
 };
+
 export default Calculator;

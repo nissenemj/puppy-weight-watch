@@ -5,18 +5,19 @@ import { cn } from "@/lib/utils"
 const Card = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & {
-    variant?: 'default' | 'elevated';
+    variant?: 'default' | 'elevated' | 'flat';
   }
 >(({ className, variant = 'default', ...props }, ref) => (
   <div
     ref={ref}
     className={cn(
-      // Base styles - simplified
-      "rounded-[var(--radius-lg)] bg-white text-[var(--color-text-primary)] transition-all duration-200",
-      // Variants - only 2
+      // Base styles - Paper look
+      "rounded-xl bg-white text-stone-900 transition-all duration-200",
+      // Variants
       {
-        'default': "border border-[var(--color-border)] shadow-sm hover:shadow-md",
-        'elevated': "shadow-md hover:shadow-lg border-0"
+        'default': "border border-stone-200 shadow-sm hover:shadow-md",
+        'elevated': "shadow-md hover:shadow-lg border-0",
+        'flat': "border border-stone-100 bg-stone-50/50 shadow-none"
       }[variant],
       className
     )}
@@ -31,7 +32,7 @@ const CardHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex flex-col space-y-[var(--spacing-3)] p-[var(--spacing-6)]", className)}
+    className={cn("flex flex-col space-y-1.5 p-6", className)}
     {...props}
   />
 ))
@@ -44,7 +45,7 @@ const CardTitle = React.forwardRef<
   <h3
     ref={ref}
     className={cn(
-      "font-[var(--font-family-heading)] text-[var(--font-size-xl)] font-[var(--font-weight-semibold)] text-[var(--color-text-primary)] line-height-[var(--line-height-tight)]",
+      "font-serif text-xl font-semibold text-stone-900 leading-tight",
       className
     )}
     {...props}
@@ -58,7 +59,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("font-[var(--font-family-body)] text-[var(--font-size-sm)] text-[var(--color-text-secondary)] mt-[var(--spacing-1)]", className)}
+    className={cn("font-sans text-sm text-stone-500 mt-1", className)}
     {...props}
   />
 ))
@@ -68,7 +69,7 @@ const CardContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("p-[var(--spacing-6)] pt-0 font-[var(--font-family-body)] text-[var(--font-size-base)] line-height-[var(--line-height-relaxed)] text-[var(--color-text-primary)]", className)} {...props} />
+  <div ref={ref} className={cn("p-6 pt-0 font-sans text-base leading-relaxed text-stone-700", className)} {...props} />
 ))
 CardContent.displayName = "CardContent"
 
@@ -78,10 +79,11 @@ const CardFooter = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex items-center justify-between p-[var(--spacing-6)] pt-0 mt-[var(--spacing-5)] border-t border-[var(--color-border-subtle)]", className)}
+    className={cn("flex items-center justify-between p-6 pt-0 mt-4 border-t border-stone-100", className)}
     {...props}
   />
 ))
 CardFooter.displayName = "CardFooter"
 
 export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
+

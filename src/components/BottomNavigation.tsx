@@ -86,14 +86,14 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onMenuClick,
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-50 border-t border-brand-orange/20 bg-white/95 backdrop-blur-md safe-area-padding-bottom md:hidden"
+      className="fixed bottom-0 left-0 right-0 z-50 border-t border-stone-200 dark:border-stone-800 bg-white/90 dark:bg-stone-950/90 backdrop-blur-md safe-area-bottom md:hidden"
       role="navigation"
       aria-label="Päänavigaatio"
     >
       {/* Active indicator bar */}
       {mounted && (
         <motion.div
-          className="absolute top-0 h-0.5 bg-brand-orange"
+          className="absolute top-0 h-0.5 bg-terracotta-500 dark:bg-terracotta-400"
           initial={false}
           animate={{
             left: `${indicatorOffset}%`,
@@ -119,10 +119,10 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onMenuClick,
               to={item.href}
               onClick={handleTabClick(item.label, item.href)}
               className={cn(
-                'relative flex min-h-[56px] touch-target flex-col items-center justify-center gap-1 px-2 py-2 text-xs font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/60 focus-visible:ring-offset-2',
+                'relative flex min-h-[56px] touch-target flex-col items-center justify-center gap-1 px-2 py-2 text-xs font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracotta-500/60 focus-visible:ring-offset-2',
                 active
-                  ? 'text-brand-orange scale-105'
-                  : 'text-brand-ink/60 hover:text-brand-orange/80 hover:scale-105 active:scale-95',
+                  ? 'text-terracotta-600 dark:text-terracotta-400'
+                  : 'text-stone-500 dark:text-stone-400 hover:text-terracotta-500 dark:hover:text-terracotta-300 active:scale-95',
               )}
               aria-label={item.ariaLabel}
               aria-current={active ? 'page' : undefined}
@@ -152,7 +152,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onMenuClick,
                       animate={{ scale: 1, opacity: 1 }}
                       exit={{ scale: 0, opacity: 0 }}
                       transition={{ type: "spring", stiffness: 500, damping: 25 }}
-                      className="absolute -right-2 -top-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-[var(--color-error)] px-1 text-[10px] font-bold text-white shadow-md"
+                      className="absolute -right-2 -top-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white shadow-md"
                       aria-label={`${badge} uutta`}
                     >
                       {typeof badge === 'number' && badge > 99 ? '99+' : badge}
@@ -179,7 +179,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onMenuClick,
             handleTabClick('Valikko', '/menu')(e);
             onMenuClick?.();
           }}
-          className="flex min-h-[56px] touch-target flex-col items-center justify-center gap-1 px-2 py-2 text-xs font-medium text-brand-ink/60 transition-all duration-200 hover:text-brand-orange/80 hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/60 focus-visible:ring-offset-2"
+          className="flex min-h-[56px] touch-target flex-col items-center justify-center gap-1 px-2 py-2 text-xs font-medium text-stone-500 dark:text-stone-400 transition-all duration-200 hover:text-terracotta-500 dark:hover:text-terracotta-300 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracotta-500/60 focus-visible:ring-offset-2"
           aria-label="Avaa valikko"
         >
           <Menu className="h-5 w-5" aria-hidden={true} />

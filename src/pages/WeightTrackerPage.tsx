@@ -4,14 +4,11 @@ import { supabase } from '@/integrations/supabase/client'
 import { useNavigate, useLocation } from 'react-router-dom'
 import AuthenticationWrapper from '@/components/AuthenticationWrapper'
 import ModernPuppyWeightTracker from '@/components/ModernPuppyWeightTracker'
-import { MobileOptimizedLayout } from '@/components/MobileOptimizedLayout'
-import LayoutWithNavigation from '@/components/ui/layout-with-navigation'
 import { useGuestAuth } from '@/contexts/GuestAuthContext'
 import GuestModeBar, { GuestModeBarMobile } from '@/components/GuestModeBar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { PageLayout, Container, Section } from '@/components/ui/Layout'
-import { Dog, RefreshCw, Plus, User as UserIcon, Download } from 'lucide-react'
+import { User as UserIcon, Loader2, Dog, AlertCircle } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useToast } from '@/hooks/use-toast'
 import { useIsMobile } from '@/hooks/use-mobile'
@@ -22,7 +19,6 @@ const WeightTrackerPage = () => {
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signup')
   const navigate = useNavigate()
-  const location = useLocation()
   const { toast } = useToast()
   const isMobile = useIsMobile()
   const { isGuest, guestWeightEntries, syncGuestDataToUser } = useGuestAuth()
@@ -44,32 +40,12 @@ const WeightTrackerPage = () => {
     return () => subscription.unsubscribe()
   }, [])
 
-  const [hasBooks, setHasBooks] = useState(false)
   const [hasDogs, setHasDogs] = useState(false)
   const [checkingData, setCheckingData] = useState(true)
 
   const checkUserData = async (user: User) => {
     try {
       setCheckingData(true)
-
-      // Check if user has puppy books
-      const { data: books, error: booksError } = await supabase
-        .from('puppy_books')
-        .select('id, dog_id')
-        .eq('owner_id', user.id)
-        .limit(1)
-
-      if (booksError) {
-        console.error('Error checking puppy books:', booksError)
-        toast({
-          title: "Virhe tietojen haussa",
-          description: "Pentukirjojen tarkistaminen epäonnistui",
-          variant: "destructive"
-        })
-      } else {
-        setHasBooks(books && books.length > 0)
-      }
-
       // Check if user has any dogs
       const { data: dogs, error: dogsError } = await supabase
         .from('dogs')
@@ -87,8 +63,6 @@ const WeightTrackerPage = () => {
       } else {
         const dogsExist = dogs && dogs.length > 0
         setHasDogs(dogsExist)
-
-        // Remove automatic redirect - let user choose what to do
       }
     } catch (error) {
       console.error('Error in checkUserData:', error)
@@ -141,14 +115,6 @@ const WeightTrackerPage = () => {
     }
   }
 
-  const handleSignOut = () => {
-    setUser(null)
-    toast({
-      title: "Uloskirjautuminen onnistui",
-      description: "Nähdään pian!",
-    })
-  }
-
   const handleSignUpClick = () => {
     setAuthMode('signup')
     setShowAuthModal(true)
@@ -159,151 +125,98 @@ const WeightTrackerPage = () => {
     setShowAuthModal(true)
   }
 
-  if (loading) {
+  if (loading || (user && checkingData)) {
     return (
-      <PageLayout variant="default">
-        <Section className="min-h-screen flex items-center justify-center">
-          <Container size="sm" padding="lg">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-center"
-            >
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                className="w-16 h-16 mx-auto mb-6"
-              >
-                <div className="w-16 h-16 border-4 border-[var(--color-accent-200)] border-t-[var(--color-accent)] rounded-full"></div>
-              </motion.div>
-              <p className="text-body-lg text-muted">Ladataan...</p>
-            </motion.div>
-          </Container>
-        </Section>
-      </PageLayout>
-    )
-  }
-
-  // Guest mode: Allow access without authentication
-  // Show weight tracker with guest mode UI
-
-  // Only show loading for authenticated users
-  if (user && checkingData) {
-    return (
-      <PageLayout variant="default">
-        <Section className="min-h-screen flex items-center justify-center">
-          <Container size="sm" padding="lg">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-center"
-            >
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                className="w-16 h-16 mx-auto mb-6"
-              >
-                <div className="w-16 h-16 border-4 border-[var(--color-accent-200)] border-t-[var(--color-accent)] rounded-full"></div>
-              </motion.div>
-              <p className="text-body-lg text-muted">Tarkistetaan tietoja...</p>
-            </motion.div>
-          </Container>
-        </Section>
-      </PageLayout>
+      <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-4">
+        <Loader2 className="w-12 h-12 text-terracotta-500 animate-spin" />
+        <p className="text-stone-500 font-medium">Ladataan tietoja...</p>
+      </div>
     )
   }
 
   // Show helpful message if authenticated user doesn't have dogs
   if (user && !hasDogs) {
     return (
-      <div className="min-h-screen bg-gradient-primary flex items-center justify-center p-4 mobile-text-wrap mobile-container-safe">
-        <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-6 text-center mobile-card-safe">
-          <h2 className="text-xl font-semibold mb-4 text-gray-800">
-            Painonseuranta edellyttää koiran lisäämistä
-          </h2>
-
-          <div className="mb-4 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-            <p className="text-yellow-800 mb-3">
-              🐕 Sinulla ei ole vielä koiria lisättynä
-            </p>
-            <button
-              onClick={() => navigate('/onboarding')}
-              className="bg-primary text-white px-4 py-2 rounded hover:bg-primary/90 transition-colors"
-            >
-              Lisää koira
-            </button>
-          </div>
-
-          <div className="mt-4 pt-4 border-t">
-            <button
-              onClick={retryDataLoad}
-              className="text-primary hover:text-primary/80 transition-colors"
-            >
-              Yritä uudelleen
-            </button>
-          </div>
-        </div>
+      <div className="container max-w-md mx-auto px-4 py-12">
+        <Card className="border-stone-200 shadow-sm">
+          <CardHeader className="text-center pb-2">
+            <div className="w-16 h-16 bg-terracotta-50 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Dog className="w-8 h-8 text-terracotta-500" />
+            </div>
+            <CardTitle className="text-xl font-serif text-stone-900">Ei koiria lisättynä</CardTitle>
+            <CardDescription className="text-stone-500">
+              Painonseuranta edellyttää koiran profiilin luomista.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="p-4 bg-amber-50 border border-amber-100 rounded-lg flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+              <p className="text-sm text-amber-800">
+                Luo koirallesi profiili aloittaaksesi kasvun seurannan. Se vie vain hetken!
+              </p>
+            </div>
+            <div className="flex flex-col gap-3">
+              <Button
+                onClick={() => navigate('/onboarding')}
+                className="w-full bg-terracotta-500 hover:bg-terracotta-600 text-white"
+              >
+                Lisää koira
+              </Button>
+              <Button
+                variant="ghost"
+                onClick={retryDataLoad}
+                className="w-full text-stone-500 hover:text-stone-900"
+              >
+                Yritä uudelleen
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     )
   }
 
-  // Custom quick actions for weight tracker
-  const weightTrackerQuickActions = [
-    {
-      id: "add-health-record",
-      label: "Terveysmerkintä",
-      description: "Lisää terveystietoja",
-      icon: <UserIcon className="w-4 h-4" />,
-      action: () => navigate('/puppy-book?tab=health'),
-      color: "success" as const
-    }
-  ];
-
   return (
-    <MobileOptimizedLayout>
-      <LayoutWithNavigation
-        showBreadcrumbs={true}
-        stickyNavigation={true}
-        showQuickActions={true}
-        quickActionsVariant="floating"
-        customQuickActions={weightTrackerQuickActions}
-      >
-        <div className="pt-20 md:pt-24">
-          {/* Show guest mode bar for non-authenticated users */}
-          {isGuest && guestWeightEntries.length > 0 && (
-            <>
-              {isMobile ? (
-                <GuestModeBarMobile
-                  onSignUpClick={handleSignUpClick}
-                  onSignInClick={handleSignInClick}
-                />
-              ) : (
-                <div className="px-4 py-2">
-                  <GuestModeBar
-                    onSignUpClick={handleSignUpClick}
-                    onSignInClick={handleSignInClick}
-                  />
-                </div>
-              )}
-            </>
-          )}
-
-          <ModernPuppyWeightTracker />
-
-          {/* Auth Modal */}
-          {showAuthModal && (
-            <AuthenticationWrapper
-              onAuthSuccess={handleAuthSuccess}
-              mode={authMode}
-              onClose={() => setShowAuthModal(false)}
+    <div className="container mx-auto px-4 py-6 md:py-8 space-y-6">
+      {/* Guest Mode Bar */}
+      {isGuest && guestWeightEntries.length > 0 && (
+        <div className="mb-6">
+          {isMobile ? (
+            <GuestModeBarMobile
+              onSignUpClick={handleSignUpClick}
+              onSignInClick={handleSignInClick}
+            />
+          ) : (
+            <GuestModeBar
+              onSignUpClick={handleSignUpClick}
+              onSignInClick={handleSignInClick}
             />
           )}
         </div>
+      )}
 
-        {/* Spacer for bottom navigation - prevents content from being hidden */}
+      <div className="space-y-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-3xl md:text-4xl font-serif font-bold text-stone-900">Painonseuranta</h1>
+            <p className="text-stone-500 mt-1">Seuraa koirasi kasvua ja kehitystä</p>
+          </div>
 
-      </LayoutWithNavigation>
-    </MobileOptimizedLayout>
+          {/* Quick Actions could go here if needed, but keeping it simple for now */}
+        </div>
+
+        <ModernPuppyWeightTracker />
+      </div>
+
+      {/* Auth Modal */}
+      {showAuthModal && (
+        <AuthenticationWrapper
+          onAuthSuccess={handleAuthSuccess}
+          mode={authMode}
+          onClose={() => setShowAuthModal(false)}
+        />
+      )}
+    </div>
   )
 }
 
