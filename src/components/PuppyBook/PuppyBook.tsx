@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Book, 
-  Camera, 
-  Heart, 
-  Calendar, 
-  Award, 
+import {
+  Book,
+  Camera,
+  Heart,
+  Calendar,
+  Award,
   Plus,
   MessageCircle,
   Share2,
@@ -22,7 +22,7 @@ import {
 } from '@/utils/iconImports';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import Navigation from '@/components/Navigation';
+import { Navigation } from '@/components/Navigation';
 import AppLogo from '@/components/AppLogo';
 // Navigation is now handled by the main Navigation component
 import MonthlyTracker from './MonthlyTracker';
@@ -273,7 +273,7 @@ const PuppyBook: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gradient-mint-light/20 via-gradient-peach-light/20 to-gradient-sky/20 page-with-navigation">
       <Navigation />
-      
+
       <div className="max-w-6xl mx-auto px-4 pt-4">
         <div className="flex items-center justify-center mb-6">
           <PuppyBookSelector
@@ -283,7 +283,7 @@ const PuppyBook: React.FC = () => {
           />
         </div>
       </div>
-      <AnimatedHeader 
+      <AnimatedHeader
         title="Pentu kasvaa – seuraa matkaa!"
         subtitle="Tallenna ainutlaatuisia hetkiä pennun matkalla"
         puppyName={book.title}
@@ -292,9 +292,9 @@ const PuppyBook: React.FC = () => {
         onEditProfile={() => setShowProfileEditor(true)}
         bannerColor={book.theme?.bannerColor || 'orange'}
       />
-      <PuppyBookNavigation 
-        activeSection={activeSection} 
-        onSectionChange={setActiveSection} 
+      <PuppyBookNavigation
+        activeSection={activeSection}
+        onSectionChange={setActiveSection}
       />
       <div className="container mx-auto px-4 py-6 max-w-4xl">
         <AnimatePresence mode="wait">
@@ -306,7 +306,7 @@ const PuppyBook: React.FC = () => {
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3 }}
             >
-              <MonthlyTracker 
+              <MonthlyTracker
                 bookId={book.id}
                 birthDate={book.birth_date}
                 selectedMonth={selectedMonth}
@@ -355,8 +355,8 @@ const PuppyBook: React.FC = () => {
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3 }}
             >
-              <MemoryGallery 
-                bookId={book.id} 
+              <MemoryGallery
+                bookId={book.id}
                 onRefresh={memoryGalleryRef}
                 onAddMemory={() => setShowFloatingAction(true)}
                 puppyProfile={{
@@ -402,8 +402,8 @@ const PuppyBook: React.FC = () => {
           )}
         </AnimatePresence>
       </div>
-      <FloatingActionButton 
-        bookId={book.id} 
+      <FloatingActionButton
+        bookId={book.id}
         showDialog={showFloatingAction}
         onShowDialogChange={setShowFloatingAction}
         onMemoryAdded={() => {
@@ -416,7 +416,7 @@ const PuppyBook: React.FC = () => {
           // Could trigger a refresh of timeline or monthly tracker
         }}
       />
-      
+
       {/* Dialogs */}
       <ShareDialog
         isOpen={showShareDialog}
@@ -424,14 +424,14 @@ const PuppyBook: React.FC = () => {
         bookTitle={book.title}
         bookId={book.id}
       />
-      
+
       <SettingsDialog
         isOpen={showSettingsDialog}
         onClose={() => setShowSettingsDialog(false)}
         book={book}
         onBookUpdated={(updatedBook) => setBook({ ...book, ...updatedBook })}
       />
-      
+
       <PuppyProfileEditor
         isOpen={showProfileEditor}
         onClose={() => setShowProfileEditor(false)}
@@ -485,21 +485,21 @@ const CreateBookPrompt: React.FC<{
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 flex items-center justify-center p-4 relative overflow-hidden">
       {/* Söpöt taustakuviot */}
-      <motion.img 
+      <motion.img
         src={pawPrints}
         alt="Tassunjälkiä - koristeellinen elementti"
         className="absolute top-10 left-10 w-20 h-20 opacity-20"
         animate={{ rotate: 360 }}
         transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
       />
-      <motion.img 
+      <motion.img
         src={pawPrints}
         alt="Tassunjälkiä - koristeellinen elementti"
         className="absolute bottom-10 right-10 w-16 h-16 opacity-15"
         animate={{ rotate: -360 }}
         transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
       />
-      
+
       <motion.div
         initial={{ opacity: 0, scale: 0.9, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -507,19 +507,19 @@ const CreateBookPrompt: React.FC<{
         className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center relative"
       >
         {/* Leikkisä ikoni */}
-        <motion.div 
+        <motion.div
           className="relative mb-6"
           whileHover={{ scale: 1.1 }}
           transition={{ type: "spring", stiffness: 300 }}
         >
-          <motion.img 
+          <motion.img
             src={happyPuppy}
             alt="Onnellinen pentu"
             className="w-24 h-24 mx-auto rounded-full shadow-lg"
-            animate={{ 
+            animate={{
               scale: [1, 1.05, 1],
             }}
-            transition={{ 
+            transition={{
               duration: 2,
               repeat: Infinity,
               ease: "easeInOut"
@@ -527,11 +527,11 @@ const CreateBookPrompt: React.FC<{
           />
           <motion.div
             className="absolute -top-2 -right-2"
-            animate={{ 
+            animate={{
               rotate: [0, 10, -10, 0],
               scale: [1, 1.2, 1]
             }}
-            transition={{ 
+            transition={{
               duration: 3,
               repeat: Infinity,
               ease: "easeInOut"
@@ -540,8 +540,8 @@ const CreateBookPrompt: React.FC<{
             <Sparkles className="w-6 h-6 text-yellow-400" />
           </motion.div>
         </motion.div>
-        
-        <motion.h2 
+
+        <motion.h2
           className="text-3xl font-sans font-bold text-gray-800 mb-3"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -549,7 +549,7 @@ const CreateBookPrompt: React.FC<{
         >
           Luo ensimmäinen pentukirja!
         </motion.h2>
-        <motion.p 
+        <motion.p
           className="text-gray-600 mb-6 font-body"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -579,24 +579,24 @@ const PuppyBookHeader: React.FC<{
   return (
     <div className="relative bg-gradient-playful text-white overflow-hidden">
       {/* Söpöt taustakuviot */}
-      <motion.img 
+      <motion.img
         src={pawPrints}
         alt="Tassunjälkiä - koristeellinen elementti"
         className="absolute top-4 right-4 w-16 h-16 opacity-30"
         animate={{ rotate: 360 }}
         transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
       />
-      <motion.img 
+      <motion.img
         src={pawPrints}
         alt="Tassunjälkiä - koristeellinen elementti"
         className="absolute bottom-4 left-4 w-12 h-12 opacity-20"
         animate={{ rotate: -360 }}
         transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
       />
-      
+
       <div className="absolute inset-0 bg-black/10"></div>
       <div className="relative container mx-auto px-4 py-8">
-        <motion.div 
+        <motion.div
           className="flex items-center space-x-6"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -608,25 +608,25 @@ const PuppyBookHeader: React.FC<{
           >
             {book.cover_image_url ? (
               <div className="w-24 h-24 rounded-2xl overflow-hidden shadow-lg border-4 border-white/30">
-                <img 
-                  src={book.cover_image_url} 
+                <img
+                  src={book.cover_image_url}
                   alt="Kirjan kansi"
                   className="w-full h-full object-cover"
                 />
               </div>
             ) : (
               <div className="w-24 h-24 rounded-2xl overflow-hidden shadow-lg border-4 border-white/30 bg-white/20 flex items-center justify-center">
-                <img 
-                  src={puppyBookIcon} 
+                <img
+                  src={puppyBookIcon}
                   alt="Pentukirja"
                   className="w-16 h-16"
                 />
               </div>
             )}
           </motion.div>
-          
+
           <div className="flex-1">
-            <motion.h1 
+            <motion.h1
               className="text-3xl font-playful font-bold mb-2 flex items-center gap-3"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -634,11 +634,11 @@ const PuppyBookHeader: React.FC<{
             >
               {book.title}
               <motion.div
-                animate={{ 
+                animate={{
                   scale: [1, 1.2, 1],
                   rotate: [0, 10, -10, 0]
                 }}
-                transition={{ 
+                transition={{
                   duration: 2,
                   repeat: Infinity,
                   ease: "easeInOut"
@@ -647,7 +647,7 @@ const PuppyBookHeader: React.FC<{
                 <Heart className="w-6 h-6 text-red-400" />
               </motion.div>
             </motion.h1>
-            <motion.p 
+            <motion.p
               className="text-white/80 font-body"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -656,7 +656,7 @@ const PuppyBookHeader: React.FC<{
               Luotu {new Date(book.created_at).toLocaleDateString('fi-FI')}
             </motion.p>
           </div>
-          
+
           <div className="flex space-x-2">
             <motion.button
               whileHover={{ scale: 1.1, rotate: 10 }}
@@ -692,7 +692,7 @@ const PuppyBookNavigation: React.FC<{
     { id: 'milestones', label: 'Virstanpylväät', icon: Award },
     { id: 'growth', label: 'Kasvu', icon: Target },
     { id: 'memories', label: 'Muistot', icon: Heart },
-    
+
   ];
 
   return (
@@ -715,11 +715,11 @@ const PuppyBookNavigation: React.FC<{
             >
               <motion.div
                 initial={{ scale: 1, rotate: 0 }}
-                animate={activeSection === section.id ? { 
+                animate={activeSection === section.id ? {
                   scale: [1, 1.1, 1],
                   rotate: [0, 3, -3, 0]
                 } : { scale: 1, rotate: 0 }}
-                transition={{ 
+                transition={{
                   duration: 0.6,
                   ease: "easeInOut",
                   repeat: 0
