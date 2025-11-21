@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Badge } from '@/components/ui/badge'
 import SEO from '@/components/SEO'
 import FAQ from '@/components/FAQ'
+import MeshBackground from '@/components/MeshBackground'
 import { createWebApplicationSchema, createWeightTrackingSchema, createFAQSchema } from '@/utils/structuredData'
 import { trackHeroCTAClicked, trackPageViewed } from '@/utils/analytics'
 import { entranceAnimations } from '@/animations'
@@ -32,7 +33,7 @@ const Index = () => {
     },
     {
       question: "Mikä on normaali painonnousu pennulle?",
-      answer: "Terve pentu yleensä kaksinkertaistaa syntymäpainonsa ensimmäisen viikon aikana ja kolminkertaistaa sen kahden viikon ikään mennessä."
+      answer: "Terve pentu yleensä kaksinkertaist AA syntymäpainonsa ensimmäisen viikon aikana ja kolminkertaistaa sen kahden viikon ikään mennessä."
     },
     {
       question: "Voiko sovellusta käyttää ilman rekisteröitymistä?",
@@ -93,15 +94,16 @@ const Index = () => {
       <SEO
         title="Pentulaskuri - Koiran Kasvun & Ruokinnan Seuranta"
         description="Moderni ja helppokäyttöinen sovellus koiran kasvun seuraamiseen. Seuraa painoa, ruokintaa ja kehitystä ammattimaisilla työkaluilla. Ilmainen käyttö."
-        keywords="pentulaskuri, koiranpentu, painonseuranta, koiran kasvu, ruokinta, annostelu, kasvukäyrä, pentu-sovellus, moderni"
+        keywords="pentulaskuri, koiranpentu, painonseuranta, koiran kas vu, ruokinta, annostelu, kasvukäyrä, pentu-sovellus, moderni"
         structuredData={structuredData}
         url={window.location.origin}
       />
 
+      {/* Mesh Background */}
+      <MeshBackground variant="default" />
+
       {/* Hero Section */}
       <section className="relative pt-8 md:pt-16 pb-12 md:pb-24 overflow-hidden">
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-terracotta-50/50 via-stone-50 to-white" />
-
         <div className="container px-4 md:px-6 mx-auto text-center">
           <motion.div
             initial="hidden"

@@ -5,8 +5,10 @@
 @layer base {
   :root {
     /* Base Colors (Stone-50) */
-    --background: 60 5% 96%; /* Stone 50 */
-    --foreground: 24 5% 10%; /* Stone 900 */
+    --background: 60 5% 96%;
+    /* Stone 50 */
+    --foreground: 24 5% 10%;
+    /* Stone 900 */
 
     /* Card / Surface */
     --card: 0 0% 100%;
@@ -15,19 +17,23 @@
     --popover-foreground: 24 5% 10%;
 
     /* Primary (Terracotta) */
-    --primary: 13 68% 63%; /* #E07A5F */
+    --primary: 13 68% 63%;
+    /* #E07A5F */
     --primary-foreground: 60 9.1% 97.8%;
 
     /* Secondary (Stone-200) */
-    --secondary: 30 6% 90%; /* Stone 200 */
+    --secondary: 30 6% 90%;
+    /* Stone 200 */
     --secondary-foreground: 24 5% 26%;
 
     /* Muted (Stone-100) */
-    --muted: 30 6% 96%; /* Stone 100 */
+    --muted: 30 6% 96%;
+    /* Stone 100 */
     --muted-foreground: 25 5% 45%;
 
     /* Accent (Sage) */
-    --accent: 150 24% 60%; /* #81B29A */
+    --accent: 150 24% 60%;
+    /* #81B29A */
     --accent-foreground: 24 5% 10%;
 
     /* Destructive */
@@ -35,17 +41,22 @@
     --destructive-foreground: 60 9.1% 97.8%;
 
     /* Borders & Input */
-    --border: 30 6% 90%; /* Stone 200 */
+    --border: 30 6% 90%;
+    /* Stone 200 */
     --input: 30 6% 90%;
-    --ring: 13 68% 63%; /* Primary */
+    --ring: 13 68% 63%;
+    /* Primary */
 
-    --radius: 0.75rem; /* rounded-xl */
+    --radius: 0.75rem;
+    /* rounded-xl */
   }
 
   .dark {
     /* Dark Mode (Stone-900) */
-    --background: 24 5% 10%; /* Stone 900 */
-    --foreground: 60 5% 96%; /* Stone 50 */
+    --background: 24 5% 10%;
+    /* Stone 900 */
+    --foreground: 60 5% 96%;
+    /* Stone 50 */
 
     --card: 24 5% 10%;
     --card-foreground: 60 5% 96%;
@@ -55,7 +66,8 @@
     --primary: 13 68% 63%;
     --primary-foreground: 60 9.1% 97.8%;
 
-    --secondary: 24 5% 15%; /* Stone 800 */
+    --secondary: 24 5% 15%;
+    /* Stone 800 */
     --secondary-foreground: 60 5% 96%;
 
     --muted: 24 5% 15%;
@@ -77,19 +89,26 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground font-sans antialiased;
     /* Prevent horizontal scroll on mobile */
     overflow-x: hidden;
   }
-  
+
   /* Typography Defaults */
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-serif tracking-tight text-stone-900 dark:text-stone-50;
   }
 }
 
 @layer utilities {
+
   /* Anthropic-style Glass Panel */
   .glass-panel {
     @apply bg-white/80 dark:bg-stone-900/80 backdrop-blur-md border border-stone-200 dark:border-stone-800 shadow-sm;
@@ -99,13 +118,61 @@
   .safe-area-bottom {
     padding-bottom: env(safe-area-inset-bottom);
   }
-  
+
   /* Hide scrollbar but allow scroll */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
+
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+
+  /* Noise Texture Overlay (Organic Modernism) */
+  .noise-texture::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  }
+
+  /* Floating Animation for 3D Elements */
+  @keyframes float {
+
+    0%,
+    100% {
+      transform: translateY(0px) rotate(0deg);
+    }
+
+    50% {
+      transform: translateY(-20px) rotate(3deg);
+    }
+  }
+
+  @keyframes float-slow {
+
+    0%,
+    100% {
+      transform: translateY(0px) scale(1);
+    }
+
+    50% {
+      transform: translateY(-15px) scale(1.05);
+    }
+  }
+
+  .floating {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .floating-slow {
+    animation: float-slow 8s ease-in-out infinite;
   }
 }

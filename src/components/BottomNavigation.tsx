@@ -86,7 +86,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onMenuClick,
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-50 border-t border-stone-200 dark:border-stone-800 bg-white/90 dark:bg-stone-950/90 backdrop-blur-md safe-area-bottom md:hidden"
+      className="fixed bottom-0 left-0 right-0 z-50 border-t border-stone-200/50 dark:border-stone-800/50 bg-white/70 dark:bg-stone-950/70 backdrop-blur-xl safe-area-bottom md:hidden"
       role="navigation"
       aria-label="Päänavigaatio"
     >

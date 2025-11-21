@@ -80,5 +80,8 @@ createRoot(document.getElementById("root")!).render(
   </StrictMode>
 )
 
+// Apply noise texture globally
+document.body.classList.add('noise-texture')
+
 // Mark app initialization complete
 performanceMonitor.measureEnd('app_initialization')

@@ -5,19 +5,20 @@ import { cn } from "@/lib/utils"
 const Card = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & {
-    variant?: 'default' | 'elevated' | 'flat';
+    variant?: 'default' | 'elevated' | 'flat' | 'frosted';
   }
 >(({ className, variant = 'default', ...props }, ref) => (
   <div
     ref={ref}
     className={cn(
       // Base styles - Paper look
-      "rounded-xl bg-white text-stone-900 transition-all duration-200",
+      "rounded-xl text-stone-900 transition-all duration-200",
       // Variants
       {
-        'default': "border border-stone-200 shadow-sm hover:shadow-md",
-        'elevated': "shadow-md hover:shadow-lg border-0",
-        'flat': "border border-stone-100 bg-stone-50/50 shadow-none"
+        'default': "bg-white border border-stone-200 shadow-sm hover:shadow-md",
+        'elevated': "bg-white shadow-md hover:shadow-lg border-0",
+        'flat': "border border-stone-100 bg-stone-50/50 shadow-none",
+        'frosted': "bg-white/70 dark:bg-stone-900/70 backdrop-blur-xl border border-stone-200/50 dark:border-stone-700/50 shadow-sm hover:shadow-md"
       }[variant],
       className
     )}

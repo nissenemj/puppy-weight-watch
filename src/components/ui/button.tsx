@@ -10,17 +10,17 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        // Primary - Warm terracotta brand color
-        default: "bg-terracotta-500 text-white shadow-sm hover:bg-terracotta-600 hover:shadow-md active:scale-95",
+        // Primary - Warm terracotta brand color with subtle glow
+        default: "bg-terracotta-500 text-white shadow-sm shadow-terracotta-500/20 hover:bg-terracotta-600 hover:shadow-md hover:shadow-terracotta-500/30 active:scale-95",
 
         // Hero - Large, prominent CTA for hero sections
         hero: "bg-white text-terracotta-700 shadow-lg hover:bg-stone-50 hover:shadow-xl active:scale-95 font-semibold border-2 border-white/20",
 
         // Secondary - Sage green for secondary actions
-        secondary: "bg-sage-500 text-white shadow-sm hover:bg-sage-600 active:scale-95",
+        secondary: "bg-sage-500 text-white shadow-sm shadow-sage-500/20 hover:bg-sage-600 hover:shadow-md hover:shadow-sage-500/30 active:scale-95",
 
-        // Outline - Border style
-        outline: "border-2 border-terracotta-500 bg-transparent text-terracotta-600 hover:bg-terracotta-50 active:scale-95",
+        // Outline - Border style with gradient hover
+        outline: "border-2 border-terracotta-500 bg-transparent text-terracotta-600 hover:bg-terracotta-50 hover:shadow-sm hover:shadow-terracotta-500/10 active:scale-95",
 
         // Ghost - Minimal style
         ghost: "bg-transparent text-stone-600 hover:bg-stone-100 hover:text-stone-900 active:scale-95",
