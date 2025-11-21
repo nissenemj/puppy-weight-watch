@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { MobileOptimizedLayout } from '@/components/MobileOptimizedLayout'
-import Navigation from '@/components/Navigation'
+import { Navigation } from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import { Section, Container } from '@/components/ui/Layout'
 import { trackPageViewed } from '@/utils/analytics'

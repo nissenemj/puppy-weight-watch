@@ -2,7 +2,7 @@ import * as React from "react"
 import { useLocation } from "react-router-dom"
 import { cn } from "@/lib/utils"
 import { AutoBreadcrumb, BreadcrumbMobile } from "./breadcrumb"
-import Navigation from "../Navigation"
+import { Navigation } from "../Navigation"
 
 interface EnhancedNavigationProps {
   className?: string

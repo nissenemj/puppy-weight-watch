@@ -9,6 +9,7 @@ import { Calculator as CalculatorIcon, Sparkles, TrendingUp, CheckCircle } from 
 import { motion } from 'framer-motion';
 import { entranceAnimations } from '@/animations';
 import { Badge } from '@/components/ui/badge';
+import MeshBackground from '@/components/MeshBackground';
 
 const Calculator = () => {
   useEffect(() => {
@@ -53,24 +54,9 @@ const Calculator = () => {
     }])
   ];
 
-  return (
-    <div className="flex flex-col gap-16 pb-20">
-      <SEO
-        title="Pentulaskuri - Ruokamäärä"
-        description="Laske koiranpentusi optimaalinen päivittäinen ruokamäärä. Huomioi rodun, iän, painon ja aktiivisuuden. Käytä virallisia annostelutaulukoita."
-        keywords="pentulaskuri, ruokalaskuri, koiranpennun ruokinta, annostelu, ruokamäärä, penturuoka"
-        structuredData={structuredData}
-      />
-
-      {/* Hero Section */}
-      <section className="relative pt-8 md:pt-16 pb-12 overflow-hidden bg-stone-50">
-        <div className="container px-4 md:px-6 mx-auto text-center">
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={entranceAnimations.staggerContainer}
-            className="max-w-3xl mx-auto space-y-6"
-          >
+  variants = { entranceAnimations.staggerContainer }
+  className = "max-w-3xl mx-auto space-y-6"
+    >
             <motion.div variants={entranceAnimations.staggerChild}>
               <Badge variant="secondary" className="bg-white border-stone-200 text-stone-600 px-4 py-1.5 text-sm shadow-sm">
                 <CalculatorIcon className="w-3.5 h-3.5 mr-2 text-terracotta-500" />
@@ -106,17 +92,17 @@ const Calculator = () => {
                 <span>Ammattimaiset suositukset</span>
               </div>
             </motion.div>
-          </motion.div>
-        </div>
-      </section>
+          </motion.div >
+        </div >
+      </section >
 
-      {/* Calculator Section */}
-      <section className="container px-4 md:px-6 mx-auto max-w-4xl">
-        <AdvancedFoodCalculator user={null} />
-      </section>
+  {/* Calculator Section */ }
+  < section className = "container px-4 md:px-6 mx-auto max-w-4xl" >
+    <AdvancedFoodCalculator user={null} />
+      </section >
 
-      {/* FAQ Section */}
-      <section className="container px-4 md:px-6 mx-auto max-w-3xl">
+  {/* FAQ Section */ }
+  < section className = "container px-4 md:px-6 mx-auto max-w-3xl" >
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-serif font-bold text-stone-900 mb-4">Usein kysytyt kysymykset</h2>
           <p className="text-lg text-stone-600">
@@ -124,10 +110,10 @@ const Calculator = () => {
           </p>
         </div>
         <FAQ items={faqs} />
-      </section>
+      </section >
 
-      <Footer />
-    </div>
+  <Footer />
+    </div >
   );
 };
 

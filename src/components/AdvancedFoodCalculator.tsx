@@ -231,7 +231,7 @@ export default function AdvancedFoodCalculator({ user, currentWeight: propCurren
   if (loading) {
     return (
       <div className="space-y-6">
-        <Card className="bg-gradient-warm border-0 shadow-lg">
+        <Card variant="frosted" className="border-0 shadow-lg">
           <CardHeader>
             <Skeleton className="h-8 w-3/4 bg-white/20" />
             <Skeleton className="h-4 w-1/2 bg-white/20" />
@@ -250,13 +250,13 @@ export default function AdvancedFoodCalculator({ user, currentWeight: propCurren
 
   return (
     <div className="space-y-6">
-      <Card className="bg-gradient-warm border-0 shadow-lg">
+      <Card variant="frosted" className="border-0 shadow-lg">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-white">
+          <CardTitle className="flex items-center gap-2 text-stone-900">
             <Calculator className="h-5 w-5" />
             Edistynyt ruoka-annoslaskuri
           </CardTitle>
-          <CardDescription className="text-white/80">
+          <CardDescription className="text-stone-600">
             <Scale className="h-5 w-5" aria-hidden="true" />
             Käytetyt annostelutiedot
           </CardDescription>
@@ -326,7 +326,7 @@ export default function AdvancedFoodCalculator({ user, currentWeight: propCurren
       </Card>
 
       {/* Important Notes */}
-      <Card role="alert" aria-labelledby="important-notes">
+      <Card variant="frosted" role="alert" aria-labelledby="important-notes">
         <CardHeader>
           <CardTitle id="important-notes">
             <span aria-label="Varoitus" role="img">⚠️</span>
