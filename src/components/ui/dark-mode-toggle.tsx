@@ -2,6 +2,7 @@ import * as React from "react"
 import { Moon, Sun } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { useTheme } from "@/contexts/ThemeContext"
 
 interface DarkModeToggleProps {
   className?: string
@@ -12,26 +13,8 @@ export const DarkModeToggle = React.forwardRef<
   HTMLButtonElement,
   DarkModeToggleProps
 >(({ className, variant = "default" }, ref) => {
-  const [isDark, setIsDark] = React.useState(false)
-
-  React.useEffect(() => {
-    // Check initial theme
-    const isDarkMode = document.documentElement.classList.contains('dark')
-    setIsDark(isDarkMode)
-  }, [])
-
-  const toggleDarkMode = () => {
-    const newDarkMode = !isDark
-    setIsDark(newDarkMode)
-
-    if (newDarkMode) {
-      document.documentElement.classList.add('dark')
-      localStorage.setItem('theme', 'dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-      localStorage.setItem('theme', 'light')
-    }
-  }
+  const { theme, toggleTheme } = useTheme()
+  const isDark = theme === 'dark'
 
   const getVariantStyles = () => {
     switch (variant) {
@@ -51,7 +34,7 @@ export const DarkModeToggle = React.forwardRef<
       ref={ref}
       variant={variant === "default" ? "ghost" : "ghost"}
       size="icon"
-      onClick={toggleDarkMode}
+      onClick={toggleTheme}
       className={cn(
         "relative overflow-hidden transition-all duration-300",
         getVariantStyles(),
