@@ -265,7 +265,7 @@ export default function AdvancedFoodCalculator({ user, currentWeight: propCurren
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {result.selectedFood && (
+          {result?.selectedFood && (
             <div className="mb-4 p-4 bg-blue-50 rounded-lg" role="group" aria-labelledby="selected-food">
               <h3 id="selected-food" className="font-semibold mb-2 text-[var(--color-text-primary)]">Valittu ruoka:</h3>
               <dl className="space-y-1">
@@ -279,7 +279,7 @@ export default function AdvancedFoodCalculator({ user, currentWeight: propCurren
             </div>
           )}
 
-          {result.usedGuidelines.length > 0 && (
+          {result?.usedGuidelines && result.usedGuidelines.length > 0 && (
             <div className="overflow-x-auto mobile-table-responsive">
               <h3 className="font-semibold mb-2 text-[var(--color-text-primary)]">Käytetyt annostelutiedot:</h3>
               <table className="w-full text-sm" role="table" aria-labelledby="guidelines-table" summary="Taulukko näyttää laskennassa käytetyt annostelutiedot">
@@ -311,17 +311,19 @@ export default function AdvancedFoodCalculator({ user, currentWeight: propCurren
             </div>
           )}
 
-          <div className="mt-4 p-4 bg-green-50 rounded-lg" role="group" aria-labelledby="final-result">
-            <h3 id="final-result" className="font-semibold mb-2 text-[var(--color-text-primary)]">Lopputulos:</h3>
-            <dl className="space-y-1">
-              <div><dt className="inline font-medium">Perusannos:</dt> <dd className="inline">{Math.round(result.dailyAmount / result.activityMultiplier)}g päivässä</dd></div>
-              {result.activityMultiplier !== 1.0 && (
-                <div><dt className="inline font-medium">Aktiivisuussäätö:</dt> <dd className="inline">×{result.activityMultiplier} = {result.dailyAmount}g</dd></div>
-              )}
-              <div><dt className="inline font-medium">Ruokintakerrat:</dt> <dd className="inline">{result.mealsPerDay} kertaa päivässä</dd></div>
-              <div><dt className="inline font-medium">Annos per kerta:</dt> <dd className="inline">{result.gramsPerMeal}g</dd></div>
-            </dl>
-          </div>
+          {result && (
+            <div className="mt-4 p-4 bg-green-50 rounded-lg" role="group" aria-labelledby="final-result">
+              <h3 id="final-result" className="font-semibold mb-2 text-[var(--color-text-primary)]">Lopputulos:</h3>
+              <dl className="space-y-1">
+                <div><dt className="inline font-medium">Perusannos:</dt> <dd className="inline">{Math.round(result.dailyAmount / result.activityMultiplier)}g päivässä</dd></div>
+                {result.activityMultiplier !== 1.0 && (
+                  <div><dt className="inline font-medium">Aktiivisuussäätö:</dt> <dd className="inline">×{result.activityMultiplier} = {result.dailyAmount}g</dd></div>
+                )}
+                <div><dt className="inline font-medium">Ruokintakerrat:</dt> <dd className="inline">{result.mealsPerDay} kertaa päivässä</dd></div>
+                <div><dt className="inline font-medium">Annos per kerta:</dt> <dd className="inline">{result.gramsPerMeal}g</dd></div>
+              </dl>
+            </div>
+          )}
         </CardContent>
       </Card>
 
