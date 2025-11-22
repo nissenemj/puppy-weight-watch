@@ -48,29 +48,14 @@ const Calculator = () => {
     createBreadcrumbSchema([{
       name: "Etusivu",
       url: window.location.origin
-    }, {
-      name: "Pentulaskuri",
-      url: `${window.location.origin}/calculator`
-    }])
-  ];
 
-  variants = { entranceAnimations.staggerContainer }
-  className = "max-w-3xl mx-auto space-y-6"
-    >
-            <motion.div variants={entranceAnimations.staggerChild}>
-              <Badge variant="secondary" className="bg-white border-stone-200 text-stone-600 px-4 py-1.5 text-sm shadow-sm">
-                <CalculatorIcon className="w-3.5 h-3.5 mr-2 text-terracotta-500" />
-                Tarkka ruokalaskuri
-              </Badge>
-            </motion.div>
-
-            <motion.h1
-              variants={entranceAnimations.staggerChild}
+        < motion.h1
+              variants={ entranceAnimations.staggerChild }
               className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-stone-900 tracking-tight"
-            >
-              Pentulaskuri <br />
-              <span className="text-terracotta-500">Ruokamäärät</span>
-            </motion.h1>
+      >
+      Pentulaskuri < br />
+      <span className="text-terracotta-500">Ruokamäärät</span>
+            </motion.h1 >
 
             <motion.p
               variants={entranceAnimations.staggerChild}
