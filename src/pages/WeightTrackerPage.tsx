@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { User } from '@supabase/supabase-js'
 import { supabase } from '@/integrations/supabase/client'
 import { useNavigate, useLocation } from 'react-router-dom'
@@ -8,6 +8,7 @@ import { useGuestAuth } from '@/contexts/GuestAuthContext'
 import GuestModeBar, { GuestModeBarMobile } from '@/components/GuestModeBar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { PullToRefresh } from '@/components/ui/pull-to-refresh'
 import { User as UserIcon, Loader2, Dog, AlertCircle } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useToast } from '@/hooks/use-toast'
@@ -176,8 +177,15 @@ const WeightTrackerPage = () => {
     )
   }
 
+  const handleRefresh = useCallback(async () => {
+    if (user) {
+      await checkUserData(user);
+    }
+  }, [user]);
+
   return (
-    <div className="container mx-auto px-4 py-6 md:py-8 space-y-6">
+    <PullToRefresh onRefresh={handleRefresh} className="min-h-screen">
+      <div className="container mx-auto px-4 py-6 md:py-8 space-y-6">
       {/* Guest Mode Bar */}
       {isGuest && guestWeightEntries.length > 0 && (
         <div className="mb-6">
@@ -216,7 +224,8 @@ const WeightTrackerPage = () => {
           onClose={() => setShowAuthModal(false)}
         />
       )}
-    </div>
+      </div>
+    </PullToRefresh>
   )
 }
 

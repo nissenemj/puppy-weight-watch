@@ -103,6 +103,29 @@
 
 @layer utilities {
 
+  /* Scroll snap for mobile tabs */
+  .snap-x {
+    scroll-snap-type: x mandatory;
+  }
+
+  .snap-mandatory {
+    scroll-snap-type: x mandatory;
+  }
+
+  .snap-start {
+    scroll-snap-align: start;
+  }
+
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
   /* Anthropic-style Glass Panel */
   .glass-panel {
     @apply bg-white/80 backdrop-blur-md border border-stone-200 shadow-sm;

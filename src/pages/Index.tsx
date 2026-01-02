@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Scale, Calculator, Book, TrendingUp, Shield, Clock, Target, Heart, Sparkles, ArrowRight, CheckCircle } from 'lucide-react'
@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import SEO from '@/components/SEO'
 import FAQ from '@/components/FAQ'
 import MeshBackground from '@/components/MeshBackground'
+import { PullToRefresh } from '@/components/ui/pull-to-refresh'
 import { createWebApplicationSchema, createWeightTrackingSchema, createFAQSchema } from '@/utils/structuredData'
 import { trackHeroCTAClicked, trackPageViewed } from '@/utils/analytics'
 import { entranceAnimations } from '@/animations'
@@ -89,8 +90,14 @@ const Index = () => {
     { icon: Heart, text: "Vastuullista hoitoa" }
   ];
 
+  const handleRefresh = useCallback(async () => {
+    // Refresh the page data
+    window.location.reload();
+  }, []);
+
   return (
-    <div className="flex flex-col gap-16 pb-20">
+    <PullToRefresh onRefresh={handleRefresh} className="min-h-screen">
+      <div className="flex flex-col gap-16 pb-20">
       <SEO
         title="Pentulaskuri - Koiran Kasvun & Ruokinnan Seuranta"
         description="Moderni ja helppokäyttöinen sovellus koiran kasvun seuraamiseen. Seuraa painoa, ruokintaa ja kehitystä ammattimaisilla työkaluilla. Ilmainen käyttö."
@@ -211,7 +218,8 @@ const Index = () => {
         </div>
         <FAQ items={faqs} />
       </section>
-    </div>
+      </div>
+    </PullToRefresh>
   )
 }
 
