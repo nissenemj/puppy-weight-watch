@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import { Menu, PawPrint, Scale, Calculator, Book, Info, Home, LogOut, PlusCircle, Dog } from 'lucide-react';
 import { BottomNavigation } from './BottomNavigation';
-import { DarkModeToggle } from '@/components/ui/dark-mode-toggle';
+
 
 interface PrimaryLink {
   href: string;
@@ -257,7 +257,6 @@ const NavigationWithRouter: React.FC = () => {
           </div>
 
           <div className="hidden md:flex items-center gap-4">
-            <DarkModeToggle variant="minimal" />
             {renderAuthActions()}
             <Button asChild variant="secondary" className="hidden lg:inline-flex bg-sage-500 text-white hover:bg-sage-600 transition-all duration-200 hover:scale-105 shadow-sm">
               <Link to={user ? '/onboarding' : '/login'}>
@@ -350,11 +349,6 @@ const NavigationWithRouter: React.FC = () => {
                   </nav>
 
                   <div className="space-y-3 pt-4">
-                    <div className="flex items-center justify-between px-4 py-2">
-                      <span className="text-sm font-medium text-stone-900 dark:text-stone-100">Teema</span>
-                      <DarkModeToggle variant="minimal" />
-                    </div>
-                    <Separator />
                     {user ? (
                       <>
                         <Button onClick={handleSignOut} variant="outline" className="w-full justify-start text-red-600 border-stone-200 hover:bg-red-50">
