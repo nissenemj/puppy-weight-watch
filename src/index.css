@@ -46,37 +46,6 @@
     --input: 30 6% 90%;
     --ring: 13 68% 63%;
   }
-
-  .dark {
-    /* Dark Theme Colors */
-    --background: 24 5% 10%;
-    --foreground: 60 5% 96%;
-
-    --card: 24 5% 12%;
-    --card-foreground: 60 5% 96%;
-    --popover: 24 5% 12%;
-    --popover-foreground: 60 5% 96%;
-
-    --primary: 13 68% 63%;
-    --primary-foreground: 60 9.1% 97.8%;
-
-    --secondary: 24 5% 15%;
-    /* Stone 800 */
-    --secondary-foreground: 60 5% 96%;
-
-    --muted: 24 5% 15%;
-    --muted-foreground: 25 5% 65%;
-
-    --accent: 150 24% 60%;
-    --accent-foreground: 60 5% 96%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 60 9.1% 97.8%;
-
-    --border: 24 5% 15%;
-    --input: 24 5% 15%;
-    --ring: 13 68% 63%;
-  }
 }
 
 @layer base {
@@ -97,7 +66,38 @@
   h4,
   h5,
   h6 {
-    @apply font-serif tracking-tight text-stone-900 dark:text-stone-50;
+    @apply font-serif tracking-tight text-stone-900;
+  }
+}
+
+/* Mobile Optimizations */
+@layer base {
+  html {
+    /* Prevent text size adjustment on orientation change */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    /* Prevent pull-to-refresh and overscroll */
+    overscroll-behavior: contain;
+    /* Remove tap highlight on mobile */
+    -webkit-tap-highlight-color: transparent;
+    /* Optimize touch interactions */
+    touch-action: manipulation;
+  }
+
+  /* Prevent zoom on input focus (iOS) - ensure 16px+ font */
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+
+  /* Ensure touch targets are minimum 44x44px */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
   }
 }
 
@@ -105,7 +105,7 @@
 
   /* Anthropic-style Glass Panel */
   .glass-panel {
-    @apply bg-white/80 dark:bg-stone-900/80 backdrop-blur-md border border-stone-200 dark:border-stone-800 shadow-sm;
+    @apply bg-white/80 backdrop-blur-md border border-stone-200 shadow-sm;
   }
 
   /* Mobile Safe Area */
