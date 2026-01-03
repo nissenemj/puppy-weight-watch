@@ -5,11 +5,33 @@ import SEO from '@/components/SEO';
 import FAQ from '@/components/FAQ';
 import { createCalculatorSchema, createFAQSchema, createBreadcrumbSchema } from '@/utils/structuredData';
 import { trackPageViewed } from '@/utils/analytics';
-import { Calculator as CalculatorIcon, CheckCircle } from 'lucide-react';
+import { Calculator as CalculatorIcon, CheckCircle, ExternalLink, Bone, Drumstick } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { entranceAnimations } from '@/animations';
 import { Badge } from '@/components/ui/badge';
 import MeshBackground from '@/components/MeshBackground';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+
+// Manufacturer feeding guide links
+const MANUFACTURER_LINKS = {
+  kuivaruoat: [
+    { name: 'Brit', url: 'https://brit-petfood.com/en/products/dogs/' },
+    { name: 'Hau-Hau Champion', url: 'https://hauhau.fi/blogs/koiran-ruokinta/' },
+    { name: 'Royal Canin', url: 'https://royalcanin.com/fi/dogs/products/' },
+    { name: 'Josera', url: 'https://josera.de/hund/futter/' },
+    { name: 'Eukanuba', url: 'https://eukanuba.com/fi/dogs/' },
+    { name: "Hill's", url: 'https://hillspet.fi/dog-food' },
+  ],
+  raakaruoat: [
+    { name: 'MUSH', url: 'https://mush.fi/koiranruoka/penturuoka/' },
+    { name: 'SMAAK', url: 'https://smaak.fi/koiranruoka/' },
+    { name: 'Best-In', url: 'https://best-in.fi/koiranruokinta/' },
+    { name: 'Kennelpakaste', url: 'https://kennelpakaste.fi/' },
+  ],
+  markaruoat: [
+    { name: 'Dagsmark', url: 'https://dagsmarkpetfood.fi/blogs/oppaat/' },
+  ],
+};
 
 const Calculator = () => {
   useEffect(() => {
@@ -116,6 +138,98 @@ const Calculator = () => {
       {/* Calculator Section */}
       <section className="container px-4 md:px-6 mx-auto max-w-4xl">
         <AdvancedFoodCalculator user={null} />
+      </section>
+
+      {/* Manufacturer Feeding Guides Section */}
+      <section className="container px-4 md:px-6 mx-auto max-w-4xl">
+        <Card variant="frosted" className="border-0 shadow-lg">
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl md:text-3xl font-serif font-bold text-stone-900 mb-2">
+              Valmistajien Viralliset Annosohjeet
+            </CardTitle>
+            <CardDescription className="text-base text-stone-600 max-w-2xl mx-auto">
+              Tarkista aina ruokamäärä valmistajan virallisesta annostelutaulukosta,
+              koska energiatiheys vaihtelee tuotteittain (1200–1800 kcal/kg).
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Kuivaruoat */}
+              <div className="space-y-3">
+                <div className="flex items-center gap-2 text-stone-800 font-semibold">
+                  <Bone className="w-5 h-5 text-terracotta-500" />
+                  <h3>Kuivaruoat</h3>
+                </div>
+                <ul className="space-y-2">
+                  {MANUFACTURER_LINKS.kuivaruoat.map((manufacturer) => (
+                    <li key={manufacturer.name}>
+                      <a
+                        href={manufacturer.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-stone-600 hover:text-terracotta-600 transition-colors group py-1"
+                      >
+                        <span className="group-hover:underline">{manufacturer.name}</span>
+                        <ExternalLink className="w-3.5 h-3.5 opacity-50 group-hover:opacity-100" />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Raakaruoat */}
+              <div className="space-y-3">
+                <div className="flex items-center gap-2 text-stone-800 font-semibold">
+                  <Drumstick className="w-5 h-5 text-terracotta-500" />
+                  <h3>Raakaruoat</h3>
+                </div>
+                <ul className="space-y-2">
+                  {MANUFACTURER_LINKS.raakaruoat.map((manufacturer) => (
+                    <li key={manufacturer.name}>
+                      <a
+                        href={manufacturer.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-stone-600 hover:text-terracotta-600 transition-colors group py-1"
+                      >
+                        <span className="group-hover:underline">{manufacturer.name}</span>
+                        <ExternalLink className="w-3.5 h-3.5 opacity-50 group-hover:opacity-100" />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Märkäruoat */}
+              <div className="space-y-3">
+                <div className="flex items-center gap-2 text-stone-800 font-semibold">
+                  <Bone className="w-5 h-5 text-terracotta-500" />
+                  <h3>Märkäruoat</h3>
+                </div>
+                <ul className="space-y-2">
+                  {MANUFACTURER_LINKS.markaruoat.map((manufacturer) => (
+                    <li key={manufacturer.name}>
+                      <a
+                        href={manufacturer.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-stone-600 hover:text-terracotta-600 transition-colors group py-1"
+                      >
+                        <span className="group-hover:underline">{manufacturer.name}</span>
+                        <ExternalLink className="w-3.5 h-3.5 opacity-50 group-hover:opacity-100" />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            {/* Disclaimer */}
+            <p className="text-xs text-stone-500 text-center mt-6 pt-4 border-t border-stone-200">
+              Nämä linkit johtavat valmistajien omille sivuille. Pentulaskuri.com ei vastaa ulkoisten sivustojen sisällöstä.
+            </p>
+          </CardContent>
+        </Card>
       </section>
 
       {/* FAQ Section */}

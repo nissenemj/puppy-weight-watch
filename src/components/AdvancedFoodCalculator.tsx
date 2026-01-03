@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectTrigger, SelectValue, SelectItem } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
-import { Calculator, Dog, Scale } from 'lucide-react'
+import { Calculator, Dog, Scale, ExternalLink, BookOpen } from 'lucide-react'
 import { User } from '@supabase/supabase-js'
 import { supabase } from '@/integrations/supabase/client'
 import { dbToAppTypes } from '@/utils/typeUtils'
@@ -48,6 +48,21 @@ const ACTIVITY_MULTIPLIERS = {
   'normaali': 1.0,
   'aktiivinen': 1.1,
   'hyvin-aktiivinen': 1.2
+}
+
+// Manufacturer feeding guide URLs
+const MANUFACTURER_FEEDING_URLS: Record<string, string> = {
+  'Brit': 'https://brit-petfood.com/en/products/dogs/',
+  'Hau-Hau Champion': 'https://hauhau.fi/blogs/koiran-ruokinta/',
+  'Royal Canin': 'https://royalcanin.com/fi/dogs/products/',
+  'Josera': 'https://josera.de/hund/futter/',
+  'Eukanuba': 'https://eukanuba.com/fi/dogs/',
+  "Hill's": 'https://hillspet.fi/dog-food',
+  'MUSH': 'https://mush.fi/koiranruoka/penturuoka/',
+  'SMAAK': 'https://smaak.fi/koiranruoka/',
+  'Best-In': 'https://best-in.fi/koiranruokinta/',
+  'Kennelpakaste': 'https://kennelpakaste.fi/',
+  'Dagsmark': 'https://dagsmarkpetfood.fi/blogs/oppaat/',
 }
 
 interface AdvancedFoodCalculatorProps {
@@ -449,6 +464,19 @@ export default function AdvancedFoodCalculator({ user, currentWeight: propCurren
                   <div><dt className="inline font-medium">Huomautuksia:</dt> <dd className="inline">{result.selectedFood.notes}</dd></div>
                 )}
               </dl>
+              {/* Manufacturer feeding guide link */}
+              {MANUFACTURER_FEEDING_URLS[result.selectedFood.manufacturer] && (
+                <a
+                  href={MANUFACTURER_FEEDING_URLS[result.selectedFood.manufacturer]}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 mt-3 px-4 py-2 bg-terracotta-500 hover:bg-terracotta-600 text-white rounded-lg transition-colors font-medium text-sm"
+                >
+                  <BookOpen className="w-4 h-4" />
+                  Katso {result.selectedFood.manufacturer}:n virallinen annosohje
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              )}
             </div>
           )}
 
