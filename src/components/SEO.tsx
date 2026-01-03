@@ -7,8 +7,10 @@ interface SEOProps {
   keywords?: string;
   image?: string;
   url?: string;
+  canonicalUrl?: string;
   type?: 'website' | 'article' | 'product';
   structuredData?: object;
+  noindex?: boolean;
 }
 
 const SEO: React.FC<SEOProps> = ({
@@ -17,19 +19,29 @@ const SEO: React.FC<SEOProps> = ({
   keywords = 'koiranpentu, painonseuranta, ruokalaskuri, pentulaskuri, koiran kasvu, ruokinta, annostelu',
   image = '/icons/icon-512x512.png',
   url = window.location.href,
+  canonicalUrl,
   type = 'website',
-  structuredData
+  structuredData,
+  noindex = false
 }) => {
   const fullTitle = title === 'Koiranpennun Painonseuranta' ? title : `${title} | Koiranpennun Painonseuranta`;
 
+  // Generate canonical URL - always use https://pentulaskuri.com (without www)
+  const baseUrl = 'https://pentulaskuri.com';
+  const pathname = typeof window !== 'undefined' ? window.location.pathname : '/';
+  const canonical = canonicalUrl || `${baseUrl}${pathname}`;
+
   return (
     <Helmet>
+      {/* Canonical URL - critical for SEO */}
+      <link rel="canonical" href={canonical} />
+
       {/* Basic meta tags */}
       <title>{fullTitle}</title>
       <meta name="description" content={description} />
       <meta name="keywords" content={keywords} />
-      <meta name="author" content="Koiranpennun Painonseuranta App" />
-      <meta name="robots" content="index, follow" />
+      <meta name="author" content="Pentulaskuri.com" />
+      <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />
       <meta name="language" content="fi" />
       <meta name="revisit-after" content="7 days" />
       
