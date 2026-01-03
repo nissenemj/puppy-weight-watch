@@ -323,18 +323,118 @@ export default function AdvancedFoodCalculator({ user, currentWeight: propCurren
 
   return (
     <div className="space-y-6">
+      {/* Input Form */}
+      <Card className="bg-gradient-to-br from-terracotta-500 to-terracotta-600 border-0 shadow-lg">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-white">
+            <Calculator className="h-5 w-5" />
+            Ruoka-annoslaskuri
+          </CardTitle>
+          <CardDescription className="text-white/80">
+            Laske pennun päivittäinen ruokamäärä
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <form role="form" aria-labelledby="calculator-title" onSubmit={(e) => { e.preventDefault(); calculateFeeding(); }}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="current-weight" className="text-white">Nykyinen paino (kg) *</Label>
+                <Input
+                  id="current-weight"
+                  type="number"
+                  step="0.1"
+                  value={currentWeight}
+                  onChange={(e) => setCurrentWeight(e.target.value)}
+                  placeholder="esim. 3.2"
+                  className="bg-white/20 border-white/30 text-white placeholder:text-white/60"
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="age" className="text-white">Ikä kuukausina *</Label>
+                <Input
+                  id="age"
+                  type="number"
+                  value={ageMonths}
+                  onChange={(e) => setAgeMonths(e.target.value)}
+                  placeholder="esim. 4"
+                  className="bg-white/20 border-white/30 text-white placeholder:text-white/60"
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="adult-weight" className="text-white">Odotettu aikuispaino (kg)</Label>
+                <Input
+                  id="adult-weight"
+                  type="number"
+                  step="0.1"
+                  value={expectedAdultWeight}
+                  onChange={(e) => setExpectedAdultWeight(e.target.value)}
+                  placeholder="esim. 8"
+                  className="bg-white/20 border-white/30 text-white placeholder:text-white/60"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-white">Aktiivisuustaso</Label>
+                <Select value={activityLevel} onValueChange={setActivityLevel}>
+                  <SelectTrigger className="bg-white/20 border-white/30 text-white">
+                    <SelectValue placeholder="Valitse aktiivisuustaso" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="hyvin-matala">Hyvin matala (sisäkoira)</SelectItem>
+                    <SelectItem value="normaali">Normaali (päivittäiset kävelyt)</SelectItem>
+                    <SelectItem value="aktiivinen">Aktiivinen (pitkät kävelyt, leikki)</SelectItem>
+                    <SelectItem value="hyvin-aktiivinen">Hyvin aktiivinen (urheilu, työkoira)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="space-y-2 mt-4">
+              <Label className="text-white" id="food-label">Valitse koiranruoka *</Label>
+              <Select value={selectedFoodId} onValueChange={setSelectedFoodId} required>
+                <SelectTrigger
+                  className="bg-white/20 border-white/30 text-white"
+                  aria-labelledby="food-label"
+                  aria-required="true"
+                >
+                  <SelectValue placeholder="Valitse ruoka" />
+                </SelectTrigger>
+                <SelectContent>
+                  {dogFoods.map(food => (
+                    <SelectItem key={food.id} value={food.id}>
+                      {food.manufacturer} - {food.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <Button
+              type="submit"
+              className="w-full mt-6 bg-white text-terracotta-600 hover:bg-white/90 font-semibold"
+              disabled={!currentWeight || !ageMonths || !selectedFoodId}
+            >
+              <Dog className="mr-2 h-4 w-4" aria-hidden="true" />
+              Laske ruokamäärä
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+
+      {/* Results Card - only shown when result exists */}
+      {result && (
       <Card variant="frosted" className="border-0 shadow-lg">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-stone-900">
-            <Calculator className="h-5 w-5" />
-            Edistynyt ruoka-annoslaskuri
+            <Scale className="h-5 w-5" />
+            Laskentatulokset
           </CardTitle>
-          <CardDescription className="text-stone-600">
-            <Scale className="h-5 w-5" aria-hidden="true" />
-            Käytetyt annostelutiedot
-          </CardDescription>
           <CardDescription>
-            Laskenta perustuu seuraaviin tietoihin valitusta ruoasta.
+            Laskenta perustuu valitun ruoan annostelutaulukkoon.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -420,6 +520,7 @@ export default function AdvancedFoodCalculator({ user, currentWeight: propCurren
           )}
         </CardContent>
       </Card>
+      )}
 
       {/* Important Notes */}
       <Card variant="frosted" role="alert" aria-labelledby="important-notes">
