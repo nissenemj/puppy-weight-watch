@@ -3,6 +3,8 @@ import Footer from '@/components/Footer';
 import AdvancedFoodCalculator from '@/components/AdvancedFoodCalculator';
 import SEO from '@/components/SEO';
 import FAQ from '@/components/FAQ';
+import VeterinaryDisclaimer from '@/components/VeterinaryDisclaimer';
+import RelatedContent from '@/components/RelatedContent';
 import { createCalculatorSchema, createFAQSchema, createBreadcrumbSchema } from '@/utils/structuredData';
 import { trackPageViewed } from '@/utils/analytics';
 import { Calculator as CalculatorIcon, CheckCircle, ExternalLink, Bone, Drumstick } from 'lucide-react';
@@ -232,6 +234,11 @@ const Calculator = () => {
         </Card>
       </section>
 
+      {/* Veterinary Disclaimer - E-E-A-T */}
+      <section className="container px-4 md:px-6 mx-auto max-w-3xl">
+        <VeterinaryDisclaimer />
+      </section>
+
       {/* FAQ Section */}
       <section className="container px-4 md:px-6 mx-auto max-w-3xl">
         <div className="text-center mb-12">
@@ -241,6 +248,33 @@ const Calculator = () => {
           </p>
         </div>
         <FAQ items={faqs} />
+      </section>
+
+      {/* Related Content - Internal Linking */}
+      <section className="container px-4 md:px-6 mx-auto max-w-3xl">
+        <RelatedContent
+          title="Hyödyllisiä työkaluja ja oppaita"
+          items={[
+            {
+              title: 'Painonseuranta',
+              description: 'Seuraa pennun kasvua ja kehitystä graafeilla',
+              href: '/weight-tracker',
+              icon: 'scale'
+            },
+            {
+              title: 'Ruokintaopas',
+              description: 'Kattava opas pennun ruokintaan ja ruokavalintoihin',
+              href: '/guides/feeding',
+              icon: 'book'
+            },
+            {
+              title: 'Turvallisuusopas',
+              description: 'Varmista kotisi turvallisuus pennulle',
+              href: '/guides/safety',
+              icon: 'shield'
+            }
+          ]}
+        />
       </section>
 
       <Footer />

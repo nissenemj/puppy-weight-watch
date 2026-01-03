@@ -1,15 +1,15 @@
 import { useState, useEffect, useCallback } from 'react'
 import { User } from '@supabase/supabase-js'
 import { supabase } from '@/integrations/supabase/client'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import AuthenticationWrapper from '@/components/AuthenticationWrapper'
 import ModernPuppyWeightTracker from '@/components/ModernPuppyWeightTracker'
+import VeterinaryDisclaimer from '@/components/VeterinaryDisclaimer'
 import { useGuestAuth } from '@/contexts/GuestAuthContext'
 import GuestModeBar, { GuestModeBarMobile } from '@/components/GuestModeBar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { User as UserIcon, Loader2, Dog, AlertCircle } from 'lucide-react'
-import { motion } from 'framer-motion'
+import { Loader2, Dog, AlertCircle } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import { useIsMobile } from '@/hooks/use-mobile'
 
@@ -207,6 +207,9 @@ const WeightTrackerPage = () => {
         </div>
 
         <ModernPuppyWeightTracker />
+
+        {/* Veterinary Disclaimer - E-E-A-T */}
+        <VeterinaryDisclaimer variant="compact" className="mt-8" />
       </div>
 
       {/* Auth Modal */}

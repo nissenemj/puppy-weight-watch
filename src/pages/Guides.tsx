@@ -1,6 +1,8 @@
 import React from 'react';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
+import VeterinaryDisclaimer from '@/components/VeterinaryDisclaimer';
+import RelatedContent from '@/components/RelatedContent';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Container, Section } from '@/components/ui/Layout';
@@ -13,7 +15,6 @@ import {
   Utensils,
   BookOpen,
   ArrowRight,
-  Info,
   CheckCircle
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -196,6 +197,36 @@ const Guides = () => {
               </motion.div>
             ))}
           </div>
+        </Container>
+      </Section>
+
+      {/* Veterinary Disclaimer - E-E-A-T */}
+      <Section className="py-8" animated={false}>
+        <Container size="lg" padding="lg">
+          <VeterinaryDisclaimer />
+        </Container>
+      </Section>
+
+      {/* Related Tools - Internal Linking */}
+      <Section className="py-8" animated={false}>
+        <Container size="lg" padding="lg">
+          <RelatedContent
+            title="Työkalut oppaan tueksi"
+            items={[
+              {
+                title: 'Ruokalaskuri',
+                description: 'Laske pennun tarkka ruokamäärä painon ja iän mukaan',
+                href: '/calculator',
+                icon: 'calculator'
+              },
+              {
+                title: 'Painonseuranta',
+                description: 'Seuraa pennun kasvua ja vertaa rotukohtaisiin käyriin',
+                href: '/weight-tracker',
+                icon: 'scale'
+              }
+            ]}
+          />
         </Container>
       </Section>
 
