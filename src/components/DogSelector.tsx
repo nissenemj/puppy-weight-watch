@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Button } from '@/components/ui/button'
 import { Plus, Settings, Trash2 } from 'lucide-react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog'
+import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -210,9 +210,10 @@ export default function DogSelector({ user, selectedDogId, onDogSelect }: DogSel
       })
     } catch (error) {
       console.error('Error deleting dog:', error)
+      const errorMessage = error instanceof Error ? error.message : String(error)
       toast({
-        title: "Virhe",
-        description: "Koiran poistaminen epäonnistui",
+        title: "Virhe koiran poistamisessa",
+        description: errorMessage,
         variant: "destructive"
       })
     }
@@ -385,13 +386,16 @@ export default function DogSelector({ user, selectedDogId, onDogSelect }: DogSel
             <AlertDialogCancel onClick={() => setDeleteConfirmed(false)}>
               Peruuta
             </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={deleteDog}
+            <Button
+              onClick={async (e) => {
+                e.preventDefault()
+                await deleteDog()
+              }}
               disabled={!deleteConfirmed}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              variant="destructive"
             >
               Poista pysyvästi
-            </AlertDialogAction>
+            </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
