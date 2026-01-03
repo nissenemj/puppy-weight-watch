@@ -1,9 +1,8 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect } from 'react';
 import Footer from '@/components/Footer';
 import AdvancedFoodCalculator from '@/components/AdvancedFoodCalculator';
 import SEO from '@/components/SEO';
 import FAQ from '@/components/FAQ';
-import { PullToRefresh } from '@/components/ui/pull-to-refresh';
 import { createCalculatorSchema, createFAQSchema, createBreadcrumbSchema } from '@/utils/structuredData';
 import { trackPageViewed } from '@/utils/analytics';
 import { Calculator as CalculatorIcon, CheckCircle } from 'lucide-react';
@@ -55,13 +54,8 @@ const Calculator = () => {
     }])
   ];
 
-  const handleRefresh = useCallback(async () => {
-    window.location.reload();
-  }, []);
-
   return (
-    <PullToRefresh onRefresh={handleRefresh} className="min-h-screen">
-      <div className="flex flex-col gap-16 pb-20">
+    <div className="min-h-screen flex flex-col gap-16 pb-20">
       <SEO
         title="Pentulaskuri - Ruokamäärä"
         description="Laske koiranpentusi optimaalinen päivittäinen ruokamäärä. Huomioi rodun, iän, painon ja aktiivisuuden. Käytä virallisia annostelutaulukoita."
@@ -136,8 +130,7 @@ const Calculator = () => {
       </section>
 
       <Footer />
-      </div>
-    </PullToRefresh>
+    </div>
   );
 };
 
