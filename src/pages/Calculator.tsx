@@ -8,10 +8,7 @@ import RelatedContent from '@/components/RelatedContent';
 import { createCalculatorSchema, createFAQSchema, createBreadcrumbSchema } from '@/utils/structuredData';
 import { trackPageViewed } from '@/utils/analytics';
 import { Calculator as CalculatorIcon, CheckCircle, ExternalLink, Bone, Drumstick } from 'lucide-react';
-import { motion } from 'framer-motion';
-import { entranceAnimations } from '@/animations';
 import { Badge } from '@/components/ui/badge';
-import MeshBackground from '@/components/MeshBackground';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 // Manufacturer feeding guide links
@@ -87,53 +84,52 @@ const Calculator = () => {
         structuredData={structuredData}
       />
 
-      <MeshBackground variant="default" />
+      {/* Video Hero Section */}
+      <section className="relative min-h-[50vh] md:min-h-[60vh] flex items-center justify-center overflow-hidden">
+        {/* Video Background */}
+        <video
+          autoPlay
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+          onEnded={(e) => {
+            // Pysäytä viimeiseen ruutuun
+            const video = e.currentTarget;
+            video.currentTime = video.duration;
+          }}
+        >
+          <source src="/videos/koiranpennut_syövät_iloisesti_ruokaa-0.mp4" type="video/mp4" />
+        </video>
 
-      {/* Hero Section - pt-20/pt-24 for fixed navigation */}
-      <section className="relative pt-20 md:pt-24 pb-12 overflow-hidden">
-        <div className="container px-4 md:px-6 mx-auto text-center">
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={entranceAnimations.staggerContainer}
-            className="max-w-3xl mx-auto space-y-6"
-          >
-            <motion.div variants={entranceAnimations.staggerChild}>
-              <Badge variant="secondary" className="bg-white border-stone-200 text-stone-600 px-4 py-1.5 text-sm shadow-sm">
-                <CalculatorIcon className="w-3.5 h-3.5 mr-2 text-terracotta-500" />
-                Tarkka ruokalaskuri
-              </Badge>
-            </motion.div>
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-black/20" />
 
-            <motion.h1
-              variants={entranceAnimations.staggerChild}
-              className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-stone-900 tracking-tight"
-            >
-              Pentulaskuri <br />
-              <span className="text-terracotta-500">Ruokamäärät</span>
-            </motion.h1>
+        {/* Hero Content */}
+        <div className="relative z-10 text-center px-4 md:px-6 max-w-3xl mx-auto space-y-6">
+          <Badge className="bg-white/20 backdrop-blur-md border-white/30 text-white px-4 py-1.5 text-sm shadow-sm">
+            <CalculatorIcon className="w-3.5 h-3.5 mr-2 text-terracotta-300" />
+            Tarkka ruokalaskuri
+          </Badge>
 
-            <motion.p
-              variants={entranceAnimations.staggerChild}
-              className="text-lg text-stone-600 leading-relaxed max-w-xl mx-auto"
-            >
-              Laske koiranpentusi optimaalinen päivittäinen ruokamäärä huomioiden rodun, iän, painon ja aktiivisuustason.
-            </motion.p>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-white tracking-tight drop-shadow-lg">
+            Pentulaskuri <br />
+            <span className="text-terracotta-300">Ruokamäärät</span>
+          </h1>
 
-            <motion.div
-              variants={entranceAnimations.staggerChild}
-              className="flex flex-wrap justify-center gap-6 pt-4"
-            >
-              <div className="flex items-center gap-2 text-stone-600 font-medium">
-                <CheckCircle className="w-5 h-5 text-sage-500" />
-                <span>Tarkat tulokset</span>
-              </div>
-              <div className="flex items-center gap-2 text-stone-600 font-medium">
-                <CheckCircle className="w-5 h-5 text-sage-500" />
-                <span>Ammattimaiset suositukset</span>
-              </div>
-            </motion.div>
-          </motion.div>
+          <p className="text-lg text-white/90 leading-relaxed max-w-xl mx-auto drop-shadow">
+            Laske koiranpentusi optimaalinen päivittäinen ruokamäärä huomioiden rodun, iän, painon ja aktiivisuustason.
+          </p>
+
+          <div className="flex flex-wrap justify-center gap-6 pt-4">
+            <div className="flex items-center gap-2 text-white/90 font-medium">
+              <CheckCircle className="w-5 h-5 text-terracotta-300" />
+              <span>Tarkat tulokset</span>
+            </div>
+            <div className="flex items-center gap-2 text-white/90 font-medium">
+              <CheckCircle className="w-5 h-5 text-terracotta-300" />
+              <span>Ammattimaiset suositukset</span>
+            </div>
+          </div>
         </div>
       </section>
 
