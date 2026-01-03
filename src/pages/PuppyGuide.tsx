@@ -26,10 +26,14 @@ const PuppyGuide = () => {
               autoPlay
               muted
               playsInline
-              loop
               className="absolute inset-0 w-full h-full object-cover"
+              onEnded={(e) => {
+                // Pysäytä viimeiseen ruutuun
+                const video = e.currentTarget;
+                video.currentTime = video.duration;
+              }}
             >
-              <source src="/videos/koiranpennut_syövät_iloisesti_ruokaa-0.mp4" type="video/mp4" />
+              <source src="/videos/Pennut_nakertavat_kirjoja_videoksi.mp4" type="video/mp4" />
             </video>
 
             {/* Gradient Overlay */}
