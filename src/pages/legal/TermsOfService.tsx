@@ -19,7 +19,7 @@ const TermsOfService = () => {
             <h1 className="text-h1 mb-8">Käyttöehdot</h1>
 
             <div className="prose prose-lg max-w-none space-y-6">
-              <p className="text-body-lg text-muted mb-8">
+              <p className="text-body-lg text-muted-foreground mb-8">
                 Viimeksi päivitetty: {new Date().toLocaleDateString('fi-FI')}
               </p>
 

@@ -97,28 +97,29 @@ const Index = () => {
         url={window.location.origin}
       />
 
-      {/* Video Hero Section - pt-16/pt-20 for fixed navigation */}
-      <section className="relative min-h-[80vh] md:min-h-[90vh] flex items-start justify-end overflow-hidden pt-16 md:pt-20">
-        {/* Video Background */}
-        <video
-          autoPlay
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-          onEnded={(e) => {
-            // Pysäytä viimeiseen ruutuun
-            const video = e.currentTarget;
-            video.currentTime = video.duration;
-          }}
-        >
-          <source src="/videos/Video_Generation_Complete.mp4" type="video/mp4" />
-        </video>
+      {/* Video Hero Section - pt-20 for fixed navigation, contained with rounded corners */}
+      <section className="container px-4 md:px-6 mx-auto pt-20 md:pt-24">
+        <div className="relative rounded-2xl overflow-hidden min-h-[60vh] md:min-h-[70vh] flex items-start justify-end">
+          {/* Video Background */}
+          <video
+            autoPlay
+            muted
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover"
+            onEnded={(e) => {
+              // Pysäytä viimeiseen ruutuun
+              const video = e.currentTarget;
+              video.currentTime = video.duration;
+            }}
+          >
+            <source src="/videos/Video_Generation_Complete.mp4" type="video/mp4" />
+          </video>
 
-        {/* Gradient Overlay - tummennus oikeaan laitaan tekstin taakse */}
-        <div className="absolute inset-0 bg-gradient-to-l from-black/60 via-black/20 to-transparent" />
+          {/* Gradient Overlay - tummennus oikeaan laitaan tekstin taakse */}
+          <div className="absolute inset-0 bg-gradient-to-l from-black/60 via-black/20 to-transparent" />
 
-        {/* Hero Content - sijoitettu oikeaan yläkulmaan */}
-        <div className="relative z-10 max-w-lg text-right pt-12 md:pt-24 pr-4 md:pr-12">
+          {/* Hero Content - sijoitettu oikeaan yläkulmaan */}
+          <div className="relative z-10 max-w-lg text-right pt-12 md:pt-24 pr-4 md:pr-12">
           <motion.div
             initial="hidden"
             animate="visible"
@@ -181,6 +182,7 @@ const Index = () => {
               ))}
             </motion.div>
           </motion.div>
+        </div>
         </div>
       </section>
 

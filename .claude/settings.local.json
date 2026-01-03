@@ -59,9 +59,17 @@
       "Bash(if [ -d \"public/fonts\" ])",
       "Bash(then echo \"Fonts directory exists\")",
       "Bash(else echo \"Fonts directory does not exist\")",
-      "Bash(fi)"
+      "Bash(fi)",
+      "Bash(PORT=8080 npm run dev)",
+      "mcp__playwright__browser_press_key",
+      "Bash(grep:*)",
+      "Bash(PLAYWRIGHT_BASE_URL=http://localhost:8081 npx playwright test:*)",
+      "Bash(npx prettier:*)",
+      "Bash(mcp__playwright__browser_navigate:*)"
     ],
     "deny": [],
-    "additionalDirectories": ["C:\\c\\Users\\nisse"]
+    "additionalDirectories": [
+      "C:\\c\\Users\\nisse"
+    ]
   }
 }

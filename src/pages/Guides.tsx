@@ -68,27 +68,28 @@ const Guides = () => {
         keywords="pentuopas, koiranpennun hoito, sosialisaatio, turvallisuus, ruokinta, kasvatusvinkit"
       />
 
-      {/* Video Hero Section - pt-16/pt-20 for fixed navigation */}
-      <section className="relative min-h-[70vh] md:min-h-[80vh] flex items-start justify-end overflow-hidden pt-16 md:pt-20">
-        {/* Video Background */}
-        <video
-          autoPlay
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-          onEnded={(e) => {
-            const video = e.currentTarget;
-            video.currentTime = video.duration;
-          }}
-        >
-          <source src="/videos/Pennut_nakertavat_kirjoja_videoksi.mp4" type="video/mp4" />
-        </video>
+      {/* Video Hero Section - pt-20 for fixed navigation, contained with rounded corners */}
+      <section className="container px-4 md:px-6 mx-auto pt-20 md:pt-24">
+        <div className="relative rounded-2xl overflow-hidden min-h-[55vh] md:min-h-[65vh] flex items-start justify-end">
+          {/* Video Background */}
+          <video
+            autoPlay
+            muted
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover"
+            onEnded={(e) => {
+              const video = e.currentTarget;
+              video.currentTime = video.duration;
+            }}
+          >
+            <source src="/videos/Pennut_nakertavat_kirjoja_videoksi.mp4" type="video/mp4" />
+          </video>
 
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-l from-black/60 via-black/20 to-transparent" />
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-l from-black/60 via-black/20 to-transparent" />
 
-        {/* Hero Content - top right */}
-        <div className="relative z-10 max-w-lg text-right pt-8 md:pt-16 pr-4 md:pr-12">
+          {/* Hero Content - top right */}
+          <div className="relative z-10 max-w-lg text-right pt-8 md:pt-16 pr-4 md:pr-12">
           <motion.div
             initial="hidden"
             animate="visible"
@@ -134,6 +135,7 @@ const Guides = () => {
               </div>
             </motion.div>
           </motion.div>
+        </div>
         </div>
       </section>
 

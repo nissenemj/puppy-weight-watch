@@ -84,28 +84,29 @@ const Calculator = () => {
         structuredData={structuredData}
       />
 
-      {/* Video Hero Section - pt-16/pt-20 for fixed navigation */}
-      <section className="relative min-h-[60vh] md:min-h-[70vh] flex items-start justify-end overflow-hidden pt-16 md:pt-20">
-        {/* Video Background */}
-        <video
-          autoPlay
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-          onEnded={(e) => {
-            // Pysäytä viimeiseen ruutuun
-            const video = e.currentTarget;
-            video.currentTime = video.duration;
-          }}
-        >
-          <source src="/videos/koiranpennut_syövät_iloisesti_ruokaa-0.mp4" type="video/mp4" />
-        </video>
+      {/* Video Hero Section - pt-20 for fixed navigation, contained with rounded corners */}
+      <section className="container px-4 md:px-6 mx-auto pt-20 md:pt-24">
+        <div className="relative rounded-2xl overflow-hidden min-h-[50vh] md:min-h-[60vh] flex items-start justify-end">
+          {/* Video Background */}
+          <video
+            autoPlay
+            muted
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover"
+            onEnded={(e) => {
+              // Pysäytä viimeiseen ruutuun
+              const video = e.currentTarget;
+              video.currentTime = video.duration;
+            }}
+          >
+            <source src="/videos/koiranpennut_syövät_iloisesti_ruokaa-0.mp4" type="video/mp4" />
+          </video>
 
-        {/* Gradient Overlay - from left for right-aligned content */}
-        <div className="absolute inset-0 bg-gradient-to-l from-black/60 via-black/20 to-transparent" />
+          {/* Gradient Overlay - from left for right-aligned content */}
+          <div className="absolute inset-0 bg-gradient-to-l from-black/60 via-black/20 to-transparent" />
 
-        {/* Hero Content - top right */}
-        <div className="relative z-10 max-w-lg text-right pt-8 md:pt-16 pr-4 md:pr-12 space-y-5">
+          {/* Hero Content - top right */}
+          <div className="relative z-10 max-w-lg text-right pt-8 md:pt-16 pr-4 md:pr-12 space-y-5">
           <div className="flex justify-end">
             <Badge className="bg-white/20 backdrop-blur-md border-white/30 text-white px-4 py-1.5 text-sm shadow-sm">
               <CalculatorIcon className="w-3.5 h-3.5 mr-2 text-terracotta-300" />
@@ -134,6 +135,7 @@ const Calculator = () => {
               <span>Ammattimaiset suositukset</span>
             </div>
           </div>
+        </div>
         </div>
       </section>
 

@@ -235,7 +235,7 @@ export default function EnhancedWeightChart({ weightData, birthDate, breed }: We
         </CardHeader>
         <CardContent>
           <div className="text-center py-12 text-muted-foreground">
-            <TrendingUp className="h-16 w-16 mx-auto mb-4 text-muted" />
+            <TrendingUp className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
             <p className="text-lg font-medium mb-2">Aloita painonseuranta</p>
             <p className="text-sm">Lisää ensimmäinen painomittaus nähdäksesi kasvukäyrän</p>
           </div>

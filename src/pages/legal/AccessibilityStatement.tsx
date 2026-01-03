@@ -20,7 +20,7 @@ const AccessibilityStatement = () => {
             <h1 className="text-h1 mb-8">Saavutettavuusseloste</h1>
 
             <div className="prose prose-lg max-w-none space-y-6">
-              <p className="text-body-lg text-muted mb-8">
+              <p className="text-body-lg text-muted-foreground mb-8">
                 Viimeksi päivitetty: {new Date().toLocaleDateString('fi-FI')}
               </p>
 
@@ -56,7 +56,7 @@ const AccessibilityStatement = () => {
                     <CheckCircle className="w-5 h-5 text-[var(--color-success-600)] flex-shrink-0 mt-0.5" />
                     <div>
                       <h3 className="text-body-lg font-semibold mb-1">Näppäimistönavigaatio</h3>
-                      <p className="text-body text-muted">
+                      <p className="text-body text-muted-foreground">
                         Kaikki toiminnot ovat käytettävissä näppäimistöllä ilman hiirtä. Tab-näppäimellä voit navigoida
                         elementtien välillä ja Enter/Space-näppäimillä aktivoida toimintoja.
                       </p>
@@ -67,7 +67,7 @@ const AccessibilityStatement = () => {
                     <CheckCircle className="w-5 h-5 text-[var(--color-success-600)] flex-shrink-0 mt-0.5" />
                     <div>
                       <h3 className="text-body-lg font-semibold mb-1">Ruudunlukijatuki</h3>
-                      <p className="text-body text-muted">
+                      <p className="text-body text-muted-foreground">
                         Palvelu on optimoitu ruudunlukijoille. Käytämme semanttista HTML:ää, ARIA-attribuutteja ja
                         kuvaavia tekstejä varmistaaksemme hyvän käyttökokemuksen ruudunlukijaa käyttäville.
                       </p>
@@ -78,7 +78,7 @@ const AccessibilityStatement = () => {
                     <CheckCircle className="w-5 h-5 text-[var(--color-success-600)] flex-shrink-0 mt-0.5" />
                     <div>
                       <h3 className="text-body-lg font-semibold mb-1">Värikontrastit</h3>
-                      <p className="text-body text-muted">
+                      <p className="text-body text-muted-foreground">
                         Tekstin ja taustan väliset kontrastit täyttävät WCAG 2.1 AA -tason vaatimuksen (4.5:1 normaali teksti, 3:1 iso teksti).
                         Tärkeät toiminnot eivät perustu pelkästään väriin.
                       </p>
@@ -89,7 +89,7 @@ const AccessibilityStatement = () => {
                     <CheckCircle className="w-5 h-5 text-[var(--color-success-600)] flex-shrink-0 mt-0.5" />
                     <div>
                       <h3 className="text-body-lg font-semibold mb-1">Responsiivinen design</h3>
-                      <p className="text-body text-muted">
+                      <p className="text-body text-muted-foreground">
                         Palvelu toimii kaikilla laitteilla ja näyttöko'oilla. Tukemme myös tekstin suurentamista jopa 200% ilman, että sisältö menee päällekkäin.
                       </p>
                     </div>
@@ -99,7 +99,7 @@ const AccessibilityStatement = () => {
                     <CheckCircle className="w-5 h-5 text-[var(--color-success-600)] flex-shrink-0 mt-0.5" />
                     <div>
                       <h3 className="text-body-lg font-semibold mb-1">Selkeät fokusindikaattorit</h3>
-                      <p className="text-body text-muted">
+                      <p className="text-body text-muted-foreground">
                         Kaikilla interaktiivisilla elementeillä on selkeä visuaalinen fokusindikaattori, joka auttaa
                         näppäimistönavigaatiossa.
                       </p>
@@ -110,7 +110,7 @@ const AccessibilityStatement = () => {
                     <CheckCircle className="w-5 h-5 text-[var(--color-success-600)] flex-shrink-0 mt-0.5" />
                     <div>
                       <h3 className="text-body-lg font-semibold mb-1">Kuvaavat linkit ja painikkeet</h3>
-                      <p className="text-body text-muted">
+                      <p className="text-body text-muted-foreground">
                         Kaikilla linkeillä ja painikkeilla on kuvaavat tekstit. Vältetään epämääräisiä tekstejä kuten "klikkaa tästä".
                       </p>
                     </div>
@@ -120,7 +120,7 @@ const AccessibilityStatement = () => {
                     <CheckCircle className="w-5 h-5 text-[var(--color-success-600)] flex-shrink-0 mt-0.5" />
                     <div>
                       <h3 className="text-body-lg font-semibold mb-1">Virheviestit ja lomakkeet</h3>
-                      <p className="text-body text-muted">
+                      <p className="text-body text-muted-foreground">
                         Lomakkeet sisältävät selkeät ohjeet ja virheviestit. Virheet ilmoitetaan sekä visuaalisesti että ruudunlukijalle.
                       </p>
                     </div>
@@ -130,7 +130,7 @@ const AccessibilityStatement = () => {
                     <CheckCircle className="w-5 h-5 text-[var(--color-success-600)] flex-shrink-0 mt-0.5" />
                     <div>
                       <h3 className="text-body-lg font-semibold mb-1">Riittävät kosketus kohteet</h3>
-                      <p className="text-body text-muted">
+                      <p className="text-body text-muted-foreground">
                         Mobiililaitteilla kaikki kosketuskohteet ovat vähintään 44×44 pikseliä WCAG-suositusten mukaisesti.
                       </p>
                     </div>
@@ -140,7 +140,7 @@ const AccessibilityStatement = () => {
                     <CheckCircle className="w-5 h-5 text-[var(--color-success-600)] flex-shrink-0 mt-0.5" />
                     <div>
                       <h3 className="text-body-lg font-semibold mb-1">Animaatioiden hallinta</h3>
-                      <p className="text-body text-muted">
+                      <p className="text-body text-muted-foreground">
                         Kunnioitamme käyttäjän "prefers-reduced-motion" -asetusta. Animaatiot vähenevät tai poistuvat,
                         jos käyttäjä on pyytänyt vähentyneitä liikkeitä.
                       </p>
@@ -160,7 +160,7 @@ const AccessibilityStatement = () => {
                     <AlertCircle className="w-5 h-5 text-[var(--color-warning-600)] flex-shrink-0 mt-0.5" />
                     <div>
                       <h3 className="text-body-lg font-semibold mb-1">Kaavioiden saavutettavuus</h3>
-                      <p className="text-body text-muted">
+                      <p className="text-body text-muted-foreground">
                         Painokaaviot eivät ole täysin saavutettavia ruudunlukijalla. Työskentelemme datapisteiden
                         tekstimuotoisen esityksen parissa.
                       </p>
@@ -171,7 +171,7 @@ const AccessibilityStatement = () => {
                     <AlertCircle className="w-5 h-5 text-[var(--color-warning-600)] flex-shrink-0 mt-0.5" />
                     <div>
                       <h3 className="text-body-lg font-semibold mb-1">Kuvien alt-tekstit</h3>
-                      <p className="text-body text-muted">
+                      <p className="text-body text-muted-foreground">
                         Käyttäjien lataamat kuvat eivät automaattisesti sisällä alt-tekstejä. Kehitämme ominaisuutta,
                         joka pyytää käyttäjiä lisäämään kuvaavan tekstin kuville.
                       </p>

@@ -120,7 +120,7 @@ export default function GrowthDevelopmentSection({ weightData, birthDate }: Grow
         </CardHeader>
         <CardContent>
           <div className="text-center py-8 text-muted-foreground">
-            <Calendar className="h-16 w-16 mx-auto mb-4 text-muted" />
+            <Calendar className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
             <p>Syntymäaika puuttuu</p>
           </div>
         </CardContent>

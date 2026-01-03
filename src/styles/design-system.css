@@ -10,22 +10,27 @@
 :root {
   /* === SIMPLIFIED COLOR SYSTEM === */
 
-  /* Primary palette - Warm terracotta (3 shades only) */
+  /* Primary palette - Warm terracotta */
+  --color-primary-50: #fff5f2;   /* Lightest */
   --color-primary-100: #ffe4d9;  /* Light */
+  --color-primary-200: #ffc9b3;  /* Light-medium */
   --color-primary-500: #E85A28;  /* Main brand - WCAG AA compliant (4.51:1) */
   --color-primary-700: #a04a2a;  /* Dark */
 
-  /* Secondary palette - Calm blue (3 shades) */
+  /* Secondary palette - Calm blue */
+  --color-secondary-50: #eff6ff;   /* Lightest */
   --color-secondary-100: #dbeafe;  /* Light blue */
   --color-secondary-500: #3b82f6;  /* Main blue */
   --color-secondary-700: #1d4ed8;  /* Dark blue */
 
-  /* Tertiary palette - Vibrant green (3 shades) */
+  /* Tertiary palette - Vibrant green */
+  --color-tertiary-50: #f0fdf4;   /* Lightest */
   --color-tertiary-100: #dcfce7;  /* Light green */
   --color-tertiary-500: #22c55e;  /* Main green */
   --color-tertiary-700: #15803d;  /* Dark green */
 
-  /* Accent palette - Warm amber (3 shades) */
+  /* Accent palette - Warm amber */
+  --color-accent-50: #fffbeb;    /* Lightest */
   --color-accent-100: #fef3c7;  /* Light amber */
   --color-accent-500: #f59e0b;  /* Main amber */
   --color-accent-700: #b45309;  /* Dark amber */

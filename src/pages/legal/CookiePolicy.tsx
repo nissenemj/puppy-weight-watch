@@ -19,7 +19,7 @@ const CookiePolicy = () => {
             <h1 className="text-h1 mb-8">Evästekäytäntö</h1>
 
             <div className="prose prose-lg max-w-none space-y-6">
-              <p className="text-body-lg text-muted mb-8">
+              <p className="text-body-lg text-muted-foreground mb-8">
                 Viimeksi päivitetty: {new Date().toLocaleDateString('fi-FI')}
               </p>
 
@@ -151,7 +151,7 @@ const CookiePolicy = () => {
                         </tbody>
                       </table>
                     </div>
-                    <p className="text-body text-muted mt-2 text-sm italic">
+                    <p className="text-body text-muted-foreground mt-2 text-sm italic">
                       Huom: Analytiikkaevästeet ovat käytössä vain, jos olet hyväksynyt analytiikan käyttöehdoissa
                       tai evästeasetuksissa.
                     </p>
