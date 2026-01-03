@@ -632,7 +632,7 @@ export default function ModernPuppyWeightTracker() {
                   <Card className="bg-white/80 backdrop-blur-sm shadow-xl rounded-2xl border-0 hover-3d">
                     <CardContent className="p-4 sm:p-6">
                       <div className="flex items-center space-x-3 sm:space-x-4">
-                        <div className="p-3 sm:p-4 bg-gradient-cool rounded-full text-white shadow-lg">
+                        <div className="p-3 sm:p-4 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full text-white shadow-lg">
                           <Scale className="h-6 w-6 sm:h-8 sm:w-8" />
                         </div>
                         <div>
@@ -648,7 +648,7 @@ export default function ModernPuppyWeightTracker() {
                   <Card className="bg-white/80 backdrop-blur-sm shadow-xl rounded-2xl border-0 hover-3d">
                     <CardContent className="p-4 sm:p-6">
                       <div className="flex items-center space-x-3 sm:space-x-4">
-                        <div className="p-3 sm:p-4 bg-gradient-purple rounded-full text-white shadow-lg">
+                        <div className="p-3 sm:p-4 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full text-white shadow-lg">
                           <TrendingUp className="h-6 w-6 sm:h-8 sm:w-8" />
                         </div>
                         <div>
@@ -664,7 +664,7 @@ export default function ModernPuppyWeightTracker() {
                   <Card className="bg-white/80 backdrop-blur-sm shadow-xl rounded-2xl border-0 hover-3d">
                     <CardContent className="p-4 sm:p-6">
                       <div className="flex items-center space-x-3 sm:space-x-4">
-                        <div className="p-3 sm:p-4 bg-gradient-warm rounded-full text-white shadow-lg">
+                        <div className="p-3 sm:p-4 bg-gradient-to-br from-terracotta-500 to-orange-500 rounded-full text-white shadow-lg">
                           <Calculator className="h-6 w-6 sm:h-8 sm:w-8" />
                         </div>
                         <div>
