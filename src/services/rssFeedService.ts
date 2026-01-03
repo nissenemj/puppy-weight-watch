@@ -72,37 +72,83 @@ const DOG_KEYWORDS = [
   'pentu', 'koiran ravitsemus', 'eläinrehu', 'varoitus'
 ];
 
+// CORS proxy options with fallbacks
+const CORS_PROXIES = [
+  {
+    name: 'corsproxy.io',
+    getUrl: (url: string) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+    parseResponse: async (response: Response) => response.text(),
+  },
+  {
+    name: 'allorigins',
+    getUrl: (url: string) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+    parseResponse: async (response: Response) => response.text(),
+  },
+  {
+    name: 'cors.sh',
+    getUrl: (url: string) => `https://cors.sh/${url}`,
+    parseResponse: async (response: Response) => response.text(),
+  },
+];
+
+// Try fetching with multiple CORS proxies
+async function fetchWithCorsProxy(url: string): Promise<string | null> {
+  for (const proxy of CORS_PROXIES) {
+    try {
+      const proxyUrl = proxy.getUrl(url);
+      const response = await fetch(proxyUrl, {
+        headers: {
+          'x-cors-api-key': 'temp_' + Date.now(), // Some proxies need this
+        },
+      });
+
+      if (response.ok) {
+        const content = await proxy.parseResponse(response);
+        if (content && content.includes('<item>')) {
+          return content;
+        }
+      }
+    } catch {
+      // Try next proxy
+      continue;
+    }
+  }
+  return null;
+}
+
 // RSS Feed parsing function
 export async function fetchRSSFeed(url: string, sourceName: string): Promise<NewsItem[]> {
   try {
-    // Use CORS proxy for RSS feed access
-    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
-    const response = await fetch(proxyUrl);
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+    const xmlText = await fetchWithCorsProxy(url);
+
+    if (!xmlText) {
+      console.warn(`Ei saatu RSS-syötettä (${sourceName}) - kaikki proxyt epäonnistuivat`);
+      return [];
     }
-    
-    const data = await response.json();
-    const xmlText = data.contents;
-    
+
     // Parse XML
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
-    
+
+    // Check for parsing errors
+    const parseError = xmlDoc.querySelector('parsererror');
+    if (parseError) {
+      console.warn(`RSS-syötteen jäsentäminen epäonnistui (${sourceName})`);
+      return [];
+    }
+
     const items = xmlDoc.querySelectorAll('item');
-    const articles: NewsItem[] = Array.from(items).map(item => ({
+    const articles: NewsItem[] = Array.from(items).map((item) => ({
       title: item.querySelector('title')?.textContent || '',
       description: item.querySelector('description')?.textContent || '',
       url: item.querySelector('link')?.textContent || '',
       publishedAt: item.querySelector('pubDate')?.textContent || new Date().toISOString(),
       source: sourceName,
       priority: 'low' as const,
-      category: 'yleinen' as const
+      category: 'yleinen' as const,
     }));
-    
+
     return articles;
-    
   } catch (error) {
     console.error(`RSS-syötteen haku epäonnistui (${sourceName}):`, error);
     return [];
