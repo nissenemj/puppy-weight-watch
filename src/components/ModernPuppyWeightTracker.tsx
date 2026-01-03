@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { SkeletonMobileCard } from '@/components/ui/skeleton'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -26,6 +26,7 @@ import WeightEntry from '@/features/weight-tracking/components/WeightEntry'
 import GrowthDevelopmentSection from './GrowthDevelopmentSection'
 import AchievementSystem from './AchievementSystem'
 import AuthModal from './AuthModal'
+import ShareGrowthChart from './ShareGrowthChart'
 import { Scale, TrendingUp, Calculator, Utensils, Bell, RefreshCw, Calendar } from 'lucide-react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Calendar as CalendarComponent } from '@/components/ui/calendar'
@@ -64,6 +65,7 @@ export default function ModernPuppyWeightTracker() {
   const [birthDate, setBirthDate] = useState<Date | undefined>(undefined)
   const { toast } = useToast()
   const isMobile = useIsMobile()
+  const chartRef = useRef<HTMLDivElement>(null)
 
   // Guest auth context
   const {
@@ -96,7 +98,7 @@ export default function ModernPuppyWeightTracker() {
   useEffect(() => {
     if (isGuest && guestWeightEntries.length > 0) {
       // Convert guest entries to chart format
-      const convertedEntries = guestWeightEntries.map((entry: any) => ({
+      const convertedEntries = guestWeightEntries.map((entry: { id: string; date: string; weight: number; created_at: string }) => ({
         id: entry.id,
         user_id: 'guest',
         date: entry.date,
@@ -678,10 +680,38 @@ export default function ModernPuppyWeightTracker() {
 
                 {/* Growth Chart with Centiles */}
                 {selectedDogBirthDate && entries.length > 0 ? (
-                  <GrowthChart
-                    weightPoints={convertToWeightPoints(entries, selectedDogBirthDate)}
-                    initialSizeClass={determineSizeClass()}
-                  />
+                  <div className="space-y-4">
+                    {/* Share Button Header */}
+                    {selectedDog && (
+                      <div className="flex justify-end">
+                        <ShareGrowthChart
+                          dog={{
+                            id: selectedDog.id,
+                            name: selectedDog.name,
+                            breed: selectedDog.breed,
+                            user_id: user?.id || '',
+                            created_at: new Date().toISOString(),
+                          }}
+                          weightData={entries.map(e => ({
+                            id: e.id,
+                            dog_id: selectedDog.id,
+                            date: e.date,
+                            weight: e.weight,
+                            user_id: e.user_id,
+                            created_at: e.created_at,
+                          }))}
+                          chartRef={chartRef}
+                        />
+                      </div>
+                    )}
+                    {/* Chart Container with Ref */}
+                    <div ref={chartRef}>
+                      <GrowthChart
+                        weightPoints={convertToWeightPoints(entries, selectedDogBirthDate)}
+                        initialSizeClass={determineSizeClass()}
+                      />
+                    </div>
+                  </div>
                 ) : (
                   <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
                     <CardContent className="text-center py-12">
