@@ -26,6 +26,9 @@ const InfoHome = lazy(() => import("./pages/InfoHome"));
 const FeedingData = lazy(() => import("./pages/FeedingData"));
 const FoodTypes = lazy(() => import("./pages/FoodTypes"));
 
+// Contact page
+const Contact = lazy(() => import("./pages/Contact"));
+
 // Legal pages
 const PrivacyPolicy = lazy(() => import("./pages/legal/PrivacyPolicy"));
 const TermsOfService = lazy(() => import("./pages/legal/TermsOfService"));
@@ -135,6 +138,12 @@ const router = createBrowserRouter([
       {
         path: "/info/safety",
         element: withSuspense(SafetyPage),
+      },
+
+      // Contact page
+      {
+        path: "/contact",
+        element: withSuspense(Contact),
       },
 
       // Legal pages

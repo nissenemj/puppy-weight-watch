@@ -3,7 +3,7 @@ import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { PageLayout, Container, Section } from '@/components/ui/Layout';
+import { Container, Section } from '@/components/ui/Layout';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
@@ -13,13 +13,11 @@ import {
   Utensils,
   BookOpen,
   ArrowRight,
-  Info
+  Info,
+  CheckCircle
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { entranceAnimations } from '@/animations';
-import { MobileOptimizedLayout } from '@/components/MobileOptimizedLayout';
-import { generateBreadcrumbs } from '@/utils/navigation';
-import Breadcrumb from '@/components/Breadcrumb';
 
 const Guides = () => {
   const guides = [
@@ -61,64 +59,82 @@ const Guides = () => {
     }
   ];
 
-  const breadcrumbs = generateBreadcrumbs('/guides');
-
   return (
-    <MobileOptimizedLayout>
-    <PageLayout variant="default" animated className="no-horizontal-scroll mobile-text-wrap responsive-media">
-      {/* Skip to main content */}
-      <a href="#guides-main" className="skip-link focus-enhanced">
-        Siirry pääsisältöön
-      </a>
-      
+    <div className="min-h-screen flex flex-col">
       <SEO
         title="Oppaat - Koiranpennun Hoito-ohjeet"
         description="Kattavat oppaat koiranpennun hoitamiseen: ruokinta, sosialisaatio, turvallisuus ja kasvatusvinkit asiantuntijoilta."
         keywords="pentuopas, koiranpennun hoito, sosialisaatio, turvallisuus, ruokinta, kasvatusvinkit"
       />
 
-      {/* Breadcrumb */}
-      <Section className="py-4 border-b border-[var(--color-border)]">
-        <Container size="lg" padding="lg">
-          <Breadcrumb items={breadcrumbs.map(b => ({ name: b.name, href: b.url, current: b.url === '/guides' }))} />
-        </Container>
-      </Section>
+      {/* Video Hero Section - pt-16/pt-20 for fixed navigation */}
+      <section className="relative min-h-[70vh] md:min-h-[80vh] flex items-start justify-end overflow-hidden pt-16 md:pt-20">
+        {/* Video Background */}
+        <video
+          autoPlay
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+          onEnded={(e) => {
+            const video = e.currentTarget;
+            video.currentTime = video.duration;
+          }}
+        >
+          <source src="/videos/Pennut_nakertavat_kirjoja_videoksi.mp4" type="video/mp4" />
+        </video>
 
-      {/* Hero Section */}
-      <Section className="py-16 bg-gradient-to-br from-[var(--color-primary-50)] to-[var(--color-secondary-50)]" role="banner" animated={false}>
-        <Container size="lg" padding="lg">
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-l from-black/60 via-black/20 to-transparent" />
+
+        {/* Hero Content - top right */}
+        <div className="relative z-10 max-w-lg text-right pt-8 md:pt-16 pr-4 md:pr-12">
           <motion.div
             initial="hidden"
             animate="visible"
             variants={entranceAnimations.staggerContainer}
-            className="text-center"
+            className="space-y-5"
           >
-            <motion.div variants={entranceAnimations.staggerChild} className="mb-4">
-              <Badge className="bg-[var(--color-primary-100)] text-[var(--color-primary-700)] border-[var(--color-primary-500)]">
-                <BookOpen className="w-4 h-4 mr-2" aria-hidden="true" />
+            <motion.div variants={entranceAnimations.staggerChild} className="flex justify-end">
+              <Badge className="bg-white/20 backdrop-blur-md border-white/30 text-white px-4 py-1.5 text-sm shadow-sm">
+                <BookOpen className="w-3.5 h-3.5 mr-2 text-terracotta-300" />
                 Asiantuntija-oppaat
               </Badge>
             </motion.div>
-            
-            <motion.h1 variants={entranceAnimations.staggerChild} className="text-display-1 mb-6" id="guides-title">
-              Koiranpennun
-              <br />
-              <span className="text-[var(--color-primary-500)]">Hoito-oppaat</span>
+
+            <motion.h1
+              variants={entranceAnimations.staggerChild}
+              className="text-3xl md:text-5xl lg:text-6xl font-serif font-bold text-white tracking-tight leading-tight"
+              style={{ textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}
+              id="guides-title"
+            >
+              Koiranpennun <br />
+              <span className="text-terracotta-300">Hoito-oppaat</span>
             </motion.h1>
-            
-            <motion.p variants={entranceAnimations.staggerChild} className="text-body-xl text-muted-foreground max-w-3xl mx-auto mb-8">
-              Kattavat, asiantuntija-arvioidut oppaat, jotka auttavat sinua kasvattamaan terveen ja onnellisen koiranpennun.
+
+            <motion.p
+              variants={entranceAnimations.staggerChild}
+              className="text-base md:text-lg text-white/90 leading-relaxed"
+              style={{ textShadow: '0 1px 4px rgba(0,0,0,0.5)' }}
+            >
+              Kattavat oppaat terveen ja onnellisen koiranpennun kasvattamiseen.
             </motion.p>
 
-            <motion.div variants={entranceAnimations.staggerChild} className="flex items-center justify-center gap-6 text-body-sm text-muted-foreground">
+            <motion.div
+              variants={entranceAnimations.staggerChild}
+              className="flex flex-wrap justify-end gap-x-5 gap-y-2 text-sm font-medium text-white/80"
+            >
               <div className="flex items-center gap-2">
-                <Info className="w-4 h-4 text-[var(--color-info)]" aria-hidden="true" />
+                <CheckCircle className="w-4 h-4 text-terracotta-300" />
+                <span>Asiantuntijoiden laatima</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 text-terracotta-300" />
                 <span>Säännöllisesti päivitetty</span>
               </div>
             </motion.div>
           </motion.div>
-        </Container>
-      </Section>
+        </div>
+      </section>
 
       {/* Guides Grid */}
       <Section className="py-20" role="main" id="guides-main" animated={false}>
@@ -208,8 +224,7 @@ const Guides = () => {
       </Section>
 
       <Footer />
-    </PageLayout>
-    </MobileOptimizedLayout>
+    </div>
   );
 };
 

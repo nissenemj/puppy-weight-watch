@@ -87,8 +87,8 @@ const Calculator = () => {
 
       <MeshBackground variant="default" />
 
-      {/* Hero Section */}
-      <section className="relative pt-8 md:pt-16 pb-12 overflow-hidden">
+      {/* Hero Section - pt-20/pt-24 for fixed navigation */}
+      <section className="relative pt-20 md:pt-24 pb-12 overflow-hidden">
         <div className="container px-4 md:px-6 mx-auto text-center">
           <motion.div
             initial="hidden"

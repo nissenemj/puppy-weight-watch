@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Scale, Calculator, Book, TrendingUp, Shield, Clock, Target, Heart, Sparkles, ArrowRight, CheckCircle } from 'lucide-react'
@@ -9,13 +9,10 @@ import { Badge } from '@/components/ui/badge'
 import SEO from '@/components/SEO'
 import FAQ from '@/components/FAQ'
 import MeshBackground from '@/components/MeshBackground'
-import { PullToRefresh } from '@/components/ui/pull-to-refresh'
 import { createWebApplicationSchema, createWeightTrackingSchema, createFAQSchema } from '@/utils/structuredData'
 import { trackHeroCTAClicked, trackPageViewed } from '@/utils/analytics'
 import { entranceAnimations } from '@/animations'
 
-// Import assets
-import pentulaskuriHero from '@/assets/pentulaskuri-hero.png'
 
 const Index = () => {
   // Track page view
@@ -90,14 +87,8 @@ const Index = () => {
     { icon: Heart, text: "Vastuullista hoitoa" }
   ];
 
-  const handleRefresh = useCallback(async () => {
-    // Refresh the page data
-    window.location.reload();
-  }, []);
-
   return (
-    <PullToRefresh onRefresh={handleRefresh} className="min-h-screen">
-      <div className="flex flex-col gap-16 pb-20">
+    <div className="min-h-screen flex flex-col gap-16 pb-20">
       <SEO
         title="Pentulaskuri - Koiran Kasvun & Ruokinnan Seuranta"
         description="Moderni ja helppokäyttöinen sovellus koiran kasvun seuraamiseen. Seuraa painoa, ruokintaa ja kehitystä ammattimaisilla työkaluilla. Ilmainen käyttö."
@@ -106,56 +97,73 @@ const Index = () => {
         url={window.location.origin}
       />
 
-      {/* Mesh Background */}
-      <MeshBackground variant="default" />
+      {/* Video Hero Section - pt-16/pt-20 for fixed navigation */}
+      <section className="relative min-h-[80vh] md:min-h-[90vh] flex items-start justify-end overflow-hidden pt-16 md:pt-20">
+        {/* Video Background */}
+        <video
+          autoPlay
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+          onEnded={(e) => {
+            // Pysäytä viimeiseen ruutuun
+            const video = e.currentTarget;
+            video.currentTime = video.duration;
+          }}
+        >
+          <source src="/videos/Video_Generation_Complete.mp4" type="video/mp4" />
+        </video>
 
-      {/* Hero Section */}
-      <section className="relative pt-8 md:pt-16 pb-12 md:pb-24 overflow-hidden">
-        <div className="container px-4 md:px-6 mx-auto text-center">
+        {/* Gradient Overlay - tummennus oikeaan laitaan tekstin taakse */}
+        <div className="absolute inset-0 bg-gradient-to-l from-black/60 via-black/20 to-transparent" />
+
+        {/* Hero Content - sijoitettu oikeaan yläkulmaan */}
+        <div className="relative z-10 max-w-lg text-right pt-12 md:pt-24 pr-4 md:pr-12">
           <motion.div
             initial="hidden"
             animate="visible"
             variants={entranceAnimations.staggerContainer}
-            className="max-w-3xl mx-auto space-y-8"
+            className="space-y-6"
           >
-            <motion.div variants={entranceAnimations.staggerChild}>
-              <Badge variant="secondary" className="bg-white/80 backdrop-blur-sm border-stone-200 text-stone-600 px-4 py-1.5 text-sm shadow-sm">
-                <Sparkles className="w-3.5 h-3.5 mr-2 text-terracotta-500" />
+            <motion.div variants={entranceAnimations.staggerChild} className="flex justify-end">
+              <Badge variant="secondary" className="bg-white/20 backdrop-blur-md border-white/30 text-white px-4 py-1.5 text-sm shadow-sm">
+                <Sparkles className="w-3.5 h-3.5 mr-2 text-terracotta-300" />
                 Uusi ja moderni tapa seurata kasvua
               </Badge>
             </motion.div>
 
             <motion.h1
               variants={entranceAnimations.staggerChild}
-              className="text-4xl md:text-6xl lg:text-7xl font-serif font-bold text-stone-900 tracking-tight leading-tight"
+              className="text-3xl md:text-5xl lg:text-6xl font-serif font-bold text-white tracking-tight leading-tight"
+              style={{ textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}
             >
               Älykkäät työkalut <br />
-              <span className="text-terracotta-500">vastuulliseen hoitoon</span>
+              <span className="text-terracotta-300">vastuulliseen hoitoon</span>
             </motion.h1>
 
             <motion.p
               variants={entranceAnimations.staggerChild}
-              className="text-lg md:text-xl text-stone-600 leading-relaxed max-w-2xl mx-auto"
+              className="text-base md:text-lg text-white/90 leading-relaxed"
+              style={{ textShadow: '0 1px 4px rgba(0,0,0,0.5)' }}
             >
-              Tiedepohjaiset mittaustyökalut ja asiantunteva ohjaus tukevat vastuullista koiranhoitoa ja pennun optimaalista kehitystä.
+              Tiedepohjaiset mittaustyökalut ja asiantunteva ohjaus tukevat vastuullista koiranhoitoa.
             </motion.p>
 
             <motion.div
               variants={entranceAnimations.staggerChild}
-              className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
+              className="flex flex-col sm:flex-row items-end justify-end gap-3 pt-2"
             >
               <Link
                 to="/weight-tracker"
                 onClick={() => trackHeroCTAClicked('Aloita seuranta ilmaiseksi', '/weight-tracker')}
-                className="w-full sm:w-auto"
               >
-                <Button size="lg" className="w-full sm:w-auto h-14 px-8 text-lg shadow-lg shadow-terracotta-500/20">
+                <Button size="lg" className="h-12 px-6 text-base shadow-lg shadow-terracotta-500/30">
                   <Scale className="w-5 h-5 mr-2" />
-                  Aloita seuranta ilmaiseksi
+                  Aloita seuranta
                 </Button>
               </Link>
-              <Link to="/guides" className="w-full sm:w-auto">
-                <Button variant="outline" size="lg" className="w-full sm:w-auto h-14 px-8 text-lg bg-white/50 backdrop-blur-sm hover:bg-white">
+              <Link to="/guides">
+                <Button variant="outline" size="lg" className="h-12 px-6 text-base bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20">
                   Lue oppaat
                 </Button>
               </Link>
@@ -163,11 +171,11 @@ const Index = () => {
 
             <motion.div
               variants={entranceAnimations.staggerChild}
-              className="pt-8 flex flex-wrap justify-center gap-x-8 gap-y-4 text-sm font-medium text-stone-500"
+              className="pt-4 flex flex-wrap justify-end gap-x-6 gap-y-2 text-sm font-medium text-white/80"
             >
               {benefits.map((benefit, index) => (
                 <div key={index} className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-sage-500" />
+                  <CheckCircle className="w-4 h-4 text-terracotta-300" />
                   <span>{benefit.text}</span>
                 </div>
               ))}
@@ -175,6 +183,9 @@ const Index = () => {
           </motion.div>
         </div>
       </section>
+
+      {/* Mesh Background for rest of page */}
+      <MeshBackground variant="default" />
 
       {/* Features Grid */}
       <section className="container px-4 md:px-6 mx-auto">
@@ -218,8 +229,7 @@ const Index = () => {
         </div>
         <FAQ items={faqs} />
       </section>
-      </div>
-    </PullToRefresh>
+    </div>
   )
 }
 

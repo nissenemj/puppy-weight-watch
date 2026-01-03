@@ -65,6 +65,9 @@ const Footer = () => {
   }, {
     href: '/accessibility',
     label: 'Saavutettavuus'
+  }, {
+    href: '/contact',
+    label: 'Ota yhteyttä'
   }];
   return <footer className="relative">
       {/* Newsletter Section */}

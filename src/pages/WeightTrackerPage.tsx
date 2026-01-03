@@ -8,7 +8,6 @@ import { useGuestAuth } from '@/contexts/GuestAuthContext'
 import GuestModeBar, { GuestModeBarMobile } from '@/components/GuestModeBar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { PullToRefresh } from '@/components/ui/pull-to-refresh'
 import { User as UserIcon, Loader2, Dog, AlertCircle } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useToast } from '@/hooks/use-toast'
@@ -82,13 +81,6 @@ const WeightTrackerPage = () => {
       checkUserData(user)
     }
   }
-
-  // useCallback must be called unconditionally (before any early returns)
-  const handleRefresh = useCallback(async () => {
-    if (user) {
-      await checkUserData(user);
-    }
-  }, [user, checkUserData]);
 
   useEffect(() => {
     if (user && !loading) {
@@ -185,7 +177,7 @@ const WeightTrackerPage = () => {
   }
 
   return (
-    <PullToRefresh onRefresh={handleRefresh} className="min-h-screen">
+    <div className="min-h-screen pt-16 md:pt-20">
       <div className="container mx-auto px-4 py-6 md:py-8 space-y-6">
       {/* Guest Mode Bar */}
       {isGuest && guestWeightEntries.length > 0 && (
@@ -226,7 +218,7 @@ const WeightTrackerPage = () => {
         />
       )}
       </div>
-    </PullToRefresh>
+    </div>
   )
 }
 
