@@ -84,8 +84,8 @@ const Calculator = () => {
         structuredData={structuredData}
       />
 
-      {/* Video Hero Section */}
-      <section className="relative min-h-[50vh] md:min-h-[60vh] flex items-center justify-center overflow-hidden">
+      {/* Video Hero Section - pt-16/pt-20 for fixed navigation */}
+      <section className="relative min-h-[60vh] md:min-h-[70vh] flex items-start justify-end overflow-hidden pt-16 md:pt-20">
         {/* Video Background */}
         <video
           autoPlay
@@ -101,32 +101,36 @@ const Calculator = () => {
           <source src="/videos/koiranpennut_syövät_iloisesti_ruokaa-0.mp4" type="video/mp4" />
         </video>
 
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-black/20" />
+        {/* Gradient Overlay - from left for right-aligned content */}
+        <div className="absolute inset-0 bg-gradient-to-l from-black/60 via-black/20 to-transparent" />
 
-        {/* Hero Content */}
-        <div className="relative z-10 text-center px-4 md:px-6 max-w-3xl mx-auto space-y-6">
-          <Badge className="bg-white/20 backdrop-blur-md border-white/30 text-white px-4 py-1.5 text-sm shadow-sm">
-            <CalculatorIcon className="w-3.5 h-3.5 mr-2 text-terracotta-300" />
-            Tarkka ruokalaskuri
-          </Badge>
+        {/* Hero Content - top right */}
+        <div className="relative z-10 max-w-lg text-right pt-8 md:pt-16 pr-4 md:pr-12 space-y-5">
+          <div className="flex justify-end">
+            <Badge className="bg-white/20 backdrop-blur-md border-white/30 text-white px-4 py-1.5 text-sm shadow-sm">
+              <CalculatorIcon className="w-3.5 h-3.5 mr-2 text-terracotta-300" />
+              Tarkka ruokalaskuri
+            </Badge>
+          </div>
 
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-white tracking-tight drop-shadow-lg">
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-serif font-bold text-white tracking-tight"
+              style={{ textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>
             Pentulaskuri <br />
             <span className="text-terracotta-300">Ruokamäärät</span>
           </h1>
 
-          <p className="text-lg text-white/90 leading-relaxed max-w-xl mx-auto drop-shadow">
+          <p className="text-base md:text-lg text-white/90 leading-relaxed"
+             style={{ textShadow: '0 1px 4px rgba(0,0,0,0.5)' }}>
             Laske koiranpentusi optimaalinen päivittäinen ruokamäärä huomioiden rodun, iän, painon ja aktiivisuustason.
           </p>
 
-          <div className="flex flex-wrap justify-center gap-6 pt-4">
-            <div className="flex items-center gap-2 text-white/90 font-medium">
-              <CheckCircle className="w-5 h-5 text-terracotta-300" />
+          <div className="flex flex-wrap justify-end gap-x-5 gap-y-2 text-sm font-medium text-white/80">
+            <div className="flex items-center gap-2">
+              <CheckCircle className="w-4 h-4 text-terracotta-300" />
               <span>Tarkat tulokset</span>
             </div>
-            <div className="flex items-center gap-2 text-white/90 font-medium">
-              <CheckCircle className="w-5 h-5 text-terracotta-300" />
+            <div className="flex items-center gap-2">
+              <CheckCircle className="w-4 h-4 text-terracotta-300" />
               <span>Ammattimaiset suositukset</span>
             </div>
           </div>
