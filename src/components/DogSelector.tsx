@@ -138,6 +138,15 @@ export default function DogSelector({ user, selectedDogId, onDogSelect }: DogSel
       if (error) throw error
 
       await loadDogs()
+
+      // Update parent component with new dog data
+      const updatedDog: Dog = {
+        id: selectedDogId,
+        name: editDogName,
+        breed: editDogBreed || undefined
+      }
+      onDogSelect(selectedDogId, updatedDog)
+
       setIsEditingDog(false)
 
       toast({

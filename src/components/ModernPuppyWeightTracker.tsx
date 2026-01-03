@@ -506,7 +506,14 @@ export default function ModernPuppyWeightTracker() {
             <DogSelector
               user={user}
               selectedDogId={selectedDog?.id}
-              onDogSelect={(dogId, dog) => setSelectedDog(dog)}
+              onDogSelect={(dogId, dog) => {
+                // Handle dog deletion - if no dogId, set selectedDog to null
+                if (dogId && dog?.id) {
+                  setSelectedDog(dog)
+                } else {
+                  setSelectedDog(null)
+                }
+              }}
             />
           </div>
         )}
