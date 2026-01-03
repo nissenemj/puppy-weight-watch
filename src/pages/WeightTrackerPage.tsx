@@ -44,14 +44,14 @@ const WeightTrackerPage = () => {
   const [hasDogs, setHasDogs] = useState(false)
   const [checkingData, setCheckingData] = useState(true)
 
-  const checkUserData = async (user: User) => {
+  const checkUserData = useCallback(async (userData: User) => {
     try {
       setCheckingData(true)
       // Check if user has any dogs
       const { data: dogs, error: dogsError } = await supabase
         .from('dogs')
         .select('id')
-        .eq('user_id', user.id)
+        .eq('user_id', userData.id)
         .limit(1)
 
       if (dogsError) {
@@ -75,7 +75,7 @@ const WeightTrackerPage = () => {
     } finally {
       setCheckingData(false)
     }
-  }
+  }, [toast])
 
   const retryDataLoad = () => {
     if (user) {
@@ -83,11 +83,18 @@ const WeightTrackerPage = () => {
     }
   }
 
+  // useCallback must be called unconditionally (before any early returns)
+  const handleRefresh = useCallback(async () => {
+    if (user) {
+      await checkUserData(user);
+    }
+  }, [user, checkUserData]);
+
   useEffect(() => {
     if (user && !loading) {
       checkUserData(user)
     }
-  }, [user, loading, navigate])
+  }, [user, loading, checkUserData])
 
   const handleAuthSuccess = async (user: User) => {
     setUser(user)
@@ -176,12 +183,6 @@ const WeightTrackerPage = () => {
       </div>
     )
   }
-
-  const handleRefresh = useCallback(async () => {
-    if (user) {
-      await checkUserData(user);
-    }
-  }, [user]);
 
   return (
     <PullToRefresh onRefresh={handleRefresh} className="min-h-screen">

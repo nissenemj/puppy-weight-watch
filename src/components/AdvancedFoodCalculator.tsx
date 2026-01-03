@@ -11,6 +11,13 @@ import { User } from '@supabase/supabase-js'
 import { supabase } from '@/integrations/supabase/client'
 import { dbToAppTypes } from '@/utils/typeUtils'
 import { toast } from 'sonner'
+import {
+  getBreedMultiplier,
+  getBreedCategory,
+  interpolateAmount,
+  findInterpolationBounds,
+  BreedCategory
+} from '@/utils/breedMultipliers'
 
 // Database types
 interface DogFood {
@@ -65,6 +72,9 @@ export default function AdvancedFoodCalculator({ user, currentWeight: propCurren
     usedGuidelines: FeedingGuideline[]
     selectedFood: DogFood | null
     activityMultiplier: number
+    breedMultiplier: number
+    breedCategory: BreedCategory | null
+    wasInterpolated: boolean
   } | null>(null)
 
   useEffect(() => {
@@ -138,6 +148,11 @@ export default function AdvancedFoodCalculator({ user, currentWeight: propCurren
 
     let dailyAmount = 0
     let usedGuidelines: FeedingGuideline[] = []
+    let wasInterpolated = false
+
+    // Get breed multiplier based on expected adult weight
+    const breedMult = getBreedMultiplier(adultWeight || weight)
+    const breedCat = getBreedCategory(adultWeight || weight)
 
     // Different calculation methods based on food's dosage method
     switch (selectedFood.dosage_method) {
@@ -147,25 +162,78 @@ export default function AdvancedFoodCalculator({ user, currentWeight: propCurren
           return
         }
         const ageCategory = getAgeCategory(months)
-        const matchingGuidelines = foodGuidelines.filter(g =>
+
+        // First try exact match
+        const exactMatch = foodGuidelines.filter(g =>
           g.adult_weight_kg === adultWeight && g.age_months === ageCategory
         )
-        if (matchingGuidelines.length > 0) {
-          const guideline = matchingGuidelines[0]
+
+        if (exactMatch.length > 0) {
+          const guideline = exactMatch[0]
           dailyAmount = guideline.daily_amount_min || 0
-          usedGuidelines = matchingGuidelines
+          usedGuidelines = exactMatch
+        } else {
+          // No exact match - try interpolation based on adult weight
+          const ageCategoryGuidelines = foodGuidelines.filter(g =>
+            g.age_months === ageCategory &&
+            g.adult_weight_kg !== null &&
+            g.adult_weight_kg !== undefined &&
+            g.daily_amount_min !== null
+          )
+
+          if (ageCategoryGuidelines.length >= 2) {
+            // Convert to interpolation format
+            const guidelinePoints = ageCategoryGuidelines.map(g => ({
+              weight: g.adult_weight_kg!,
+              amount: g.daily_amount_min!,
+              original: g
+            }))
+
+            const bounds = findInterpolationBounds(adultWeight, guidelinePoints)
+
+            if (bounds) {
+              dailyAmount = interpolateAmount(adultWeight, bounds.lower, bounds.upper)
+              usedGuidelines = [bounds.lower.original, bounds.upper.original]
+              wasInterpolated = true
+            }
+          }
         }
         break
       }
 
       case 'Nykyinen_Paino': {
-        const weightGuidelines = foodGuidelines.filter(g =>
+        // First try exact match
+        const exactWeightMatch = foodGuidelines.filter(g =>
           g.current_weight_kg === weight
         )
-        if (weightGuidelines.length > 0) {
-          const guideline = weightGuidelines[0]
+
+        if (exactWeightMatch.length > 0) {
+          const guideline = exactWeightMatch[0]
           dailyAmount = guideline.daily_amount_min || 0
-          usedGuidelines = weightGuidelines
+          usedGuidelines = exactWeightMatch
+        } else {
+          // No exact match - try interpolation based on current weight
+          const validGuidelines = foodGuidelines.filter(g =>
+            g.current_weight_kg !== null &&
+            g.current_weight_kg !== undefined &&
+            g.daily_amount_min !== null
+          )
+
+          if (validGuidelines.length >= 2) {
+            const guidelinePoints = validGuidelines.map(g => ({
+              weight: g.current_weight_kg!,
+              amount: g.daily_amount_min!,
+              original: g
+            }))
+
+            const bounds = findInterpolationBounds(weight, guidelinePoints)
+
+            if (bounds) {
+              dailyAmount = interpolateAmount(weight, bounds.lower, bounds.upper)
+              usedGuidelines = [bounds.lower.original, bounds.upper.original]
+              wasInterpolated = true
+            }
+          }
         }
         break
       }
@@ -199,8 +267,10 @@ export default function AdvancedFoodCalculator({ user, currentWeight: propCurren
       return
     }
 
-    // Apply activity multiplier
-    const adjustedDailyAmount = Math.round(dailyAmount * activityMult)
+    // Apply activity and breed multipliers
+    // Breed multiplier adjusts for metabolic differences (toy breeds +15%, giant breeds -10%)
+    const combinedMultiplier = activityMult * breedMult
+    const adjustedDailyAmount = Math.round(dailyAmount * combinedMultiplier)
 
     // Calculate meals per day based on age
     let mealsPerDay = 2
@@ -218,7 +288,10 @@ export default function AdvancedFoodCalculator({ user, currentWeight: propCurren
       energyKcal,
       usedGuidelines,
       selectedFood,
-      activityMultiplier: activityMult
+      activityMultiplier: activityMult,
+      breedMultiplier: breedMult,
+      breedCategory: breedCat,
+      wasInterpolated
     })
   }
 
@@ -315,12 +388,33 @@ export default function AdvancedFoodCalculator({ user, currentWeight: propCurren
             <div className="mt-4 p-4 bg-green-50 rounded-lg" role="group" aria-labelledby="final-result">
               <h3 id="final-result" className="font-semibold mb-2 text-[var(--color-text-primary)]">Lopputulos:</h3>
               <dl className="space-y-1">
-                <div><dt className="inline font-medium">Perusannos:</dt> <dd className="inline">{Math.round(result.dailyAmount / result.activityMultiplier)}g päivässä</dd></div>
-                {result.activityMultiplier !== 1.0 && (
-                  <div><dt className="inline font-medium">Aktiivisuussäätö:</dt> <dd className="inline">×{result.activityMultiplier} = {result.dailyAmount}g</dd></div>
+                <div><dt className="inline font-medium">Perusannos:</dt> <dd className="inline">{Math.round(result.dailyAmount / (result.activityMultiplier * result.breedMultiplier))}g päivässä</dd></div>
+                {result.wasInterpolated && (
+                  <div className="text-blue-600 text-sm">
+                    <Badge variant="outline" className="mr-2 text-xs">Interpoloitu</Badge>
+                    Annos laskettu kahden painoluokan välistä
+                  </div>
                 )}
+                {result.breedCategory && result.breedMultiplier !== 1.0 && (
+                  <div>
+                    <dt className="inline font-medium">Rotukoko ({result.breedCategory.name}):</dt>{' '}
+                    <dd className="inline">
+                      ×{result.breedMultiplier.toFixed(2)}
+                      <span className="text-sm text-muted-foreground ml-2">
+                        ({result.breedMultiplier > 1 ? 'korkeampi aineenvaihdunta' : 'hitaampi aineenvaihdunta'})
+                      </span>
+                    </dd>
+                  </div>
+                )}
+                {result.activityMultiplier !== 1.0 && (
+                  <div><dt className="inline font-medium">Aktiivisuussäätö:</dt> <dd className="inline">×{result.activityMultiplier}</dd></div>
+                )}
+                <div className="pt-2 border-t mt-2">
+                  <dt className="inline font-medium text-lg">Lopullinen annos:</dt>{' '}
+                  <dd className="inline text-lg font-bold text-green-700">{result.dailyAmount}g päivässä</dd>
+                </div>
                 <div><dt className="inline font-medium">Ruokintakerrat:</dt> <dd className="inline">{result.mealsPerDay} kertaa päivässä</dd></div>
-                <div><dt className="inline font-medium">Annos per kerta:</dt> <dd className="inline">{result.gramsPerMeal}g</dd></div>
+                <div><dt className="inline font-medium">Annos per kerta:</dt> <dd className="inline font-semibold">{result.gramsPerMeal}g</dd></div>
               </dl>
             </div>
           )}

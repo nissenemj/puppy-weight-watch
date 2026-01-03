@@ -69,7 +69,7 @@ const Footer = () => {
   return <footer className="relative">
       {/* Newsletter Section */}
       <section
-        className="full-width-section py-16 mobile-container-safe"
+        className="full-width-section py-12 sm:py-16 px-4 sm:px-6"
         style={{ background: 'linear-gradient(135deg, #FF6B35 0%, #FF8E72 100%)' }}
       >
         <div className="full-width-content">
@@ -148,9 +148,9 @@ const Footer = () => {
         className="text-white"
         style={{ background: 'linear-gradient(135deg, #171717 0%, #262626 50%, #7c2d12 100%)' }}
       >
-        <div className="full-width-section py-16 mobile-container-safe">
+        <div className="full-width-section py-12 sm:py-16 px-4 sm:px-6">
           <div className="full-width-content">
-            <div className="grid lg:grid-cols-12 gap-12">
+            <div className="flex flex-col gap-8 lg:grid lg:grid-cols-12 lg:gap-12">
               
               {/* Brand Column - Wider */}
               <motion.div className="lg:col-span-5" initial={{
@@ -284,7 +284,7 @@ const Footer = () => {
 
         {/* Bottom Bar */}
         <div className="border-t border-white/10">
-          <div className="full-width-section py-6 mobile-container-safe">
+          <div className="full-width-section py-6 px-4 sm:px-6">
             <div className="full-width-content">
               <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-body-sm text-white/60">
                 <div className="flex items-center gap-2">

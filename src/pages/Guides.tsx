@@ -6,14 +6,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { PageLayout, Container, Section } from '@/components/ui/Layout';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { 
-  Dog, 
-  Users, 
-  Shield, 
+import {
+  Dog,
+  Users,
+  Shield,
   Utensils,
   BookOpen,
   ArrowRight,
-  CheckCircle,
   Info
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -86,7 +85,7 @@ const Guides = () => {
       </Section>
 
       {/* Hero Section */}
-      <Section className="py-16 bg-gradient-to-br from-[var(--color-primary-50)] to-[var(--color-secondary-50)]" role="banner">
+      <Section className="py-16 bg-gradient-to-br from-[var(--color-primary-50)] to-[var(--color-secondary-50)]" role="banner" animated={false}>
         <Container size="lg" padding="lg">
           <motion.div
             initial="hidden"
@@ -107,15 +106,11 @@ const Guides = () => {
               <span className="text-[var(--color-primary-500)]">Hoito-oppaat</span>
             </motion.h1>
             
-            <motion.p variants={entranceAnimations.staggerChild} className="text-body-xl text-muted max-w-3xl mx-auto mb-8">
+            <motion.p variants={entranceAnimations.staggerChild} className="text-body-xl text-muted-foreground max-w-3xl mx-auto mb-8">
               Kattavat, asiantuntija-arvioidut oppaat, jotka auttavat sinua kasvattamaan terveen ja onnellisen koiranpennun.
             </motion.p>
 
-            <motion.div variants={entranceAnimations.staggerChild} className="flex items-center justify-center gap-6 text-body-sm text-muted">
-              <div className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-[var(--color-success)]" aria-hidden="true" />
-                <span>Eläinlääkäri-tarkistettu</span>
-              </div>
+            <motion.div variants={entranceAnimations.staggerChild} className="flex items-center justify-center gap-6 text-body-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <Info className="w-4 h-4 text-[var(--color-info)]" aria-hidden="true" />
                 <span>Säännöllisesti päivitetty</span>
@@ -126,7 +121,7 @@ const Guides = () => {
       </Section>
 
       {/* Guides Grid */}
-      <Section className="py-20" role="main" id="guides-main">
+      <Section className="py-20" role="main" id="guides-main" animated={false}>
         <Container size="lg" padding="lg">
           <div className="grid gap-8 md:grid-cols-2 mobile-grid-1">
             {guides.map((guide, index) => (
@@ -189,11 +184,11 @@ const Guides = () => {
       </Section>
 
       {/* Call to Action */}
-      <Section className="py-16 bg-[var(--color-surface-alt)]">
+      <Section className="py-16 bg-[var(--color-surface-alt)]" animated={false}>
         <Container size="lg" padding="lg">
           <div className="text-center">
             <h2 className="text-h2 mb-4">Aloita pennun seuranta</h2>
-            <p className="text-body-lg text-muted max-w-2xl mx-auto mb-8">
+            <p className="text-body-lg text-muted-foreground max-w-2xl mx-auto mb-8">
               Yhdistä oppaamme käytäntöön - seuraa pennun kasvua ja hyvinvointia digitaalisilla työkaluilla.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
