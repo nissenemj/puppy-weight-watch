@@ -12,8 +12,6 @@ import InfoBadge from '@/components/InfoBadge';
 import BackToTopButton from '@/components/BackToTopButton';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import heroImage from '@/assets/welcome-illustration.png';
-import ScrollPanBackground from '@/components/ScrollPanBackground';
 
 const PuppyGuide = () => {
   return (
@@ -21,19 +19,33 @@ const PuppyGuide = () => {
       <div className="min-h-screen bg-background page-with-navigation w-full overflow-x-hidden">
         <Navigation />
         <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-full min-w-0 space-y-8">
-          {/* Hero Section with pan background */}
-          <div className="rounded-2xl overflow-hidden mb-12">
-            <ScrollPanBackground src={heroImage} alt="Koiranpennun hoito-opas ja kasvatus" panX={30} panY={20} zoom={1.04} minHeightClass="h-60 sm:h-72 md:h-80">
-              <div className="text-center space-y-3">
-                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-heading font-bold text-white drop-shadow">
-                  🐕 Kattava opas pennun ruokintaan
+          {/* Video Hero Section */}
+          <div className="relative rounded-2xl overflow-hidden mb-12 h-60 sm:h-72 md:h-80">
+            {/* Video Background */}
+            <video
+              autoPlay
+              muted
+              playsInline
+              loop
+              className="absolute inset-0 w-full h-full object-cover"
+            >
+              <source src="/videos/koiranpennut_syövät_iloisesti_ruokaa-0.mp4" type="video/mp4" />
+            </video>
+
+            {/* Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+
+            {/* Hero Content */}
+            <div className="absolute inset-0 flex items-center justify-center z-10">
+              <div className="text-center space-y-3 px-4">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-heading font-bold text-white drop-shadow-lg">
+                  Kattava opas pennun ruokintaan
                 </h1>
-                <h2 className="text-2xl md:text-3xl font-semibold text-white/95">
+                <h2 className="text-xl md:text-2xl lg:text-3xl font-semibold text-white/95 drop-shadow">
                   Selviydy, menesty ja kasvata terve aikuinen
                 </h2>
               </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-            </ScrollPanBackground>
+            </div>
           </div>
 
           <InfoCard
