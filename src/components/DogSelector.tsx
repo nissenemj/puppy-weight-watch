@@ -164,15 +164,31 @@ export default function DogSelector({ user, selectedDogId, onDogSelect }: DogSel
   }
 
   const deleteDog = async () => {
-    if (!selectedDogId || !deleteConfirmed) return
+    if (!selectedDogId || !deleteConfirmed) {
+      return
+    }
 
     try {
+      // Delete feeding_plans first (no CASCADE on foreign key)
+      const { error: feedingError } = await supabase
+        .from('feeding_plans')
+        .delete()
+        .eq('dog_id', selectedDogId)
+
+      if (feedingError) {
+        console.error('Error deleting feeding plans:', feedingError)
+        // Continue anyway - might not have any feeding plans
+      }
+
+      // Now delete the dog
       const { error } = await supabase
         .from('dogs')
         .delete()
         .eq('id', selectedDogId)
 
-      if (error) throw error
+      if (error) {
+        throw error
+      }
 
       const remainingDogs = dogs.filter(d => d.id !== selectedDogId)
       setDogs(remainingDogs)
