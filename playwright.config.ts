@@ -9,7 +9,7 @@ export default defineConfig({
   fullyParallel: false,
   reporter: [["list"]],
   use: {
-    baseURL: process.env.PLAYWRIGHT_BASE_URL || "http://127.0.0.1:4173",
+    baseURL: process.env.PLAYWRIGHT_BASE_URL || "http://localhost:8081",
     actionTimeout: 0,
     trace: "on-first-retry",
   },

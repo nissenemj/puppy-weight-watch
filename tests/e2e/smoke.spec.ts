@@ -11,7 +11,7 @@ test.describe("App smoke check", () => {
     });
 
     // Tarkista että sivu latautuu
-    await expect(page).toHaveTitle(/Pentulaskuri/i);
+    await expect(page).toHaveTitle(/Koiranpennun Painonseuranta/i);
 
     // Tarkista että päänavigaatio näkyy (käytä first() koska on 2 nav-elementtiä)
     const nav = page.getByRole("navigation", { name: "Päänavigaatio" }).first();
@@ -21,10 +21,10 @@ test.describe("App smoke check", () => {
   test("navigaatio toimii", async ({ page }) => {
     await page.goto("/");
 
-    // Etsi ruokalaskuri-linkki navigaatiosta (exact match)
-    const calculatorLink = page.getByRole("link", {
+    // Etsi ruokalaskuri-linkki työpöytä-navigaatiosta
+    const desktopNav = page.getByRole("navigation", { name: "Sivulinkit" });
+    const calculatorLink = desktopNav.getByRole("link", {
       name: "Ruokalaskuri",
-      exact: true,
     });
 
     await calculatorLink.click();
