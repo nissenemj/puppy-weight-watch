@@ -40,26 +40,39 @@ export const createWebApplicationSchema = () => ({
 
 export const createCalculatorSchema = () => ({
   "@context": "https://schema.org",
-  "@type": "WebApplication",
+  "@type": "SoftwareApplication",
   "name": "Pentulaskuri - Ruokamäärä",
-  "description": "Laske koiranpentusi päivittäinen ruokamäärä painon, iän ja rodun perusteella",
+  "description": "Laske koiranpentusi päivittäinen ruokamäärä painon, iän ja rodun perusteella. Ilmainen työkalu koiranpennun ruokinnan suunnitteluun.",
   "url": `${window.location.origin}/calculator`,
-  "applicationCategory": "CalculatorApplication",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "All",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "EUR"
+  },
   "featureList": [
     "Ruokamäärän laskenta",
     "Ikäkohtaiset suositukset",
     "Rotukohtaiset erot",
-    "Annostelutaulukot"
+    "Annostelutaulukot",
+    "Painonseuranta integraatio"
   ]
 });
 
 export const createWeightTrackingSchema = () => ({
   "@context": "https://schema.org",
-  "@type": "WebApplication",
+  "@type": "SoftwareApplication",
   "name": "Painonseuranta",
   "description": "Seuraa koiranpentusi painon kehitystä ja kasvua",
   "url": window.location.origin,
   "applicationCategory": "HealthApplication",
+  "operatingSystem": "All",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "EUR"
+  },
   "featureList": [
     "Painon kirjaaminen",
     "Kasvukäyrät",
@@ -68,7 +81,7 @@ export const createWeightTrackingSchema = () => ({
   ]
 });
 
-export const createFAQSchema = (faqs: Array<{question: string, answer: string}>) => ({
+export const createFAQSchema = (faqs: Array<{ question: string, answer: string }>) => ({
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": faqs.map(faq => ({
@@ -81,7 +94,7 @@ export const createFAQSchema = (faqs: Array<{question: string, answer: string}>)
   }))
 });
 
-export const createBreadcrumbSchema = (breadcrumbs: Array<{name: string, url: string}>) => ({
+export const createBreadcrumbSchema = (breadcrumbs: Array<{ name: string, url: string }>) => ({
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   "itemListElement": breadcrumbs.map((crumb, index) => ({
@@ -92,18 +105,24 @@ export const createBreadcrumbSchema = (breadcrumbs: Array<{name: string, url: st
   }))
 });
 
-export const createArticleSchema = (title: string, description: string, datePublished?: string) => ({
+export const createArticleSchema = (title: string, description: string, image?: string, datePublished?: string) => ({
   "@context": "https://schema.org",
   "@type": "Article",
   "headline": title,
   "description": description,
+  "image": image ? (image.startsWith('http') ? image : `${window.location.origin}${image}`) : undefined,
   "author": {
     "@type": "Organization",
-    "name": "Koiranpennun Painonseuranta"
+    "name": "Koiranpennun Painonseuranta",
+    "url": window.location.origin
   },
   "publisher": {
     "@type": "Organization",
-    "name": "Koiranpennun Painonseuranta"
+    "name": "Koiranpennun Painonseuranta",
+    "logo": {
+      "@type": "ImageObject",
+      "url": `${window.location.origin}/icon-512x512.png` // using existing icon as logo
+    }
   },
   "datePublished": datePublished || new Date().toISOString(),
   "dateModified": new Date().toISOString()

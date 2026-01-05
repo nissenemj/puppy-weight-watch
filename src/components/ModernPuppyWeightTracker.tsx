@@ -27,7 +27,7 @@ import GrowthDevelopmentSection from './GrowthDevelopmentSection'
 import AchievementSystem from './AchievementSystem'
 import AuthModal from './AuthModal'
 import ShareGrowthChart from './ShareGrowthChart'
-import { Scale, TrendingUp, Calculator, Utensils, Bell, RefreshCw, Calendar } from 'lucide-react'
+import { Scale, TrendingUp, Calculator, Utensils, Bell, RefreshCw, Calendar, Download } from 'lucide-react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Calendar as CalendarComponent } from '@/components/ui/calendar'
 import { format } from 'date-fns'
@@ -473,6 +473,39 @@ export default function ModernPuppyWeightTracker() {
     }
   }
 
+  const handleExportCSV = () => {
+    if (!entries.length) return
+
+    // Header
+    let csvContent = "Päivämäärä,Paino (kg),Ikä (vko)\n"
+
+    const birthDateObj = selectedDogBirthDate ? new Date(selectedDogBirthDate) : null
+
+    // Rows
+    entries.forEach(entry => {
+      let age = ""
+      if (birthDateObj) {
+        const entryDate = new Date(entry.date)
+        const ageInWeeks = Math.floor((entryDate.getTime() - birthDateObj.getTime()) / (1000 * 60 * 60 * 24 * 7))
+        age = Math.max(0, ageInWeeks).toString()
+      }
+      csvContent += `${format(new Date(entry.date), 'dd.MM.yyyy')},${entry.weight},${age}\n`
+    })
+
+    // Download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+    const link = document.createElement("a")
+    if (link.download !== undefined) {
+      const url = URL.createObjectURL(blob)
+      link.setAttribute("href", url)
+      link.setAttribute("download", `${selectedDog?.name || 'pentu'}_painot.csv`)
+      link.style.visibility = 'hidden'
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    }
+  }
+
   return (
     <div
       ref={containerRef}
@@ -627,6 +660,14 @@ export default function ModernPuppyWeightTracker() {
           <TabsContent value="weight-tracking" className="space-y-6 animate-fade-in">
             {(selectedDog || isGuest) ? (
               <>
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-semibold text-gray-700">Yhteenveto</h3>
+                  <Button variant="outline" size="sm" onClick={handleExportCSV} className="gap-2 text-stone-600 hover:text-stone-900">
+                    <Download className="h-4 w-4" />
+                    Lataa CSV
+                  </Button>
+                </div>
+
                 {/* Stats Cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
                   <Card className="bg-white/80 backdrop-blur-sm shadow-xl rounded-2xl border-0 hover-3d">

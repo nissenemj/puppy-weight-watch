@@ -11,9 +11,24 @@ import InfoSection from '@/components/InfoSection';
 import BackToTopButton from '@/components/BackToTopButton';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import SEO from '@/components/SEO';
+import { createArticleSchema, createBreadcrumbSchema } from '@/utils/structuredData';
 import heroImage from '@/assets/relaxation-protocol-infographic.jpg';
 
 const RelaxationProtocolGuide = () => {
+  const structuredData = [
+    createArticleSchema(
+      "Rentoutusprotokolla - Ohje koiran rauhoittumiseen",
+      "Karen Overallin 15 päivän rentoutusprotokolla. Opi opettamaan koirallesi rauhoittumista ja itsehillintää.",
+      heroImage
+    ),
+    createBreadcrumbSchema([
+      { name: "Etusivu", url: window.location.origin },
+      { name: "Oppaat", url: `${window.location.origin}/guides` },
+      { name: "Rentoutusprotokolla", url: `${window.location.origin}/guides/relaxation-protocol` }
+    ])
+  ];
+
   const faqs = [
     {
       question: "Kuinka kauan yksi harjoituskerta kestää?",
@@ -39,15 +54,22 @@ const RelaxationProtocolGuide = () => {
 
   return (
     <MobileOptimizedLayout>
+      <SEO
+        title="Rentoutusprotokolla - Ohje koiran rauhoittumiseen"
+        description="Karen Overallin 15 päivän rentoutusprotokolla on tehokas tapa hoitaa eroahdistusta ja reaktiivisuutta."
+        image={heroImage}
+        type="article"
+        structuredData={structuredData}
+      />
       <div className="min-h-screen bg-background page-with-navigation w-full overflow-x-hidden">
         <Navigation />
         <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-full min-w-0 space-y-8">
           {/* Hero Section with infographic */}
           <div className="rounded-2xl overflow-hidden mb-12">
             <div className="relative">
-              <img 
-                src={heroImage} 
-                alt="Karen Overallin Rentoutusprotokolla - Visuaalinen opas rauhalliseen koiraan" 
+              <img
+                src={heroImage}
+                alt="Karen Overallin Rentoutusprotokolla - Visuaalinen opas rauhalliseen koiraan"
                 className="w-full h-auto"
               />
             </div>
@@ -99,19 +121,19 @@ const RelaxationProtocolGuide = () => {
               <InfoCard title="Protokollan ydinajatus" variant="warm">
                 <div className="space-y-4">
                   <p className="text-sm">
-                    Karen Overallin kehittämä <strong>Rentoutusprotokolla</strong> (Protocol for Relaxation) on yksi maailman 
-                    käytetyimmistä ja tieteellisesti arvostetuimmista työkaluista koirien ahdistuksen, ylivireyden ja 
+                    Karen Overallin kehittämä <strong>Rentoutusprotokolla</strong> (Protocol for Relaxation) on yksi maailman
+                    käytetyimmistä ja tieteellisesti arvostetuimmista työkaluista koirien ahdistuksen, ylivireyden ja
                     reaktiivisuuden hoidossa.
                   </p>
                   <div className="bg-primary/10 p-4 rounded-lg border-l-4 border-primary">
                     <h4 className="font-semibold text-primary mb-2">Ydinajatus</h4>
                     <p className="text-sm">
-                      Protokolla opettaa koiralle, että <strong>rauhallisuus on aktiivinen valinta ja tila</strong>, 
+                      Protokolla opettaa koiralle, että <strong>rauhallisuus on aktiivinen valinta ja tila</strong>,
                       ei vain toimettomuutta.
                     </p>
                   </div>
                   <p className="text-sm">
-                    Tämä 15 päivän ohjelma opettaa koiralle fysiologista rauhoittumista ja impulssikontrollia, 
+                    Tämä 15 päivän ohjelma opettaa koiralle fysiologista rauhoittumista ja impulssikontrollia,
                     mikä auttaa suoraan sekä ulkoiluun että ääniherkkyyteen.
                   </p>
                 </div>
@@ -130,8 +152,8 @@ const RelaxationProtocolGuide = () => {
               <InfoCard title="2.1 Reaktiivisuus on tunnetila, ei tottelemattomuutta" variant="cool">
                 <div className="space-y-4">
                   <p className="text-sm">
-                    Tutkimukset osoittavat, että reaktiivinen käytös (rähinä, hyökkäily) on lähes aina oire koiran 
-                    "kiihtymisportaikon" ylittymisestä. Koira ei ole "tottelematon", vaan sen mantelitumake (amygdala) 
+                    Tutkimukset osoittavat, että reaktiivinen käytös (rähinä, hyökkäily) on lähes aina oire koiran
+                    "kiihtymisportaikon" ylittymisestä. Koira ei ole "tottelematon", vaan sen mantelitumake (amygdala)
                     on kaapannut aivotoiminnan, estäen oppimisen.
                   </p>
                   <div className="bg-accent/10 p-4 rounded-lg border border-accent/20">
@@ -140,8 +162,8 @@ const RelaxationProtocolGuide = () => {
                       <div>
                         <h4 className="font-semibold text-accent">Vanhentuneet teoriat kumottu</h4>
                         <p className="text-sm mt-1">
-                          Vanhentuneet "johtajuus-" tai "dominanssiteoriat" on tieteellisesti kumottu. 
-                          Nykyisin reaktiivisuutta lähestytään tunteiden säätelyn, stressinhallinnan ja 
+                          Vanhentuneet "johtajuus-" tai "dominanssiteoriat" on tieteellisesti kumottu.
+                          Nykyisin reaktiivisuutta lähestytään tunteiden säätelyn, stressinhallinnan ja
                           koiran oman vaikutusmahdollisuuden (agency) kautta.
                         </p>
                       </div>
@@ -153,7 +175,7 @@ const RelaxationProtocolGuide = () => {
               <InfoCard title="2.2 Vaikutusmahdollisuudet (Agency)" variant="warm">
                 <div className="space-y-3">
                   <p className="text-sm">
-                    Kognitiotutkimukset korostavat, että kun koira saa itse vaikuttaa tilanteeseen 
+                    Kognitiotutkimukset korostavat, että kun koira saa itse vaikuttaa tilanteeseen
                     (esim. poistumalla uhkaavan asian luota), oppiminen nopeutuu ja stressitasot laskevat pysyvästi.
                   </p>
                 </div>
@@ -165,7 +187,7 @@ const RelaxationProtocolGuide = () => {
                     <AlertTriangle className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
                     <div>
                       <p className="text-sm">
-                        Tuoreet tutkimukset ovat löytäneet vahvan linkin kroonisen kivun, suoliston mikrobiomin 
+                        Tuoreet tutkimukset ovat löytäneet vahvan linkin kroonisen kivun, suoliston mikrobiomin
                         ja reaktiivisuuden välillä. <strong>Reaktiivisen koiran terveydentila tulisi aina tarkistaa.</strong>
                       </p>
                     </div>
@@ -176,13 +198,13 @@ const RelaxationProtocolGuide = () => {
               <InfoCard title="2.4 Kuinka protokolla toimii?" variant="purple">
                 <div className="space-y-4">
                   <p className="text-sm">
-                    Rentoutusprotokolla toimii luomalla koiralle turvallisen ja ennakoitavan rutiinin, 
+                    Rentoutusprotokolla toimii luomalla koiralle turvallisen ja ennakoitavan rutiinin,
                     jossa se oppii, että matolla olo on lupa "sammuttaa järjestelmä".
                   </p>
                   <div className="bg-primary/5 p-3 rounded">
                     <h4 className="font-semibold text-primary text-sm mb-1">Biofeedback-mekanismi</h4>
                     <p className="text-sm">
-                      Kun koira makaa paikoillaan ja sitä palkitaan rauhallisuudesta, sen syke laskee ja hengitys tasaantuu. 
+                      Kun koira makaa paikoillaan ja sitä palkitaan rauhallisuudesta, sen syke laskee ja hengitys tasaantuu.
                       Tämä fysiologinen rauhoittuminen viestii aivoille, että "kaikki on hyvin".
                     </p>
                   </div>
@@ -205,7 +227,7 @@ const RelaxationProtocolGuide = () => {
                     <div className="bg-primary/5 p-4 rounded-lg">
                       <h5 className="font-semibold text-sm mb-2">1. Tietty alusta</h5>
                       <p className="text-xs">
-                        Käytä tiettyä mattoa, pyyhettä tai petiä. Tästä tulee koiralle visuaalinen vihje 
+                        Käytä tiettyä mattoa, pyyhettä tai petiä. Tästä tulee koiralle visuaalinen vihje
                         rauhoittumiselle ja sen "turvasatama".
                       </p>
                     </div>
@@ -238,35 +260,35 @@ const RelaxationProtocolGuide = () => {
                       <tr>
                         <td className="border border-border p-3 font-medium">Ei käskyttämistä</td>
                         <td className="border border-border p-3">
-                          Älä hokee "paikka, paikka". Pyydä koira alussa matolle, ja sen jälkeen olet hiljaa. 
+                          Älä hokee "paikka, paikka". Pyydä koira alussa matolle, ja sen jälkeen olet hiljaa.
                           Haluamme koiran tarkkailevan sinua ja ympäristöä, ei kuuntelevan käskyjä.
                         </td>
                       </tr>
                       <tr className="bg-muted/50">
                         <td className="border border-border p-3 font-medium">Koira valitsee asennon</td>
                         <td className="border border-border p-3">
-                          Makuuasento on paras rentoutumiseen, mutta istuminenkin käy alussa. 
+                          Makuuasento on paras rentoutumiseen, mutta istuminenkin käy alussa.
                           Jos koira vaihtaa asentoa, se on ok, kunhan se pysyy matolla.
                         </td>
                       </tr>
                       <tr>
                         <td className="border border-border p-3 font-medium">Vapautus</td>
                         <td className="border border-border p-3">
-                          Harjoitus ei lopu siihen, että koira nousee omin luvin. 
+                          Harjoitus ei lopu siihen, että koira nousee omin luvin.
                           Harjoitus loppuu sinun vapautussanaasi (esim. "Vapaa").
                         </td>
                       </tr>
                       <tr className="bg-muted/50">
                         <td className="border border-border p-3 font-medium">Virheet</td>
                         <td className="border border-border p-3">
-                          Jos koira poistuu matolta ennen aikojaan, älä suutu. 
+                          Jos koira poistuu matolta ennen aikojaan, älä suutu.
                           Ohjaa koira neutraalisti takaisin ja peruuta harjoituksessa pari pykälää taaksepäin.
                         </td>
                       </tr>
                       <tr>
                         <td className="border border-border p-3 font-medium">Palkitseminen</td>
                         <td className="border border-border p-3">
-                          Palkitse koira aina heti tehtävän suorittamisen jälkeen. 
+                          Palkitse koira aina heti tehtävän suorittamisen jälkeen.
                           Palkkio on pieni, jotta harjoitusta voidaan jatkaa.
                         </td>
                       </tr>
@@ -287,7 +309,7 @@ const RelaxationProtocolGuide = () => {
             <div className="space-y-6">
               <div className="bg-primary/10 p-4 rounded-lg border-l-4 border-primary mb-6">
                 <p className="text-sm">
-                  <strong>Ohje:</strong> Jokainen tehtävä on suoritettava onnistuneesti (koira pysyy rauhallisena matolla) 
+                  <strong>Ohje:</strong> Jokainen tehtävä on suoritettava onnistuneesti (koira pysyy rauhallisena matolla)
                   ennen kuin siirrytään seuraavaan. Jos koira nousee ylös tai on levoton, palaa edelliseen, helpompaan tehtävään.
                 </p>
               </div>
@@ -500,7 +522,7 @@ const RelaxationProtocolGuide = () => {
                 <div className="space-y-4">
                   <div className="bg-primary/10 p-4 rounded-lg border-l-4 border-primary">
                     <p className="text-sm">
-                      <strong>Tärkeää:</strong> Päivät 9-15 ovat yleistämistä varten. 
+                      <strong>Tärkeää:</strong> Päivät 9-15 ovat yleistämistä varten.
                       Toista aiemmat päivät uudessa ympäristössä (esim. toinen huone, takapiha, puisto).
                     </p>
                   </div>
@@ -517,7 +539,7 @@ const RelaxationProtocolGuide = () => {
                   <div className="bg-accent/10 p-4 rounded-lg">
                     <h5 className="font-semibold mb-2">Ylläpito</h5>
                     <p className="text-sm">
-                      Jatka harjoittelua satunnaisesti eri paikoissa ja eri aikoina. 
+                      Jatka harjoittelua satunnaisesti eri paikoissa ja eri aikoina.
                       Yhdistele tehtäviä eri päiviltä ylläpitääksesi taitoa.
                     </p>
                   </div>
@@ -537,11 +559,11 @@ const RelaxationProtocolGuide = () => {
               <InfoCard title="Protokollan hyödyt" variant="warm">
                 <div className="space-y-4">
                   <p className="text-sm">
-                    Rentoutusprotokolla on erinomainen pohja, jonka päälle muut käyttäytymisen muokkausohjelmat 
+                    Rentoutusprotokolla on erinomainen pohja, jonka päälle muut käyttäytymisen muokkausohjelmat
                     (kuten <strong>Engage-Disengage</strong> tai <strong>BAT 2.0</strong>) on helppo rakentaa.
                   </p>
                   <p className="text-sm">
-                    Kun koira oppii fysiologisen rentoutumisen taidon, sen kyky käsitellä stressiä ja 
+                    Kun koira oppii fysiologisen rentoutumisen taidon, sen kyky käsitellä stressiä ja
                     uusia tilanteita paranee merkittävästi.
                   </p>
                 </div>

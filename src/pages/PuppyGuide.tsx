@@ -12,10 +12,33 @@ import InfoBadge from '@/components/InfoBadge';
 import BackToTopButton from '@/components/BackToTopButton';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import SEO from '@/components/SEO';
+import { createArticleSchema, createBreadcrumbSchema } from '@/utils/structuredData';
+import puppyCareGuide from '@/assets/puppy-care-guide.jpg';
 
 const PuppyGuide = () => {
+  const structuredData = [
+    createArticleSchema(
+      "Kattava opas pennun ruokintaan",
+      "Opi kaikki koiranpennun ruokinnasta: energiatarve, proteiinit, rasvat, ja oikeat ruokintatavat.",
+      puppyCareGuide
+    ),
+    createBreadcrumbSchema([
+      { name: "Etusivu", url: window.location.origin },
+      { name: "Oppaat", url: `${window.location.origin}/guides` },
+      { name: "Ruokintaopas", url: `${window.location.origin}/guides/puppy-guide` }
+    ])
+  ];
+
   return (
     <MobileOptimizedLayout>
+      <SEO
+        title="Kattava opas pennun ruokintaan"
+        description="Opi kaikki koiranpennun ruokinnasta: energiatarve, proteiinit, rasvat, ja oikeat ruokintatavat. Vältä yleisimmät virheet."
+        image={puppyCareGuide}
+        type="article"
+        structuredData={structuredData}
+      />
       <div className="min-h-screen bg-background page-with-navigation w-full overflow-x-hidden">
         <Navigation />
         <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-full min-w-0 space-y-8">

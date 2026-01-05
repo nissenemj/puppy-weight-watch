@@ -36,7 +36,8 @@ export default function InfoHome() {
   const structuredData = [
     createArticleSchema(
       "Penturuoka-opas - Koiranpentujen ruokinta ja ravitsemus",
-      "Laaja katsaus Suomessa myytäviin koiranpentujen ruokiin ja niiden annosteluun ohjelmistokehityksen näkökulmasta"
+      "Laaja katsaus Suomessa myytäviin koiranpentujen ruokiin ja niiden annosteluun ohjelmistokehityksen näkökulmasta",
+      heroImage
     ),
     createFAQSchema(faqs),
     createBreadcrumbSchema(breadcrumbs)

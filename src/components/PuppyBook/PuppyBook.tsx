@@ -20,6 +20,7 @@ import {
   Trophy,
   Target
 } from '@/utils/iconImports';
+import { User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Navigation } from '@/components/Navigation';
@@ -55,8 +56,8 @@ interface PuppyBookData {
   title: string;
   birth_date?: string;
   cover_image_url?: string;
-  theme: any;
-  privacy_settings: any;
+  theme: Record<string, unknown>;
+  privacy_settings: Record<string, unknown>;
   created_at: string;
   updated_at: string;
 }
@@ -68,7 +69,7 @@ interface TimelineEntry {
   title: string;
   description?: string;
   entry_date: string;
-  metadata: any;
+  metadata: Record<string, unknown>;
   is_highlight: boolean;
   created_by?: string;
   created_at: string;
@@ -83,7 +84,7 @@ interface Memory {
   content_url?: string;
   caption?: string;
   tags: string[];
-  location?: any;
+  location?: Record<string, unknown>;
   created_by?: string;
   created_at: string;
   updated_at?: string;
@@ -124,7 +125,7 @@ const PuppyBook: React.FC = () => {
   const [activeSection, setActiveSection] = useState('monthly');
   const [book, setBook] = useState<PuppyBookData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [selectedBookId, setSelectedBookId] = useState<string>('');
   const [selectedMonth, setSelectedMonth] = useState(0);
   const [showFloatingAction, setShowFloatingAction] = useState(false);
@@ -134,22 +135,43 @@ const PuppyBook: React.FC = () => {
   const memoryGalleryRef = React.useRef<(() => void) | null>(null);
   const { toast } = useToast();
 
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
     loadUser();
   }, []);
 
   const loadUser = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      setLoading(true);
+      setError(null);
+
+      // Create a timeout promise
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Timeout')), 10000); // 10s timeout
+      });
+
+      // Race between auth check and timeout
+      const { data } = await Promise.race([
+        supabase.auth.getUser(),
+        timeoutPromise
+      ]) as { data: { user: User | null } };
+
+      const user = data?.user;
       setUser(user);
-      setLoading(false);
     } catch (error) {
       console.error('Error loading user:', error);
+      setError('Käyttäjätietojen lataus epäonnistui. Tarkista verkkoyhteys.');
+    } finally {
       setLoading(false);
     }
   };
 
-  const handleBookSelect = (bookId: string, bookData: any) => {
+  const handleRetry = () => {
+    loadUser();
+  };
+
+  const handleBookSelect = (bookId: string, bookData: PuppyBookData) => {
     setSelectedBookId(bookId);
     setBook(bookData);
   };
@@ -198,7 +220,7 @@ const PuppyBook: React.FC = () => {
       }
 
       if (data) {
-        setBook(data as any);
+        setBook(data as unknown as PuppyBookData);
         toast({
           title: "Onnistui!",
           description: "Pentukirja luotu onnistuneesti! Voit nyt aloittaa pennun tarinan tallentamisen",
@@ -260,6 +282,26 @@ const PuppyBook: React.FC = () => {
     return <PuppyBookSkeleton />;
   }
 
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center p-6 max-w-sm mx-auto">
+          <div className="mb-4 text-red-500">
+            <Book className="w-12 h-12 mx-auto opacity-50" />
+          </div>
+          <h3 className="text-lg font-semibold mb-2">Hups! Jotain meni pieleen</h3>
+          <p className="text-muted-foreground mb-6">{error}</p>
+          <button
+            onClick={handleRetry}
+            className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+          >
+            Yritä uudelleen
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   if (!user) {
     return <div className="min-h-screen bg-gradient-to-br from-gradient-mint-light/20 via-gradient-peach-light/20 to-gradient-sky/20 flex items-center justify-center">
       <p className="text-gray-600">Kirjaudu sisään nähdäksesi pentukirjasi</p>
@@ -290,7 +332,7 @@ const PuppyBook: React.FC = () => {
         birthDate={book.birth_date}
         puppyImageUrl={book.cover_image_url}
         onEditProfile={() => setShowProfileEditor(true)}
-        bannerColor={book.theme?.bannerColor || 'orange'}
+        bannerColor={(book.theme?.bannerColor as string) || 'orange'}
       />
       <PuppyBookNavigation
         activeSection={activeSection}
@@ -468,8 +510,8 @@ const PuppyBookSkeleton: React.FC = () => {
 // Kirjan luomisprompt
 const CreateBookPrompt: React.FC<{
   onBookCreated: (title: string, birthDate?: string, coverImageUrl?: string) => void;
-  user: any;
-  onBookSelect: (bookId: string, bookData: any) => void;
+  user: User;
+  onBookSelect: (bookId: string, bookData: PuppyBookData) => void;
 }> = ({ onBookCreated, user, onBookSelect }) => {
   const [title, setTitle] = useState('');
   const [birthDate, setBirthDate] = useState(getDefaultBirthDate());
@@ -699,9 +741,9 @@ const PuppyBookNavigation: React.FC<{
       <div className="relative">
         {/* Fade-gradient osoittamaan scrollattavuutta */}
         <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none md:hidden" />
-        
+
         <div className="container mx-auto px-2 md:px-4">
-          <nav 
+          <nav
             className="flex overflow-x-auto scrollbar-hide snap-x snap-mandatory -mx-2 px-2 gap-1"
             style={{ WebkitOverflowScrolling: 'touch' }}
           >

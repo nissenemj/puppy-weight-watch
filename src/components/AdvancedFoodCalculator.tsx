@@ -6,7 +6,21 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectTrigger, SelectValue, SelectItem } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
-import { Calculator, Dog, Scale, ExternalLink, BookOpen } from 'lucide-react'
+import { Calculator, Dog, Scale, ExternalLink, BookOpen, Check, ChevronsUpDown } from 'lucide-react'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { cn } from "@/lib/utils"
 import { User } from '@supabase/supabase-js'
 import { supabase } from '@/integrations/supabase/client'
 import { dbToAppTypes } from '@/utils/typeUtils'
@@ -79,6 +93,7 @@ export default function AdvancedFoodCalculator({ user, currentWeight: propCurren
   const [dogFoods, setDogFoods] = useState<DogFood[]>([])
   const [feedingGuidelines, setFeedingGuidelines] = useState<FeedingGuideline[]>([])
   const [loading, setLoading] = useState(true)
+  const [open, setOpen] = useState(false)
   const [result, setResult] = useState<{
     dailyAmount: number
     mealsPerDay: number
@@ -410,22 +425,52 @@ export default function AdvancedFoodCalculator({ user, currentWeight: propCurren
 
             <div className="space-y-2 mt-4">
               <Label className="text-white" id="food-label">Valitse koiranruoka *</Label>
-              <Select value={selectedFoodId} onValueChange={setSelectedFoodId} required>
-                <SelectTrigger
-                  className="bg-white/20 border-white/30 text-white"
-                  aria-labelledby="food-label"
-                  aria-required="true"
-                >
-                  <SelectValue placeholder="Valitse ruoka" />
-                </SelectTrigger>
-                <SelectContent>
-                  {dogFoods.map(food => (
-                    <SelectItem key={food.id} value={food.id}>
-                      {food.manufacturer} - {food.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={open}
+                    className="w-full justify-between bg-white/20 border-white/30 text-white hover:bg-white/30 hover:text-white"
+                  >
+                    {selectedFoodId
+                      ? (() => {
+                        const food = dogFoods.find((f) => f.id === selectedFoodId)
+                        return food ? `${food.manufacturer} - ${food.name}` : "Valitse ruoka..."
+                      })()
+                      : "Valitse ruoka..."}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
+                  <Command>
+                    <CommandInput placeholder="Etsi ruokaa..." className="h-9" />
+                    <CommandList>
+                      <CommandEmpty>Ruokaa ei löytynyt.</CommandEmpty>
+                      <CommandGroup>
+                        {dogFoods.map((food) => (
+                          <CommandItem
+                            key={food.id}
+                            value={`${food.manufacturer} ${food.name}`}
+                            onSelect={() => {
+                              setSelectedFoodId(food.id === selectedFoodId ? "" : food.id)
+                              setOpen(false)
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                selectedFoodId === food.id ? "opacity-100" : "opacity-0"
+                              )}
+                            />
+                            {food.manufacturer} - {food.name}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
             </div>
 
             <Button
@@ -442,112 +487,112 @@ export default function AdvancedFoodCalculator({ user, currentWeight: propCurren
 
       {/* Results Card - only shown when result exists */}
       {result && (
-      <Card variant="frosted" className="border-0 shadow-lg">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-stone-900">
-            <Scale className="h-5 w-5" />
-            Laskentatulokset
-          </CardTitle>
-          <CardDescription>
-            Laskenta perustuu valitun ruoan annostelutaulukkoon.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {result?.selectedFood && (
-            <div className="mb-4 p-4 bg-blue-50 rounded-lg" role="group" aria-labelledby="selected-food">
-              <h3 id="selected-food" className="font-semibold mb-2 text-[var(--color-text-primary)]">Valittu ruoka:</h3>
-              <dl className="space-y-1">
-                <div><dt className="inline font-medium">Ruoka:</dt> <dd className="inline">{result.selectedFood.manufacturer} - {result.selectedFood.name}</dd></div>
-                <div><dt className="inline font-medium">Tyyppi:</dt> <dd className="inline">{result.selectedFood.food_type} - {result.selectedFood.nutrition_type}</dd></div>
-                <div><dt className="inline font-medium">Annostelutapa:</dt> <dd className="inline">{result.selectedFood.dosage_method.replace(/_/g, ' ')}</dd></div>
-                {result.selectedFood.notes && (
-                  <div><dt className="inline font-medium">Huomautuksia:</dt> <dd className="inline">{result.selectedFood.notes}</dd></div>
+        <Card variant="frosted" className="border-0 shadow-lg">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-stone-900">
+              <Scale className="h-5 w-5" />
+              Laskentatulokset
+            </CardTitle>
+            <CardDescription>
+              Laskenta perustuu valitun ruoan annostelutaulukkoon.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {result?.selectedFood && (
+              <div className="mb-4 p-4 bg-blue-50 rounded-lg" role="group" aria-labelledby="selected-food">
+                <h3 id="selected-food" className="font-semibold mb-2 text-[var(--color-text-primary)]">Valittu ruoka:</h3>
+                <dl className="space-y-1">
+                  <div><dt className="inline font-medium">Ruoka:</dt> <dd className="inline">{result.selectedFood.manufacturer} - {result.selectedFood.name}</dd></div>
+                  <div><dt className="inline font-medium">Tyyppi:</dt> <dd className="inline">{result.selectedFood.food_type} - {result.selectedFood.nutrition_type}</dd></div>
+                  <div><dt className="inline font-medium">Annostelutapa:</dt> <dd className="inline">{result.selectedFood.dosage_method.replace(/_/g, ' ')}</dd></div>
+                  {result.selectedFood.notes && (
+                    <div><dt className="inline font-medium">Huomautuksia:</dt> <dd className="inline">{result.selectedFood.notes}</dd></div>
+                  )}
+                </dl>
+                {/* Manufacturer feeding guide link */}
+                {MANUFACTURER_FEEDING_URLS[result.selectedFood.manufacturer] && (
+                  <a
+                    href={MANUFACTURER_FEEDING_URLS[result.selectedFood.manufacturer]}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 mt-3 px-4 py-2 bg-terracotta-500 hover:bg-terracotta-600 text-white rounded-lg transition-colors font-medium text-sm"
+                  >
+                    <BookOpen className="w-4 h-4" />
+                    Katso {result.selectedFood.manufacturer}:n virallinen annosohje
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
                 )}
-              </dl>
-              {/* Manufacturer feeding guide link */}
-              {MANUFACTURER_FEEDING_URLS[result.selectedFood.manufacturer] && (
-                <a
-                  href={MANUFACTURER_FEEDING_URLS[result.selectedFood.manufacturer]}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 mt-3 px-4 py-2 bg-terracotta-500 hover:bg-terracotta-600 text-white rounded-lg transition-colors font-medium text-sm"
-                >
-                  <BookOpen className="w-4 h-4" />
-                  Katso {result.selectedFood.manufacturer}:n virallinen annosohje
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </a>
-              )}
-            </div>
-          )}
+              </div>
+            )}
 
-          {result?.usedGuidelines && result.usedGuidelines.length > 0 && (
-            <div className="overflow-x-auto mobile-table-responsive">
-              <h3 className="font-semibold mb-2 text-[var(--color-text-primary)]">Käytetyt annostelutiedot:</h3>
-              <table className="w-full text-sm" role="table" aria-labelledby="guidelines-table" summary="Taulukko näyttää laskennassa käytetyt annostelutiedot">
-                <thead>
-                  <tr className="border-b" role="row">
-                    <th className="text-left p-2" role="columnheader" scope="col">Aikuispaino</th>
-                    <th className="text-left p-2" role="columnheader" scope="col">Ikä</th>
-                    <th className="text-left p-2" role="columnheader" scope="col">Nykyinen paino</th>
-                    <th className="text-left p-2" role="columnheader" scope="col">Kokoluokka</th>
-                    <th className="text-left p-2" role="columnheader" scope="col">Min annos</th>
-                    <th className="text-left p-2" role="columnheader" scope="col">Max annos</th>
-                    <th className="text-left p-2" role="columnheader" scope="col">Kaava</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {result.usedGuidelines.map((guideline, index) => (
-                    <tr key={guideline.id} className="border-b bg-blue-50" role="row">
-                      <td className="p-2" role="cell">{guideline.adult_weight_kg || '-'} kg</td>
-                      <td className="p-2" role="cell">{guideline.age_months || '-'}</td>
-                      <td className="p-2" role="cell">{guideline.current_weight_kg || '-'} kg</td>
-                      <td className="p-2" role="cell">{guideline.size_category || '-'}</td>
-                      <td className="p-2" role="cell">{guideline.daily_amount_min || '-'}g</td>
-                      <td className="p-2" role="cell">{guideline.daily_amount_max || '-'}g</td>
-                      <td className="p-2" role="cell">{guideline.calculation_formula || '-'}</td>
+            {result?.usedGuidelines && result.usedGuidelines.length > 0 && (
+              <div className="overflow-x-auto mobile-table-responsive">
+                <h3 className="font-semibold mb-2 text-[var(--color-text-primary)]">Käytetyt annostelutiedot:</h3>
+                <table className="w-full text-sm" role="table" aria-labelledby="guidelines-table" summary="Taulukko näyttää laskennassa käytetyt annostelutiedot">
+                  <thead>
+                    <tr className="border-b" role="row">
+                      <th className="text-left p-2" role="columnheader" scope="col">Aikuispaino</th>
+                      <th className="text-left p-2" role="columnheader" scope="col">Ikä</th>
+                      <th className="text-left p-2" role="columnheader" scope="col">Nykyinen paino</th>
+                      <th className="text-left p-2" role="columnheader" scope="col">Kokoluokka</th>
+                      <th className="text-left p-2" role="columnheader" scope="col">Min annos</th>
+                      <th className="text-left p-2" role="columnheader" scope="col">Max annos</th>
+                      <th className="text-left p-2" role="columnheader" scope="col">Kaava</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+                  </thead>
+                  <tbody>
+                    {result.usedGuidelines.map((guideline, index) => (
+                      <tr key={guideline.id} className="border-b bg-blue-50" role="row">
+                        <td className="p-2" role="cell">{guideline.adult_weight_kg || '-'} kg</td>
+                        <td className="p-2" role="cell">{guideline.age_months || '-'}</td>
+                        <td className="p-2" role="cell">{guideline.current_weight_kg || '-'} kg</td>
+                        <td className="p-2" role="cell">{guideline.size_category || '-'}</td>
+                        <td className="p-2" role="cell">{guideline.daily_amount_min || '-'}g</td>
+                        <td className="p-2" role="cell">{guideline.daily_amount_max || '-'}g</td>
+                        <td className="p-2" role="cell">{guideline.calculation_formula || '-'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
 
-          {result && (
-            <div className="mt-4 p-4 bg-green-50 rounded-lg" role="group" aria-labelledby="final-result">
-              <h3 id="final-result" className="font-semibold mb-2 text-[var(--color-text-primary)]">Lopputulos:</h3>
-              <dl className="space-y-1">
-                <div><dt className="inline font-medium">Perusannos:</dt> <dd className="inline">{Math.round(result.dailyAmount / (result.activityMultiplier * result.breedMultiplier))}g päivässä</dd></div>
-                {result.wasInterpolated && (
-                  <div className="text-blue-600 text-sm">
-                    <Badge variant="outline" className="mr-2 text-xs">Interpoloitu</Badge>
-                    Annos laskettu kahden painoluokan välistä
+            {result && (
+              <div className="mt-4 p-4 bg-green-50 rounded-lg" role="group" aria-labelledby="final-result">
+                <h3 id="final-result" className="font-semibold mb-2 text-[var(--color-text-primary)]">Lopputulos:</h3>
+                <dl className="space-y-1">
+                  <div><dt className="inline font-medium">Perusannos:</dt> <dd className="inline">{Math.round(result.dailyAmount / (result.activityMultiplier * result.breedMultiplier))}g päivässä</dd></div>
+                  {result.wasInterpolated && (
+                    <div className="text-blue-600 text-sm">
+                      <Badge variant="outline" className="mr-2 text-xs">Interpoloitu</Badge>
+                      Annos laskettu kahden painoluokan välistä
+                    </div>
+                  )}
+                  {result.breedCategory && result.breedMultiplier !== 1.0 && (
+                    <div>
+                      <dt className="inline font-medium">Rotukoko ({result.breedCategory.name}):</dt>{' '}
+                      <dd className="inline">
+                        ×{result.breedMultiplier.toFixed(2)}
+                        <span className="text-sm text-muted-foreground ml-2">
+                          ({result.breedMultiplier > 1 ? 'korkeampi aineenvaihdunta' : 'hitaampi aineenvaihdunta'})
+                        </span>
+                      </dd>
+                    </div>
+                  )}
+                  {result.activityMultiplier !== 1.0 && (
+                    <div><dt className="inline font-medium">Aktiivisuussäätö:</dt> <dd className="inline">×{result.activityMultiplier}</dd></div>
+                  )}
+                  <div className="pt-2 border-t mt-2">
+                    <dt className="inline font-medium text-lg">Lopullinen annos:</dt>{' '}
+                    <dd className="inline text-lg font-bold text-green-700">{result.dailyAmount}g päivässä</dd>
                   </div>
-                )}
-                {result.breedCategory && result.breedMultiplier !== 1.0 && (
-                  <div>
-                    <dt className="inline font-medium">Rotukoko ({result.breedCategory.name}):</dt>{' '}
-                    <dd className="inline">
-                      ×{result.breedMultiplier.toFixed(2)}
-                      <span className="text-sm text-muted-foreground ml-2">
-                        ({result.breedMultiplier > 1 ? 'korkeampi aineenvaihdunta' : 'hitaampi aineenvaihdunta'})
-                      </span>
-                    </dd>
-                  </div>
-                )}
-                {result.activityMultiplier !== 1.0 && (
-                  <div><dt className="inline font-medium">Aktiivisuussäätö:</dt> <dd className="inline">×{result.activityMultiplier}</dd></div>
-                )}
-                <div className="pt-2 border-t mt-2">
-                  <dt className="inline font-medium text-lg">Lopullinen annos:</dt>{' '}
-                  <dd className="inline text-lg font-bold text-green-700">{result.dailyAmount}g päivässä</dd>
-                </div>
-                <div><dt className="inline font-medium">Ruokintakerrat:</dt> <dd className="inline">{result.mealsPerDay} kertaa päivässä</dd></div>
-                <div><dt className="inline font-medium">Annos per kerta:</dt> <dd className="inline font-semibold">{result.gramsPerMeal}g</dd></div>
-              </dl>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                  <div><dt className="inline font-medium">Ruokintakerrat:</dt> <dd className="inline">{result.mealsPerDay} kertaa päivässä</dd></div>
+                  <div><dt className="inline font-medium">Annos per kerta:</dt> <dd className="inline font-semibold">{result.gramsPerMeal}g</dd></div>
+                </dl>
+              </div>
+            )}
+          </CardContent>
+        </Card>
       )}
 
       {/* Important Notes */}
