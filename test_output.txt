@@ -1,0 +1,1215 @@
+
+[1m[46m RUN [49m[22m [36mv3.2.4 [39m[90mC:/Users/nisse/puppy-weight-watch[39m
+
+[90mstderr[2m | src/components/__tests__/AdvancedFoodCalculator.test.tsx[2m > [22m[2mAdvancedFoodCalculator[2m > [22m[2mrenderöinti[2m > [22m[2mnäyttää latausanimaation aluksi
+[22m[39mWarning: An update to AdvancedFoodCalculator inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at AdvancedFoodCalculator (C:\Users\nisse\puppy-weight-watch\src\components\AdvancedFoodCalculator.tsx:49:35)
+Warning: An update to AdvancedFoodCalculator inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at AdvancedFoodCalculator (C:\Users\nisse\puppy-weight-watch\src\components\AdvancedFoodCalculator.tsx:49:35)
+Warning: An update to AdvancedFoodCalculator inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at AdvancedFoodCalculator (C:\Users\nisse\puppy-weight-watch\src\components\AdvancedFoodCalculator.tsx:49:35)
+
+ [31m❯[39m src/components/__tests__/AdvancedFoodCalculator.test.tsx [2m([22m[2m11 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[33m 6097[2mms[22m[39m
+   [32m✓[39m AdvancedFoodCalculator[2m > [22mrenderöinti[2m > [22mnäyttää latausanimaation aluksi[32m 49[2mms[22m[39m
+[31m   [31m×[31m AdvancedFoodCalculator[2m > [22mrenderöinti[2m > [22mnäyttää lomakkeen latauksen jälkeen[39m[33m 3027[2mms[22m[39m
+[31m     → Unable to find an element with the text: /edistynyt ruoka-annoslaskuri/i. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"space-y-6"[31m
+    [36m>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"rounded-xl text-stone-900 transition-all duration-200 bg-white border-stone-200 hover:shadow-md bg-gradient-to-br from-terracotta-500 to-terracotta-600 border-0 shadow-lg"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex flex-col space-y-1.5 p-6"[31m
+        [36m>[31m
+          [36m<h3[31m
+            [33mclass[31m=[32m"font-serif text-xl font-semibold leading-tight flex items-center gap-2 text-white"[31m
+          [36m>[31m
+            [36m<svg[31m
+              [33mclass[31m=[32m"lucide lucide-calculator h-5 w-5"[31m
+              [33mfill[31m=[32m"none"[31m
+              [33mheight[31m=[32m"24"[31m
+              [33mstroke[31m=[32m"currentColor"[31m
+              [33mstroke-linecap[31m=[32m"round"[31m
+              [33mstroke-linejoin[31m=[32m"round"[31m
+              [33mstroke-width[31m=[32m"2"[31m
+              [33mviewBox[31m=[32m"0 0 24 24"[31m
+              [33mwidth[31m=[32m"24"[31m
+              [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+            [36m>[31m
+              [36m<rect[31m
+                [33mheight[31m=[32m"20"[31m
+                [33mrx[31m=[32m"2"[31m
+                [33mwidth[31m=[32m"16"[31m
+                [33mx[31m=[32m"4"[31m
+                [33my[31m=[32m"2"[31m
+              [36m/>[31m
+              [36m<line[31m
+                [33mx1[31m=[32m"8"[31m
+                [33mx2[31m=[32m"16"[31m
+                [33my1[31m=[32m"6"[31m
+                [33my2[31m=[32m"6"[31m
+              [36m/>[31m
+              [36m<line[31m
+                [33mx1[31m=[32m"16"[31m
+                [33mx2[31m=[32m"16"[31m
+                [33my1[31m=[32m"14"[31m
+                [33my2[31m=[32m"18"[31m
+              [36m/>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M16 10h.01"[31m
+              [36m/>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M12 10h.01"[31m
+              [36m/>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M8 10h.01"[31m
+              [36m/>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M12 14h.01"[31m
+              [36m/>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M8 14h.01"[31m
+              [36m/>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M12 18h.01"[31m
+              [36m/>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M8 18h.01"[31m
+              [36m/>[31m
+            [36m</svg>[31m
+            [0mRuoka-annoslaskuri[0m
+          [36m</h3>[31m
+          [36m<p[31m
+            [33mclass[31m=[32m"font-sans text-sm mt-1 text-white/80"[31m
+          [36m>[31m
+            [0mLaske pennun päivittäinen ruokamäärä[0m
+          [36m</p>[31m
+        [36m</div>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"p-6 pt-0 font-sans text-base leading-relaxed text-foreground/90 space-y-4"[31m
+        [36m>[31m
+          [36m<form[31m
+            [33maria-labelledby[31m=[32m"calculator-title"[31m
+            [33mrole[31m=[32m"form"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"grid grid-cols-1 md:grid-cols-2 gap-4"[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"space-y-2"[31m
+              [36m>[31m
+                [36m<label[31m
+                  [33mclass[31m=[32m"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-white"[31m
+                  [33mfor[31m=[32m"current-weight"[31m
+                [36m>[31m
+                  [0mNykyinen paino (kg) *[0m
+                [36m</label>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"space-y-2"[31m
+                [36m>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"relative"[31m
+                  [36m>[31m
+                    [36m<input[31m
+                      [33maria-invalid[31m=[32m"false"[31m
+                      [33mclass[31m=[32m"flex w-full border font-medium transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 hover:border-[var(--color-primary-500)] hover:shadow-sm focus-visible:ring-2 focus-visible:ring-[var(--color-primary-500)] h-11 px-4 py-2 text-base rounded-xl min-h-[44px] bg-white/20 border-white/30 text-white placeholder:text-white/60"[31m
+                      [33mid[31m=[32m"current-weight"[31m
+                      [33mplaceholder[31m=[32m"esim. 3.2"[31m
+                      [33mrequired[31m=[32m""[31m
+                      [33mstep[31m=[32m"0.1"[31m
+                      [33mtype[31m=[32m"number"[31m
+                      [33mvalue[31m=[32m""[31m
+                    [36m/>[31m
+                  [36m</div>[31m
+                [36m</div>[31m
+              [36m</div>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"space-y-2"[31m
+              [36m>[31m
+                [36m<label[31m
+                  [33mclass[31m=[32m"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-white"[31m
+                  [33mfor[31m=[32m"age"[31m
+                [36m>[31m
+                  [0mIkä kuukausina *[0m
+                [36m</label>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"space-y-2"[31m
+                [36m>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"relative"[31m
+                  [36m>[31m
+                    [36m<input[31m
+                      [33maria-invalid[31m=[32m"false"[31m
+                      [33mclass[31m=[32m"flex w-full border font-medium transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 hover:border-[var(--color-primary-500)] hover:shadow-sm focus-visible:ring-2 focus-visible:ring-[var(--color-primary-500)] h-11 px-4 py-2 text-base rounded-xl min-h-[44px] bg-white/20 border-white/30 text-white placeholder:text-white/60"[31m
+                      [33mid[31m=[32m"age"[31m
+                      [33mplaceholder[31m=[32m"esim. 4"[31m
+                      [33mrequired[31m=[32m""[31m
+                      [33mtype[31m=[32m"number"[31m
+                      [33mvalue[31m=[32m""[31m
+                    [36m/>[31m
+                  [36m</div>[31m
+                [36m</div>[31m
+              [36m</div>[31m
+              [36m<div[31m
+                [33mclass[31m=[3...
+
+Ignored nodes: comments, script, style
+[36m<html>[31m
+  [36m<head />[31m
+  [36m<body>[31m
+    [36m<div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"space-y-6"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"rounded-xl text-stone-900 transition-all duration-200 bg-white border-stone-200 hover:shadow-md bg-gradient-to-br from-terracotta-500 to-terracotta-600 border-0 shadow-lg"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex flex-col space-y-1.5 p-6"[31m
+          [36m>[31m
+            [36m<h3[31m
+              [33mclass[31m=[32m"font-serif text-xl font-semibold leading-tight flex items-center gap-2 text-white"[31m
+            [36m>[31m
+              [36m<svg[31m
+                [33mclass[31m=[32m"lucide lucide-calculator h-5 w-5"[31m
+                [33mfill[31m=[32m"none"[31m
+                [33mheight[31m=[32m"24"[31m
+                [33mstroke[31m=[32m"currentColor"[31m
+                [33mstroke-linecap[31m=[32m"round"[31m
+                [33mstroke-linejoin[31m=[32m"round"[31m
+                [33mstroke-width[31m=[32m"2"[31m
+                [33mviewBox[31m=[32m"0 0 24 24"[31m
+                [33mwidth[31m=[32m"24"[31m
+                [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+              [36m>[31m
+                [36m<rect[31m
+                  [33mheight[31m=[32m"20"[31m
+                  [33mrx[31m=[32m"2"[31m
+                  [33mwidth[31m=[32m"16"[31m
+                  [33mx[31m=[32m"4"[31m
+                  [33my[31m=[32m"2"[31m
+                [36m/>[31m
+                [36m<line[31m
+                  [33mx1[31m=[32m"8"[31m
+                  [33mx2[31m=[32m"16"[31m
+                  [33my1[31m=[32m"6"[31m
+                  [33my2[31m=[32m"6"[31m
+                [36m/>[31m
+                [36m<line[31m
+                  [33mx1[31m=[32m"16"[31m
+                  [33mx2[31m=[32m"16"[31m
+                  [33my1[31m=[32m"14"[31m
+                  [33my2[31m=[32m"18"[31m
+                [36m/>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M16 10h.01"[31m
+                [36m/>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M12 10h.01"[31m
+                [36m/>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M8 10h.01"[31m
+                [36m/>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M12 14h.01"[31m
+                [36m/>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M8 14h.01"[31m
+                [36m/>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M12 18h.01"[31m
+                [36m/>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M8 18h.01"[31m
+                [36m/>[31m
+              [36m</svg>[31m
+              [0mRuoka-annoslaskuri[0m
+            [36m</h3>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"font-sans text-sm mt-1 text-white/80"[31m
+            [36m>[31m
+              [0mLaske pennun päivittäinen ruokamäärä[0m
+            [36m</p>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"p-6 pt-0 font-sans text-base leading-relaxed text-foreground/90 space-y-4"[31m
+          [36m>[31m
+            [36m<form[31m
+              [33maria-labelledby[31m=[32m"calculator-title"[31m
+              [33mrole[31m=[32m"form"[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"grid grid-cols-1 md:grid-cols-2 gap-4"[31m
+              [36m>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"space-y-2"[31m
+                [36m>[31m
+                  [36m<label[31m
+                    [33mclass[31m=[32m"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-white"[31m
+                    [33mfor[31m=[32m"current-weight"[31m
+                  [36m>[31m
+                    [0mNykyinen paino (kg) *[0m
+                  [36m</label>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"space-y-2"[31m
+                  [36m>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"relative"[31m
+                    [36m>[31m
+                      [36m<input[31m
+                        [33maria-invalid[31m=[32m"false"[31m
+                        [33mclass[31m=[32m"flex w-full border font-medium transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 hover:border-[var(--color-primary-500)] hover:shadow-sm focus-visible:ring-2 focus-visible:ring-[var(--color-primary-500)] h-11 px-4 py-2 text-base rounded-xl min-h-[44px] bg-white/20 border-white/30 text-white placeholder:text-white/60"[31m
+                        [33mid[31m=[32m"current-weight"[31m
+                        [33mplaceholder[31m=[32m"esim. 3.2"[31m
+                        [33mrequired[31m=[32m""[31m
+                        [33mstep[31m=[32m"0.1"[31m
+                        [33mtype[31m=[32m"number"[31m
+                        [33mvalue[31m=[32m""[31m
+                      [36m/>[31m
+                    [36m</div>[31m
+                  [36m</div>[31m
+                [36m</div>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"space-y-2"[31m
+                [36m>[31m
+                  [36m<label[31m
+                    [33mclass[31m=[32m"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-white"[31m
+                    [33mfor[31m=[32m"age"[31m
+                  [36m>[31m
+                    [0mIkä kuukausina *[0m
+                  [36m</label>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"space-y-2"[31m
+                  [36m>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"relative"[31m
+                    [36m>[31m
+                      [36m<input[31m
+                        [33maria-invalid[31m=[32m"false"[31m
+                        [33mclass[31m=[32m"flex w-full border font-medium transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 hover:border-[var(--color-primary-500)] hover:shadow-sm focus-visible:ring-2 focus-visible:ring-[var(--color-primary-500)] h-11 px-4 py-2 text-base rounded-xl min-h-[44px] bg-white/20 border-white/30 text-white placeholder:text-white/60"[31m
+                        [33mid[31m=[32m"age"[31m
+                        [33mplaceholder[31m=[32m"esim. 4"[31m
+                        [33mrequired[31m=[32m""[3...[39m
+[31m   [31m×[31m AdvancedFoodCalculator[2m > [22mrenderöinti[2m > [22mrenderöi käytetyt annostelutiedot -osion[39m[33m 3012[2mms[22m[39m
+[31m     → Unable to find an element with the text: /käytetyt annostelutiedot/i. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"space-y-6"[31m
+    [36m>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"rounded-xl text-stone-900 transition-all duration-200 bg-white border-stone-200 hover:shadow-md bg-gradient-to-br from-terracotta-500 to-terracotta-600 border-0 shadow-lg"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex flex-col space-y-1.5 p-6"[31m
+        [36m>[31m
+          [36m<h3[31m
+            [33mclass[31m=[32m"font-serif text-xl font-semibold leading-tight flex items-center gap-2 text-white"[31m
+          [36m>[31m
+            [36m<svg[31m
+              [33mclass[31m=[32m"lucide lucide-calculator h-5 w-5"[31m
+              [33mfill[31m=[32m"none"[31m
+              [33mheight[31m=[32m"24"[31m
+              [33mstroke[31m=[32m"currentColor"[31m
+              [33mstroke-linecap[31m=[32m"round"[31m
+              [33mstroke-linejoin[31m=[32m"round"[31m
+              [33mstroke-width[31m=[32m"2"[31m
+              [33mviewBox[31m=[32m"0 0 24 24"[31m
+              [33mwidth[31m=[32m"24"[31m
+              [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+            [36m>[31m
+              [36m<rect[31m
+                [33mheight[31m=[32m"20"[31m
+                [33mrx[31m=[32m"2"[31m
+                [33mwidth[31m=[32m"16"[31m
+                [33mx[31m=[32m"4"[31m
+                [33my[31m=[32m"2"[31m
+              [36m/>[31m
+              [36m<line[31m
+                [33mx1[31m=[32m"8"[31m
+                [33mx2[31m=[32m"16"[31m
+                [33my1[31m=[32m"6"[31m
+                [33my2[31m=[32m"6"[31m
+              [36m/>[31m
+              [36m<line[31m
+                [33mx1[31m=[32m"16"[31m
+                [33mx2[31m=[32m"16"[31m
+                [33my1[31m=[32m"14"[31m
+                [33my2[31m=[32m"18"[31m
+              [36m/>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M16 10h.01"[31m
+              [36m/>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M12 10h.01"[31m
+              [36m/>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M8 10h.01"[31m
+              [36m/>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M12 14h.01"[31m
+              [36m/>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M8 14h.01"[31m
+              [36m/>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M12 18h.01"[31m
+              [36m/>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M8 18h.01"[31m
+              [36m/>[31m
+            [36m</svg>[31m
+            [0mRuoka-annoslaskuri[0m
+          [36m</h3>[31m
+          [36m<p[31m
+            [33mclass[31m=[32m"font-sans text-sm mt-1 text-white/80"[31m
+          [36m>[31m
+            [0mLaske pennun päivittäinen ruokamäärä[0m
+          [36m</p>[31m
+        [36m</div>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"p-6 pt-0 font-sans text-base leading-relaxed text-foreground/90 space-y-4"[31m
+        [36m>[31m
+          [36m<form[31m
+            [33maria-labelledby[31m=[32m"calculator-title"[31m
+            [33mrole[31m=[32m"form"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"grid grid-cols-1 md:grid-cols-2 gap-4"[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"space-y-2"[31m
+              [36m>[31m
+                [36m<label[31m
+                  [33mclass[31m=[32m"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-white"[31m
+                  [33mfor[31m=[32m"current-weight"[31m
+                [36m>[31m
+                  [0mNykyinen paino (kg) *[0m
+                [36m</label>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"space-y-2"[31m
+                [36m>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"relative"[31m
+                  [36m>[31m
+                    [36m<input[31m
+                      [33maria-invalid[31m=[32m"false"[31m
+                      [33mclass[31m=[32m"flex w-full border font-medium transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 hover:border-[var(--color-primary-500)] hover:shadow-sm focus-visible:ring-2 focus-visible:ring-[var(--color-primary-500)] h-11 px-4 py-2 text-base rounded-xl min-h-[44px] bg-white/20 border-white/30 text-white placeholder:text-white/60"[31m
+                      [33mid[31m=[32m"current-weight"[31m
+                      [33mplaceholder[31m=[32m"esim. 3.2"[31m
+                      [33mrequired[31m=[32m""[31m
+                      [33mstep[31m=[32m"0.1"[31m
+                      [33mtype[31m=[32m"number"[31m
+                      [33mvalue[31m=[32m""[31m
+                    [36m/>[31m
+                  [36m</div>[31m
+                [36m</div>[31m
+              [36m</div>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"space-y-2"[31m
+              [36m>[31m
+                [36m<label[31m
+                  [33mclass[31m=[32m"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-white"[31m
+                  [33mfor[31m=[32m"age"[31m
+                [36m>[31m
+                  [0mIkä kuukausina *[0m
+                [36m</label>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"space-y-2"[31m
+                [36m>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"relative"[31m
+                  [36m>[31m
+                    [36m<input[31m
+                      [33maria-invalid[31m=[32m"false"[31m
+                      [33mclass[31m=[32m"flex w-full border font-medium transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 hover:border-[var(--color-primary-500)] hover:shadow-sm focus-visible:ring-2 focus-visible:ring-[var(--color-primary-500)] h-11 px-4 py-2 text-base rounded-xl min-h-[44px] bg-white/20 border-white/30 text-white placeholder:text-white/60"[31m
+                      [33mid[31m=[32m"age"[31m
+                      [33mplaceholder[31m=[32m"esim. 4"[31m
+                      [33mrequired[31m=[32m""[31m
+                      [33mtype[31m=[32m"number"[31m
+                      [33mvalue[31m=[32m""[31m
+                    [36m/>[31m
+                  [36m</div>[31m
+                [36m</div>[31m
+              [36m</div>[31m
+              [36m<div[31m
+                [33mclass[31m=[3...
+
+Ignored nodes: comments, script, style
+[36m<html>[31m
+  [36m<head />[31m
+  [36m<body>[31m
+    [36m<div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"space-y-6"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"rounded-xl text-stone-900 transition-all duration-200 bg-white border-stone-200 hover:shadow-md bg-gradient-to-br from-terracotta-500 to-terracotta-600 border-0 shadow-lg"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex flex-col space-y-1.5 p-6"[31m
+          [36m>[31m
+            [36m<h3[31m
+              [33mclass[31m=[32m"font-serif text-xl font-semibold leading-tight flex items-center gap-2 text-white"[31m
+            [36m>[31m
+              [36m<svg[31m
+                [33mclass[31m=[32m"lucide lucide-calculator h-5 w-5"[31m
+                [33mfill[31m=[32m"none"[31m
+                [33mheight[31m=[32m"24"[31m
+                [33mstroke[31m=[32m"currentColor"[31m
+                [33mstroke-linecap[31m=[32m"round"[31m
+                [33mstroke-linejoin[31m=[32m"round"[31m
+                [33mstroke-width[31m=[32m"2"[31m
+                [33mviewBox[31m=[32m"0 0 24 24"[31m
+                [33mwidth[31m=[32m"24"[31m
+                [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+              [36m>[31m
+                [36m<rect[31m
+                  [33mheight[31m=[32m"20"[31m
+                  [33mrx[31m=[32m"2"[31m
+                  [33mwidth[31m=[32m"16"[31m
+                  [33mx[31m=[32m"4"[31m
+                  [33my[31m=[32m"2"[31m
+                [36m/>[31m
+                [36m<line[31m
+                  [33mx1[31m=[32m"8"[31m
+                  [33mx2[31m=[32m"16"[31m
+                  [33my1[31m=[32m"6"[31m
+                  [33my2[31m=[32m"6"[31m
+                [36m/>[31m
+                [36m<line[31m
+                  [33mx1[31m=[32m"16"[31m
+                  [33mx2[31m=[32m"16"[31m
+                  [33my1[31m=[32m"14"[31m
+                  [33my2[31m=[32m"18"[31m
+                [36m/>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M16 10h.01"[31m
+                [36m/>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M12 10h.01"[31m
+                [36m/>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M8 10h.01"[31m
+                [36m/>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M12 14h.01"[31m
+                [36m/>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M8 14h.01"[31m
+                [36m/>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M12 18h.01"[31m
+                [36m/>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M8 18h.01"[31m
+                [36m/>[31m
+              [36m</svg>[31m
+              [0mRuoka-annoslaskuri[0m
+            [36m</h3>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"font-sans text-sm mt-1 text-white/80"[31m
+            [36m>[31m
+              [0mLaske pennun päivittäinen ruokamäärä[0m
+            [36m</p>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"p-6 pt-0 font-sans text-base leading-relaxed text-foreground/90 space-y-4"[31m
+          [36m>[31m
+            [36m<form[31m
+              [33maria-labelledby[31m=[32m"calculator-title"[31m
+              [33mrole[31m=[32m"form"[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"grid grid-cols-1 md:grid-cols-2 gap-4"[31m
+              [36m>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"space-y-2"[31m
+                [36m>[31m
+                  [36m<label[31m
+                    [33mclass[31m=[32m"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-white"[31m
+                    [33mfor[31m=[32m"current-weight"[31m
+                  [36m>[31m
+                    [0mNykyinen paino (kg) *[0m
+                  [36m</label>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"space-y-2"[31m
+                  [36m>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"relative"[31m
+                    [36m>[31m
+                      [36m<input[31m
+                        [33maria-invalid[31m=[32m"false"[31m
+                        [33mclass[31m=[32m"flex w-full border font-medium transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 hover:border-[var(--color-primary-500)] hover:shadow-sm focus-visible:ring-2 focus-visible:ring-[var(--color-primary-500)] h-11 px-4 py-2 text-base rounded-xl min-h-[44px] bg-white/20 border-white/30 text-white placeholder:text-white/60"[31m
+                        [33mid[31m=[32m"current-weight"[31m
+                        [33mplaceholder[31m=[32m"esim. 3.2"[31m
+                        [33mrequired[31m=[32m""[31m
+                        [33mstep[31m=[32m"0.1"[31m
+                        [33mtype[31m=[32m"number"[31m
+                        [33mvalue[31m=[32m""[31m
+                      [36m/>[31m
+                    [36m</div>[31m
+                  [36m</div>[31m
+                [36m</div>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"space-y-2"[31m
+                [36m>[31m
+                  [36m<label[31m
+                    [33mclass[31m=[32m"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-white"[31m
+                    [33mfor[31m=[32m"age"[31m
+                  [36m>[31m
+                    [0mIkä kuukausina *[0m
+                  [36m</label>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"space-y-2"[31m
+                  [36m>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"relative"[31m
+                    [36m>[31m
+                      [36m<input[31m
+                        [33maria-invalid[31m=[32m"false"[31m
+                        [33mclass[31m=[32m"flex w-full border font-medium transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 hover:border-[var(--color-primary-500)] hover:shadow-sm focus-visible:ring-2 focus-visible:ring-[var(--color-primary-500)] h-11 px-4 py-2 text-base rounded-xl min-h-[44px] bg-white/20 border-white/30 text-white placeholder:text-white/60"[31m
+                        [33mid[31m=[32m"age"[31m
+                        [33mplaceholder[31m=[32m"esim. 4"[31m
+                        [33mrequired[31m=[32m""[3...[39m
+   [32m✓[39m Laskentalogiikat (yksikkötestit)[2m > [22mgetAgeCategory[2m > [22mluokittelee 2-vuotiaat oikein[32m 1[2mms[22m[39m
+   [32m✓[39m Laskentalogiikat (yksikkötestit)[2m > [22mgetWeightCategory[2m > [22mluokittelee painot oikein[32m 1[2mms[22m[39m
+   [32m✓[39m Laskentalogiikat (yksikkötestit)[2m > [22mgetSizeCategory[2m > [22mluokittelee rotukoot oikein[32m 0[2mms[22m[39m
+   [32m✓[39m Laskentalogiikat (yksikkötestit)[2m > [22mACTIVITY_MULTIPLIERS[2m > [22msisältää oikeat kertoimet[32m 0[2mms[22m[39m
+   [32m✓[39m Laskentalogiikat (yksikkötestit)[2m > [22materioiden määrän laskenta[2m > [22mlaskee oikean aterioiden määrän iän mukaan[32m 0[2mms[22m[39m
+   [32m✓[39m Laskentalogiikat (yksikkötestit)[2m > [22mprosenttipohjainen laskenta[2m > [22mlaskee 7.5% nykyisestä painosta[32m 1[2mms[22m[39m
+   [32m✓[39m Laskentalogiikat (yksikkötestit)[2m > [22menergia-arvojen laskenta[2m > [22mlaskee päivittäisen energian oikein (375 kcal/100g)[32m 0[2mms[22m[39m
+   [32m✓[39m Laskentalogiikat (yksikkötestit)[2m > [22materiakoon laskenta[2m > [22mjakaa päivittäisen annoksen tasaisesti[32m 0[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 2 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m src/components/__tests__/AdvancedFoodCalculator.test.tsx[2m > [22mAdvancedFoodCalculator[2m > [22mrenderöinti[2m > [22mnäyttää lomakkeen latauksen jälkeen
+[31m[1mTestingLibraryElementError[22m[39m: Unable to find an element with the text: /edistynyt ruoka-annoslaskuri/i. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"space-y-6"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"rounded-xl text-stone-900 transition-all duration-200 bg-white border-stone-200 hover:shadow-md bg-gradient-to-br from-terracotta-500 to-terracotta-600 border-0 shadow-lg"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex flex-col space-y-1.5 p-6"[39m
+        [36m>[39m
+          [36m<h3[39m
+            [33mclass[39m=[32m"font-serif text-xl font-semibold leading-tight flex items-center gap-2 text-white"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33mclass[39m=[32m"lucide lucide-calculator h-5 w-5"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"24"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"24"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<rect[39m
+                [33mheight[39m=[32m"20"[39m
+                [33mrx[39m=[32m"2"[39m
+                [33mwidth[39m=[32m"16"[39m
+                [33mx[39m=[32m"4"[39m
+                [33my[39m=[32m"2"[39m
+              [36m/>[39m
+              [36m<line[39m
+                [33mx1[39m=[32m"8"[39m
+                [33mx2[39m=[32m"16"[39m
+                [33my1[39m=[32m"6"[39m
+                [33my2[39m=[32m"6"[39m
+              [36m/>[39m
+              [36m<line[39m
+                [33mx1[39m=[32m"16"[39m
+                [33mx2[39m=[32m"16"[39m
+                [33my1[39m=[32m"14"[39m
+                [33my2[39m=[32m"18"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M16 10h.01"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M12 10h.01"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M8 10h.01"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M12 14h.01"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M8 14h.01"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M12 18h.01"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M8 18h.01"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mRuoka-annoslaskuri[0m
+          [36m</h3>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"font-sans text-sm mt-1 text-white/80"[39m
+          [36m>[39m
+            [0mLaske pennun päivittäinen ruokamäärä[0m
+          [36m</p>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"p-6 pt-0 font-sans text-base leading-relaxed text-foreground/90 space-y-4"[39m
+        [36m>[39m
+          [36m<form[39m
+            [33maria-labelledby[39m=[32m"calculator-title"[39m
+            [33mrole[39m=[32m"form"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"grid grid-cols-1 md:grid-cols-2 gap-4"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"space-y-2"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-white"[39m
+                  [33mfor[39m=[32m"current-weight"[39m
+                [36m>[39m
+                  [0mNykyinen paino (kg) *[0m
+                [36m</label>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"space-y-2"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"relative"[39m
+                  [36m>[39m
+                    [36m<input[39m
+                      [33maria-invalid[39m=[32m"false"[39m
+                      [33mclass[39m=[32m"flex w-full border font-medium transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 hover:border-[var(--color-primary-500)] hover:shadow-sm focus-visible:ring-2 focus-visible:ring-[var(--color-primary-500)] h-11 px-4 py-2 text-base rounded-xl min-h-[44px] bg-white/20 border-white/30 text-white placeholder:text-white/60"[39m
+                      [33mid[39m=[32m"current-weight"[39m
+                      [33mplaceholder[39m=[32m"esim. 3.2"[39m
+                      [33mrequired[39m=[32m""[39m
+                      [33mstep[39m=[32m"0.1"[39m
+                      [33mtype[39m=[32m"number"[39m
+                      [33mvalue[39m=[32m""[39m
+                    [36m/>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"space-y-2"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-white"[39m
+                  [33mfor[39m=[32m"age"[39m
+                [36m>[39m
+                  [0mIkä kuukausina *[0m
+                [36m</label>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"space-y-2"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"relative"[39m
+                  [36m>[39m
+                    [36m<input[39m
+                      [33maria-invalid[39m=[32m"false"[39m
+                      [33mclass[39m=[32m"flex w-full border font-medium transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 hover:border-[var(--color-primary-500)] hover:shadow-sm focus-visible:ring-2 focus-visible:ring-[var(--color-primary-500)] h-11 px-4 py-2 text-base rounded-xl min-h-[44px] bg-white/20 border-white/30 text-white placeholder:text-white/60"[39m
+                      [33mid[39m=[32m"age"[39m
+                      [33mplaceholder[39m=[32m"esim. 4"[39m
+                      [33mrequired[39m=[32m""[39m
+                      [33mtype[39m=[32m"number"[39m
+                      [33mvalue[39m=[32m""[39m
+                    [36m/>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[3...
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"space-y-6"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"rounded-xl text-stone-900 transition-all duration-200 bg-white border-stone-200 hover:shadow-md bg-gradient-to-br from-terracotta-500 to-terracotta-600 border-0 shadow-lg"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex flex-col space-y-1.5 p-6"[39m
+          [36m>[39m
+            [36m<h3[39m
+              [33mclass[39m=[32m"font-serif text-xl font-semibold leading-tight flex items-center gap-2 text-white"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33mclass[39m=[32m"lucide lucide-calculator h-5 w-5"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mheight[39m=[32m"24"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+                [33mwidth[39m=[32m"24"[39m
+                [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+              [36m>[39m
+                [36m<rect[39m
+                  [33mheight[39m=[32m"20"[39m
+                  [33mrx[39m=[32m"2"[39m
+                  [33mwidth[39m=[32m"16"[39m
+                  [33mx[39m=[32m"4"[39m
+                  [33my[39m=[32m"2"[39m
+                [36m/>[39m
+                [36m<line[39m
+                  [33mx1[39m=[32m"8"[39m
+                  [33mx2[39m=[32m"16"[39m
+                  [33my1[39m=[32m"6"[39m
+                  [33my2[39m=[32m"6"[39m
+                [36m/>[39m
+                [36m<line[39m
+                  [33mx1[39m=[32m"16"[39m
+                  [33mx2[39m=[32m"16"[39m
+                  [33my1[39m=[32m"14"[39m
+                  [33my2[39m=[32m"18"[39m
+                [36m/>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M16 10h.01"[39m
+                [36m/>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M12 10h.01"[39m
+                [36m/>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M8 10h.01"[39m
+                [36m/>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M12 14h.01"[39m
+                [36m/>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M8 14h.01"[39m
+                [36m/>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M12 18h.01"[39m
+                [36m/>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M8 18h.01"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mRuoka-annoslaskuri[0m
+            [36m</h3>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"font-sans text-sm mt-1 text-white/80"[39m
+            [36m>[39m
+              [0mLaske pennun päivittäinen ruokamäärä[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"p-6 pt-0 font-sans text-base leading-relaxed text-foreground/90 space-y-4"[39m
+          [36m>[39m
+            [36m<form[39m
+              [33maria-labelledby[39m=[32m"calculator-title"[39m
+              [33mrole[39m=[32m"form"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"grid grid-cols-1 md:grid-cols-2 gap-4"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"space-y-2"[39m
+                [36m>[39m
+                  [36m<label[39m
+                    [33mclass[39m=[32m"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-white"[39m
+                    [33mfor[39m=[32m"current-weight"[39m
+                  [36m>[39m
+                    [0mNykyinen paino (kg) *[0m
+                  [36m</label>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"space-y-2"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"relative"[39m
+                    [36m>[39m
+                      [36m<input[39m
+                        [33maria-invalid[39m=[32m"false"[39m
+                        [33mclass[39m=[32m"flex w-full border font-medium transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 hover:border-[var(--color-primary-500)] hover:shadow-sm focus-visible:ring-2 focus-visible:ring-[var(--color-primary-500)] h-11 px-4 py-2 text-base rounded-xl min-h-[44px] bg-white/20 border-white/30 text-white placeholder:text-white/60"[39m
+                        [33mid[39m=[32m"current-weight"[39m
+                        [33mplaceholder[39m=[32m"esim. 3.2"[39m
+                        [33mrequired[39m=[32m""[39m
+                        [33mstep[39m=[32m"0.1"[39m
+                        [33mtype[39m=[32m"number"[39m
+                        [33mvalue[39m=[32m""[39m
+                      [36m/>[39m
+                    [36m</div>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"space-y-2"[39m
+                [36m>[39m
+                  [36m<label[39m
+                    [33mclass[39m=[32m"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-white"[39m
+                    [33mfor[39m=[32m"age"[39m
+                  [36m>[39m
+                    [0mIkä kuukausina *[0m
+                  [36m</label>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"space-y-2"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"relative"[39m
+                    [36m>[39m
+                      [36m<input[39m
+                        [33maria-invalid[39m=[32m"false"[39m
+                        [33mclass[39m=[32m"flex w-full border font-medium transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 hover:border-[var(--color-primary-500)] hover:shadow-sm focus-visible:ring-2 focus-visible:ring-[var(--color-primary-500)] h-11 px-4 py-2 text-base rounded-xl min-h-[44px] bg-white/20 border-white/30 text-white placeholder:text-white/60"[39m
+                        [33mid[39m=[32m"age"[39m
+                        [33mplaceholder[39m=[32m"esim. 4"[39m
+                        [33mrequired[39m=[32m""[3...
+[90m [2m❯[22m Proxy.waitFor node_modules/@testing-library/dom/dist/wait-for.js:[2m163:27[22m[39m
+[36m [2m❯[22m src/components/__tests__/AdvancedFoodCalculator.test.tsx:[2m101:13[22m[39m
+    [90m 99| [39m      [34mrender[39m([33m<[39m[33mAdvancedFoodCalculator[39m [33muser[39m[33m=[39m[33m{[39mmockUser[33m}[39m [33m/[39m[33m>[39m)
+    [90m100| [39m
+    [90m101| [39m      [35mawait[39m [34mwaitFor[39m(() [33m=>[39m {
+    [90m   | [39m            [31m^[39m
+    [90m102| [39m        [90m// Tarkista että komponentti renderöityy (otsikko tai sisältö)[39m
+    [90m103| [39m        expect(screen.getByText(/edistynyt ruoka-annoslaskuri/i)).toBe…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/components/__tests__/AdvancedFoodCalculator.test.tsx[2m > [22mAdvancedFoodCalculator[2m > [22mrenderöinti[2m > [22mrenderöi käytetyt annostelutiedot -osion
+[31m[1mTestingLibraryElementError[22m[39m: Unable to find an element with the text: /käytetyt annostelutiedot/i. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"space-y-6"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"rounded-xl text-stone-900 transition-all duration-200 bg-white border-stone-200 hover:shadow-md bg-gradient-to-br from-terracotta-500 to-terracotta-600 border-0 shadow-lg"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex flex-col space-y-1.5 p-6"[39m
+        [36m>[39m
+          [36m<h3[39m
+            [33mclass[39m=[32m"font-serif text-xl font-semibold leading-tight flex items-center gap-2 text-white"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33mclass[39m=[32m"lucide lucide-calculator h-5 w-5"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"24"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"24"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<rect[39m
+                [33mheight[39m=[32m"20"[39m
+                [33mrx[39m=[32m"2"[39m
+                [33mwidth[39m=[32m"16"[39m
+                [33mx[39m=[32m"4"[39m
+                [33my[39m=[32m"2"[39m
+              [36m/>[39m
+              [36m<line[39m
+                [33mx1[39m=[32m"8"[39m
+                [33mx2[39m=[32m"16"[39m
+                [33my1[39m=[32m"6"[39m
+                [33my2[39m=[32m"6"[39m
+              [36m/>[39m
+              [36m<line[39m
+                [33mx1[39m=[32m"16"[39m
+                [33mx2[39m=[32m"16"[39m
+                [33my1[39m=[32m"14"[39m
+                [33my2[39m=[32m"18"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M16 10h.01"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M12 10h.01"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M8 10h.01"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M12 14h.01"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M8 14h.01"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M12 18h.01"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M8 18h.01"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mRuoka-annoslaskuri[0m
+          [36m</h3>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"font-sans text-sm mt-1 text-white/80"[39m
+          [36m>[39m
+            [0mLaske pennun päivittäinen ruokamäärä[0m
+          [36m</p>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"p-6 pt-0 font-sans text-base leading-relaxed text-foreground/90 space-y-4"[39m
+        [36m>[39m
+          [36m<form[39m
+            [33maria-labelledby[39m=[32m"calculator-title"[39m
+            [33mrole[39m=[32m"form"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"grid grid-cols-1 md:grid-cols-2 gap-4"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"space-y-2"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-white"[39m
+                  [33mfor[39m=[32m"current-weight"[39m
+                [36m>[39m
+                  [0mNykyinen paino (kg) *[0m
+                [36m</label>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"space-y-2"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"relative"[39m
+                  [36m>[39m
+                    [36m<input[39m
+                      [33maria-invalid[39m=[32m"false"[39m
+                      [33mclass[39m=[32m"flex w-full border font-medium transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 hover:border-[var(--color-primary-500)] hover:shadow-sm focus-visible:ring-2 focus-visible:ring-[var(--color-primary-500)] h-11 px-4 py-2 text-base rounded-xl min-h-[44px] bg-white/20 border-white/30 text-white placeholder:text-white/60"[39m
+                      [33mid[39m=[32m"current-weight"[39m
+                      [33mplaceholder[39m=[32m"esim. 3.2"[39m
+                      [33mrequired[39m=[32m""[39m
+                      [33mstep[39m=[32m"0.1"[39m
+                      [33mtype[39m=[32m"number"[39m
+                      [33mvalue[39m=[32m""[39m
+                    [36m/>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"space-y-2"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-white"[39m
+                  [33mfor[39m=[32m"age"[39m
+                [36m>[39m
+                  [0mIkä kuukausina *[0m
+                [36m</label>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"space-y-2"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"relative"[39m
+                  [36m>[39m
+                    [36m<input[39m
+                      [33maria-invalid[39m=[32m"false"[39m
+                      [33mclass[39m=[32m"flex w-full border font-medium transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 hover:border-[var(--color-primary-500)] hover:shadow-sm focus-visible:ring-2 focus-visible:ring-[var(--color-primary-500)] h-11 px-4 py-2 text-base rounded-xl min-h-[44px] bg-white/20 border-white/30 text-white placeholder:text-white/60"[39m
+                      [33mid[39m=[32m"age"[39m
+                      [33mplaceholder[39m=[32m"esim. 4"[39m
+                      [33mrequired[39m=[32m""[39m
+                      [33mtype[39m=[32m"number"[39m
+                      [33mvalue[39m=[32m""[39m
+                    [36m/>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[3...
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"space-y-6"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"rounded-xl text-stone-900 transition-all duration-200 bg-white border-stone-200 hover:shadow-md bg-gradient-to-br from-terracotta-500 to-terracotta-600 border-0 shadow-lg"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex flex-col space-y-1.5 p-6"[39m
+          [36m>[39m
+            [36m<h3[39m
+              [33mclass[39m=[32m"font-serif text-xl font-semibold leading-tight flex items-center gap-2 text-white"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33mclass[39m=[32m"lucide lucide-calculator h-5 w-5"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mheight[39m=[32m"24"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+                [33mwidth[39m=[32m"24"[39m
+                [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+              [36m>[39m
+                [36m<rect[39m
+                  [33mheight[39m=[32m"20"[39m
+                  [33mrx[39m=[32m"2"[39m
+                  [33mwidth[39m=[32m"16"[39m
+                  [33mx[39m=[32m"4"[39m
+                  [33my[39m=[32m"2"[39m
+                [36m/>[39m
+                [36m<line[39m
+                  [33mx1[39m=[32m"8"[39m
+                  [33mx2[39m=[32m"16"[39m
+                  [33my1[39m=[32m"6"[39m
+                  [33my2[39m=[32m"6"[39m
+                [36m/>[39m
+                [36m<line[39m
+                  [33mx1[39m=[32m"16"[39m
+                  [33mx2[39m=[32m"16"[39m
+                  [33my1[39m=[32m"14"[39m
+                  [33my2[39m=[32m"18"[39m
+                [36m/>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M16 10h.01"[39m
+                [36m/>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M12 10h.01"[39m
+                [36m/>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M8 10h.01"[39m
+                [36m/>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M12 14h.01"[39m
+                [36m/>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M8 14h.01"[39m
+                [36m/>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M12 18h.01"[39m
+                [36m/>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M8 18h.01"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mRuoka-annoslaskuri[0m
+            [36m</h3>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"font-sans text-sm mt-1 text-white/80"[39m
+            [36m>[39m
+              [0mLaske pennun päivittäinen ruokamäärä[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"p-6 pt-0 font-sans text-base leading-relaxed text-foreground/90 space-y-4"[39m
+          [36m>[39m
+            [36m<form[39m
+              [33maria-labelledby[39m=[32m"calculator-title"[39m
+              [33mrole[39m=[32m"form"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"grid grid-cols-1 md:grid-cols-2 gap-4"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"space-y-2"[39m
+                [36m>[39m
+                  [36m<label[39m
+                    [33mclass[39m=[32m"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-white"[39m
+                    [33mfor[39m=[32m"current-weight"[39m
+                  [36m>[39m
+                    [0mNykyinen paino (kg) *[0m
+                  [36m</label>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"space-y-2"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"relative"[39m
+                    [36m>[39m
+                      [36m<input[39m
+                        [33maria-invalid[39m=[32m"false"[39m
+                        [33mclass[39m=[32m"flex w-full border font-medium transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 hover:border-[var(--color-primary-500)] hover:shadow-sm focus-visible:ring-2 focus-visible:ring-[var(--color-primary-500)] h-11 px-4 py-2 text-base rounded-xl min-h-[44px] bg-white/20 border-white/30 text-white placeholder:text-white/60"[39m
+                        [33mid[39m=[32m"current-weight"[39m
+                        [33mplaceholder[39m=[32m"esim. 3.2"[39m
+                        [33mrequired[39m=[32m""[39m
+                        [33mstep[39m=[32m"0.1"[39m
+                        [33mtype[39m=[32m"number"[39m
+                        [33mvalue[39m=[32m""[39m
+                      [36m/>[39m
+                    [36m</div>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"space-y-2"[39m
+                [36m>[39m
+                  [36m<label[39m
+                    [33mclass[39m=[32m"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-white"[39m
+                    [33mfor[39m=[32m"age"[39m
+                  [36m>[39m
+                    [0mIkä kuukausina *[0m
+                  [36m</label>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"space-y-2"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"relative"[39m
+                    [36m>[39m
+                      [36m<input[39m
+                        [33maria-invalid[39m=[32m"false"[39m
+                        [33mclass[39m=[32m"flex w-full border font-medium transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 hover:border-[var(--color-primary-500)] hover:shadow-sm focus-visible:ring-2 focus-visible:ring-[var(--color-primary-500)] h-11 px-4 py-2 text-base rounded-xl min-h-[44px] bg-white/20 border-white/30 text-white placeholder:text-white/60"[39m
+                        [33mid[39m=[32m"age"[39m
+                        [33mplaceholder[39m=[32m"esim. 4"[39m
+                        [33mrequired[39m=[32m""[3...
+[90m [2m❯[22m Proxy.waitFor node_modules/@testing-library/dom/dist/wait-for.js:[2m163:27[22m[39m
+[36m [2m❯[22m src/components/__tests__/AdvancedFoodCalculator.test.tsx:[2m110:13[22m[39m
+    [90m108| [39m      [34mrender[39m([33m<[39m[33mAdvancedFoodCalculator[39m [33muser[39m[33m=[39m[33m{[39mmockUser[33m}[39m [33m/[39m[33m>[39m)
+    [90m109| [39m
+    [90m110| [39m      [35mawait[39m [34mwaitFor[39m(() [33m=>[39m {
+    [90m   | [39m            [31m^[39m
+    [90m111| [39m        expect(screen.getByText(/käytetyt annostelutiedot/i)).toBeInTh…
+    [90m112| [39m      }[33m,[39m { timeout[33m:[39m [34m3000[39m })
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m9 passed[39m[22m[90m (11)[39m
+[2m   Start at [22m 19:09:27
+[2m   Duration [22m 9.20s[2m (transform 274ms, setup 197ms, collect 742ms, tests 6.10s, environment 1.51s, prepare 254ms)[22m
+
