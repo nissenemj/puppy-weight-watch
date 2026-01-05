@@ -20,6 +20,7 @@ const Guides = lazy(() => import("./pages/Guides"));
 const PuppyGuide = lazy(() => import("./pages/PuppyGuide"));
 const SafetyPage = lazy(() => import("./pages/SafetyPage"));
 const SocializationGuide = lazy(() => import("./pages/SocializationGuide"));
+const RelaxationProtocolGuide = lazy(() => import("./pages/RelaxationProtocolGuide"));
 
 // Legacy support - will redirect to new structure
 const InfoHome = lazy(() => import("./pages/InfoHome"));
@@ -108,6 +109,10 @@ const router = createBrowserRouter([
       {
         path: "/guides/safety",
         element: withSuspense(SafetyPage),
+      },
+      {
+        path: "/guides/relaxation-protocol",
+        element: withSuspense(RelaxationProtocolGuide),
       },
       {
         path: "/guides/feeding",

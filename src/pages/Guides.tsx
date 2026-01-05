@@ -15,7 +15,8 @@ import {
   Utensils,
   BookOpen,
   ArrowRight,
-  CheckCircle
+  CheckCircle,
+  Brain
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { entranceAnimations } from '@/animations';
@@ -35,7 +36,7 @@ const Guides = () => {
       icon: Users,
       title: 'Sosialisaatio-opas',
       description: 'Opettele sosialisoimaan pentusi turvallisesti ja tehokkaasti',
-      href: '/guides/socialization', 
+      href: '/guides/socialization',
       badge: 'Tärkeä',
       color: 'secondary',
       features: ['Muut koirat', 'Ihmiset', 'Ympäristöt', 'Äänimaisema']
@@ -57,6 +58,15 @@ const Guides = () => {
       badge: 'Päivitetty',
       color: 'success',
       features: ['Ruokamäärät', 'Ruokinta-ajat', 'Ruokavalio', 'Herkut']
+    },
+    {
+      icon: Brain,
+      title: 'Rentoutusprotokolla',
+      description: 'Karen Overallin 15 päivän ohjelma koiran rauhoittamiseen ja impulssikontrolliin',
+      href: '/guides/relaxation-protocol',
+      badge: 'Uusi',
+      color: 'primary',
+      features: ['Fysiologinen rentoutus', 'Impulssikontrolli', 'Reaktiivisuus', '15 päivän ohjelma']
     }
   ];
 
@@ -90,52 +100,52 @@ const Guides = () => {
 
           {/* Hero Content - top right */}
           <div className="relative z-10 max-w-lg text-right pt-8 md:pt-16 pr-4 md:pr-12">
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={entranceAnimations.staggerContainer}
-            className="space-y-5"
-          >
-            <motion.div variants={entranceAnimations.staggerChild} className="flex justify-end">
-              <Badge className="bg-white/20 backdrop-blur-md border-white/30 text-white px-4 py-1.5 text-sm shadow-sm">
-                <BookOpen className="w-3.5 h-3.5 mr-2 text-terracotta-300" />
-                Asiantuntija-oppaat
-              </Badge>
-            </motion.div>
-
-            <motion.h1
-              variants={entranceAnimations.staggerChild}
-              className="text-3xl md:text-5xl lg:text-6xl font-serif font-bold text-white tracking-tight leading-tight"
-              style={{ textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}
-              id="guides-title"
-            >
-              Koiranpennun <br />
-              <span className="text-terracotta-300">Hoito-oppaat</span>
-            </motion.h1>
-
-            <motion.p
-              variants={entranceAnimations.staggerChild}
-              className="text-base md:text-lg text-white/90 leading-relaxed"
-              style={{ textShadow: '0 1px 4px rgba(0,0,0,0.5)' }}
-            >
-              Kattavat oppaat terveen ja onnellisen koiranpennun kasvattamiseen.
-            </motion.p>
-
             <motion.div
-              variants={entranceAnimations.staggerChild}
-              className="flex flex-wrap justify-end gap-x-5 gap-y-2 text-sm font-medium text-white/80"
+              initial="hidden"
+              animate="visible"
+              variants={entranceAnimations.staggerContainer}
+              className="space-y-5"
             >
-              <div className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-terracotta-300" />
-                <span>Asiantuntijoiden laatima</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-terracotta-300" />
-                <span>Säännöllisesti päivitetty</span>
-              </div>
+              <motion.div variants={entranceAnimations.staggerChild} className="flex justify-end">
+                <Badge className="bg-white/20 backdrop-blur-md border-white/30 text-white px-4 py-1.5 text-sm shadow-sm">
+                  <BookOpen className="w-3.5 h-3.5 mr-2 text-terracotta-300" />
+                  Asiantuntija-oppaat
+                </Badge>
+              </motion.div>
+
+              <motion.h1
+                variants={entranceAnimations.staggerChild}
+                className="text-3xl md:text-5xl lg:text-6xl font-serif font-bold text-white tracking-tight leading-tight"
+                style={{ textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}
+                id="guides-title"
+              >
+                Koiranpennun <br />
+                <span className="text-terracotta-300">Hoito-oppaat</span>
+              </motion.h1>
+
+              <motion.p
+                variants={entranceAnimations.staggerChild}
+                className="text-base md:text-lg text-white/90 leading-relaxed"
+                style={{ textShadow: '0 1px 4px rgba(0,0,0,0.5)' }}
+              >
+                Kattavat oppaat terveen ja onnellisen koiranpennun kasvattamiseen.
+              </motion.p>
+
+              <motion.div
+                variants={entranceAnimations.staggerChild}
+                className="flex flex-wrap justify-end gap-x-5 gap-y-2 text-sm font-medium text-white/80"
+              >
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 text-terracotta-300" />
+                  <span>Asiantuntijoiden laatima</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 text-terracotta-300" />
+                  <span>Säännöllisesti päivitetty</span>
+                </div>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        </div>
+          </div>
         </div>
       </section>
 
@@ -162,11 +172,11 @@ const Guides = () => {
                         </Badge>
                       </div>
                     </div>
-                    
+
                     <CardTitle id={`guide-${index}-title`} className="text-h3 mb-2 text-foreground font-semibold">
                       {guide.title}
                     </CardTitle>
-                    
+
                     <CardDescription className="text-body-base">
                       {guide.description}
                     </CardDescription>
@@ -186,7 +196,7 @@ const Guides = () => {
                     </div>
 
                     <Link to={guide.href} aria-describedby={`guide-${index}-title`}>
-                      <Button 
+                      <Button
                         className="w-full group-hover:bg-[var(--color-primary-700)] transition-colors touch-target focus-enhanced"
                         aria-label={`Lue ${guide.title} -opas`}
                       >
