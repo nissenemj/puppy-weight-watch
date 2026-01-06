@@ -33,6 +33,9 @@ const Contact = lazy(() => import("./pages/Contact"));
 // Blog page
 const Blog = lazy(() => import("./pages/Blog"));
 
+// Admin pages
+const AdminMessages = lazy(() => import("./pages/admin/AdminMessages"));
+
 // Legal pages
 const PrivacyPolicy = lazy(() => import("./pages/legal/PrivacyPolicy"));
 const TermsOfService = lazy(() => import("./pages/legal/TermsOfService"));
@@ -158,6 +161,12 @@ const router = createBrowserRouter([
       {
         path: "/blog",
         element: withSuspense(Blog),
+      },
+
+      // Admin pages
+      {
+        path: "/admin/messages",
+        element: withSuspense(AdminMessages),
       },
 
       // Legal pages
