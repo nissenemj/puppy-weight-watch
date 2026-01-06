@@ -9,9 +9,12 @@ import { entranceAnimations, hoverAnimations } from '@/animations';
 import { useNewsletterSubscription } from '@/hooks/useNewsletterSubscription';
 import { trackNewsletterSubscription, trackFooterLinkClicked } from '@/utils/analytics';
 const Footer = () => {
-  const { subscribe, isLoading, isSubscribed } = useNewsletterSubscription();
+  const {
+    subscribe,
+    isLoading,
+    isSubscribed
+  } = useNewsletterSubscription();
   const [email, setEmail] = useState('');
-
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (email.trim()) {
@@ -71,10 +74,9 @@ const Footer = () => {
   }];
   return <footer className="relative">
       {/* Newsletter Section */}
-      <section
-        className="full-width-section py-12 sm:py-16 px-4 sm:px-6"
-        style={{ background: 'linear-gradient(135deg, #FF6B35 0%, #FF8E72 100%)' }}
-      >
+      <section className="full-width-section py-12 sm:py-16 px-4 sm:px-6" style={{
+      background: 'linear-gradient(135deg, #FF6B35 0%, #FF8E72 100%)'
+    }}>
         <div className="full-width-content">
           <motion.div initial={{
           opacity: 0,
@@ -96,48 +98,22 @@ const Footer = () => {
               
               
               <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="sinun@email.fi"
-                  className="flex-1 px-6 py-3 rounded-xl bg-white/90 backdrop-blur text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50 disabled:opacity-50"
-                  disabled={isLoading || isSubscribed}
-                  required
-                  aria-label="Sähköpostiosoite uutiskirjettä varten"
-                  aria-describedby="newsletter-description"
-                />
-                <Button 
-                  type="submit"
-                  size="lg" 
-                  className="bg-white text-[var(--color-primary-600)] hover:bg-white/90 disabled:opacity-50"
-                  disabled={isLoading || isSubscribed || !email.trim()}
-                >
-                  {isLoading ? (
-                    <>
+                <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="sinun@email.fi" className="flex-1 px-6 py-3 rounded-xl bg-white/90 backdrop-blur text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50 disabled:opacity-50" disabled={isLoading || isSubscribed} required aria-label="Sähköpostiosoite uutiskirjettä varten" aria-describedby="newsletter-description" />
+                <Button type="submit" size="lg" className="bg-white text-[var(--color-primary-600)] hover:bg-white/90 disabled:opacity-50" disabled={isLoading || isSubscribed || !email.trim()}>
+                  {isLoading ? <>
                       <Loader2 className="w-5 h-5 mr-2 animate-spin" />
                       Tilataan...
-                    </>
-                  ) : isSubscribed ? (
-                    <>
+                    </> : isSubscribed ? <>
                       <CheckCircle className="w-5 h-5 mr-2" />
                       Tilattu!
-                    </>
-                  ) : (
-                    <>
+                    </> : <>
                       Tilaa uutiskirje
                       <ArrowRight className="w-5 h-5 ml-2" />
-                    </>
-                  )}
+                    </>}
                 </Button>
               </form>
               
-              <p
-                id="newsletter-description"
-                className="text-body-sm text-white/70 mt-4"
-                role="status"
-                aria-live="polite"
-              >
+              <p id="newsletter-description" className="text-body-sm text-white/70 mt-4" role="status" aria-live="polite">
                 <CheckCircle className="w-4 h-4 inline mr-1" />
                 Ei roskapostia. Voit peruuttaa milloin tahansa.
               </p>
@@ -147,10 +123,9 @@ const Footer = () => {
       </section>
 
       {/* Main Footer */}
-      <div
-        className="text-white"
-        style={{ background: 'linear-gradient(135deg, #171717 0%, #262626 50%, #7c2d12 100%)' }}
-      >
+      <div className="text-white" style={{
+      background: 'linear-gradient(135deg, #171717 0%, #262626 50%, #7c2d12 100%)'
+    }}>
         <div className="full-width-section py-12 sm:py-16 px-4 sm:px-6">
           <div className="full-width-content">
             <div className="flex flex-col gap-8 lg:grid lg:grid-cols-12 lg:gap-12">
@@ -182,14 +157,7 @@ const Footer = () => {
 
                 {/* Contact */}
                 <div className="flex gap-3 mb-8">
-                  <a
-                    href="mailto:nissenemj@gmail.com"
-                    className="min-w-[44px] min-h-[44px] w-11 h-11 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center text-white shadow-lg hover:scale-110 transition-transform touch-target"
-                    aria-label="Lähetä sähköposti: nissenemj@gmail.com"
-                    onClick={() => trackFooterLinkClicked('contact', 'Email', 'mailto:nissenemj@gmail.com')}
-                  >
-                    <Mail className="w-5 h-5" />
-                  </a>
+                  
                 </div>
 
               </motion.div>
@@ -211,11 +179,7 @@ const Footer = () => {
                   {quickLinks.map((link, index) => {
                   const Icon = link.icon;
                   return <li key={index}>
-                        <Link
-                          to={link.href}
-                          className="flex items-center gap-3 text-white/70 hover:text-white transition-colors group"
-                          onClick={() => trackFooterLinkClicked('quick-links', link.label, link.href)}
-                        >
+                        <Link to={link.href} className="flex items-center gap-3 text-white/70 hover:text-white transition-colors group" onClick={() => trackFooterLinkClicked('quick-links', link.label, link.href)}>
                           <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
                             <Icon className="w-4 h-4" />
                           </div>
@@ -244,11 +208,7 @@ const Footer = () => {
                 <h4 className="text-h5 font-semibold mb-6 text-white/90">Oppaat</h4>
                 <ul className="space-y-3">
                   {supportLinks.map((link, index) => <li key={index}>
-                      <Link
-                        to={link.href}
-                        className="text-white/70 hover:text-white transition-colors text-body-sm"
-                        onClick={() => trackFooterLinkClicked('guides', link.label, link.href)}
-                      >
+                      <Link to={link.href} className="text-white/70 hover:text-white transition-colors text-body-sm" onClick={() => trackFooterLinkClicked('guides', link.label, link.href)}>
                         {link.label}
                       </Link>
                     </li>)}
@@ -270,11 +230,7 @@ const Footer = () => {
                 <h4 className="text-h5 font-semibold mb-6 text-white/90">Juridiset</h4>
                 <ul className="space-y-3">
                   {legalLinks.map((link, index) => <li key={index}>
-                      <Link
-                        to={link.href}
-                        className="text-white/70 hover:text-white transition-colors text-body-sm"
-                        onClick={() => trackFooterLinkClicked('legal', link.label, link.href)}
-                      >
+                      <Link to={link.href} className="text-white/70 hover:text-white transition-colors text-body-sm" onClick={() => trackFooterLinkClicked('legal', link.label, link.href)}>
                         {link.label}
                       </Link>
                     </li>)}
