@@ -67,20 +67,39 @@ export default function ContactForm({ onSubmit }: ContactFormProps) {
     setIsSubmitting(true);
 
     try {
-      // Save to Supabase (if table exists) or invoke edge function
-      const { error } = await supabase.functions.invoke('send-contact-email', {
-        body: {
+      // Rate limiting: max 3 submissions per hour
+      const rateLimitKey = 'contact_form_submissions';
+      const submissions = JSON.parse(localStorage.getItem(rateLimitKey) || '[]') as number[];
+      const oneHourAgo = Date.now() - 3600000;
+      const recentSubmissions = submissions.filter((t: number) => t > oneHourAgo);
+      
+      if (recentSubmissions.length >= 3) {
+        toast({
+          title: 'Liian monta viestiä',
+          description: 'Voit lähettää korkeintaan 3 viestiä tunnissa.',
+          variant: 'destructive'
+        });
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Save to Supabase database
+      const { error } = await supabase
+        .from('contact_messages')
+        .insert({
           name: formData.name,
           email: formData.email,
-          message: formData.message,
-          to: 'nissenemj@gmail.com'
-        }
-      });
+          message: formData.message
+        });
 
       if (error) {
-        console.error('Edge function error:', error);
-        // Fallback: just log and show success (for now)
+        console.error('Database error:', error);
+        throw new Error('Viestin tallennus epäonnistui');
       }
+
+      // Update rate limit
+      recentSubmissions.push(Date.now());
+      localStorage.setItem(rateLimitKey, JSON.stringify(recentSubmissions));
 
       if (onSubmit) {
         onSubmit({ name: formData.name, email: formData.email, message: formData.message });
