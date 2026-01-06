@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/componen
 import { supabase } from '@/integrations/supabase/client'
 import MeshBackground from '@/components/MeshBackground'
 import SEO from '@/components/SEO'
+import AdBanner from '@/components/AdBanner'
 
 interface DashboardProps {
     user: User
@@ -200,6 +201,11 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
                                 </Link>
                             </CardContent>
                         </Card>
+
+                        {/* Ad Banner - Visible as 4th card */}
+                        <div className="md:col-span-2 lg:col-span-1 flex justify-center">
+                            <AdBanner variant="rectangle" className="w-full max-w-sm h-full" />
+                        </div>
 
                     </div>
                 )}
