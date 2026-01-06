@@ -30,6 +30,9 @@ const FoodTypes = lazy(() => import("./pages/FoodTypes"));
 // Contact page
 const Contact = lazy(() => import("./pages/Contact"));
 
+// Blog page
+const Blog = lazy(() => import("./pages/Blog"));
+
 // Legal pages
 const PrivacyPolicy = lazy(() => import("./pages/legal/PrivacyPolicy"));
 const TermsOfService = lazy(() => import("./pages/legal/TermsOfService"));
@@ -149,6 +152,12 @@ const router = createBrowserRouter([
       {
         path: "/contact",
         element: withSuspense(Contact),
+      },
+
+      // Blog page
+      {
+        path: "/blog",
+        element: withSuspense(Blog),
       },
 
       // Legal pages

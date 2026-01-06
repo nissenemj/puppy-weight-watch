@@ -17,14 +17,28 @@ const FORMSPREE_FORM_ID = 'xbdlaeel';
 const Contact = () => {
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const [formStartTime] = useState<number>(Date.now());
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setStatus('submitting');
-    setErrorMessage('');
 
     const form = e.currentTarget;
     const formData = new FormData(form);
+
+    // Bot protection: Check honeypot
+    if (formData.get('_gotcha')) {
+      setStatus('success'); // Fake success for bots
+      return;
+    }
+
+    // Bot protection: Time check (must be at least 3 seconds)
+    if (Date.now() - formStartTime < 3000) {
+      setStatus('success'); // Fake success for bots
+      return;
+    }
+
+    setStatus('submitting');
+    setErrorMessage('');
 
     try {
       const response = await fetch(`https://formspree.io/f/${FORMSPREE_FORM_ID}`, {
@@ -124,6 +138,9 @@ const Contact = () => {
                 </motion.div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-5">
+                  {/* Honeypot field - hidden from users, bots will fill it */}
+                  <input type="text" name="_gotcha" style={{ display: 'none' }} tabIndex={-1} autoComplete="off" />
+
                   <div className="space-y-2">
                     <Label htmlFor="name">Nimi *</Label>
                     <Input
