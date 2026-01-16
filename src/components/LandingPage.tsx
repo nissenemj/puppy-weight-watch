@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Badge } from '@/components/ui/badge'
 import SEO from '@/components/SEO'
 import FAQ from '@/components/FAQ'
+import PartnerBanner from '@/components/PartnerBanner'
 import MeshBackground from '@/components/MeshBackground'
 import { createWebApplicationSchema, createWeightTrackingSchema, createFAQSchema } from '@/utils/structuredData'
 import { trackHeroCTAClicked, trackPageViewed } from '@/utils/analytics'
@@ -97,8 +98,8 @@ const LandingPage = () => {
                 url={window.location.origin}
             />
 
-            {/* Video Hero Section - pt-20 for fixed navigation, contained with rounded corners */}
-            <section className="container px-4 md:px-6 mx-auto pt-20 md:pt-24">
+            {/* Video Hero Section - pt-24/pt-28 for fixed navigation, contained with rounded corners */}
+            <section className="container px-4 md:px-6 mx-auto pt-24 md:pt-28">
                 <div className="relative rounded-2xl overflow-hidden min-h-[60vh] md:min-h-[70vh] flex items-start justify-end">
                     {/* Video Background */}
                     <video
@@ -219,6 +220,11 @@ const LandingPage = () => {
                         </motion.div>
                     ))}
                 </div>
+            </section>
+
+            {/* Partner Banner */}
+            <section className="container px-4 md:px-6 mx-auto">
+                <PartnerBanner />
             </section>
 
             {/* FAQ Section */}

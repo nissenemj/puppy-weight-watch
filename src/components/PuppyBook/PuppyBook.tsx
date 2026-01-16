@@ -19,18 +19,23 @@ import {
   Users,
   Trophy,
   Target
-} from '@/utils/iconImports';
-import { User } from '@supabase/supabase-js';
+} from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Navigation } from '@/components/Navigation';
-import AppLogo from '@/components/AppLogo';
-// Navigation is now handled by the main Navigation component
+import { useUser } from '@/contexts/UserContext';
+
+// Extracted components
+import { PuppyBookSkeleton } from '@/components/features/puppy-book/PuppyBookSkeleton';
+import { CreateBookPrompt } from '@/components/features/puppy-book/CreateBookPrompt';
+import { PuppyBookNavigation } from '@/components/features/puppy-book/PuppyBookNavigation';
+import { DEFAULT_MILESTONES } from '@/data/constants';
+
+// Sub-components
 import MonthlyTracker from './MonthlyTracker';
 import Timeline from './Timeline';
 import Milestones from './Milestones';
 import MemoryGallery from './MemoryGallery';
-
 import Leaderboard from './Leaderboard';
 import WeeklyChallenges from './WeeklyChallenges';
 import UserSpotlight from './UserSpotlight';
@@ -40,92 +45,20 @@ import FloatingActionButton from './FloatingActionButton';
 import ShareDialog from './ShareDialog';
 import SettingsDialog from './SettingsDialog';
 import PuppyProfileEditor from './PuppyProfileEditor';
-import { ImageUploader } from './ImageUploader';
-import happyPuppy from '@/assets/happy-puppy.png';
-import pawPrints from '@/assets/paw-prints.png';
-import puppyBookIcon from '@/assets/puppy-book-icon.png';
-import welcomeIllustration from '@/assets/welcome-illustration.png';
-import { calculatePuppyAge, getMonthNumberFromAge, getDefaultBirthDate } from '@/utils/puppyAge';
 import PuppyBookSelector from './PuppyBookSelector';
 
-// Tyyppimäärittelyt
-interface PuppyBookData {
-  id: string;
-  puppy_id?: string;
-  owner_id: string;
-  title: string;
-  birth_date?: string;
-  cover_image_url?: string;
-  theme: Record<string, unknown>;
-  privacy_settings: Record<string, unknown>;
-  created_at: string;
-  updated_at: string;
-}
-
-interface TimelineEntry {
-  id: string;
-  book_id: string;
-  entry_type: string;
-  title: string;
-  description?: string;
-  entry_date: string;
-  metadata: Record<string, unknown>;
-  is_highlight: boolean;
-  created_by?: string;
-  created_at: string;
-  updated_at?: string;
-}
-
-interface Memory {
-  id: string;
-  book_id: string;
-  timeline_entry_id?: string;
-  content_type: string;
-  content_url?: string;
-  caption?: string;
-  tags: string[];
-  location?: Record<string, unknown>;
-  created_by?: string;
-  created_at: string;
-  updated_at?: string;
-  reactions?: MemoryReaction[];
-  comments?: MemoryComment[];
-}
-
-interface MemoryReaction {
-  id: string;
-  memory_id: string;
-  user_id: string;
-  reaction_type: string;
-  created_at: string;
-}
-
-interface MemoryComment {
-  id: string;
-  memory_id: string;
-  user_id: string;
-  comment_text: string;
-  created_at: string;
-}
-
-interface Milestone {
-  id: string;
-  book_id: string;
-  title: string;
-  description?: string;
-  target_age_weeks?: number;
-  completed: boolean;
-  completed_at?: string;
-  display_order: number;
-  created_at: string;
-}
+// Utilities and Types
+import { getMonthNumberFromAge, getDefaultBirthDate } from '@/utils/puppyAge';
+import type { PuppyBook as PuppyBookType, TimelineEntry, Memory, Milestone, MemoryReaction, MemoryComment } from '@/types/dog';
 
 // Pääkomponentti
 const PuppyBook: React.FC = () => {
+  const { user, loading: userLoading } = useUser();
+  const { toast } = useToast();
+
   const [activeSection, setActiveSection] = useState('monthly');
-  const [book, setBook] = useState<PuppyBookData | null>(null);
+  const [book, setBook] = useState<PuppyBookType | null>(null);
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<User | null>(null);
   const [selectedBookId, setSelectedBookId] = useState<string>('');
   const [selectedMonth, setSelectedMonth] = useState(0);
   const [showFloatingAction, setShowFloatingAction] = useState(false);
@@ -133,45 +66,21 @@ const PuppyBook: React.FC = () => {
   const [showSettingsDialog, setShowSettingsDialog] = useState(false);
   const [showProfileEditor, setShowProfileEditor] = useState(false);
   const memoryGalleryRef = React.useRef<(() => void) | null>(null);
-  const { toast } = useToast();
 
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    loadUser();
-  }, []);
-
-  const loadUser = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      // Create a timeout promise
-      const timeoutPromise = new Promise((_, reject) => {
-        setTimeout(() => reject(new Error('Timeout')), 10000); // 10s timeout
-      });
-
-      // Race between auth check and timeout
-      const { data } = await Promise.race([
-        supabase.auth.getUser(),
-        timeoutPromise
-      ]) as { data: { user: User | null } };
-
-      const user = data?.user;
-      setUser(user);
-    } catch (error) {
-      console.error('Error loading user:', error);
-      setError('Käyttäjätietojen lataus epäonnistui. Tarkista verkkoyhteys.');
-    } finally {
+    if (!userLoading) {
       setLoading(false);
     }
-  };
+  }, [userLoading]);
 
   const handleRetry = () => {
-    loadUser();
+    // Reload the page to retry user authentication
+    window.location.reload();
   };
 
-  const handleBookSelect = (bookId: string, bookData: PuppyBookData) => {
+  const handleBookSelect = (bookId: string, bookData: PuppyBookType) => {
     setSelectedBookId(bookId);
     setBook(bookData);
   };
@@ -189,7 +98,6 @@ const PuppyBook: React.FC = () => {
 
   const createBook = async (title: string, birthDate?: string, coverImageUrl?: string) => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
       const { data, error } = await supabase
@@ -235,50 +143,17 @@ const PuppyBook: React.FC = () => {
   };
 
   const createDefaultMilestones = async (bookId: string) => {
-    const defaultMilestones = [
-      {
-        book_id: bookId,
-        title: 'Ensimmäinen rokotus',
-        description: 'Perusrokotukset aloitettu',
-        target_age_weeks: 8,
-        display_order: 1
-      },
-      {
-        book_id: bookId,
-        title: 'Peruskomennot',
-        description: 'Istu, maahan, tule -komennot',
-        target_age_weeks: 12,
-        display_order: 2
-      },
-      {
-        book_id: bookId,
-        title: 'Sosiaalistaminen',
-        description: 'Tutustuminen muihin koiriin ja ihmisiin',
-        target_age_weeks: 16,
-        display_order: 3
-      },
-      {
-        book_id: bookId,
-        title: 'Toinen rokotus',
-        description: 'Rokotussarja täydennetty',
-        target_age_weeks: 12,
-        display_order: 4
-      },
-      {
-        book_id: bookId,
-        title: 'Hihnakävely',
-        description: 'Opetellut kävelemään hihnassa',
-        target_age_weeks: 20,
-        display_order: 5
-      }
-    ];
+    const milestonesWithBookId = DEFAULT_MILESTONES.map(milestone => ({
+      ...milestone,
+      book_id: bookId
+    }));
 
     await supabase
       .from('puppy_milestones')
-      .insert(defaultMilestones);
+      .insert(milestonesWithBookId);
   };
 
-  if (loading) {
+  if (loading || userLoading) {
     return <PuppyBookSkeleton />;
   }
 
@@ -483,304 +358,5 @@ const PuppyBook: React.FC = () => {
     </div>
   );
 };
-
-// Latausskeleton
-const PuppyBookSkeleton: React.FC = () => {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50">
-      <div className="animate-pulse">
-        <div className="h-64 bg-gray-200 rounded-b-3xl mb-6"></div>
-        <div className="container mx-auto px-4">
-          <div className="flex space-x-4 mb-6">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="h-12 bg-gray-200 rounded-lg flex-1"></div>
-            ))}
-          </div>
-          <div className="space-y-4">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="h-32 bg-gray-200 rounded-xl"></div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// Kirjan luomisprompt
-const CreateBookPrompt: React.FC<{
-  onBookCreated: (title: string, birthDate?: string, coverImageUrl?: string) => void;
-  user: User;
-  onBookSelect: (bookId: string, bookData: PuppyBookData) => void;
-}> = ({ onBookCreated, user, onBookSelect }) => {
-  const [title, setTitle] = useState('');
-  const [birthDate, setBirthDate] = useState(getDefaultBirthDate());
-  const [coverImageUrl, setCoverImageUrl] = useState('');
-  const [isCreating, setIsCreating] = useState(false);
-
-  const handleCreateBook = async () => {
-    setIsCreating(true);
-    await onBookCreated(title, birthDate, coverImageUrl);
-    setIsCreating(false);
-  };
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Söpöt taustakuviot */}
-      <motion.img
-        src={pawPrints}
-        alt="Tassunjälkiä - koristeellinen elementti"
-        className="absolute top-10 left-10 w-20 h-20 opacity-20"
-        animate={{ rotate: 360 }}
-        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-      />
-      <motion.img
-        src={pawPrints}
-        alt="Tassunjälkiä - koristeellinen elementti"
-        className="absolute bottom-10 right-10 w-16 h-16 opacity-15"
-        animate={{ rotate: -360 }}
-        transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-      />
-
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ type: "spring", bounce: 0.4 }}
-        className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center relative"
-      >
-        {/* Leikkisä ikoni */}
-        <motion.div
-          className="relative mb-6"
-          whileHover={{ scale: 1.1 }}
-          transition={{ type: "spring", stiffness: 300 }}
-        >
-          <motion.img
-            src={happyPuppy}
-            alt="Onnellinen pentu"
-            className="w-24 h-24 mx-auto rounded-full shadow-lg"
-            animate={{
-              scale: [1, 1.05, 1],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          />
-          <motion.div
-            className="absolute -top-2 -right-2"
-            animate={{
-              rotate: [0, 10, -10, 0],
-              scale: [1, 1.2, 1]
-            }}
-            transition={{
-              duration: 3,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          >
-            <Sparkles className="w-6 h-6 text-yellow-400" />
-          </motion.div>
-        </motion.div>
-
-        <motion.h2
-          className="text-3xl font-sans font-bold text-gray-800 mb-3"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-        >
-          Luo ensimmäinen pentukirja!
-        </motion.h2>
-        <motion.p
-          className="text-gray-600 mb-6 font-body"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-        >
-          Valitse koira ja aloita pennun ainutlaatuisen elämäntarinan tallentaminen
-        </motion.p>
-
-        <div className="mb-6">
-          <PuppyBookSelector
-            user={user}
-            selectedBookId=""
-            onBookSelect={onBookSelect}
-          />
-        </div>
-      </motion.div>
-    </div>
-  );
-};
-
-// Kirjan header
-const PuppyBookHeader: React.FC<{
-  book: PuppyBookData;
-  onShareClick: () => void;
-  onSettingsClick: () => void;
-}> = ({ book, onShareClick, onSettingsClick }) => {
-  return (
-    <div className="relative bg-gradient-playful text-white overflow-hidden">
-      {/* Söpöt taustakuviot */}
-      <motion.img
-        src={pawPrints}
-        alt="Tassunjälkiä - koristeellinen elementti"
-        className="absolute top-4 right-4 w-16 h-16 opacity-30"
-        animate={{ rotate: 360 }}
-        transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-      />
-      <motion.img
-        src={pawPrints}
-        alt="Tassunjälkiä - koristeellinen elementti"
-        className="absolute bottom-4 left-4 w-12 h-12 opacity-20"
-        animate={{ rotate: -360 }}
-        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-      />
-
-      <div className="absolute inset-0 bg-black/10"></div>
-      <div className="relative container mx-auto px-4 py-8">
-        <motion.div
-          className="flex items-center space-x-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <motion.div
-            whileHover={{ scale: 1.05, rotate: 5 }}
-            transition={{ type: "spring", stiffness: 300 }}
-          >
-            {book.cover_image_url ? (
-              <div className="w-24 h-24 rounded-2xl overflow-hidden shadow-lg border-4 border-white/30">
-                <img
-                  src={book.cover_image_url}
-                  alt="Kirjan kansi"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            ) : (
-              <div className="w-24 h-24 rounded-2xl overflow-hidden shadow-lg border-4 border-white/30 bg-white/20 flex items-center justify-center">
-                <img
-                  src={puppyBookIcon}
-                  alt="Pentukirja"
-                  className="w-16 h-16"
-                />
-              </div>
-            )}
-          </motion.div>
-
-          <div className="flex-1">
-            <motion.h1
-              className="text-3xl font-playful font-bold mb-2 flex items-center gap-3"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-            >
-              {book.title}
-              <motion.div
-                animate={{
-                  scale: [1, 1.2, 1],
-                  rotate: [0, 10, -10, 0]
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              >
-                <Heart className="w-6 h-6 text-red-400" />
-              </motion.div>
-            </motion.h1>
-            <motion.p
-              className="text-white/80 font-body"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-            >
-              Luotu {new Date(book.created_at).toLocaleDateString('fi-FI')}
-            </motion.p>
-          </div>
-
-          <div className="flex space-x-2">
-            <motion.button
-              whileHover={{ scale: 1.1, rotate: 10 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={onShareClick}
-              className="p-3 bg-white/20 rounded-xl backdrop-blur-sm hover:bg-white/30 transition-colors"
-            >
-              <Share2 className="w-5 h-5" />
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.1, rotate: -10 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={onSettingsClick}
-              className="p-3 bg-white/20 rounded-xl backdrop-blur-sm hover:bg-white/30 transition-colors"
-            >
-              <Settings className="w-5 h-5" />
-            </motion.button>
-          </div>
-        </motion.div>
-      </div>
-    </div>
-  );
-};
-
-// Navigaatio
-const PuppyBookNavigation: React.FC<{
-  activeSection: string;
-  onSectionChange: (section: string) => void;
-}> = ({ activeSection, onSectionChange }) => {
-  const sections = [
-    { id: 'monthly', label: 'Kuukaudet', icon: Calendar },
-    { id: 'timeline', label: 'Aikajana', icon: Calendar },
-    { id: 'milestones', label: 'Virstanpylväät', icon: Award },
-    { id: 'growth', label: 'Kasvu', icon: Target },
-    { id: 'memories', label: 'Muistot', icon: Heart },
-  ];
-
-  return (
-    <div className="bg-white border-b border-stone-200 sticky top-16 md:top-20 z-40 shadow-sm">
-      <div className="relative">
-        {/* Fade-gradient osoittamaan scrollattavuutta */}
-        <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none md:hidden" />
-
-        <div className="container mx-auto px-2 md:px-4">
-          <nav
-            className="flex overflow-x-auto scrollbar-hide snap-x snap-mandatory -mx-2 px-2 gap-1"
-            style={{ WebkitOverflowScrolling: 'touch' }}
-          >
-            {sections.map((section) => (
-              <button
-                key={section.id}
-                onClick={() => onSectionChange(section.id)}
-                className={`
-                  snap-start flex-shrink-0 flex flex-col md:flex-row items-center justify-center
-                  gap-1 md:gap-2 min-w-[68px] md:min-w-0 px-3 md:px-5 py-3 md:py-4 
-                  font-medium transition-all touch-manipulation rounded-t-lg
-                  active:scale-95 active:bg-stone-100
-                  ${activeSection === section.id
-                    ? 'text-terracotta-600 border-b-2 border-terracotta-500 bg-terracotta-50'
-                    : 'text-stone-600 hover:text-terracotta-500 hover:bg-terracotta-50/50'
-                  }
-                `}
-              >
-                <section.icon className="w-5 h-5 flex-shrink-0" />
-                <span className="text-xs md:text-sm font-medium truncate max-w-[56px] md:max-w-none">
-                  {section.label}
-                </span>
-              </button>
-            ))}
-          </nav>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-
-
-
-
-
-
-
 
 export default PuppyBook;

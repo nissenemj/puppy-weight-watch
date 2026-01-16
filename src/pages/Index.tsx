@@ -31,9 +31,9 @@ const Index = () => {
         setUser(data.user);
       }
     } catch (error) {
-      // If timeout or error, we just stay as guest (user=null), 
+      // If timeout or error, we just stay as guest (user=null),
       // effectively showing landing page (fail open)
-      // console.error('Auth check failed:', error); 
+      // console.error('Auth check failed:', error);
     } finally {
       setLoading(false);
     }

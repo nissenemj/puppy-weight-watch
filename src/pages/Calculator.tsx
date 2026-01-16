@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import Footer from '@/components/Footer';
 import AdvancedFoodCalculator from '@/components/AdvancedFoodCalculator';
+import PartnerBanner from '@/components/PartnerBanner';
 import SEO from '@/components/SEO';
 import FAQ from '@/components/FAQ';
 import VeterinaryDisclaimer from '@/components/VeterinaryDisclaimer';
@@ -146,7 +147,7 @@ const Calculator = () => {
 
       {/* Manufacturer Feeding Guides Section */}
       <section className="container px-4 md:px-6 mx-auto max-w-4xl">
-        <Card variant="frosted" className="border-0 shadow-lg">
+        <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl md:text-3xl font-serif font-bold text-stone-900 mb-2">
               Valmistajien Viralliset Annosohjeet
@@ -234,6 +235,11 @@ const Calculator = () => {
             </p>
           </CardContent>
         </Card>
+      </section>
+
+      {/* Partner Banner */}
+      <section className="container px-4 md:px-6 mx-auto">
+        <PartnerBanner />
       </section>
 
       {/* Veterinary Disclaimer - E-E-A-T */}

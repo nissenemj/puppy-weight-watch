@@ -4,6 +4,8 @@ import { HelmetProvider } from 'react-helmet-async'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 import { GuestAuthProvider } from './contexts/GuestAuthContext'
+import { UserProvider } from './contexts/UserContext'
+import { DogProvider } from './contexts/DogContext'
 import Router from './router'
 import CriticalCSS from './components/CriticalCSS'
 import './index.css'
@@ -65,14 +67,18 @@ createRoot(document.getElementById("root")!).render(
         <CriticalCSS />
         <ScrollProgressBar />
         <AccessibilityEnhancer />
-        <GuestAuthProvider>
-          <QueryClientProvider client={queryClient}>
-            <HelmetProvider>
-              <ProductionReadiness />
-              <Router />
-            </HelmetProvider>
-          </QueryClientProvider>
-        </GuestAuthProvider>
+        <UserProvider>
+          <DogProvider>
+            <GuestAuthProvider>
+              <QueryClientProvider client={queryClient}>
+                <HelmetProvider>
+                  <ProductionReadiness />
+                  <Router />
+                </HelmetProvider>
+              </QueryClientProvider>
+            </GuestAuthProvider>
+          </DogProvider>
+        </UserProvider>
       </ErrorBoundary>
     </ModuleLoadingErrorBoundary>
   </StrictMode>

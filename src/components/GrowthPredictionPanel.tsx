@@ -2,7 +2,7 @@ import React from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
-import { TrendingUp, Target, Calendar, Info, Zap, AlertCircle } from 'lucide-react'
+import { TrendingUp, Target, Calendar, Info, Zap, AlertCircle, Brain } from 'lucide-react'
 import { getGrowthPhaseLabel, getGrowthPhaseColor, type GrowthPredictionResult, type GrowthPhase } from '@/utils/growthPrediction'
 import { getBreedCategoryInfo } from '@/data/breedGrowthProfiles'
 
@@ -83,7 +83,11 @@ export default function GrowthPredictionPanel({
                 Kasvuennuste
               </CardTitle>
               <CardDescription>
-                Polynomiregressio-malli {prediction.coefficients.length - 1}. asteen polynomilla
+                {prediction.modelType === 'gompertz'
+                  ? 'Gompertz-kasvumalli (tieteellinen S-käyrä)'
+                  : prediction.modelType === 'veterinary'
+                  ? 'Veterinaarien käytännön kaavat'
+                  : 'Lineaarinen ennuste'}
               </CardDescription>
             </div>
             <Badge variant="outline" className={`${accuracyColor} border-current bg-white/80`}>
@@ -208,6 +212,45 @@ export default function GrowthPredictionPanel({
           </p>
         </CardContent>
       </Card>
+
+      {/* Gompertz-mallin yksityiskohdat */}
+      {prediction.modelType === 'gompertz' && prediction.gompertzParams && (
+        <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg rounded-xl">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <Brain className="h-4 w-4 text-primary" />
+              Gompertz-mallin parametrit
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <div className="text-muted-foreground mb-1">Aikuispaino (Wmax)</div>
+                <div className="font-bold">{prediction.gompertzParams.adultWeight.toFixed(1)} kg</div>
+              </div>
+              <div>
+                <div className="text-muted-foreground mb-1">Kasvun kesto (b)</div>
+                <div className="font-bold">{Math.round(prediction.gompertzParams.growthDuration)} päivää</div>
+              </div>
+              <div>
+                <div className="text-muted-foreground mb-1">Inflektiopiste (c)</div>
+                <div className="font-bold">{Math.round(prediction.gompertzParams.inflectionAge / 7)} viikkoa</div>
+              </div>
+              <div>
+                <div className="text-muted-foreground mb-1">Mallin laatu</div>
+                <div className="font-bold">
+                  {prediction.modelQuality?.rsquared
+                    ? `R² = ${(prediction.modelQuality.rsquared * 100).toFixed(1)}%`
+                    : 'N/A'}
+                </div>
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground mt-3">
+              Gompertz-malli: Wt = Wmax × exp(-exp(-(t-c)/b))
+            </p>
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 }

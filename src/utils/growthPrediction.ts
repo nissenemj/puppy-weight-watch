@@ -4,13 +4,22 @@ import {
   createSimpleGrowthPrediction,
   validateVeterinaryEstimate
 } from './veterinaryGrowthCalculator'
+import {
+  fitGompertzToData,
+  generateGompertzPredictions,
+  calculateBreedBasedParameters,
+  estimateBreedProfileFromWeight,
+  validateGompertzParameters,
+  gompertzFunction,
+  type GompertzParameters
+} from './biologicalGrowthModel'
 
 export interface GrowthPredictionResult {
   // Ennustedata
   predictions: PredictionPoint[]
   // Mallin tarkkuus
   r2: number
-  // Polynomikertoimet
+  // Kertoimet (Gompertz: [adultWeight, growthDuration, inflectionAge])
   coefficients: number[]
   // Ennustettu aikuispaino
   predictedAdultWeight: number
@@ -25,6 +34,16 @@ export interface GrowthPredictionResult {
   currentGrowthPhase: GrowthPhase
   // Viikottainen kasvuvauhti
   currentWeeklyGrowthRate: number
+  // Käytetty mallityyppi
+  modelType: 'gompertz' | 'veterinary' | 'linear'
+  // Gompertz-mallin parametrit (jos käytössä)
+  gompertzParams?: GompertzParameters
+  // Mallin laatumetriikat
+  modelQuality?: {
+    rsquared: number
+    rmse: number
+    mae: number
+  }
 }
 
 export interface PredictionPoint {
@@ -148,11 +167,211 @@ export function calculateGrowthPrediction(
   }
 
   try {
+    // Ensisijainen: Gompertz-malli (vähintään 3 datapistettä tieteelliseen sovitukseen)
+    if (weightData.length >= 3) {
+      const gompertzResult = calculateGrowthPredictionGompertz(weightData, birthDate, breedCategory)
+      if (gompertzResult) {
+        return gompertzResult
+      }
+    }
+    // Fallback: Veterinaarinen malli (2 datapistettä tai Gompertz epäonnistui)
     return calculateGrowthPredictionVeterinary(weightData, birthDate, breedCategory)
   } catch (error) {
-    console.warn('Gompertz model failed, falling back to linear:', error)
+    console.warn('Growth prediction failed, falling back to linear:', error)
     return calculateGrowthPredictionLinear(weightData, birthDate, breedCategory)
   }
+}
+
+// Gompertz-kasvumallin mukainen ennuste (tieteellinen)
+function calculateGrowthPredictionGompertz(
+  weightData: WeightEntry[],
+  birthDate: Date,
+  breedCategory?: BreedCategory
+): GrowthPredictionResult | null {
+  if (weightData.length < 3) {
+    return null // Gompertz vaatii vähintään 3 datapistettä luotettavaan sovitukseen
+  }
+
+  try {
+    // 1. Järjestä data ja laske perusarvot
+    const sortedData = [...weightData].sort((a, b) =>
+      new Date(a.date).getTime() - new Date(b.date).getTime()
+    )
+    const lastEntry = sortedData[sortedData.length - 1]
+    const ageInDays = Math.floor((new Date(lastEntry.date).getTime() - birthDate.getTime()) / (1000 * 60 * 60 * 24))
+    const currentAgeWeeks = ageInDays / 7
+
+    // 2. Arvioi rotuprofiili nykyisen painon perusteella
+    const breedProfile = estimateBreedProfileFromWeight(lastEntry.weight, ageInDays)
+
+    // 3. Laske alustavat Gompertz-parametrit rotuprofiilista
+    const initialParams = calculateBreedBasedParameters(breedProfile)
+
+    // 4. Sovita Gompertz-malli dataan (curve fitting)
+    const fitResult = fitGompertzToData(weightData, birthDate, initialParams)
+
+    // 5. Validoi parametrit - käytä fallbackia jos epäonnistuu
+    if (!validateGompertzParameters(fitResult.parameters)) {
+      console.warn('Gompertz-parametrit epärealistiset, käytetään fallbackia')
+      return null
+    }
+
+    // 6. Generoi ennusteet tulevaisuuteen
+    const maturityAgeDays = breedProfile.maturityMonths * 30.44
+    const predictionEndAge = Math.max(ageInDays + 180, maturityAgeDays) // Vähintään 6kk tai aikuisikään
+    const gompertzPredictions = generateGompertzPredictions(
+      fitResult.parameters,
+      0, // Aloita syntymästä
+      predictionEndAge,
+      7 // Viikon välein
+    )
+
+    // 7. Muunna yhteensopivaan muotoon
+    const predictions = convertToPredictionPoints(gompertzPredictions, birthDate, sortedData)
+
+    // 8. Laske luottamusvälit
+    const { upper, lower } = extractConfidenceInterval(gompertzPredictions, birthDate, fitResult.parameters.confidence)
+
+    // 9. Laske kasvuvauhti Gompertz-derivaatasta
+    const currentWeeklyGrowthRate = calculateGompertzGrowthRate(ageInDays, fitResult.parameters)
+
+    // 10. Määritä kasvuvaihe
+    const currentGrowthPhase = determineGrowthPhaseFromGompertz(ageInDays, fitResult.parameters)
+
+    // 11. Arvioi rotukategoria breed categoryksi
+    const breed = breedCategory || estimateBreedCategory(lastEntry.weight, currentAgeWeeks)
+
+    return {
+      predictions,
+      r2: fitResult.quality.rsquared,
+      coefficients: [
+        fitResult.parameters.adultWeight,
+        fitResult.parameters.growthDuration,
+        fitResult.parameters.inflectionAge
+      ],
+      predictedAdultWeight: fitResult.parameters.adultWeight,
+      estimatedMaturityAge: breedProfile.maturityMonths,
+      confidenceInterval: { upper, lower },
+      currentGrowthPhase,
+      currentWeeklyGrowthRate,
+      modelType: 'gompertz',
+      gompertzParams: fitResult.parameters,
+      modelQuality: fitResult.quality
+    }
+  } catch (error) {
+    console.warn('Gompertz growth calculation failed:', error)
+    return null
+  }
+}
+
+// Helper: Muunna Gompertz-ennusteet PredictionPoint-muotoon
+function convertToPredictionPoints(
+  gompertzPredictions: Array<{ age: number; weight: number; confidence?: { lower: number; upper: number } }>,
+  birthDate: Date,
+  actualData: WeightEntry[]
+): PredictionPoint[] {
+  const actualDatesSet = new Set(actualData.map(d => {
+    const entryDate = new Date(d.date)
+    return entryDate.toISOString().split('T')[0]
+  }))
+
+  // Lisää ensin todelliset mittaukset
+  const results: PredictionPoint[] = actualData.map(entry => {
+    const entryDate = new Date(entry.date)
+    const ageInDays = Math.floor((entryDate.getTime() - birthDate.getTime()) / (1000 * 60 * 60 * 24))
+    return {
+      date: entry.date,
+      ageWeeks: ageInDays / 7,
+      weight: entry.weight,
+      isPrediction: false
+    }
+  })
+
+  // Lisää ennusteet
+  gompertzPredictions.forEach(pred => {
+    const date = new Date(birthDate)
+    date.setDate(date.getDate() + pred.age)
+    const dateStr = date.toISOString().split('T')[0]
+
+    // Älä lisää päällekkäisiä datapisteitä
+    if (!actualDatesSet.has(dateStr)) {
+      results.push({
+        date: dateStr,
+        ageWeeks: pred.age / 7,
+        weight: pred.weight,
+        isPrediction: true
+      })
+    }
+  })
+
+  // Järjestä päivämäärän mukaan
+  return results.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+}
+
+// Helper: Laske Gompertz-kasvuvauhti (derivaatta)
+function calculateGompertzGrowthRate(
+  ageInDays: number,
+  params: GompertzParameters
+): number {
+  const { adultWeight, growthDuration, inflectionAge } = params
+  const exponent = -(ageInDays - inflectionAge) / growthDuration
+
+  // Gompertz: W(t) = Wmax * exp(-exp(exponent))
+  // Derivaatta: dW/dt = W * exp(exponent) / b
+  const weight = gompertzFunction(ageInDays, params)
+  const growthRatePerDay = (weight * Math.exp(exponent)) / growthDuration
+
+  // Muunna viikkokohtaiseksi ja varmista järkevä arvo
+  return Math.max(0.01, Math.min(2.0, growthRatePerDay * 7))
+}
+
+// Helper: Määritä kasvuvaihe Gompertz-mallin perusteella
+function determineGrowthPhaseFromGompertz(
+  ageInDays: number,
+  params: GompertzParameters
+): GrowthPhase {
+  const { inflectionAge } = params
+  const maturityAge = inflectionAge * 2.5 // Arvio aikuisiästä
+
+  if (ageInDays < inflectionAge * 0.5) return 'rapid-growth'
+  if (ageInDays < inflectionAge) return 'steady-growth'
+  if (ageInDays < inflectionAge * 1.5) return 'slowing-growth'
+  if (ageInDays < maturityAge) return 'approaching-adult'
+  return 'adult'
+}
+
+// Helper: Pura luottamusvälit Gompertz-ennusteista
+function extractConfidenceInterval(
+  gompertzPredictions: Array<{ age: number; weight: number; confidence?: { lower: number; upper: number } }>,
+  birthDate: Date,
+  confidenceLevel: number = 0.85
+): { upper: PredictionPoint[]; lower: PredictionPoint[] } {
+  const upper: PredictionPoint[] = []
+  const lower: PredictionPoint[] = []
+
+  gompertzPredictions.forEach(pred => {
+    if (pred.confidence) {
+      const date = new Date(birthDate)
+      date.setDate(date.getDate() + pred.age)
+      const dateStr = date.toISOString().split('T')[0]
+
+      upper.push({
+        date: dateStr,
+        ageWeeks: pred.age / 7,
+        weight: pred.confidence.upper,
+        isPrediction: true
+      })
+
+      lower.push({
+        date: dateStr,
+        ageWeeks: pred.age / 7,
+        weight: pred.confidence.lower,
+        isPrediction: true
+      })
+    }
+  })
+
+  return { upper, lower }
 }
 
 // Uusi veterinaaripohjainen kasvuennuste
@@ -275,7 +494,13 @@ function calculateGrowthPredictionVeterinary(
         lower: lowerBound
       },
       currentGrowthPhase: currentPhase,
-      currentWeeklyGrowthRate: recentGrowthRate
+      currentWeeklyGrowthRate: recentGrowthRate,
+      modelType: 'veterinary',
+      modelQuality: {
+        rsquared: adjustedR2,
+        rmse: 0, // Veterinaarimalli ei laske RMSE:tä
+        mae: 0
+      }
     }
   } catch (error) {
     console.warn('Veterinary growth calculation failed:', error)
@@ -377,6 +602,7 @@ function calculateGrowthPredictionLinear(
       lower: predictions.filter(p => p.isPrediction).map(p => ({ ...p, weight: p.weight * 0.85 }))
     },
     currentGrowthPhase: determineGrowthPhase(currentAgeWeeks, breed),
-    currentWeeklyGrowthRate: growthRatePerWeek
+    currentWeeklyGrowthRate: growthRatePerWeek,
+    modelType: 'linear'
   }
 }

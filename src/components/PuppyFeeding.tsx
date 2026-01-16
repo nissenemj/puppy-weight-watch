@@ -8,7 +8,8 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { AlertTriangle, Info, Scale, Dog } from 'lucide-react'
+import { AlertTriangle, Info, Scale, Dog, HelpCircle } from 'lucide-react'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { puppyFoodDatabase, uniqueFoodProducts, foodsByBrand, type PuppyFoodData } from '@/data/puppyFoodDatabase'
 
 // --- TYYPPIEN MÄÄRITTELY ---
@@ -267,13 +268,59 @@ export default function PuppyFeedingCalculator() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {showExpectedWeight && (
           <div className="space-y-2">
-            <Label htmlFor="expected-weight">Odotettu aikuispaino (kg)</Label>
-            <Input 
-              id="expected-weight" 
-              type="number" 
-              step="0.1" 
-              value={expectedWeight} 
-              onChange={(e) => setExpectedWeight(e.target.value)} 
+            <div className="flex items-center gap-2">
+              <Label htmlFor="expected-weight">Odotettu aikuispaino (kg)</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-6 w-6 p-0">
+                    <HelpCircle className="h-4 w-4 text-stone-400 hover:text-terracotta-500" />
+                    <span className="sr-only">Katso rotujen keskipainot</span>
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-80" align="start">
+                  <h4 className="font-semibold mb-3 text-stone-900">Rotujen tyypilliset aikuispainot</h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-stone-700">Chihuahua</span>
+                      <span className="text-stone-500 font-medium">1.5–3 kg</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-stone-700">Mäyräkoira (normaali)</span>
+                      <span className="text-stone-500 font-medium">7–14 kg</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-stone-700">Ranskanbulldoggi</span>
+                      <span className="text-stone-500 font-medium">8–14 kg</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-stone-700">Bordercollie</span>
+                      <span className="text-stone-500 font-medium">14–20 kg</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-stone-700">Labradorinnoutaja</span>
+                      <span className="text-stone-500 font-medium">25–36 kg</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-stone-700">Saksanpaimenkoira</span>
+                      <span className="text-stone-500 font-medium">22–40 kg</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-stone-700">Tanskandoggi</span>
+                      <span className="text-stone-500 font-medium">50–90 kg</span>
+                    </div>
+                  </div>
+                  <p className="text-xs text-stone-500 mt-3 pt-3 border-t border-stone-100">
+                    Sekarotuisilla arvioi vanhempien koon perusteella. Urokset ovat yleensä suurempia kuin nartut.
+                  </p>
+                </PopoverContent>
+              </Popover>
+            </div>
+            <Input
+              id="expected-weight"
+              type="number"
+              step="0.1"
+              value={expectedWeight}
+              onChange={(e) => setExpectedWeight(e.target.value)}
               placeholder="esim. 15"
               aria-describedby="expected-weight-help"
             />

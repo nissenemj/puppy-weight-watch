@@ -91,21 +91,27 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onMenuClick,
       role="navigation"
       aria-label="Päänavigaatio"
     >
-      {/* Active indicator bar */}
+      {/* Active indicator pill - more visible than thin line */}
       {mounted && (
-      <motion.div
-        className="absolute top-0 h-0.5 bg-terracotta-500"
-          initial={false}
-          animate={{
-            left: `${indicatorOffset}%`,
-            width: `${indicatorWidth}%`,
-          }}
-          transition={{
-            type: "spring",
-            stiffness: 380,
-            damping: 30
-          }}
-        />
+        <motion.div
+          className="absolute top-0 left-0 right-0 flex justify-center pointer-events-none"
+          style={{ paddingLeft: `${indicatorOffset}%` }}
+        >
+          <motion.div
+            className="h-1 w-10 rounded-full bg-terracotta-500 shadow-sm"
+            layoutId="bottomNavIndicator"
+            initial={false}
+            animate={{ opacity: 1 }}
+            transition={{
+              type: "spring",
+              stiffness: 380,
+              damping: 30
+            }}
+            style={{
+              marginLeft: `calc(${indicatorWidth / 2}% - 20px)`
+            }}
+          />
+        </motion.div>
       )}
 
       <div className="grid grid-cols-5 items-center">

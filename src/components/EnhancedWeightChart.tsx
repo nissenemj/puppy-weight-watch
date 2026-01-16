@@ -96,7 +96,7 @@ export default function EnhancedWeightChart({ weightData, birthDate, breed }: We
     return estimateBreedCategory(lastEntry.weight, ageWeeks)
   }, [sortedData, estimatedBirthDate])
 
-  // Calculate growth prediction using polynomial regression
+  // Calculate growth prediction using Gompertz model (or veterinary fallback)
   const growthPrediction = useMemo(() => {
     if (sortedData.length < 2) return null
     return calculateGrowthPrediction(sortedData, estimatedBirthDate, breedCategory)

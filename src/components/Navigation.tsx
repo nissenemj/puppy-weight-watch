@@ -1,6 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Link, useLocation, useNavigate, useInRouterContext } from 'react-router-dom';
-import type { User } from '@supabase/supabase-js';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
@@ -9,8 +8,11 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
-import { Menu, PawPrint, Scale, Calculator, Book, Info, Home, LogOut, PlusCircle, Dog } from 'lucide-react';
+import { Menu, PawPrint, Scale, Calculator, Book, Info, Home, LogOut, PlusCircle, Dog, ChevronDown, Check, Cloud } from 'lucide-react';
 import { BottomNavigation } from './BottomNavigation';
+import { useUser } from '@/contexts/UserContext';
+import { useDog } from '@/contexts/DogContext';
+import { useGuestAuth } from '@/contexts/GuestAuthContext';
 
 
 interface PrimaryLink {
@@ -52,10 +54,12 @@ const NavigationWithRouter: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  // Use global contexts instead of local state
+  const { user, isAuthenticated } = useUser();
+  const { activeDog, dogs, loading: dogLoading, setActiveDog } = useDog();
+  const { isGuest, guestWeightEntries } = useGuestAuth();
+
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
-  const [activeDogName, setActiveDogName] = useState<string | null>(null);
-  const [isFetchingDog, setIsFetchingDog] = useState(false);
 
   const isActive = useMemo(
     () => (path: string) => {
@@ -67,55 +71,8 @@ const NavigationWithRouter: React.FC = () => {
     [location.pathname],
   );
 
-  useEffect(() => {
-    let isMounted = true;
-    const loadSession = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (!isMounted) return;
-      setUser(data.session?.user ?? null);
-    };
-    loadSession();
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-    return () => {
-      isMounted = false;
-      listener.subscription.unsubscribe();
-    };
-  }, []);
-
-  // Optimized dog data fetching
-  useEffect(() => {
-    let isMounted = true;
-    const fetchActiveDog = async () => {
-      if (!user) {
-        setActiveDogName(null);
-        return;
-      }
-      setIsFetchingDog(true);
-      const { data, error } = await supabase
-        .from('dogs')
-        .select('id,name')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(1);
-      if (isMounted && !error && data && data.length > 0) {
-        const firstDog = data[0];
-        setActiveDogName(firstDog?.name ?? null);
-      } else if (isMounted) {
-        setActiveDogName(null);
-      }
-      if (isMounted) {
-        setIsFetchingDog(false);
-      }
-    };
-    fetchActiveDog();
-    return () => {
-      isMounted = false;
-    };
-  }, [user]);
-
   const initials = user?.email?.slice(0, 1).toUpperCase() ?? 'P';
+  const activeDogName = activeDog?.name ?? null;
 
   const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut();
@@ -163,6 +120,72 @@ const NavigationWithRouter: React.FC = () => {
     </ul>
   );
 
+  const renderDogSelector = () => {
+    // Only show if authenticated and has dogs
+    if (!isAuthenticated || dogs.length === 0) return null;
+
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            className="flex items-center gap-2 px-3 py-2 text-sm font-medium hover:bg-stone-100 rounded-xl"
+            aria-label={`Aktiivinen koira: ${activeDog?.name || 'Ei valittu'}`}
+          >
+            <Dog className="h-4 w-4 text-terracotta-500" />
+            <span className="max-w-24 truncate text-stone-700">
+              {activeDog?.name || 'Valitse koira'}
+            </span>
+            <ChevronDown className="h-3 w-3 text-stone-400" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="center" className="w-56">
+          <DropdownMenuLabel>Koirat</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          {dogs.map((dog) => (
+            <DropdownMenuItem
+              key={dog.id}
+              onClick={() => setActiveDog(dog)}
+              className="flex items-center justify-between cursor-pointer"
+            >
+              <span>{dog.name}</span>
+              {dog.id === activeDog?.id && (
+                <Check className="h-4 w-4 text-terracotta-500" />
+              )}
+            </DropdownMenuItem>
+          ))}
+          <DropdownMenuSeparator />
+          <DropdownMenuItem asChild>
+            <Link to="/onboarding" className="flex items-center gap-2 cursor-pointer">
+              <PlusCircle className="h-4 w-4" />
+              <span>Lisää uusi koira</span>
+            </Link>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  };
+
+  // Guest mode indicator - shows when user has guest data but isn't logged in
+  const renderGuestIndicator = () => {
+    // Only show if guest mode with data
+    if (!isGuest || guestWeightEntries.length === 0) return null;
+
+    return (
+      <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-amber-50 border border-amber-200 rounded-full text-xs">
+        <Cloud className="h-3 w-3 text-amber-600" />
+        <span className="text-amber-700 font-medium">Vierastila</span>
+        <span className="text-amber-600">({guestWeightEntries.length} mittausta)</span>
+        <Link
+          to="/login"
+          className="text-amber-700 hover:text-amber-900 font-semibold ml-1 hover:underline"
+        >
+          Tallenna →
+        </Link>
+      </div>
+    );
+  };
+
   const renderAuthActions = () => {
     if (user) {
       return (
@@ -179,7 +202,7 @@ const NavigationWithRouter: React.FC = () => {
               <span className="hidden md:inline-flex flex-col text-left">
                 <span className="text-sm font-semibold text-stone-900">{user.email}</span>
                 <span className="text-xs text-stone-500">
-                  {isFetchingDog ? 'Haetaan pentua...' : activeDogName ? `Pentu: ${activeDogName}` : 'Ei pentuprofiilia'}
+                  {dogLoading ? 'Haetaan pentua...' : activeDogName ? `Pentu: ${activeDogName}` : 'Ei pentuprofiilia'}
                 </span>
               </span>
             </Button>
@@ -257,6 +280,8 @@ const NavigationWithRouter: React.FC = () => {
           </div>
 
           <div className="hidden md:flex items-center gap-4">
+            {renderGuestIndicator()}
+            {renderDogSelector()}
             {renderAuthActions()}
             <Button asChild variant="secondary" className="hidden lg:inline-flex bg-sage-500 text-white hover:bg-sage-600 transition-all duration-200 hover:scale-105 shadow-sm">
               <Link to={user ? '/onboarding' : '/login'}>
@@ -301,7 +326,7 @@ const NavigationWithRouter: React.FC = () => {
                     <div className="rounded-xl border border-terracotta-200 bg-terracotta-50 p-4">
                       <p className="text-sm font-medium text-stone-900">{user.email}</p>
                       <p className="text-xs text-stone-500">
-                        {isFetchingDog ? 'Haetaan pentua...' : activeDogName ? `Viimeksi katsottu pentu: ${activeDogName}` : 'Lisää pentuprofiili aloittaaksesi'}
+                        {dogLoading ? 'Haetaan pentua...' : activeDogName ? `Viimeksi katsottu pentu: ${activeDogName}` : 'Lisää pentuprofiili aloittaaksesi'}
                       </p>
                     </div>
                   ) : (

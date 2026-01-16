@@ -65,11 +65,12 @@
       "Bash(grep:*)",
       "Bash(PLAYWRIGHT_BASE_URL=http://localhost:8081 npx playwright test:*)",
       "Bash(npx prettier:*)",
-      "Bash(mcp__playwright__browser_navigate:*)"
+      "Bash(mcp__playwright__browser_navigate:*)",
+      "Bash(dir:*)",
+      "Bash(PORT=8081 npm run dev:*)",
+      "Bash(timeout:*)"
     ],
     "deny": [],
-    "additionalDirectories": [
-      "C:\\c\\Users\\nisse"
-    ]
+    "additionalDirectories": ["C:\\c\\Users\\nisse"]
   }
 }

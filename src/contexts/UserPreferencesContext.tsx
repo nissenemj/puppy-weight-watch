@@ -37,7 +37,7 @@ export interface UserPreferences {
 }
 
 const defaultPreferences: UserPreferences = {
-  theme: 'auto',
+  theme: 'light',  // Pentulaskuri: vaalea teema oletuksena
   language: 'fi',
   weightUnit: 'kg',
   defaultWeightReminder: true,
@@ -67,6 +67,7 @@ interface UserPreferencesContextType {
 
 const UserPreferencesContext = createContext<UserPreferencesContextType | null>(null);
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useUserPreferences = () => {
   const context = useContext(UserPreferencesContext);
   if (!context) {
@@ -105,7 +106,8 @@ export const UserPreferencesProvider: React.FC<UserPreferencesProviderProps> = (
         // If user is logged in, load from database
         if (user) {
           const { data, error: dbError } = await supabase
-        .from('dogs' as any)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            .from('dogs' as any)
             .select('preferences')
             .eq('user_id', user.id)
             .single();
@@ -114,7 +116,9 @@ export const UserPreferencesProvider: React.FC<UserPreferencesProviderProps> = (
             throw dbError;
           }
 
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           if (data && (data as any)?.preferences) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const dbPrefs = { ...defaultPreferences, ...(data as any).preferences };
             setPreferences(dbPrefs);
             // Sync to localStorage
@@ -160,22 +164,14 @@ export const UserPreferencesProvider: React.FC<UserPreferencesProviderProps> = (
     }
 
     // Apply theme
+    // Pentulaskuri: ei tunnisteta järjestelmän dark modea
+    // 'auto' käyttäytyy kuten 'light' (kohderyhmä odottaa vaaleaa teemaa)
     const applyTheme = () => {
-      let theme = preferences.theme;
-      if (theme === 'auto') {
-        theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      }
-      document.documentElement.classList.toggle('dark', theme === 'dark');
+      const effectiveTheme = preferences.theme === 'dark' ? 'dark' : 'light';
+      document.documentElement.classList.toggle('dark', effectiveTheme === 'dark');
     };
 
     applyTheme();
-    
-    // Listen for system theme changes if auto theme is selected
-    if (preferences.theme === 'auto') {
-      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-      mediaQuery.addEventListener('change', applyTheme);
-      return () => mediaQuery.removeEventListener('change', applyTheme);
-    }
   }, [preferences]);
 
   const updatePreferences = async (updates: Partial<UserPreferences>) => {
@@ -189,7 +185,8 @@ export const UserPreferencesProvider: React.FC<UserPreferencesProviderProps> = (
     if (user) {
       try {
         const { error: dbError } = await supabase
-        .from('dogs' as any)
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          .from('dogs' as any)
         .upsert({
             user_id: user.id,
             preferences: newPreferences
@@ -212,8 +209,9 @@ export const UserPreferencesProvider: React.FC<UserPreferencesProviderProps> = (
     if (user) {
       try {
         const { error: dbError } = await supabase
-        .from('dogs' as any)
-        .delete()
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          .from('dogs' as any)
+          .delete()
           .eq('user_id', user.id);
 
         if (dbError) {
