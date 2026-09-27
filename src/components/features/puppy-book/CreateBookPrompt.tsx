@@ -6,11 +6,12 @@ import happyPuppy from '@/assets/happy-puppy.png';
 import pawPrints from '@/assets/paw-prints.png';
 import { getDefaultBirthDate } from '@/utils/puppyAge';
 import type { User } from '@/types/user';
+import type { PuppyBook } from '@/types/dog';
 
 interface CreateBookPromptProps {
     onBookCreated: (title: string, birthDate?: string, coverImageUrl?: string) => void;
     user: User;
-    onBookSelect: (bookId: string, bookData: Record<string, unknown>) => void;
+    onBookSelect: (bookId: string, bookData: PuppyBook) => void;
 }
 
 export const CreateBookPrompt: React.FC<CreateBookPromptProps> = ({
