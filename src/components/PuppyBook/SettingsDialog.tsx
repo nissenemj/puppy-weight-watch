@@ -22,8 +22,8 @@ interface PuppyBookData {
   title: string;
   birth_date?: string;
   cover_image_url?: string;
-  theme: any;
-  privacy_settings: any;
+  theme?: any;
+  privacy_settings?: any;
 }
 
 interface SettingsDialogProps {
