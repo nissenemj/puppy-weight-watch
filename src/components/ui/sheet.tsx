@@ -57,6 +57,7 @@ interface SheetContentProps
   showDragHandle?: boolean
   enableDragDismiss?: boolean
   onDragDismiss?: () => void
+  overlayClassName?: string
 }
 
 const SheetContent = React.forwardRef<
@@ -71,6 +72,7 @@ const SheetContent = React.forwardRef<
       showDragHandle = side === "drawer",
       enableDragDismiss = side === "drawer",
       onDragDismiss,
+      overlayClassName,
       ...props
     },
     ref
@@ -105,7 +107,7 @@ const SheetContent = React.forwardRef<
 
     return (
       <SheetPortal>
-        <SheetOverlay />
+        <SheetOverlay className={overlayClassName} />
         <SheetPrimitive.Content
           ref={ref}
           className={cn(sheetVariants({ side }), className)}
