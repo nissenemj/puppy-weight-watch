@@ -10,13 +10,13 @@ const baseline = process.argv
 if (
   process.argv.length > 3 ||
   (baseline &&
-    !['--baseline', '--baseline=catalog', '--baseline=storage'].includes(
+    !['--baseline', '--baseline=catalog', '--baseline=storage', '--baseline=blog'].includes(
       baseline,
     )) ||
   (process.argv[2] && !baseline)
 ) {
   throw new Error(
-    'Usage: node scripts/test-access-policies.mjs [--baseline[=catalog|storage]]',
+    'Usage: node scripts/test-access-policies.mjs [--baseline[=catalog|storage|blog]]',
   );
 }
 
@@ -140,10 +140,12 @@ try {
   sql('tests/security/access_fixture.sql');
   // Replay twice to catch non-idempotent policy replacement.
   for (let pass = 0; pass < 2; pass += 1) {
-    if (!baseline || baseline === '--baseline=storage')
+    if (!baseline || baseline === '--baseline=storage' || baseline === '--baseline=blog')
       sql('supabase/security/catalog_admin_writes.sql');
-    if (!baseline || baseline === '--baseline=catalog')
+    if (!baseline || baseline === '--baseline=catalog' || baseline === '--baseline=blog')
       sql('supabase/security/private_puppy_book_images.sql');
+    if (baseline !== '--baseline=blog')
+      sql('supabase/security/isolate_blog_image_admin_lookup.sql');
   }
   if (baseline)
     console.log(

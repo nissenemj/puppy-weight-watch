@@ -82,6 +82,15 @@ CREATE POLICY "Users can update their images in puppy-books bucket" ON storage.o
   USING (bucket_id = 'puppy-books' AND auth.uid()::text = (storage.foldername(name))[1]);
 CREATE POLICY "Users can delete their images from puppy-books bucket" ON storage.objects FOR DELETE
   USING (bucket_id = 'puppy-books' AND auth.uid()::text = (storage.foldername(name))[1]);
+CREATE POLICY "Admins can upload blog images" ON storage.objects FOR INSERT WITH CHECK (
+  bucket_id = 'blog-images' AND EXISTS (SELECT 1 FROM auth.users WHERE users.id = auth.uid() AND users.email = 'blog-admin@example.test')
+);
+CREATE POLICY "Admins can update blog images" ON storage.objects FOR UPDATE USING (
+  bucket_id = 'blog-images' AND EXISTS (SELECT 1 FROM auth.users WHERE users.id = auth.uid() AND users.email = 'blog-admin@example.test')
+);
+CREATE POLICY "Admins can delete blog images" ON storage.objects FOR DELETE USING (
+  bucket_id = 'blog-images' AND EXISTS (SELECT 1 FROM auth.users WHERE users.id = auth.uid() AND users.email = 'blog-admin@example.test')
+);
 NOTIFY pgrst, 'reload schema';
 `);
 check((await request(`${storage}/bucket`, { method: 'POST', token: service, body: { id: bucket, name: bucket, public: true } })).ok, 'create synthetic public bucket');
@@ -104,6 +113,14 @@ const legacyA = `${bookA}/legacy.png`;
 const deprecatedA = `${bookA}/deprecated.png`;
 const unknownA = `${bookA}/unknown.png`;
 const collision = `${a.id}/collision.png`;
+const blockedByBlog = await upload(profileA, a.token);
+check(!blockedByBlog.ok && /permission denied for table users/.test(blockedByBlog.data?.message || ''), 'baseline reproduces cross-bucket Auth table permission failure');
+const blogMigration = readFileSync(new URL('supabase/security/isolate_blog_image_admin_lookup.sql', root), 'utf8');
+sql(blogMigration);
+sql(blogMigration);
+check((await request(`${storage}/bucket`, { method: 'POST', token: service, body: { id: 'blog-images', name: 'blog-images', public: true } })).ok, 'create synthetic blog bucket');
+check(!(await request(`${storage}/object/blog-images/unauthorized.png`, { method: 'POST', token: a.token, body: png, mime: 'image/png' })).ok, 'ordinary owner gains no blog upload rights');
+check(!(await request('/rest/v1/rpc/can_write_blog_images', { method: 'POST', token: a.token, body: { _bucket_id: 'blog-images' } })).ok, 'private blog helper is not a public RPC');
 for (const [path, token] of [[profileA, a.token], [profileB, b.token], [legacyA, service], [deprecatedA, service], [unknownA, service], [collision, service]]) {
   check((await upload(path, token)).ok, 'seed synthetic image through Storage HTTP');
 }

@@ -6,6 +6,12 @@ CREATE SCHEMA auth;
 CREATE SCHEMA storage;
 CREATE SCHEMA test_support;
 GRANT USAGE ON SCHEMA public, auth, storage, test_support TO anon, authenticated;
+-- Production also has blog policies with a direct, otherwise inaccessible Auth lookup.
+CREATE TABLE auth.users (id uuid PRIMARY KEY, email text);
+INSERT INTO auth.users VALUES
+  ('00000000-0000-4000-8000-000000000001', 'owner-a@example.test'),
+  ('00000000-0000-4000-8000-000000000002', 'owner-b@example.test'),
+  ('00000000-0000-4000-8000-000000000003', 'blog-admin@example.test');
 
 CREATE FUNCTION auth.jwt() RETURNS jsonb LANGUAGE sql STABLE AS $$
   SELECT COALESCE(NULLIF(current_setting('request.jwt.claims', true), ''), '{}')::jsonb
@@ -127,6 +133,21 @@ CREATE POLICY "Users can delete their images from puppy-books bucket" ON storage
   USING (bucket_id = 'puppy-books' AND auth.uid()::text = (storage.foldername(name))[1]);
 CREATE POLICY "Anyone can view food images" ON storage.objects FOR SELECT USING (bucket_id = 'food-images');
 CREATE POLICY "Anyone can view blog images" ON storage.objects FOR SELECT USING (bucket_id = 'blog-images');
+CREATE POLICY "Admins can upload blog images" ON storage.objects FOR INSERT WITH CHECK (
+  bucket_id = 'blog-images' AND EXISTS (
+    SELECT 1 FROM auth.users WHERE users.id = auth.uid() AND users.email = 'blog-admin@example.test'
+  )
+);
+CREATE POLICY "Admins can update blog images" ON storage.objects FOR UPDATE USING (
+  bucket_id = 'blog-images' AND EXISTS (
+    SELECT 1 FROM auth.users WHERE users.id = auth.uid() AND users.email = 'blog-admin@example.test'
+  )
+);
+CREATE POLICY "Admins can delete blog images" ON storage.objects FOR DELETE USING (
+  bucket_id = 'blog-images' AND EXISTS (
+    SELECT 1 FROM auth.users WHERE users.id = auth.uid() AND users.email = 'blog-admin@example.test'
+  )
+);
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO anon, authenticated;
 GRANT SELECT, INSERT, UPDATE, DELETE ON storage.objects TO anon, authenticated;

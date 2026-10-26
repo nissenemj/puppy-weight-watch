@@ -76,7 +76,7 @@ Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-trick
 
 ## Käyttöoikeuskorjaukset
 
-`supabase/security/` sisältää kahden käyttöoikeusmuutoksen SQL-lähteet.
+`supabase/security/` sisältää kolmen käyttöoikeusmuutoksen SQL-lähteet.
 Niistä on luotu Supabase CLI:n `migration new` -komennolla vastaavat tiedostot
 `supabase/migrations/`-hakemistoon. SQL ei tule käyttöön Vercel-buildin mukana.
 Kohdekannan migraatiohistoria on tarkistettava ennen ajoa: tuotannossa on myös
@@ -97,6 +97,13 @@ erillisen ruokien lähdeaineistotyön migraatioita, jotka puuttuvat tästä haar
   säilyvät ennallaan.
 - Molemmissa on rajoittavat RLS-säännöt, jotta toinen salliva sääntö ei yksin avaa
   suojattuja toimintoja uudelleen. SQL pysähtyy, jos oletettu perusrakenne puuttuu.
+- `isolate_blog_image_admin_lookup.sql`: blogikuvien vanha sääntö luki suoraan
+  `auth.users`-taulua, mikä esti myös muiden bucketien latauksia. Muutos siirtää
+  täsmälleen nykyisen ylläpitäjäehdon `private.can_write_blog_images(text)`
+  -apufunktioon. Se tarkistaa vain kutsujan `auth.uid()`-tunnisteen ja palauttaa
+  totuusarvon. Funktio käyttää tyhjää `search_path`-asetusta ja on suoritettavissa
+  vain `authenticated`-roolilla API:n ulkopuolisessa skeemassa. Asiakkaat eivät saa
+  lukuoikeutta Auth-tauluun. Nykyinen blogiylläpitäjien rajaus säilyy.
 
 Supabasen [Storage-omistajuuden ohje](https://supabase.com/docs/guides/storage/security/ownership)
 kuvaa JWT:stä asetettavan `owner_id`-tiedon. `owner`-varakenttä tukee tämän projektin
@@ -149,7 +156,7 @@ Paikallinen tarkistus 26.10.2026 (Node 22.23.4, npm 10.9.9):
 | Tarkistus | Tulos |
 | --- | --- |
 | Koko Vitest-sarja, `--maxWorkers=2` | 138 hyväksytty, yksi aiempi testi ohitettu; mukana 62 uutta testiä |
-| PostgreSQL 17.10, molemmat SQL:t kahdesti | Oikeus- ja omistustestit hyväksytty |
+| PostgreSQL 17.10, kaikki kolme SQL:ää kahdesti | Oikeus- ja omistustestit hyväksytty |
 | Kumpikin alkuperäisten sääntöjen vastakoe | Odotettu exit 1; alkuperäinen puute havaitaan |
 | ESLint | 0 virhettä, 152 varoitusta |
 | Tuotantobuild | Hyväksytty |
@@ -175,13 +182,14 @@ npm --version   # 10.9.9
 Väliaikaiskansio voi poistua koneen siivouksessa. Sen jälkeen valitse Node 22
 käyttämälläsi versionhallintatyökalulla ja tarkista versio ennen ajoa.
 Yllä oleva Node 22 -ajo tehtiin valmisteluvaiheessa. Julkaisun valmistelussa
-26.10.2026 ajettiin lisäksi 39 hyväksyttyä testiä oikean paikallisen Supabase Auth-,
+26.10.2026 ajettiin lisäksi 43 hyväksyttyä testiä oikean paikallisen Supabase Auth-,
 Data API- ja Storage HTTP -rajapinnan kautta Node 22.23.4:llä. Testi käyttää kahta
 synteettistä käyttäjää, PostgreSQL 17.11:ta ja Storage API v1.84.19:ää.
 Se tarkistaa latauksen, luvun, allekirjoituksen, vanhat polut ja lataajatiedon,
 käyttäjä- ja kirjatunnisteiden törmäykset, toisen omistajan pääsyn eston,
 tiedostorajat, pysyvän polun tallennuksen, linkin vanhenemisen ja poiston.
-Testi ei käytä tuotantotunnuksia tai pilvipalvelua.
+Mukana on myös blogisäännön virheen toistaminen ja korjauksen tarkistus.
+Paikallinen testi ei käytä tuotantotunnuksia tai pilvipalvelua.
 
 `scripts/test-storage-api.mjs` hyväksyy vain erillisen paikallisen testiprojektin,
 jonka polku on `/private/tmp/pentulaskuri-storage-http-<tunniste>`, projektitunnus
@@ -217,6 +225,7 @@ Rajatut vastakokeet poistavat käytöstä vain yhden korjauksen:
 ```sh
 ACCESS_TEST_POSTGRES_IMAGE=backend_service-postgres:latest node scripts/test-access-policies.mjs --baseline=catalog
 ACCESS_TEST_POSTGRES_IMAGE=backend_service-postgres:latest node scripts/test-access-policies.mjs --baseline=storage
+ACCESS_TEST_POSTGRES_IMAGE=backend_service-postgres:latest node scripts/test-access-policies.mjs --baseline=blog
 ```
 
 Positiivinen RLS-ajo soveltaa molemmat muutokset kahdesti ja tarkistaa oikeudet
@@ -233,7 +242,7 @@ oikeiden JWT:iden tarkistusta, palvelun välimuisteja tai tuotannon koko migraat
 1. Tarkista kohdekannan nykyiset säännöt, rooliapufunktiot ja kuvapolkujen muodot
    uudelleen. Tuotannon rakenne tarkistettiin myös 26.10.2026 ennen julkaisuvalmistelua.
 2. Tarkista, että CLI:llä luotujen migraatioiden sisältö vastaa `supabase/security/`
-   -lähteitä. Aja vain nämä kaksi muutosta. Jos palvelun antama migraatioversio
+   -lähteitä. Aja vain nämä kolme muutosta. Jos palvelun antama migraatioversio
    poikkeaa paikallisesta, kirjaa tiedostonimeen palvelun todellinen versio.
 3. Testaa erillisessä Supabase-testiympäristössä kahden käyttäjän oikeilla
    istunnoilla: profiili, muiston lisäys ja poisto, vanha kuvapolku, allekirjoituksen
@@ -255,3 +264,27 @@ oikeiden JWT:iden tarkistusta, palvelun välimuisteja tai tuotannon koko migraat
 
 Paikallisen testin läpäisy ei yksin ole tuotannon julkaisulupa. Ympäristömuuttujien
 muutoksia tai uusia riippuvuuksia nämä korjaukset eivät edellytä.
+
+### Tuotannon tarkistus 26.10.2026
+
+Projektissa `ckwwxuyteyaaxfcvozvb` otettiin käyttöön migraatiot
+`20261026081338_restrict_catalogue_writes`,
+`20261026083923_private_puppy_book_images` ja
+`20261026084947_isolate_blog_image_admin_lookup`.
+Kuvabucket on yksityinen, raja on 5 MiB ja sallitut tyypit ovat JPEG/PNG/WebP.
+
+Tuotannossa hyväksyttiin 26 rajapintatarkistusta kahdella tätä ajoa varten luodulla
+synteettisellä anonyymillä Auth-istunnolla. Ne kattavat kuuden luettelotaulun
+julkisen luvun ja luvattoman kirjoituksen eston, kuvan latauksen ja allekirjoitetun
+luvun, toisen omistajan luku-, allekirjoitus-, päivitys- ja poistoyrityksen eston,
+kansikuvan polun tallennuksen sekä muistokuvan tallennuksen ja omistajasuojauksen.
+Testikuvat, kirjat, muistot, niiden automaattisesti syntyneet koirat sekä molemmat
+testitilit poistettiin. Alkuperäiset neljä kuvaa säilyivät.
+Kaikkien neljän aiemmat julkiset osoitteet palauttivat HTTP 400:n sekä tavallisella
+että välimuistin ohittavalla HEAD-pyynnöllä.
+
+Vercel Preview-build valmistui, mutta Preview'n selainkäyttö jäi kirjautumisen
+taakse. Jaettavaa pääsylinkkiä ei luotu. Käyttöliittymän julkiset näkymät tarkistettiin
+paikallisesta buildista ja tuotannosta; paikallinen pentukirjan sivu tarkistettiin
+leveyksillä 320, 768, 1024 ja 1440 px. Kirjautuneen käyttäjän koko selainpolkua
+omalla sähköpostitilillä ei tämän julkaisun yhteydessä vahvistettu.

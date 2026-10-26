@@ -45,6 +45,7 @@ $$;
 SELECT test_support.assert_equal((SELECT count(*) FROM storage.buckets WHERE id = 'puppy-books' AND NOT public AND file_size_limit = 5242880), 1, 'puppy-book bucket is private with a 5 MiB upload limit');
 SELECT test_support.assert_equal((SELECT count(*) FROM storage.buckets WHERE id IN ('food-images', 'blog-images') AND public), 2, 'public catalogue image buckets are unchanged');
 SELECT test_support.assert_equal((SELECT count(*) FROM storage.buckets WHERE id = 'puppy-books' AND allowed_mime_types = ARRAY['image/jpeg', 'image/png', 'image/webp']), 1, 'private upload MIME allowlist is configured');
+SELECT test_support.assert_equal(has_table_privilege('authenticated', 'auth.users', 'SELECT')::int, 0, 'Auth users table is not exposed to clients');
 
 -- Public catalogue images must not depend on private-book table privileges.
 REVOKE ALL ON public.puppy_books FROM anon;
@@ -93,6 +94,11 @@ SELECT test_support.expect_denied('INSERT INTO public.memories(book_id) VALUES (
 SELECT test_support.assert_equal((SELECT count(*) FROM storage.objects WHERE bucket_id = 'puppy-books'), 2, 'A reads their own current and legacy image paths');
 SELECT test_support.assert_equal((SELECT count(*) FROM storage.objects WHERE name LIKE '%legacy-b.jpg'), 0, 'A cannot read B legacy image');
 SELECT test_support.expect_affected('INSERT INTO storage.objects(bucket_id,name) VALUES (''puppy-books'',''00000000-0000-4000-8000-000000000001/puppy-profile/new.jpg'')', 1, 'A can upload below their own user ID');
+SELECT test_support.assert_equal(private.can_write_blog_images('blog-images')::int, 0, 'ordinary owner does not gain blog admin rights');
+SELECT test_support.assert_equal(has_function_privilege('anon', 'private.can_write_blog_images(text)', 'EXECUTE')::int, 0, 'anonymous clients cannot execute the private blog helper');
+SELECT test_support.expect_denied('INSERT INTO storage.objects(bucket_id,name) VALUES (''blog-images'',''unauthorized.jpg'')', 'ordinary owner cannot upload blog images');
+SELECT test_support.expect_affected('UPDATE storage.objects SET name = ''unauthorized.jpg'' WHERE bucket_id = ''blog-images''', 0, 'ordinary owner cannot update blog images');
+SELECT test_support.expect_affected('DELETE FROM storage.objects WHERE bucket_id = ''blog-images''', 0, 'ordinary owner cannot delete blog images');
 SELECT test_support.expect_affected('INSERT INTO storage.objects(bucket_id,name) VALUES (''puppy-books'',''00000000-0000-4000-8000-000000000001/books/10000000-0000-4000-8000-000000000001/new.jpg'')', 1, 'A can upload a memory in the new user/book path');
 SELECT test_support.expect_denied('INSERT INTO storage.objects(bucket_id,name) VALUES (''puppy-books'',''00000000-0000-4000-8000-000000000001/ambiguous-root.jpg'')', 'new ambiguous user/book root paths are rejected');
 SELECT test_support.expect_denied('INSERT INTO storage.objects(bucket_id,name) VALUES (''puppy-books'',''00000000-0000-4000-8000-000000000002/attack.jpg'')', 'A cannot upload under B user ID');
@@ -158,6 +164,11 @@ BEGIN
 END;
 $tests$;
 SELECT test_support.assert_equal((SELECT count(*) FROM storage.objects WHERE bucket_id = 'puppy-books'), 0, 'catalogue admin has no blanket access to private images');
+SELECT test_support.assert_equal(private.can_write_blog_images('blog-images')::int, 1, 'existing blog administrator keeps their access');
+SELECT test_support.assert_equal(private.can_write_blog_images('puppy-books')::int, 0, 'blog helper cannot authorize another bucket');
+SELECT test_support.expect_affected('INSERT INTO storage.objects(bucket_id,name) VALUES (''blog-images'',''admin.jpg'')', 1, 'existing blog administrator can upload');
+SELECT test_support.expect_affected('UPDATE storage.objects SET name = ''admin-updated.jpg'' WHERE bucket_id = ''blog-images'' AND name = ''admin.jpg''', 1, 'existing blog administrator can update');
+SELECT test_support.expect_affected('DELETE FROM storage.objects WHERE bucket_id = ''blog-images'' AND name = ''admin-updated.jpg''', 1, 'existing blog administrator can delete');
 ROLLBACK;
 
 -- Regression: an additional permissive policy must not reopen the protected writes.
