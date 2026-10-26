@@ -65,13 +65,6 @@ const PuppyBookLanding: React.FC = () => {
   return (
     <MobileOptimizedLayout>
       <div className="min-h-screen bg-gradient-soft page-with-navigation no-horizontal-scroll mobile-text-wrap responsive-media mobile-container-safe mobile-safe-margin">
-        {/* Skip to main content link for screen readers */}
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-white focus:text-black focus:px-4 focus:py-2 focus:rounded focus:shadow-lg"
-        >
-          Siirry pääsisältöön
-        </a>
         <SEO
           title="Pentukirja - Tallenna pennun ensimmäinen vuosi"
           description="Digitaalinen pentukirja pennun ensimmäisen vuoden dokumentointiin. Virstanpylväät, muistot, ystävät ja kasvu yhdessä paikassa."
@@ -81,7 +74,7 @@ const PuppyBookLanding: React.FC = () => {
         <Navigation />
 
         {/* Hero Section with pan background */}
-        <section className="full-width-section relative py-8 overflow-hidden rounded-2xl mobile-text-wrap responsive-media no-horizontal-scroll mobile-container-safe mobile-flex-safe" role="banner" aria-label="Pääbanneri - pentukirja">
+        <section className="full-width-section relative py-8 overflow-hidden rounded-2xl mobile-text-wrap responsive-media no-horizontal-scroll mobile-container-safe mobile-flex-safe" aria-label="Pentukirjan esittely">
           <ScrollPanBackground src={heroIllustration} alt="" panX={40} panY={20} zoom={1.04} minHeightClass="min-h-[50svh]" className="no-horizontal-scroll">
             <div className="hero-content mobile-grid-1">
               <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -152,7 +145,7 @@ const PuppyBookLanding: React.FC = () => {
         </section>
 
         {/* Features Section */}
-        <section className="full-width-section py-20 bg-white/30 mobile-text-wrap responsive-media no-horizontal-scroll mobile-container-safe mobile-card-safe" role="region" aria-labelledby="features-heading" id="main-content">
+        <section className="full-width-section py-20 bg-white/30 mobile-text-wrap responsive-media no-horizontal-scroll mobile-container-safe mobile-card-safe" aria-labelledby="features-heading">
           <div className="full-width-content mobile-grid-1">
             <motion.div
               initial={{ opacity: 0, y: 30 }}

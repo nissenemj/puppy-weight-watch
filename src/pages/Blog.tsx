@@ -19,7 +19,7 @@ const Blog = () => {
                 <Navigation />
                 <MeshBackground variant="default" />
 
-                <main className="container mx-auto px-4 pt-24 md:pt-32 pb-12 relative z-10">
+                <div className="container mx-auto px-4 pt-8 md:pt-12 pb-12 relative z-10">
                     {/* Hero Section */}
                     <div className="text-center max-w-2xl mx-auto mb-12">
                         <div className="inline-flex items-center gap-2 px-4 py-2 bg-terracotta-100 text-terracotta-700 rounded-full text-sm font-medium mb-6">
@@ -97,7 +97,7 @@ const Blog = () => {
                             </Button>
                         </div>
                     </div>
-                </main>
+                </div>
             </div>
         </MobileOptimizedLayout>
     );

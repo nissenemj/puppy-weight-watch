@@ -3,9 +3,9 @@
 @media (max-width: 768px) {
   /* === GLOBAL MOBILE SAFETY === */
   
-  /* Prevent horizontal scroll globally */
+  /* Clip horizontal overflow without creating a scroll container around sticky navigation. */
   body, html {
-    overflow-x: hidden !important;
+    overflow-x: clip !important;
     max-width: 100vw !important;
     box-sizing: border-box !important;
   }

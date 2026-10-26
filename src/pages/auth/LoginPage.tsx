@@ -174,14 +174,7 @@ export default function LoginPage() {
   const magicEmailError = magicForm.formState.errors.email?.message;
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-brand-orange/15 via-white to-white dark:from-brand-orange/25 dark:via-slate-950 dark:to-slate-950">
-      <a
-        href="#auth-card"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 rounded bg-black px-3 py-2 text-white"
-      >
-        Hyppää sisältöön
-      </a>
-
+    <div className="min-h-screen bg-gradient-to-b from-brand-orange/15 via-white to-white dark:from-brand-orange/25 dark:via-slate-950 dark:to-slate-950">
       <section className="mx-auto grid max-w-6xl grid-cols-1 gap-8 p-6 md:grid-cols-2 md:p-10">
         <div className="hidden flex-col justify-center md:flex">
           <div className="relative rounded-2xl border bg-white/60 p-8 shadow-soft backdrop-blur">
@@ -332,6 +325,6 @@ export default function LoginPage() {
           </CardFooter>
         </Card>
       </section>
-    </main>
+    </div>
   );
 }

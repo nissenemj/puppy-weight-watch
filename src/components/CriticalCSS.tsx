@@ -38,7 +38,7 @@ const CriticalCSS = () => {
           color: var(--color-text);
           background-color: var(--color-surface);
           font-size: 16px;
-          overflow-x: hidden;
+          overflow-x: clip;
         }
 
         .container {
@@ -59,7 +59,7 @@ const CriticalCSS = () => {
 
         @media (max-width: 768px) {
           body, html {
-            overflow-x: hidden !important;
+            overflow-x: clip !important;
             max-width: 100vw !important;
           }
           .container { padding: 0 0.75rem; }

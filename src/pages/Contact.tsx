@@ -72,7 +72,7 @@ const Contact = () => {
       />
 
       {/* Hero Section */}
-      <section className="relative pt-20 md:pt-28 pb-12 bg-gradient-to-br from-stone-50 to-terracotta-50">
+      <section className="relative pt-8 md:pt-12 pb-12 bg-gradient-to-br from-stone-50 to-terracotta-50">
         <div className="container px-4 md:px-6 mx-auto text-center">
           <motion.div
             initial="hidden"

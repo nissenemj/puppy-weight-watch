@@ -78,8 +78,8 @@ const Guides = () => {
         keywords="pentuopas, koiranpennun hoito, sosialisaatio, turvallisuus, ruokinta, kasvatusvinkit"
       />
 
-      {/* Video Hero Section - pt-20 for fixed navigation, contained with rounded corners */}
-      <section className="container px-4 md:px-6 mx-auto pt-20 md:pt-24">
+      {/* Video Hero Section */}
+      <section className="container px-4 md:px-6 mx-auto">
         <div className="relative rounded-2xl overflow-hidden min-h-[55vh] md:min-h-[65vh] flex items-start justify-end">
           {/* Video Background */}
           <video
@@ -150,7 +150,7 @@ const Guides = () => {
       </section>
 
       {/* Guides Grid */}
-      <Section className="py-20" role="main" id="guides-main" animated={false}>
+      <Section className="py-20" id="guides-main" animated={false}>
         <Container size="lg" padding="lg">
           <div className="grid gap-8 md:grid-cols-2 mobile-grid-1">
             {guides.map((guide, index) => (
