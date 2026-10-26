@@ -10,16 +10,15 @@ import {
   Trash2, 
   Share2, 
   Sparkles,
-  Eye,
-  Lock,
-  Users,
-  EyeOff
+  Lock
 } from '@/utils/iconImports';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { SocialShareGenerator } from './SocialShareGenerator';
 import CommentSection from './CommentSection';
 import StickerEditor from './StickerEditor';
+import { PrivatePuppyImage } from './PrivatePuppyImage';
+import { removePuppyBookImage } from '@/services/puppyBookStorage';
 
 interface Memory {
   id: string;
@@ -102,13 +101,7 @@ const MemoryCard: React.FC<MemoryCardProps> = ({ memory, viewMode, onMemoryUpdat
     try {
       // Delete associated file from storage if exists
       if (memory.content_url) {
-        const url = new URL(memory.content_url);
-        const filePath = url.pathname.split('/').pop();
-        if (filePath) {
-          await supabase.storage
-            .from('puppy-books')
-            .remove([`${memory.book_id}/${filePath}`]);
-        }
+        await removePuppyBookImage(memory.content_url);
       }
 
       // Delete memory from database
@@ -126,41 +119,9 @@ const MemoryCard: React.FC<MemoryCardProps> = ({ memory, viewMode, onMemoryUpdat
 
       onMemoryUpdated();
     } catch (error) {
-      console.error('Error deleting memory:', error);
       toast({
         title: "Virhe",
         description: "Muiston poistaminen epäonnistui",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handlePrivacyToggle = async (field: 'visibility', value: any) => {
-    try {
-      const currentSettings = memory.privacy_settings || { visibility: 'private' };
-      const newSettings = {
-        ...currentSettings,
-        [field]: value
-      };
-
-      const { error } = await supabase
-        .from('memories')
-        .update({ privacy_settings: newSettings })
-        .eq('id', memory.id);
-
-      if (error) throw error;
-
-      toast({
-        title: "Päivitetty! ✅",
-        description: `Muisto on nyt ${value === 'public' ? 'julkinen' : 'yksityinen'}`,
-      });
-
-      onMemoryUpdated();
-    } catch (error) {
-      console.error('Error updating privacy:', error);
-      toast({
-        title: "Virhe",
-        description: "Yksityisyysasetusten päivittäminen epäonnistui",
         variant: "destructive",
       });
     }
@@ -177,7 +138,7 @@ const MemoryCard: React.FC<MemoryCardProps> = ({ memory, viewMode, onMemoryUpdat
       {/* Privacy indicator and content */}
       {memory.content_url ? (
         <div className={viewMode === 'grid' ? 'relative h-full' : 'flex gap-4'}>
-          <img
+          <PrivatePuppyImage
             src={memory.content_url}
             alt={memory.caption || 'Pennun muisto'}
             className={`object-cover ${
@@ -187,15 +148,9 @@ const MemoryCard: React.FC<MemoryCardProps> = ({ memory, viewMode, onMemoryUpdat
           
           {/* Privacy indicator badge */}
           <div className="absolute top-2 left-2 flex gap-1">
-            {memory.privacy_settings?.visibility === 'public' ? (
-              <div className="bg-green-500 text-white p-1 rounded-full" title="Julkinen">
-                <Eye className="w-3 h-3" />
-              </div>
-            ) : (
-              <div className="bg-gray-500 text-white p-1 rounded-full" title="Yksityinen">
-                <Lock className="w-3 h-3" />
-              </div>
-            )}
+            <div className="bg-gray-500 text-white p-1 rounded-full" title="Vain omistajalle">
+              <Lock className="w-3 h-3" />
+            </div>
           </div>
           
           {viewMode === 'grid' && (
@@ -232,6 +187,7 @@ const MemoryCard: React.FC<MemoryCardProps> = ({ memory, viewMode, onMemoryUpdat
                     </button>
                   </div>
                   <button
+                    aria-label="Muiston valinnat"
                     onClick={(e) => {
                       e.stopPropagation();
                       setShowMenu(!showMenu);
@@ -251,15 +207,9 @@ const MemoryCard: React.FC<MemoryCardProps> = ({ memory, viewMode, onMemoryUpdat
         }`}>
           {/* Privacy indicator for text memories */}
           <div className="absolute top-1 left-1 flex gap-1">
-            {memory.privacy_settings?.visibility === 'public' ? (
-              <div className="bg-green-500 text-white p-0.5 rounded-full" title="Julkinen">
-                <Eye className="w-2 h-2" />
-              </div>
-            ) : (
-              <div className="bg-gray-500 text-white p-0.5 rounded-full" title="Yksityinen">
-                <Lock className="w-2 h-2" />
-              </div>
-            )}
+            <div className="bg-gray-500 text-white p-0.5 rounded-full" title="Vain omistajalle">
+              <Lock className="w-2 h-2" />
+            </div>
           </div>
           
           <div className="text-center">
@@ -279,6 +229,7 @@ const MemoryCard: React.FC<MemoryCardProps> = ({ memory, viewMode, onMemoryUpdat
               {memory.caption || 'Nimetön muisto'}
             </h4>
             <button
+              aria-label="Muiston valinnat"
               onClick={(e) => {
                 e.stopPropagation();
                 setShowMenu(!showMenu);
@@ -349,31 +300,9 @@ const MemoryCard: React.FC<MemoryCardProps> = ({ memory, viewMode, onMemoryUpdat
           <div className="border-b border-gray-100 p-2">
             <p className="text-xs font-medium text-gray-600 mb-2">Yksityisyys</p>
             
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                const isPublic = memory.privacy_settings?.visibility === 'public';
-                handlePrivacyToggle('visibility', isPublic ? 'private' : 'public');
-                setShowMenu(false);
-              }}
-              className={`flex items-center gap-2 px-3 py-1.5 text-xs rounded w-full transition-colors ${
-                memory.privacy_settings?.visibility === 'public'
-                  ? 'bg-green-50 text-green-700 hover:bg-green-100'
-                  : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
-              }`}
-            >
-              {memory.privacy_settings?.visibility === 'public' ? (
-                <>
-                  <Eye className="w-3 h-3" />
-                  Julkinen
-                </>
-              ) : (
-                <>
-                  <Lock className="w-3 h-3" />
-                  Yksityinen
-                </>
-              )}
-            </button>
+            <p className="text-xs text-gray-600 px-3 py-1.5">
+              Vain omistajalle. Julkinen jakaminen ei ole käytössä.
+            </p>
           </div>
           
           {/* Regular Menu Items */}

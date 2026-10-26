@@ -22,8 +22,8 @@ interface PuppyBookData {
   title: string;
   birth_date?: string;
   cover_image_url?: string;
-  theme: any;
-  privacy_settings: any;
+  theme?: any;
+  privacy_settings?: any;
 }
 
 interface SettingsDialogProps {
@@ -42,7 +42,6 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
   const [title, setTitle] = useState(book.title);
   const [birthDate, setBirthDate] = useState(book.birth_date || '');
   const [colorScheme, setColorScheme] = useState(book.theme?.colorScheme || 'warm');
-  const [isPrivate, setIsPrivate] = useState(book.privacy_settings?.visibility === 'private');
   const [allowComments, setAllowComments] = useState(book.privacy_settings?.allowComments !== false);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
@@ -66,7 +65,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
           colorScheme
         },
         privacy_settings: {
-          visibility: isPrivate ? 'private' : 'public',
+          visibility: 'private',
           allowComments
         }
       };
@@ -222,25 +221,22 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label>Yksityinen kirja</Label>
+                  <p className="text-sm font-medium">Vain omistajalle</p>
                   <p className="text-xs text-muted-foreground">
-                    Vain sinä voit nähdä tämän kirjan
+                    Kirja ja sen kuvat ovat yksityisiä. Julkinen jakaminen ei ole käytössä.
                   </p>
                 </div>
-                <Switch
-                  checked={isPrivate}
-                  onCheckedChange={setIsPrivate}
-                />
               </div>
 
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
                   <Label>Salli kommentit</Label>
                   <p className="text-xs text-muted-foreground">
-                    Muut voivat kommentoida muistoja
+                    Kommenttiasetus ei anna muille pääsyä kirjaan
                   </p>
                 </div>
                 <Switch
+                  aria-label="Salli kommentit"
                   checked={allowComments}
                   onCheckedChange={setAllowComments}
                 />

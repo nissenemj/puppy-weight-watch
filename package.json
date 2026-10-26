@@ -18,6 +18,8 @@
     "format:check": "prettier --check \"{src,public,supabase,scripts,docs,tests}/**/*.{ts,tsx,js,jsx,json,md,css,html,sql}\"",
     "type-check": "tsc --noEmit",
     "test": "vitest run",
+    "test:security:db": "node scripts/test-access-policies.mjs",
+    "test:security:db:baseline": "node scripts/test-access-policies.mjs --baseline",
     "test:watch": "vitest",
     "test:e2e": "playwright test --project=e2e",
     "a11y-test": "playwright test --project=a11y",
