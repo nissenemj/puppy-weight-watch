@@ -12,6 +12,8 @@ const WeightTrackerPage = lazy(() => import("./pages/WeightTrackerPage"));
 const OnboardingPage = lazy(() => import("./pages/OnboardingPage"));
 const PuppyBook = lazy(() => import("./pages/PuppyBook"));
 const PuppyBookLanding = lazy(() => import("./pages/PuppyBookLanding"));
+const PuppyStarterGuide = lazy(() => import("./pages/PuppyStarterGuide"));
+const MemoryBookExample = lazy(() => import("./pages/MemoryBookExample"));
 const LoginPage = lazy(() => import("./pages/auth/LoginPage"));
 const AuthCallbackPage = lazy(() => import("./pages/auth/AuthCallback"));
 
@@ -102,8 +104,16 @@ const router = createBrowserRouter([
         path: "/puppy-book-landing",
         element: withSuspense(PuppyBookLanding),
       },
+      {
+        path: "/muistokirja",
+        element: withSuspense(MemoryBookExample),
+      },
 
       // Guide sub-pages - new organized structure
+      {
+        path: "/guides/pennun-hankinnat",
+        element: withSuspense(PuppyStarterGuide),
+      },
       {
         path: "/guides/puppy-guide",
         element: withSuspense(PuppyGuide),

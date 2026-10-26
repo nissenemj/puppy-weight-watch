@@ -24,6 +24,15 @@ import { entranceAnimations } from '@/animations';
 const Guides = () => {
   const guides = [
     {
+      icon: CheckCircle,
+      title: 'Pennun hankintalista',
+      description: 'Mitä pentu tarvitsee uuteen kotiin? Merkitse hankinnat ja tutustu valintavinkkeihin.',
+      href: '/guides/pennun-hankinnat',
+      badge: 'Tarkistuslista',
+      color: 'primary',
+      features: ['Perustarvikkeet', 'Valintavinkit', 'Kodin valmistelu', 'Mainoslinkit']
+    },
+    {
       icon: Dog,
       title: 'Pentuopas',
       description: 'Kattava opas koiranpennun hoitamiseen, kasvatukseen ja hyvinvointiin',
@@ -74,7 +83,7 @@ const Guides = () => {
     <div className="min-h-screen flex flex-col">
       <SEO
         title="Oppaat - Koiranpennun Hoito-ohjeet"
-        description="Kattavat oppaat koiranpennun hoitamiseen: ruokinta, sosialisaatio, turvallisuus ja kasvatusvinkit asiantuntijoilta."
+        description="Oppaita koiranpennun arkeen: hankinnat, ruokinta, sosiaalistaminen, turvallisuus ja yhteisten taitojen harjoittelu."
         keywords="pentuopas, koiranpennun hoito, sosialisaatio, turvallisuus, ruokinta, kasvatusvinkit"
       />
 
@@ -109,7 +118,7 @@ const Guides = () => {
               <motion.div variants={entranceAnimations.staggerChild} className="flex justify-end">
                 <Badge className="bg-white/20 backdrop-blur-md border-white/30 text-white px-4 py-1.5 text-sm shadow-sm">
                   <BookOpen className="w-3.5 h-3.5 mr-2 text-terracotta-300" />
-                  Asiantuntija-oppaat
+                  Oppaat pennun arkeen
                 </Badge>
               </motion.div>
 
@@ -137,11 +146,11 @@ const Guides = () => {
               >
                 <div className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4 text-terracotta-300" />
-                  <span>Asiantuntijoiden laatima</span>
+                  <span>Vinkkejä yhteiseen alkuun</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4 text-terracotta-300" />
-                  <span>Säännöllisesti päivitetty</span>
+                  <span>Työkaluja oppaiden tueksi</span>
                 </div>
               </motion.div>
             </motion.div>
@@ -195,15 +204,14 @@ const Guides = () => {
                       </div>
                     </div>
 
-                    <Link to={guide.href} aria-describedby={`guide-${index}-title`}>
-                      <Button
+                      <Button asChild
                         className="w-full group-hover:bg-[var(--color-primary-700)] transition-colors touch-target focus-enhanced"
-                        aria-label={`Lue ${guide.title} -opas`}
                       >
+                      <Link to={guide.href} aria-label={`Lue ${guide.title} -opas`}>
                         Lue opas
                         <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+                      </Link>
                       </Button>
-                    </Link>
                   </CardContent>
                 </Card>
               </motion.div>

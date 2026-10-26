@@ -10,6 +10,8 @@ export default defineConfig({
   reporter: [["list"]],
   use: {
     baseURL: process.env.PLAYWRIGHT_BASE_URL || "http://localhost:8081",
+    // Keep API fixtures authoritative when testing a production PWA build.
+    serviceWorkers: "block",
     actionTimeout: 0,
     trace: "on-first-retry",
   },

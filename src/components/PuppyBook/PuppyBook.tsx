@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { Link, useSearchParams } from 'react-router-dom';
+import { Camera as CameraIcon, PenLine, LockKeyhole, Globe, Settings as SettingsIcon, ArrowRight } from 'lucide-react';
+import '@/styles/puppy-journal.css';
 import {
   Book,
   Camera,
@@ -22,7 +25,6 @@ import {
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { Navigation } from '@/components/Navigation';
 import { useUser } from '@/contexts/UserContext';
 
 // Extracted components
@@ -36,9 +38,6 @@ import MonthlyTracker from './MonthlyTracker';
 import Timeline from './Timeline';
 import Milestones from './Milestones';
 import MemoryGallery from './MemoryGallery';
-import Leaderboard from './Leaderboard';
-import WeeklyChallenges from './WeeklyChallenges';
-import UserSpotlight from './UserSpotlight';
 import WeightGrowthSection from './WeightGrowthSection';
 import AnimatedHeader from './AnimatedHeader';
 import FloatingActionButton from './FloatingActionButton';
@@ -56,12 +55,21 @@ const PuppyBook: React.FC = () => {
   const { user, loading: userLoading } = useUser();
   const { toast } = useToast();
 
-  const [activeSection, setActiveSection] = useState('monthly');
+  const reduceMotion = useReducedMotion();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const sectionQueries: Record<string, string> = { memories: 'muistot', monthly: 'kuukaudet', timeline: 'aikajana', milestones: 'virstanpylvaat', growth: 'kasvu' };
+  const activeSection = Object.keys(sectionQueries).find(section => sectionQueries[section] === searchParams.get('osio')) || 'memories';
+  const setActiveSection = (section: string) => {
+    const next = new URLSearchParams(searchParams);
+    next.set('osio', sectionQueries[section]);
+    setSearchParams(next, { preventScrollReset: true });
+  };
   const [book, setBook] = useState<PuppyBookType | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedBookId, setSelectedBookId] = useState<string>('');
   const [selectedMonth, setSelectedMonth] = useState(0);
   const [showFloatingAction, setShowFloatingAction] = useState(false);
+  const [memoryType, setMemoryType] = useState<'photo' | 'text'>('text');
   const [showShareDialog, setShowShareDialog] = useState(false);
   const [showSettingsDialog, setShowSettingsDialog] = useState(false);
   const [showProfileEditor, setShowProfileEditor] = useState(false);
@@ -84,6 +92,11 @@ const PuppyBook: React.FC = () => {
     setSelectedBookId(bookId);
     setBook(bookData);
   };
+
+  useEffect(() => {
+    setBook(null);
+    setSelectedBookId('');
+  }, [user?.id]);
 
   // Calculate age-appropriate default month when book changes
   useEffect(() => {
@@ -178,50 +191,51 @@ const PuppyBook: React.FC = () => {
   }
 
   if (!user) {
-    return <div className="min-h-screen bg-gradient-to-br from-gradient-mint-light/20 via-gradient-peach-light/20 to-gradient-sky/20 flex items-center justify-center">
-      <p className="text-gray-600">Kirjaudu sisään nähdäksesi pentukirjasi</p>
-    </div>;
+    return <div className="puppy-journal"><section className="journal-create">
+      <p className="journal-kicker">Oma pentukirja</p>
+      <h1>Pennun pienet hetket talteen.</h1>
+      <p>Kirjaudu sisään nähdäksesi pentukirjasi</p>
+      <div className="journal-book-actions"><Link className="journal-button" to="/login">Kirjaudu sisään</Link><Link className="journal-button journal-button-secondary" to="/muistokirja">Katso esimerkkikirjaa</Link></div>
+    </section></div>;
   }
 
-  if (!book) {
+  if (!book || book.owner_id !== user.id) {
     return <CreateBookPrompt onBookCreated={createBook} user={user} onBookSelect={handleBookSelect} />;
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gradient-mint-light/20 via-gradient-peach-light/20 to-gradient-sky/20 page-with-navigation">
-      <Navigation />
-
-      <div className="max-w-6xl mx-auto px-4 pt-4">
-        <div className="flex items-center justify-center mb-6">
-          <PuppyBookSelector
-            user={user}
-            selectedBookId={selectedBookId}
-            onBookSelect={handleBookSelect}
-          />
-        </div>
+    <div className="puppy-journal">
+      <div className="journal-book-toolbar">
+        <PuppyBookSelector user={user} selectedBookId={selectedBookId} onBookSelect={handleBookSelect} />
+        <div className="journal-book-toolbar-actions"><button type="button" className="journal-text-link" onClick={() => setShowSettingsDialog(true)}><SettingsIcon size={16} aria-hidden="true" /> Kirjan asetukset</button></div>
       </div>
       <AnimatedHeader
-        title="Pentu kasvaa – seuraa matkaa!"
-        subtitle="Tallenna ainutlaatuisia hetkiä pennun matkalla"
+        title="Pennun oma tarina"
+        subtitle="Kuvia, muistoja ja pieniä suuria hetkiä yhteiseltä matkalta."
         puppyName={book.title}
         birthDate={book.birth_date}
         puppyImageUrl={book.cover_image_url}
         onEditProfile={() => setShowProfileEditor(true)}
         bannerColor={(book.theme?.bannerColor as string) || 'orange'}
       />
+      <div className="journal-book-actions">
+        <button type="button" className="journal-button" onClick={() => { setMemoryType('text'); setShowFloatingAction(true); }}><PenLine size={18} aria-hidden="true" /> Kirjoita muisto</button>
+        <button type="button" className="journal-button journal-button-secondary" onClick={() => { setMemoryType('photo'); setShowFloatingAction(true); }}><CameraIcon size={18} aria-hidden="true" /> Lisää kuva</button>
+        <p className="flex items-start gap-2">{book.privacy_settings?.visibility === 'public' ? <><Globe size={16} className="shrink-0 mt-1" aria-hidden="true" /> Kirjan asetuksissa näkyvyys on julkinen.</> : <><LockKeyhole size={16} className="shrink-0 mt-1" aria-hidden="true" /> Muistot kuuluvat omaan kirjaasi. Voit tarkistaa näkyvyyden kirjan asetuksista.</>}</p>
+      </div>
       <PuppyBookNavigation
         activeSection={activeSection}
         onSectionChange={setActiveSection}
       />
-      <div className="container mx-auto px-4 py-6 max-w-4xl">
+      <section id="puppy-book-content" className="journal-book-content" aria-label="Pentukirjan sisältö">
         <AnimatePresence mode="wait">
           {activeSection === 'monthly' && (
             <motion.div
               key="monthly"
-              initial={{ opacity: 0, x: 20 }}
+              initial={reduceMotion ? false : { opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
+              exit={reduceMotion ? undefined : { opacity: 0, x: -20 }}
+              transition={{ duration: reduceMotion ? 0 : 0.2 }}
             >
               <MonthlyTracker
                 bookId={book.id}
@@ -234,10 +248,10 @@ const PuppyBook: React.FC = () => {
           {activeSection === 'timeline' && (
             <motion.div
               key="timeline"
-              initial={{ opacity: 0, x: 20 }}
+              initial={reduceMotion ? false : { opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
+              exit={reduceMotion ? undefined : { opacity: 0, x: -20 }}
+              transition={{ duration: reduceMotion ? 0 : 0.2 }}
             >
               <Timeline bookId={book.id} />
             </motion.div>
@@ -245,10 +259,10 @@ const PuppyBook: React.FC = () => {
           {activeSection === 'milestones' && (
             <motion.div
               key="milestones"
-              initial={{ opacity: 0, x: 20 }}
+              initial={reduceMotion ? false : { opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
+              exit={reduceMotion ? undefined : { opacity: 0, x: -20 }}
+              transition={{ duration: reduceMotion ? 0 : 0.2 }}
             >
               <Milestones bookId={book.id} />
             </motion.div>
@@ -256,10 +270,10 @@ const PuppyBook: React.FC = () => {
           {activeSection === 'growth' && (
             <motion.div
               key="growth"
-              initial={{ opacity: 0, x: 20 }}
+              initial={reduceMotion ? false : { opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
+              exit={reduceMotion ? undefined : { opacity: 0, x: -20 }}
+              transition={{ duration: reduceMotion ? 0 : 0.2 }}
             >
               <WeightGrowthSection bookId={book.id} birthDate={book.birth_date} />
             </motion.div>
@@ -267,15 +281,15 @@ const PuppyBook: React.FC = () => {
           {activeSection === 'memories' && (
             <motion.div
               key="memories"
-              initial={{ opacity: 0, x: 20 }}
+              initial={reduceMotion ? false : { opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
+              exit={reduceMotion ? undefined : { opacity: 0, x: -20 }}
+              transition={{ duration: reduceMotion ? 0 : 0.2 }}
             >
               <MemoryGallery
                 bookId={book.id}
                 onRefresh={memoryGalleryRef}
-                onAddMemory={() => setShowFloatingAction(true)}
+                onAddMemory={() => { setMemoryType('text'); setShowFloatingAction(true); }}
                 puppyProfile={{
                   name: book.title.replace('Pennun elämäntarina', '').replace('Pentukirja', '').trim() || 'Pentu',
                   birthDate: book.birth_date || getDefaultBirthDate(),
@@ -284,43 +298,13 @@ const PuppyBook: React.FC = () => {
               />
             </motion.div>
           )}
-          {activeSection === 'leaderboard' && (
-            <motion.div
-              key="leaderboard"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
-            >
-              <Leaderboard />
-            </motion.div>
-          )}
-          {activeSection === 'challenges' && (
-            <motion.div
-              key="challenges"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
-            >
-              <WeeklyChallenges />
-            </motion.div>
-          )}
-          {activeSection === 'spotlight' && (
-            <motion.div
-              key="spotlight"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
-            >
-              <UserSpotlight />
-            </motion.div>
-          )}
         </AnimatePresence>
-      </div>
+      </section>
+      <div className="journal-profile-footer rounded-lg mt-6"><p>Katso, miltä omista hetkistä koottu muistokirja voisi näyttää.</p><Link to="/muistokirja" className="journal-text-link">Muistokirjan esimerkki <ArrowRight size={16} aria-hidden="true" /></Link></div>
       <FloatingActionButton
+        key={book.id}
         bookId={book.id}
+        initialType={memoryType}
         showDialog={showFloatingAction}
         onShowDialogChange={setShowFloatingAction}
         onMemoryAdded={() => {

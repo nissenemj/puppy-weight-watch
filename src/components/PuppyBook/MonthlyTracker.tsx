@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Calendar } from '@/utils/iconImports';
-import MonthlyContent from './MonthlyContent';
+import React from "react";
+import { ChevronLeft, ChevronRight, Calendar } from "@/utils/iconImports";
+import MonthlyContent from "./MonthlyContent";
 
 interface MonthlyTrackerProps {
   bookId: string;
@@ -10,69 +9,83 @@ interface MonthlyTrackerProps {
   onMonthChange: (month: number) => void;
 }
 
-const MonthlyTracker: React.FC<MonthlyTrackerProps> = ({ 
-  bookId, 
+const MonthlyTracker: React.FC<MonthlyTrackerProps> = ({
+  bookId,
   birthDate,
-  selectedMonth, 
-  onMonthChange 
+  selectedMonth,
+  onMonthChange,
 }) => {
   const months = Array.from({ length: 13 }, (_, i) => i); // 0-12 months
 
   const getMonthLabel = (month: number) => {
-    if (month === 0) return 'Syntymä - 1kk';
+    if (month === 0) return "Syntymästä 1 kuukauteen";
     return `${month}. kuukausi`;
   };
 
   return (
     <div className="space-y-6">
       {/* Month Navigation */}
-      <div className="bg-white rounded-2xl p-6 shadow-lg">
-        <h2 className="text-2xl font-sans font-bold text-gray-800 mb-6 flex items-center gap-2">
-          <Calendar className="w-7 h-7 text-orange-500" />
+      <div className="journal-months">
+        <h2 className="flex items-center gap-2">
+          <Calendar className="w-6 h-6 text-[#245246]" aria-hidden="true" />
           Pennun kuukausiseuranta
         </h2>
-        
+
         {/* Month Selector */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="journal-month-switch">
           <button
+            type="button"
+            aria-label="Edellinen kuukausi"
             onClick={() => onMonthChange(Math.max(0, selectedMonth - 1))}
             disabled={selectedMonth === 0}
-            className="p-2 rounded-lg bg-orange-100 text-orange-600 hover:bg-orange-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="journal-icon-button"
           >
-            <ChevronLeft className="w-5 h-5" />
+            <ChevronLeft className="w-5 h-5" aria-hidden="true" />
           </button>
-          
-          <h3 className="text-xl font-semibold text-gray-800 text-[var(--color-text-primary)]">
+
+          <h3
+            className="text-base text-center font-semibold"
+            aria-live="polite"
+          >
             {getMonthLabel(selectedMonth)}
           </h3>
-          
+
           <button
+            type="button"
+            aria-label="Seuraava kuukausi"
             onClick={() => onMonthChange(Math.min(12, selectedMonth + 1))}
             disabled={selectedMonth === 12}
-            className="p-2 rounded-lg bg-orange-100 text-orange-600 hover:bg-orange-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="journal-icon-button"
           >
-            <ChevronRight className="w-5 h-5" />
+            <ChevronRight className="w-5 h-5" aria-hidden="true" />
           </button>
         </div>
-        
-        {/* Month Dots */}
-        <div className="flex justify-center space-x-2">
+
+        <div
+          className="journal-month-grid"
+          role="group"
+          aria-label="Valitse seurantakuukausi"
+        >
           {months.map((month) => (
             <button
+              type="button"
               key={month}
               onClick={() => onMonthChange(month)}
-              className={`w-3 h-3 rounded-full transition-all ${
-                selectedMonth === month
-                  ? 'bg-orange-500 scale-125'
-                  : 'bg-gray-300 hover:bg-orange-300'
-              }`}
-            />
+              aria-label={getMonthLabel(month)}
+              aria-pressed={selectedMonth === month}
+            >
+              {month} kk
+            </button>
           ))}
         </div>
       </div>
 
       {/* Monthly Content */}
-      <MonthlyContent monthNumber={selectedMonth} bookId={bookId} birthDate={birthDate} />
+      <MonthlyContent
+        monthNumber={selectedMonth}
+        bookId={bookId}
+        birthDate={birthDate}
+      />
     </div>
   );
 };

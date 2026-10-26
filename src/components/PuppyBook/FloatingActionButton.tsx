@@ -17,6 +17,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({ icon: Icon, label, onClick 
     exit={{ scale: 0, opacity: 0 }}
     whileHover={{ scale: 1.1 }}
     whileTap={{ scale: 0.9 }}
+    type="button"
     onClick={onClick}
     className="bg-white rounded-full p-3 shadow-lg border border-orange-200 hover:border-orange-300 transition-colors group"
   >
@@ -30,6 +31,7 @@ interface FloatingActionButtonProps {
   onMemoryAdded?: () => void;
   onHealthRecordAdded?: () => void;
   showDialog?: boolean;
+  initialType?: 'photo' | 'text';
   onShowDialogChange?: (show: boolean) => void;
 }
 
@@ -37,7 +39,8 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
   bookId, 
   onMemoryAdded, 
   onHealthRecordAdded,
-  showDialog = false, 
+  showDialog = false,
+  initialType = 'text',
   onShowDialogChange 
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -53,7 +56,6 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
     setDialogType(type);
     setDialogOpen(true);
     setIsOpen(false);
-    onShowDialogChange?.(true);
   };
 
   const handleDialogClose = () => {
@@ -118,15 +120,11 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
     }
   }, [isOpen, actions.length]);
 
-  // Update dialog state when external showDialog changes
+  // An internal type change must not reset a dialog opened from the action menu.
   useEffect(() => {
-    if (showDialog !== dialogOpen) {
-      setDialogOpen(showDialog);
-      if (showDialog) {
-        setDialogType('photo');
-      }
-    }
-  }, [showDialog, dialogOpen]);
+    setDialogOpen(showDialog);
+    if (showDialog) setDialogType(initialType);
+  }, [showDialog, initialType]);
 
   return (
     <>
@@ -135,6 +133,7 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
         onClose={handleDialogClose}
         bookId={bookId}
         type={dialogType}
+        onTypeChange={setDialogType}
         onMemoryAdded={() => {
           onMemoryAdded?.();
           handleDialogClose();
@@ -167,6 +166,7 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
             {isOpen && (
               <motion.div
                 ref={menuRef}
+                id="puppy-entry-actions"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -213,6 +213,11 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
+            type="button"
+            aria-label={isOpen ? 'Sulje merkintävalikko' : 'Lisää merkintä'}
+            aria-expanded={isOpen}
+            aria-controls="puppy-entry-actions"
+            onKeyDown={event => { if (event.key === 'Escape') setIsOpen(false); }}
             onClick={() => setIsOpen(!isOpen)}
             className="w-14 h-14 bg-gradient-to-r from-orange-500 to-pink-500 rounded-full shadow-lg flex items-center justify-center text-white hover:shadow-xl transition-shadow"
           >

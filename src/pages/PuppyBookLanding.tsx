@@ -1,3 +1,4 @@
+import '@/styles/puppy-journal.css';
 import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
@@ -228,6 +229,13 @@ const PuppyBookLanding: React.FC = () => {
                 />
               </motion.div>
             </div>
+          </div>
+        </section>
+
+        <section className="puppy-journal container mx-auto px-4 md:px-6" aria-labelledby="memory-example-link-title">
+          <div className="journal-callout">
+            <div><h2 id="memory-example-link-title">Miltä pennun oma muistokirja voisi näyttää?</h2><p>Selaa kuvitteellista esimerkkikirjaa ja tutustu suunnitteilla olevaan PDF-muistokirjaan.</p></div>
+            <Link to="/muistokirja" className="journal-button journal-button-light">Katso muistokirjan esimerkki</Link>
           </div>
         </section>
 

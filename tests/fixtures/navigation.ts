@@ -10,7 +10,14 @@ export const longEmail = `${"navigaatiotesti".repeat(8)}@example.invalid`;
 // UI fixtures only. Supabase reads are fulfilled locally; writes are aborted.
 export const test = base.extend<{ userState: UserState }>({
   userState: ["visitor", { option: true }],
-  page: async ({ page, userState }, runWithPage) => {
+  page: async ({ page, userState }, runWithPage, testInfo) => {
+    const localOrigin = new URL(testInfo.project.use.baseURL!).origin;
+    // Never send analytics, affiliate clicks, mail, or unmocked API traffic from tests.
+    await page.route("**/*", async (route) => {
+      if (new URL(route.request().url()).origin === localOrigin)
+        await route.continue();
+      else await route.abort();
+    });
     const user = {
       id: "11111111-1111-4111-8111-111111111111",
       email: longEmail,
