@@ -3,6 +3,41 @@ import { test, expect, openPage } from "../fixtures/navigation";
 
 test.use({ contextOptions: { reducedMotion: "reduce" } });
 
+test.describe("Kirjautumislomakkeen saavutettavuus", () => {
+  for (const width of [320, 1280]) {
+    for (const google of [false, true]) {
+      test(`lomake ja kirjautumislinkki ${width}, Google ${google}`, async ({
+        page,
+      }) => {
+        await page.setViewportSize({ width, height: 900 });
+        await page.route("**/auth/v1/settings", (route) =>
+          route.fulfill({
+            json: { external: { google, apple: false, email: true } },
+          }),
+        );
+        await openPage(page, "/login");
+        if (google) {
+          await expect(
+            page.getByRole("button", { name: "Jatka Google-tilillä" }),
+          ).toBeVisible();
+        } else {
+          await expect(
+            page.getByText(
+              "Google-kirjautuminen ei ole käytössä. Kirjaudu sähköpostilla.",
+            ),
+          ).toBeVisible();
+        }
+        await page.locator("summary").click();
+        const result = await new AxeBuilder({ page })
+          .include("#auth-card")
+          .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
+          .analyze();
+        expect(result.violations).toEqual([]);
+      });
+    }
+  }
+});
+
 test.describe("Navigaation saavutettavuus", () => {
   for (const width of [320, 1280]) {
     test(`pentukirjan esittelyn teksti ja linkit ${width}`, async ({

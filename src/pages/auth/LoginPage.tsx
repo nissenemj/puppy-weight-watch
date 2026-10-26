@@ -4,6 +4,8 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuthProviders } from '@/hooks/useAuthProviders';
+import { AUTH_PROVIDER_CHECK_FAILED, signInWithEnabledProvider } from '@/services/authProviderService';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -47,6 +49,8 @@ export default function LoginPage() {
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
+  const { providers, failed: providersFailed } = useAuthProviders();
+  const googleEnabled = providers?.google === true;
 
   const redirectTo = useMemo(
     () => (typeof window !== 'undefined' ? `${window.location.origin}/auth/callback` : undefined),
@@ -80,15 +84,13 @@ export default function LoginPage() {
     setError(null);
     setInfo(null);
     setLoading(true);
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      ...(redirectTo ? { options: { redirectTo } } : {}),
-    });
-    setLoading(false);
-    if (error) {
-      setError(error.message);
-    } else {
-      track('login', { method: 'google' });
+    try {
+      const { error } = await signInWithEnabledProvider('google', redirectTo ? { redirectTo } : undefined);
+      if (error) setError(error.message);
+    } catch (error: unknown) {
+      setError(error instanceof Error ? error.message : AUTH_PROVIDER_CHECK_FAILED);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -188,7 +190,7 @@ export default function LoginPage() {
               Seuraa painoa 📊, laske ruoka-annokset 🍖 ja tallenna muistot 📚 yhdessä paikassa. Kirjaudu sisään jatkaaksesi.
             </p>
             <ul className="mt-6 space-y-2 text-brand-ink/80">
-              <li>• Nopea Google-kirjautuminen</li>
+              {googleEnabled ? <li>• Kirjautuminen Google-tilillä</li> : null}
               <li>• Sähköposti & salasana tai magic link</li>
               <li>• Yksityisyys & tietoturva by design</li>
             </ul>
@@ -201,7 +203,7 @@ export default function LoginPage() {
               <LogIn className="h-5 w-5 text-brand-orange" aria-hidden="true" />
               {mode === 'signin' ? 'Kirjaudu sisään' : 'Luo tili'}
             </CardTitle>
-            <CardDescription>Jatka Googlella tai sähköpostilla.</CardDescription>
+            <CardDescription>{googleEnabled ? 'Jatka Googlella tai sähköpostilla.' : 'Kirjaudu sähköpostilla.'}</CardDescription>
           </CardHeader>
 
           <CardContent className="space-y-6">
@@ -219,24 +221,34 @@ export default function LoginPage() {
               </Alert>
             ) : null}
 
-            <div className="grid gap-3">
-              <Button
-                onClick={signInWithGoogle}
-                disabled={loading}
-                className="border bg-white text-brand-ink hover:bg-brand-yellow/20"
-                variant="outline"
-              >
-                {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" /> : null}
-                Jatka Google-tilillä
-              </Button>
-            </div>
+            {googleEnabled ? (
+              <>
+                <div className="grid gap-3">
+                  <Button
+                    onClick={signInWithGoogle}
+                    disabled={loading}
+                    className="border border-stone-300 bg-white text-stone-900 hover:bg-stone-50"
+                    variant="outline"
+                  >
+                    {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" /> : null}
+                    Jatka Google-tilillä
+                  </Button>
+                </div>
 
-            <div className="relative">
-              <Separator />
-              <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-white px-2 text-xs text-brand-ink/60">
-                tai sähköpostilla
-              </span>
-            </div>
+                <div className="relative">
+                  <Separator />
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-white px-2 text-xs text-brand-ink/60">
+                    tai sähköpostilla
+                  </span>
+                </div>
+              </>
+            ) : (
+              <p className="text-sm text-stone-600" role="status">
+                {providersFailed ? AUTH_PROVIDER_CHECK_FAILED : providers
+                  ? 'Google-kirjautuminen ei ole käytössä. Kirjaudu sähköpostilla.'
+                  : 'Tarkistetaan kirjautumistapoja…'}
+              </p>
+            )}
 
             <form onSubmit={emailPwdForm.handleSubmit(onSubmitEmailPwd)} className="grid gap-4" noValidate>
               <div className="grid gap-2">
@@ -264,7 +276,7 @@ export default function LoginPage() {
                 {passwordError ? <p className="text-sm text-red-600">{passwordError}</p> : null}
               </div>
 
-              <Button type="submit" disabled={loading} className="bg-brand-orange hover:bg-brand-orange/90">
+              <Button type="submit" disabled={loading} className="bg-terracotta-700 text-white hover:bg-terracotta-800">
                 {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" /> : null}
                 {mode === 'signin' ? 'Kirjaudu' : 'Luo tili'}
               </Button>
@@ -287,7 +299,7 @@ export default function LoginPage() {
                   />
                   {magicEmailError ? <p className="text-sm text-red-600">{magicEmailError}</p> : null}
                   <div className="flex flex-wrap gap-2">
-                    <Button type="submit" variant="secondary" disabled={loading}>
+                    <Button type="submit" variant="secondary" disabled={loading} className="bg-terracotta-700 text-white hover:bg-terracotta-800">
                       Lähetä magic link
                     </Button>
                     <Button

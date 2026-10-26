@@ -320,7 +320,12 @@ test.describe("Navigointi ja näppäimistö", () => {
     await openPage(page, "/login");
     await page.keyboard.press("Tab");
     await page.keyboard.press("Enter");
-    for (let i = 0; i < 7; i++) {
+    const controls = await page
+      .locator(
+        "main a:visible, main button:visible, main input:visible, main summary:visible",
+      )
+      .count();
+    for (let i = 0; i < controls; i++) {
       await page.keyboard.press("Tab");
       const focus = await page.evaluate(() => {
         const element = document.activeElement!;

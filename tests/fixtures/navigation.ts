@@ -7,7 +7,7 @@ export const longDogName = "Mittauskoiran hyvin pitkä testinimi "
   .trim();
 export const longEmail = `${"navigaatiotesti".repeat(8)}@example.invalid`;
 
-// UI fixtures only. All Supabase requests are fulfilled locally, including writes.
+// UI fixtures only. Supabase reads are fulfilled locally; writes are aborted.
 export const test = base.extend<{ userState: UserState }>({
   userState: ["visitor", { option: true }],
   page: async ({ page, userState }, runWithPage) => {
@@ -45,13 +45,15 @@ export const test = base.extend<{ userState: UserState }>({
         return;
       }
       const body =
-        url.pathname === "/auth/v1/user"
-          ? user
-          : url.pathname === "/rest/v1/dogs" && userState === "signed-in"
-            ? [dog]
-            : route.request().headers().accept?.includes("vnd.pgrst.object")
-              ? null
-              : [];
+        url.pathname === "/auth/v1/settings"
+          ? { external: { google: false, apple: false, email: true } }
+          : url.pathname === "/auth/v1/user"
+            ? user
+            : url.pathname === "/rest/v1/dogs" && userState === "signed-in"
+              ? [dog]
+              : route.request().headers().accept?.includes("vnd.pgrst.object")
+                ? null
+                : [];
       await route.fulfill({
         status: 200,
         contentType: "application/json",

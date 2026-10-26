@@ -8,7 +8,7 @@ import { useToast } from '@/hooks/use-toast'
 import { useGuestAuth } from '@/contexts/GuestAuthContext'
 import { User } from '@supabase/supabase-js'
 import { LogIn, UserPlus, X } from 'lucide-react'
-import { supabase } from '@/integrations/supabase/client'
+import { useAuthProviders } from '@/hooks/useAuthProviders'
 
 // Import the generated assets
 import appIcon from '@/assets/app-icon.png'
@@ -39,6 +39,7 @@ export default function AuthModal({
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const { toast } = useToast()
+  const { providers } = useAuthProviders(isOpen || fullScreen)
 
   const {
     signInWithEmail,
@@ -103,10 +104,10 @@ export default function AuthModal({
       } else {
         throw new Error('Autentikointi epäonnistui')
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Virhe",
-        description: error.message || 'Autentikointi epäonnistui',
+        description: error instanceof Error ? error.message : 'Autentikointi epäonnistui',
         variant: "destructive",
       })
     } finally {
@@ -122,6 +123,7 @@ export default function AuthModal({
   }
 
   const handleSocialLogin = async (provider: 'google' | 'apple') => {
+    setLoading(true)
     try {
       const success = await signInWithOAuth(provider)
 
@@ -140,16 +142,18 @@ export default function AuthModal({
       } else {
         throw new Error('OAuth kirjautuminen epäonnistui')
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Virhe",
-        description: `${provider === 'google' ? 'Google' : 'Apple'} kirjautuminen epäonnistui: ${error.message}`,
+        description: error instanceof Error ? error.message : 'Kirjautuminen epäonnistui. Käytä sähköpostikirjautumista.',
         variant: "destructive",
       })
+    } finally {
+      setLoading(false)
     }
   }
 
-  const AuthContent = () => (
+  const authContent = (
     <Card className={`backdrop-blur-sm bg-white/80 shadow-2xl border-0 animate-scale-in ${fullScreen ? 'border-0 shadow-none bg-white/90' : ''}`}>
       <CardHeader className="text-center">
         <div className="flex items-center justify-center gap-3 mb-4">
@@ -223,17 +227,18 @@ export default function AuthModal({
         </form>
 
         {/* Social Login Section */}
-        <div className="mt-6 pt-6 border-t border-gray-200">
+        {providers && (providers.google || providers.apple) ? <div className="mt-6 pt-6 border-t border-gray-200">
           <div className="text-center text-sm text-gray-500 mb-4">
             Tai kirjaudu sosiaalisen median tilillä
           </div>
 
           <div className="space-y-3">
-            <Button
+            {providers.google ? <Button
               type="button"
               variant="outline"
               className="w-full h-10 sm:h-12 rounded-xl border-2 hover:bg-gray-50 transition-all duration-200 flex items-center justify-center gap-3"
               onClick={() => handleSocialLogin('google')}
+              disabled={loading}
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -242,21 +247,22 @@ export default function AuthModal({
                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
               </svg>
               <span className="text-sm sm:text-base">Kirjaudu Google-tilillä</span>
-            </Button>
+            </Button> : null}
 
-            <Button
+            {providers.apple ? <Button
               type="button"
               variant="outline"
               className="w-full h-10 sm:h-12 rounded-xl border-2 hover:bg-gray-50 transition-all duration-200 flex items-center justify-center gap-3"
               onClick={() => handleSocialLogin('apple')}
+              disabled={loading}
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path fill="currentColor" d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 6.73.94 8.01-.2.6-.45 1.18-.75 1.72-.41.77-.86 1.48-1.34 2.48zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z" />
               </svg>
               <span className="text-sm sm:text-base">Kirjaudu Apple ID:llä</span>
-            </Button>
+            </Button> : null}
           </div>
-        </div>
+        </div> : null}
       </CardContent>
     </Card>
   )
@@ -278,7 +284,7 @@ export default function AuthModal({
             />
           </div>
 
-          <AuthContent />
+          {authContent}
         </div>
       </div>
     )
@@ -304,7 +310,7 @@ export default function AuthModal({
           )}
         </DialogHeader>
         <div className="p-0">
-          <AuthContent />
+          {authContent}
         </div>
       </DialogContent>
     </Dialog>
