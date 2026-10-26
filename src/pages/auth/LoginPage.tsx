@@ -328,12 +328,20 @@ export default function LoginPage() {
             >
               {mode === 'signin' ? 'Ei tiliä? Luo uusi' : 'Onko sinulla jo tili? Kirjaudu'}
             </Button>
-            <a
-              href="/tietosuoja"
-              className="text-sm text-brand-ink/60 underline-offset-2 hover:underline"
-            >
-              Tietosuoja & käyttöehdot
-            </a>
+            <div className="flex flex-wrap justify-center gap-x-4">
+              <a
+                href="/privacy"
+                className="inline-flex min-h-11 items-center text-sm text-terracotta-700 underline underline-offset-2 hover:text-terracotta-800"
+              >
+                Tietosuoja
+              </a>
+              <a
+                href="/terms"
+                className="inline-flex min-h-11 items-center text-sm text-terracotta-700 underline underline-offset-2 hover:text-terracotta-800"
+              >
+                Käyttöehdot
+              </a>
+            </div>
           </CardFooter>
         </Card>
       </section>
