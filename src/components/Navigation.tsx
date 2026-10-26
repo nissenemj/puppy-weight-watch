@@ -373,7 +373,7 @@ const NavigationWithRouter: React.FC = () => {
                         <Button asChild className="w-full bg-terracotta-700 hover:bg-terracotta-700 text-white" onClick={() => setIsMobileOpen(false)}>
                           <Link to="/login">{isGuest && guestWeightEntries.length > 0 ? 'Tallenna mittaukset' : 'Kirjaudu / Luo profiili'}</Link>
                         </Button>
-                        <Button asChild variant="outline" className="w-full border-stone-200" onClick={() => setIsMobileOpen(false)}>
+                        <Button asChild variant="outline" className="w-full border-stone-200 text-terracotta-700" onClick={() => setIsMobileOpen(false)}>
                           <Link to="/guides">Tutustu ominaisuuksiin</Link>
                         </Button>
                       </>

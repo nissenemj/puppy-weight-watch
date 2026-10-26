@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
   Book,
@@ -21,6 +21,7 @@ import puppyWaveGif from '@/assets/puppy-wave-gif.png';
 import growthStages from '@/assets/growth-stages.png';
 
 const PuppyBookLanding: React.FC = () => {
+  const reduceMotion = useReducedMotion();
   const features = [
     {
       icon: Calendar,
@@ -75,13 +76,14 @@ const PuppyBookLanding: React.FC = () => {
 
         {/* Hero Section with pan background */}
         <section className="full-width-section relative py-8 overflow-hidden rounded-2xl mobile-text-wrap responsive-media no-horizontal-scroll mobile-container-safe mobile-flex-safe" aria-label="Pentukirjan esittely">
-          <ScrollPanBackground src={heroIllustration} alt="" panX={40} panY={20} zoom={1.04} minHeightClass="min-h-[50svh]" className="no-horizontal-scroll">
-            <div className="hero-content mobile-grid-1">
+          <ScrollPanBackground src={heroIllustration} alt="" panX={40} panY={20} zoom={1.04} minHeightClass="min-h-[50svh]" className="no-horizontal-scroll" overlayClassName="relative inset-auto min-h-[inherit] w-full items-center px-4 py-8 sm:p-8">
+            <div className="hero-content relative z-30 w-full min-w-0">
               <div className="grid lg:grid-cols-2 gap-12 items-center">
                 <motion.div
-                  initial={{ opacity: 0, x: -30 }}
+                  initial={reduceMotion ? false : { opacity: 0, x: -30 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6 }}
+                  transition={{ duration: reduceMotion ? 0 : 0.6 }}
+                  className="min-w-0"
                 >
                   <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-playful font-bold text-white mb-6 drop-shadow" id="main-heading">
                     Pennun Ensimmäinen Vuosi 🐶
@@ -91,41 +93,35 @@ const PuppyBookLanding: React.FC = () => {
                     muistoja ja seuraa kasvua henkilökohtaisessa pentukirjassa.
                   </p>
 
-                  <div className="flex flex-col sm:flex-row gap-4 mobile-button">
-                    <Link to="/puppy-book">
-                      <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="bg-white text-orange-600 px-8 py-4 rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all flex items-center gap-2"
-                      >
-                        Aloita pentukirja
-                        <ArrowRight className="w-5 h-5" />
-                      </motion.button>
+                  <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4">
+                    <Link to="/puppy-book" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-white px-6 py-3 text-center text-base font-semibold text-terracotta-700 shadow-lg transition-colors hover:bg-stone-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-stone-900 motion-reduce:transition-none">
+                      Aloita pentukirja
+                      <ArrowRight className="w-5 h-5 shrink-0" aria-hidden="true" />
                     </Link>
 
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="border-2 border-white/80 text-white px-8 py-4 rounded-2xl font-semibold text-lg hover:bg-white/10 transition-all"
+                    <a
+                      href="#puppy-book-features"
+                      className="inline-flex min-h-12 items-center justify-center rounded-2xl border-2 border-white/80 px-6 py-3 text-center text-base font-semibold text-white transition-colors hover:bg-black/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-stone-900 motion-reduce:transition-none"
                     >
-                      Katso esimerkkiä
-                    </motion.button>
+                      Katso ominaisuudet
+                    </a>
                   </div>
                 </motion.div>
 
                 <motion.div
-                  initial={{ opacity: 0, x: 30 }}
+                  initial={reduceMotion ? false : { opacity: 0, x: 30 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
-                  className="relative"
+                  transition={{ duration: reduceMotion ? 0 : 0.6, delay: reduceMotion ? 0 : 0.2 }}
+                  className="hidden lg:flex items-center justify-center"
+                  aria-hidden="true"
                 >
                   <motion.div
-                    className="absolute -bottom-4 -right-4 bg-white rounded-2xl p-4 shadow-lg"
-                    animate={{
+                    className="bg-white rounded-2xl p-4 shadow-lg"
+                    animate={reduceMotion ? { y: 0, rotate: 0 } : {
                       y: [0, -10, 0],
                       rotate: [0, 5, 0]
                     }}
-                    transition={{
+                    transition={reduceMotion ? { duration: 0 } : {
                       duration: 3,
                       repeat: Infinity,
                       ease: "easeInOut"
@@ -133,19 +129,19 @@ const PuppyBookLanding: React.FC = () => {
                   >
                     <LazyImage
                       src={puppyWaveGif}
-                      alt="Söpö animaatio pennusta joka heiluttaa häntää iloisesti"
-                      className="w-20 h-20 rounded-xl"
+                      alt=""
+                      className="w-32 h-32 rounded-xl"
                     />
                   </motion.div>
                 </motion.div>
               </div>
             </div>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+            <div className="pointer-events-none absolute inset-0 bg-black/60" aria-hidden="true" />
           </ScrollPanBackground>
         </section>
 
         {/* Features Section */}
-        <section className="full-width-section py-20 bg-white/30 mobile-text-wrap responsive-media no-horizontal-scroll mobile-container-safe mobile-card-safe" aria-labelledby="features-heading">
+        <section className="full-width-section py-20 bg-white/30 mobile-text-wrap responsive-media no-horizontal-scroll mobile-container-safe mobile-card-safe focus-visible:outline focus-visible:outline-2 focus-visible:outline-terracotta-700" aria-labelledby="features-heading" id="puppy-book-features" tabIndex={-1}>
           <div className="full-width-content mobile-grid-1">
             <motion.div
               initial={{ opacity: 0, y: 30 }}

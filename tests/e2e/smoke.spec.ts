@@ -20,7 +20,7 @@ const routes = [
 ];
 const widths = [320, 375, 768, 1024, 1279, 1280, 1440, 1920];
 
-test.use({ reducedMotion: "reduce" });
+test.use({ contextOptions: { reducedMotion: "reduce" } });
 
 test.describe("Yhteinen sivuasettelu", () => {
   for (const path of routes) {
@@ -74,6 +74,116 @@ test.describe("Yhteinen sivuasettelu", () => {
           );
           await page.screenshot({ path: testInfo.outputPath("layout.png") });
         }
+      });
+    }
+  }
+});
+
+test.describe("Pentukirjan esittely", () => {
+  for (const viewport of [
+    { width: 320, height: 568 },
+    { width: 375, height: 812 },
+    { width: 844, height: 390 },
+    { width: 1440, height: 900 },
+  ]) {
+    test(`teksti ja painikkeet eivät leikkaudu ${viewport.width}x${viewport.height}`, async ({
+      page,
+    }, testInfo) => {
+      await page.setViewportSize(viewport);
+      await openPage(page, "/puppy-book-landing");
+      const hero = page.getByRole("region", {
+        name: "Pentukirjan esittely",
+        exact: true,
+      });
+      await expect
+        .poll(() =>
+          hero.evaluate((section) => {
+            const background = section
+              .querySelector("section")!
+              .getBoundingClientRect();
+            return [...section.querySelectorAll("h1, p, a, button")]
+              .filter((element) => {
+                const bounds = element.getBoundingClientRect();
+                return (
+                  bounds.left < background.left - 1 ||
+                  bounds.right > background.right + 1 ||
+                  bounds.top < background.top - 1 ||
+                  bounds.bottom > background.bottom + 1
+                );
+              })
+              .map((element) => element.textContent?.trim());
+          }),
+        )
+        .toEqual([]);
+      const startLink = hero.getByRole("link", {
+        name: "Aloita pentukirja",
+        exact: true,
+      });
+      await expect(startLink).toHaveAttribute("href", "/puppy-book");
+      await expect(startLink.getByRole("button")).toHaveCount(0);
+      await page.screenshot({ path: testInfo.outputPath("hero.png") });
+      await startLink.press("Tab");
+      const featuresLink = hero.getByRole("link", {
+        name: "Katso ominaisuudet",
+        exact: true,
+      });
+      await expect(featuresLink).toBeFocused();
+      const focus = await featuresLink.evaluate((element) => {
+        const bounds = element.getBoundingClientRect();
+        const bottomNav = document
+          .querySelector('nav[aria-label="Alapalkin navigaatio"]')
+          ?.getBoundingClientRect();
+        return {
+          top: bounds.top,
+          bottom: bounds.bottom,
+          headerBottom: document
+            .querySelector("header")!
+            .getBoundingClientRect().bottom,
+          footerTop:
+            bottomNav && bottomNav.height > 0 ? bottomNav.top : innerHeight,
+          hit: element.contains(
+            document.elementFromPoint(
+              bounds.left + bounds.width / 2,
+              bounds.top + bounds.height / 2,
+            ),
+          ),
+        };
+      });
+      expect(focus.top).toBeGreaterThanOrEqual(focus.headerBottom);
+      expect(focus.bottom).toBeLessThanOrEqual(focus.footerTop);
+      expect(focus.hit).toBe(true);
+      await featuresLink.press("Enter");
+      const features = page.locator("#puppy-book-features");
+      await expect(features).toBeFocused();
+      await expect(page).toHaveURL(/#puppy-book-features$/);
+      const target = await features.evaluate((element) => ({
+        top: element.getBoundingClientRect().top,
+        headerBottom: document.querySelector("header")!.getBoundingClientRect()
+          .bottom,
+      }));
+      expect(target.top).toBeGreaterThanOrEqual(target.headerBottom);
+    });
+  }
+
+  for (const path of ["/guides/safety", "/guides/socialization"]) {
+    for (const width of [320, 1280]) {
+      test(`muu kuvan päällä oleva otsikko ${path} ${width}`, async ({
+        page,
+      }) => {
+        await page.setViewportSize({ width, height: 900 });
+        await openPage(page, path);
+        await expectHeaderToFit(page);
+        const bounds = await page.locator("main h1").evaluate((element) => ({
+          title: element.getBoundingClientRect().toJSON(),
+          background: element
+            .closest("section")!
+            .getBoundingClientRect()
+            .toJSON(),
+        }));
+        expect(bounds.title.top).toBeGreaterThanOrEqual(bounds.background.top);
+        expect(bounds.title.bottom).toBeLessThanOrEqual(
+          bounds.background.bottom,
+        );
       });
     }
   }
