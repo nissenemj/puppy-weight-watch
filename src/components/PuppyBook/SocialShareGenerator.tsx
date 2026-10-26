@@ -7,6 +7,7 @@ import { Download, Share2, Copy, Camera, Heart, Sparkles, Mountain, PartyPopper 
 import { format } from 'date-fns';
 import { fi } from 'date-fns/locale';
 import { useToast } from '@/hooks/use-toast';
+import { PrivatePuppyImage } from './PrivatePuppyImage';
 
 interface Memory {
   id: string;
@@ -119,7 +120,7 @@ const ShareTemplate: React.FC<{
           {/* Photo */}
           <div className="w-full h-32 bg-white rounded-lg mb-2 overflow-hidden shadow-lg transform rotate-1">
             {memory.content_url && (
-              <img src={memory.content_url} alt="Memory" className="w-full h-full object-cover" />
+              <PrivatePuppyImage src={memory.content_url} alt="Memory" className="w-full h-full object-cover" />
             )}
           </div>
           
@@ -132,7 +133,7 @@ const ShareTemplate: React.FC<{
           {/* Puppy info */}
           <div className="absolute bottom-2 right-2 flex items-center gap-1 bg-white/80 rounded-full px-2 py-1">
             {puppyProfile.profileImage && (
-              <img src={puppyProfile.profileImage} alt={puppyProfile.name} className="w-4 h-4 rounded-full object-cover" />
+              <PrivatePuppyImage src={puppyProfile.profileImage} alt={puppyProfile.name} className="w-4 h-4 rounded-full object-cover" />
             )}
             <span className="text-xs text-amber-900 font-medium">{puppyProfile.name}, {age}</span>
           </div>
@@ -151,7 +152,7 @@ const ShareTemplate: React.FC<{
         <div className="h-8 bg-slate-800 flex items-center justify-between px-3">
           <div className="flex items-center gap-1">
             {puppyProfile.profileImage && (
-              <img src={puppyProfile.profileImage} alt={puppyProfile.name} className="w-4 h-4 rounded-full object-cover" />
+              <PrivatePuppyImage src={puppyProfile.profileImage} alt={puppyProfile.name} className="w-4 h-4 rounded-full object-cover" />
             )}
             <span className="text-white font-medium text-sm">{puppyProfile.name}</span>
           </div>
@@ -163,7 +164,7 @@ const ShareTemplate: React.FC<{
           {/* Photo */}
           <div className="w-full h-36 rounded-lg overflow-hidden shadow-lg">
             {memory.content_url && (
-              <img src={memory.content_url} alt="Memory" className="w-full h-full object-cover" />
+              <PrivatePuppyImage src={memory.content_url} alt="Memory" className="w-full h-full object-cover" />
             )}
           </div>
           
@@ -194,7 +195,7 @@ const ShareTemplate: React.FC<{
             <h2 className="text-xl font-bold text-purple-900 mb-1">{memory.caption}</h2>
             <div className="flex items-center justify-center gap-1">
               {puppyProfile.profileImage && (
-                <img src={puppyProfile.profileImage} alt={puppyProfile.name} className="w-5 h-5 rounded-full object-cover border border-pink-300" />
+                <PrivatePuppyImage src={puppyProfile.profileImage} alt={puppyProfile.name} className="w-5 h-5 rounded-full object-cover border border-pink-300" />
               )}
               <span className="text-purple-800 font-semibold text-sm">{puppyProfile.name}, {age}</span>
             </div>
@@ -203,7 +204,7 @@ const ShareTemplate: React.FC<{
           {/* Photo */}
           <div className="flex-1 rounded-2xl overflow-hidden shadow-xl border-2 border-white mb-3">
             {memory.content_url && (
-              <img src={memory.content_url} alt="Memory" className="w-full h-full object-cover" />
+              <PrivatePuppyImage src={memory.content_url} alt="Memory" className="w-full h-full object-cover" />
             )}
           </div>
           
@@ -233,7 +234,7 @@ const ShareTemplate: React.FC<{
           {/* Photo with adventure frame */}
           <div className="flex-1 rounded-xl overflow-hidden shadow-xl border-2 border-emerald-300 mb-3 relative">
             {memory.content_url && (
-              <img src={memory.content_url} alt="Memory" className="w-full h-full object-cover" />
+              <PrivatePuppyImage src={memory.content_url} alt="Memory" className="w-full h-full object-cover" />
             )}
             
             {/* Adventure badge */}
@@ -246,7 +247,7 @@ const ShareTemplate: React.FC<{
           <div className="flex justify-between items-end">
             <div className="flex items-center gap-2">
               {puppyProfile.profileImage && (
-                <img src={puppyProfile.profileImage} alt={puppyProfile.name} className="w-6 h-6 rounded-full object-cover border border-emerald-400" />
+                <PrivatePuppyImage src={puppyProfile.profileImage} alt={puppyProfile.name} className="w-6 h-6 rounded-full object-cover border border-emerald-400" />
               )}
               <div>
                 <p className="text-green-900 font-bold text-sm">{puppyProfile.name}</p>
@@ -280,7 +281,7 @@ const ShareTemplate: React.FC<{
           {/* Elegant photo frame */}
           <div className="flex-1 rounded-lg overflow-hidden shadow-xl border border-violet-200 mb-3 relative">
             {memory.content_url && (
-              <img src={memory.content_url} alt="Memory" className="w-full h-full object-cover" />
+              <PrivatePuppyImage src={memory.content_url} alt="Memory" className="w-full h-full object-cover" />
             )}
             
             {/* Celebration overlay */}
@@ -290,7 +291,7 @@ const ShareTemplate: React.FC<{
           {/* Puppy info */}
           <div className="flex justify-center items-center gap-2 mb-2">
             {puppyProfile.profileImage && (
-              <img src={puppyProfile.profileImage} alt={puppyProfile.name} className="w-7 h-7 rounded-full object-cover border-2 border-violet-300 shadow-lg" />
+              <PrivatePuppyImage src={puppyProfile.profileImage} alt={puppyProfile.name} className="w-7 h-7 rounded-full object-cover border-2 border-violet-300 shadow-lg" />
             )}
             <div>
               <p className="text-violet-900 font-bold text-sm">{puppyProfile.name}</p>

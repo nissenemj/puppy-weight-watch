@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Camera, X, Upload, AlertCircle } from '@/utils/iconImports';
-import { supabase } from '@/integrations/supabase/client';
+import { PUPPY_IMAGE_ACCEPT, uploadPuppyBookImage, validatePuppyImage } from '@/services/puppyBookStorage';
+import { PrivatePuppyImage } from './PrivatePuppyImage';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 
@@ -20,24 +21,9 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-  const ACCEPTED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
-
-  const validateFile = (file: File): string | null => {
-    if (!ACCEPTED_TYPES.includes(file.type)) {
-      return 'Vain JPEG, PNG ja WebP kuvat ovat sallittuja';
-    }
-    if (file.size > MAX_FILE_SIZE) {
-      return 'Tiedosto on liian suuri. Maksimikoko on 5MB';
-    }
-    return null;
-  };
-
   const processFile = async (file: File) => {
-    console.log('Processing file:', file.name, 'Size:', file.size, 'Type:', file.type);
-    
-    // Validate file
-    const validationError = validateFile(file);
+    if (uploading) return;
+    const validationError = validatePuppyImage(file);
     if (validationError) {
       toast({
         title: "Virheellinen tiedosto",
@@ -49,35 +35,8 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
 
     setUploading(true);
     try {
-      console.log('Getting user info...');
-      const { data: { user }, error: userError } = await supabase.auth.getUser();
-      if (userError || !user) {
-        console.error('User error:', userError);
-        throw new Error('Käyttäjä ei ole kirjautunut sisään');
-      }
-      console.log('User authenticated:', user.id);
-
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-      const filePath = `${user.id}/puppy-profile/${fileName}`;
-      
-      console.log('Uploading to path:', filePath);
-      const { error: uploadError } = await supabase.storage
-        .from('puppy-books')
-        .upload(filePath, file);
-
-      if (uploadError) {
-        console.error('Upload error:', uploadError);
-        throw uploadError;
-      }
-      console.log('Upload successful');
-
-      const { data: { publicUrl } } = supabase.storage
-        .from('puppy-books')
-        .getPublicUrl(filePath);
-      
-      console.log('Public URL generated:', publicUrl);
-      onImageAdded(publicUrl);
+      const filePath = await uploadPuppyBookImage(file);
+      onImageAdded(filePath);
       
       // Clear the input
       if (fileInputRef.current) {
@@ -88,12 +47,11 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
         title: "Kuva lisätty",
         description: "Kuva on onnistuneesti tallennettu"
       });
-    } catch (error: any) {
-      console.error('Error uploading image:', error);
-      const errorMessage = error?.message || 'Tuntematon virhe';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Kuvan tallennus epäonnistui.';
       toast({
         title: "Virhe kuvan latauksessa",
-        description: `${errorMessage}. Tarkista internet-yhteys ja yritä uudelleen.`,
+        description: errorMessage,
         variant: "destructive"
       });
     } finally {
@@ -147,7 +105,8 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
         <input
           ref={fileInputRef}
           type="file"
-          accept="image/jpeg,image/jpg,image/png,image/webp"
+          accept={PUPPY_IMAGE_ACCEPT}
+          aria-label="Valitse pennun kuva"
           onChange={handleFileUpload}
           className="hidden"
           disabled={uploading}
@@ -173,7 +132,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
                   Klikkaa tai vedä kuva tähän
                 </p>
                 <p className="text-xs text-muted-foreground/75">
-                  JPEG, PNG, WebP • Max 5MB
+                  JPEG, PNG, WebP • enintään 5 Mt
                 </p>
               </div>
             </>
@@ -213,12 +172,14 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
           <div className="flex flex-wrap gap-2">
             {images.map((imageUrl, index) => (
               <div key={index} className="relative group">
-                <img
+                <PrivatePuppyImage
                   src={imageUrl}
                   alt={`Kuva ${index + 1}`}
                   className="w-16 h-16 object-cover rounded-lg border shadow-sm"
                 />
                 <button
+                  type="button"
+                  aria-label={`Poista kuva ${index + 1}`}
                   onClick={() => onImageRemoved(imageUrl)}
                   className="absolute -top-1 -right-1 w-5 h-5 bg-destructive rounded-full flex items-center justify-center text-destructive-foreground text-xs hover:bg-destructive/90 transition-colors opacity-0 group-hover:opacity-100"
                 >

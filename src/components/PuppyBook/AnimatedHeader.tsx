@@ -1,4 +1,5 @@
 import React from 'react';
+import { PrivatePuppyImage } from './PrivatePuppyImage';
 import { motion } from 'framer-motion';
 import { Heart, Sparkles, PawPrint, Calendar, Clock, Settings } from '@/utils/iconImports';
 import { format, differenceInWeeks, differenceInDays, parseISO } from 'date-fns';
@@ -85,13 +86,11 @@ const AnimatedHeader: React.FC<AnimatedHeaderProps> = ({
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-white/30 shadow-lg">
-              <img 
-                src={puppyImageUrl || placeholderPuppyUrl}
+              <PrivatePuppyImage
+                src={puppyImageUrl}
+                fallbackSrc={placeholderPuppyUrl}
                 alt={puppyName ? `${puppyName} pentu` : "Pentu"}
                 className="w-full h-full object-cover"
-                onError={(e) => {
-                  e.currentTarget.src = placeholderPuppyUrl;
-                }}
               />
             </div>
           </motion.div>

@@ -27,3 +27,4 @@ dist-ssr
 .playwright-mcp/
 .cache/
 test-results/
+supabase/.temp/

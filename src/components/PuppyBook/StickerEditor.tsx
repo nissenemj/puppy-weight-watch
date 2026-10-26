@@ -4,6 +4,7 @@ import { Heart, Star, Smile, Award, Zap, Sparkles, Download, X } from '@/utils/i
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
+import { PrivatePuppyImage } from './PrivatePuppyImage';
 
 interface Sticker {
   id: string;
@@ -203,7 +204,7 @@ const StickerEditor: React.FC<StickerEditorProps> = ({
               onClick={handleCanvasClick}
               style={{ aspectRatio: '16/9' }}
             >
-              <img
+              <PrivatePuppyImage
                 ref={imageRef}
                 src={imageUrl}
                 alt="Muokattava kuva"

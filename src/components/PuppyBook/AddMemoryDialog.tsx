@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Camera, Upload, MapPin, Tag, Type, Image, Heart, Calendar, Award } from '@/utils/iconImports';
 import { supabase } from '@/integrations/supabase/client';
@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { PUPPY_IMAGE_ACCEPT, uploadPuppyBookImage, validatePuppyImage } from '@/services/puppyBookStorage';
 
 interface AddMemoryDialogProps {
   isOpen: boolean;
@@ -32,49 +33,36 @@ const AddMemoryDialog: React.FC<AddMemoryDialogProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
+  useEffect(() => {
+    return () => { if (previewUrl) URL.revokeObjectURL(previewUrl); };
+  }, [previewUrl]);
+
+  const selectFile = (file: File) => {
+    if (uploading) return;
+    const validationError = validatePuppyImage(file);
+    if (validationError) {
+      toast({ title: 'Virheellinen tiedosto', description: validationError, variant: 'destructive' });
+      return;
+    }
+    setSelectedFile(file);
+    setPreviewUrl(URL.createObjectURL(file));
+  };
+
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setSelectedFile(file);
-      const url = URL.createObjectURL(file);
-      setPreviewUrl(url);
-    }
+    if (file) selectFile(file);
   };
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith('image/')) {
-      setSelectedFile(file);
-      const url = URL.createObjectURL(file);
-      setPreviewUrl(url);
-    }
-  };
-
-  const uploadImage = async (file: File): Promise<string | null> => {
-    const fileExt = file.name.split('.').pop();
-    const fileName = `${bookId}/${Date.now()}.${fileExt}`;
-
-    const { data, error } = await supabase.storage
-      .from('puppy-books')
-      .upload(fileName, file);
-
-    if (error) {
-      console.error('Upload error:', error);
-      return null;
-    }
-
-    const { data: { publicUrl } } = supabase.storage
-      .from('puppy-books')
-      .getPublicUrl(fileName);
-
-    return publicUrl;
+    if (file) selectFile(file);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    console.log('AddMemoryDialog: Starting submission', { type, bookId, hasFile: !!selectedFile });
+    if (uploading) return;
     
     if (type === 'photo' && !selectedFile) {
       toast({
@@ -99,7 +87,6 @@ const AddMemoryDialog: React.FC<AddMemoryDialogProps> = ({
     try {
       // Check authentication first
       const { data: user, error: authError } = await supabase.auth.getUser();
-      console.log('AddMemoryDialog: Auth check', { user: user.user?.id, authError });
       
       if (authError || !user.user) {
         throw new Error('Et ole kirjautunut sisään');
@@ -112,9 +99,7 @@ const AddMemoryDialog: React.FC<AddMemoryDialogProps> = ({
         .eq('id', bookId)
         .single();
 
-      console.log('AddMemoryDialog: Book check', { bookCheck, bookError });
-
-      if (bookError) {
+      if (bookError || !bookCheck) {
         throw new Error('Pentukirjaa ei löydy');
       }
 
@@ -125,12 +110,7 @@ const AddMemoryDialog: React.FC<AddMemoryDialogProps> = ({
       let contentUrl = null;
       
       if (selectedFile && type === 'photo') {
-        console.log('AddMemoryDialog: Uploading image', { fileName: selectedFile.name });
-        contentUrl = await uploadImage(selectedFile);
-        if (!contentUrl) {
-          throw new Error('Kuvan lataus epäonnistui');
-        }
-        console.log('AddMemoryDialog: Image uploaded', { contentUrl });
+        contentUrl = await uploadPuppyBookImage(selectedFile, bookId);
       }
 
       const tagsArray = tags
@@ -155,19 +135,14 @@ const AddMemoryDialog: React.FC<AddMemoryDialogProps> = ({
         created_by: user.user.id,
       };
 
-      console.log('AddMemoryDialog: Inserting memory', memoryData);
-      
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('memories')
         .insert(memoryData)
         .select();
 
       if (error) {
-        console.error('AddMemoryDialog: Database error', error);
         throw error;
       }
-
-      console.log('AddMemoryDialog: Memory inserted successfully', data);
 
       toast({
         title: "Onnistui!",
@@ -183,19 +158,8 @@ const AddMemoryDialog: React.FC<AddMemoryDialogProps> = ({
       
       onMemoryAdded();
       onClose();
-    } catch (error: any) {
-      console.error('AddMemoryDialog: Error adding memory', error);
-      
-      let errorMessage = "Muiston lisääminen epäonnistui";
-      
-      if (error.message) {
-        errorMessage = error.message;
-      } else if (error.code === '42501') {
-        errorMessage = "Sinulla ei ole oikeutta lisätä muistoja tähän pentukirjaan";
-      } else if (error.code === 'PGRST116') {
-        errorMessage = "Pentukirjaa ei löydy tai sinulla ei ole oikeutta siihen";
-      }
-      
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Muiston lisääminen epäonnistui. Tarkista käyttöoikeus ja yhteys.';
       toast({
         title: "Virhe",
         description: errorMessage,
@@ -273,7 +237,7 @@ const AddMemoryDialog: React.FC<AddMemoryDialogProps> = ({
                       <div className="space-y-2">
                         <img
                           src={previewUrl}
-                          alt="Preview"
+                          alt="Valitun kuvan esikatselu"
                           className="w-full h-32 object-cover rounded-lg"
                         />
                         <p className="text-sm text-gray-600">Klikkaa vaihtaaksesi kuvan</p>
@@ -288,7 +252,9 @@ const AddMemoryDialog: React.FC<AddMemoryDialogProps> = ({
                   <input
                     ref={fileInputRef}
                     type="file"
-                    accept="image/*"
+                    accept={PUPPY_IMAGE_ACCEPT}
+                    aria-label="Valitse muiston kuva"
+                    disabled={uploading}
                     onChange={handleFileSelect}
                     className="hidden"
                   />
