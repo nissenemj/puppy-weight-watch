@@ -1,8 +1,8 @@
-import React, { useMemo, useState } from 'react';
+import React, { createContext, useContext, useMemo, useState } from 'react';
 import { Link, useLocation, useNavigate, useInRouterContext } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useToast } from '@/hooks/use-toast';
@@ -14,6 +14,7 @@ import { useUser } from '@/contexts/UserContext';
 import { useDog } from '@/contexts/DogContext';
 import { useGuestAuth } from '@/contexts/GuestAuthContext';
 
+const NavigationContext = createContext(false);
 
 interface PrimaryLink {
   href: string;
@@ -85,12 +86,12 @@ const NavigationWithRouter: React.FC = () => {
   };
 
   const renderPrimaryNav = (className?: string) => (
-    <ul className={cn('flex items-center gap-2', className)}>
+    <ul className={cn('flex shrink-0 items-center gap-1 whitespace-nowrap', className)}>
       <li>
         <Link
           to="/"
           className={cn(
-            'rounded-xl px-3 py-2 text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracotta-500/60 focus-visible:ring-offset-2',
+            'flex min-h-11 items-center rounded-xl px-3 py-2 text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracotta-500/60 focus-visible:ring-offset-2',
             isActive('/') ? 'bg-terracotta-500 text-white shadow-sm' : 'text-stone-600 hover:bg-stone-100 hover:text-stone-900',
           )}
           aria-current={isActive('/') ? 'page' : undefined}
@@ -106,12 +107,12 @@ const NavigationWithRouter: React.FC = () => {
             <Link
               to={item.href}
               className={cn(
-                'flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracotta-500/60 focus-visible:ring-offset-2',
+                'flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracotta-500/60 focus-visible:ring-offset-2',
                 active ? 'bg-white text-stone-900 shadow-sm border border-stone-200' : 'text-stone-600 hover:bg-stone-100 hover:text-stone-900',
               )}
               aria-current={active ? 'page' : undefined}
             >
-              <Icon className={cn("h-4 w-4", active ? "text-terracotta-500" : "text-stone-400")} aria-hidden="true" />
+              <Icon className={cn("h-4 w-4 shrink-0", active ? "text-terracotta-500" : "text-stone-400")} aria-hidden="true" />
               <span>{item.title}</span>
             </Link>
           </li>
@@ -129,17 +130,17 @@ const NavigationWithRouter: React.FC = () => {
         <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
-            className="flex items-center gap-2 px-3 py-2 text-sm font-medium hover:bg-stone-100 rounded-xl"
+            className="flex max-w-40 items-center gap-2 px-3 py-2 text-sm font-medium hover:bg-stone-100 rounded-xl"
             aria-label={`Aktiivinen koira: ${activeDog?.name || 'Ei valittu'}`}
           >
-            <Dog className="h-4 w-4 text-terracotta-500" />
-            <span className="max-w-24 truncate text-stone-700">
+            <Dog className="h-4 w-4 shrink-0 text-terracotta-500" />
+            <span className="min-w-0 max-w-24 truncate text-stone-700">
               {activeDog?.name || 'Valitse koira'}
             </span>
-            <ChevronDown className="h-3 w-3 text-stone-400" />
+            <ChevronDown className="h-3 w-3 shrink-0 text-stone-400" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="center" className="w-56">
+        <DropdownMenuContent align="center" className="z-[300] w-56 max-w-[calc(100vw-2rem)]">
           <DropdownMenuLabel>Koirat</DropdownMenuLabel>
           <DropdownMenuSeparator />
           {dogs.map((dog) => (
@@ -148,7 +149,7 @@ const NavigationWithRouter: React.FC = () => {
               onClick={() => setActiveDog(dog)}
               className="flex items-center justify-between cursor-pointer"
             >
-              <span>{dog.name}</span>
+              <span className="min-w-0 break-words">{dog.name}</span>
               {dog.id === activeDog?.id && (
                 <Check className="h-4 w-4 text-terracotta-500" />
               )}
@@ -172,7 +173,7 @@ const NavigationWithRouter: React.FC = () => {
     if (!isGuest || guestWeightEntries.length === 0) return null;
 
     return (
-      <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-amber-50 border border-amber-200 rounded-full text-xs">
+      <div className="flex flex-wrap items-center gap-2 px-3 py-2 bg-amber-50 border border-amber-200 rounded-xl text-xs">
         <Cloud className="h-3 w-3 text-amber-600" />
         <span className="text-amber-700 font-medium">Vierastila</span>
         <span className="text-amber-600">({guestWeightEntries.length} mittausta)</span>
@@ -193,22 +194,22 @@ const NavigationWithRouter: React.FC = () => {
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
-              className="flex items-center gap-3 px-2 text-sm font-medium hover:bg-stone-100"
+              className="h-11 w-11 shrink-0 rounded-xl p-0 hover:bg-stone-100"
               aria-label="Käyttäjävalikko - Avaa käyttäjän asetukset"
             >
               <Avatar className="h-9 w-9 border border-stone-200">
                 <AvatarFallback className="bg-terracotta-100 text-terracotta-700">{initials}</AvatarFallback>
               </Avatar>
-              <span className="hidden md:inline-flex flex-col text-left">
-                <span className="text-sm font-semibold text-stone-900">{user.email}</span>
-                <span className="text-xs text-stone-500">
-                  {dogLoading ? 'Haetaan pentua...' : activeDogName ? `Pentu: ${activeDogName}` : 'Ei pentuprofiilia'}
-                </span>
-              </span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-64" role="menu" aria-label="Käyttäjän valikko">
-            <DropdownMenuLabel>Tilin asetukset</DropdownMenuLabel>
+          <DropdownMenuContent align="end" className="z-[300] w-64 max-w-[calc(100vw-2rem)]" role="menu" aria-label="Käyttäjän valikko">
+            <DropdownMenuLabel>
+              Tilin asetukset
+              <span className="block break-all text-xs font-normal text-stone-600">{user.email}</span>
+              <span className="block break-words text-xs font-normal text-stone-500">
+                {dogLoading ? 'Haetaan pentua...' : activeDogName ? `Pentu: ${activeDogName}` : 'Ei pentuprofiilia'}
+              </span>
+            </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
               <Link to="/weight-tracker" role="menuitem">Hallinnoi painonseurantaa</Link>
@@ -229,17 +230,9 @@ const NavigationWithRouter: React.FC = () => {
       );
     }
     return (
-      <div className="flex items-center gap-3">
-        <Button asChild variant="ghost" className="hidden sm:inline-flex text-stone-600 hover:text-stone-900 hover:bg-stone-100">
-          <Link to="/guides" className="flex items-center gap-2">
-            <Info className="h-4 w-4" />
-            Tutustu palveluun
-          </Link>
-        </Button>
-        <Button asChild variant="outline" className="border-terracotta-500 text-terracotta-600 hover:bg-terracotta-50">
-          <Link to="/login">Kirjaudu / Luo profiili</Link>
-        </Button>
-      </div>
+      <Button asChild variant="outline" className="shrink-0 border-terracotta-500 text-terracotta-600 hover:bg-terracotta-50">
+        <Link to="/login">{isGuest && guestWeightEntries.length > 0 ? 'Tallenna mittaukset' : 'Kirjaudu / Luo profiili'}</Link>
+      </Button>
     );
   };
 
@@ -254,7 +247,7 @@ const NavigationWithRouter: React.FC = () => {
       </a>
 
       <header
-        className="fixed left-0 right-0 top-0 z-[100] h-16 md:h-20"
+        className="fixed left-0 right-0 top-0 z-[100] h-16 md:h-20 md:px-4"
         role="banner"
         style={{ contain: 'layout' }}
       >
@@ -262,45 +255,32 @@ const NavigationWithRouter: React.FC = () => {
           role="navigation"
           aria-label="Päänavigaatio"
           className={cn(
-            'mx-auto flex w-full max-w-6xl items-center justify-between gap-4 rounded-b-2xl md:rounded-2xl border-b md:border border-white/40 bg-white/80 px-4 py-3 shadow-sm backdrop-blur-md transition-all duration-300 md:px-6 md:mt-2',
+            'mx-auto flex h-16 w-full max-w-full items-center justify-between gap-2 rounded-b-2xl border-b border-white/40 bg-white/95 px-4 shadow-sm backdrop-blur-md md:mt-2 md:max-w-2xl md:rounded-2xl md:border lg:max-w-4xl xl:max-w-5xl',
           )}
         >
-          <Link to="/" className="flex items-center gap-3 rounded-xl px-2 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracotta-500/60 focus-visible:ring-offset-2">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-terracotta-500 text-white shadow-sm" aria-hidden="true">
+          <Link to="/" aria-label="Pentulaskuri, etusivu" className="flex min-h-11 shrink-0 items-center gap-2 rounded-xl py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracotta-500/60 focus-visible:ring-offset-2">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-terracotta-500 text-white shadow-sm" aria-hidden="true">
               <PawPrint className="h-5 w-5" />
             </span>
-            <div className="hidden sm:flex flex-col">
-              <span className="text-sm font-serif font-bold text-stone-900">Pentulaskuri</span>
-              <span className="hidden md:inline text-xs text-stone-500">Kasvun ja hyvinvoinnin seurantaan</span>
-            </div>
+            <span className="whitespace-nowrap text-sm font-serif font-bold text-stone-900">Pentulaskuri</span>
           </Link>
 
-          <div className="hidden md:flex lg:flex items-center gap-4" role="navigation" aria-label="Sivulinkit">
+          <div className="hidden min-w-0 xl:flex" role="navigation" aria-label="Sivulinkit">
             {renderPrimaryNav()}
           </div>
 
-          <div className="hidden md:flex items-center gap-4">
-            {renderGuestIndicator()}
+          <div className="hidden shrink-0 items-center gap-2 xl:flex">
             {renderDogSelector()}
             {renderAuthActions()}
-            <Button asChild variant="secondary" className="hidden lg:inline-flex bg-sage-500 text-white hover:bg-sage-600 transition-all duration-200 hover:scale-105 shadow-sm">
-              <Link to={user ? '/onboarding' : '/login'}>
-                <PlusCircle className="mr-2 h-4 w-4" /> Luo profiili
-              </Link>
-            </Button>
           </div>
 
-          <div className="flex items-center gap-2 md:hidden">
-            {user ? (
-              <Button onClick={() => navigate('/login')} variant="ghost" className="px-2">
-                <Dog className="h-5 w-5 text-terracotta-500" />
-              </Button>
-            ) : null}
+          <div className="flex shrink-0 items-center gap-2 xl:hidden">
+            <div className="hidden sm:block">{renderAuthActions()}</div>
             <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
               <SheetTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-stone-200"
+                  className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-stone-200 p-0"
                   aria-expanded={isMobileOpen}
                   aria-controls="mobile-menu"
                 >
@@ -310,7 +290,8 @@ const NavigationWithRouter: React.FC = () => {
               </SheetTrigger>
               <SheetContent
                 side="right"
-                className="w-full max-w-sm bg-stone-50 px-0 z-[250]"
+                overlayClassName="z-[200]"
+                className="h-dvh w-full max-w-sm overflow-y-auto overscroll-contain bg-stone-50 px-0 pb-[max(1.5rem,env(safe-area-inset-bottom))] z-[250]"
                 id="mobile-menu"
               >
                 <SheetHeader className="px-6 pb-4 pt-8 text-left border-b border-stone-100">
@@ -320,14 +301,17 @@ const NavigationWithRouter: React.FC = () => {
                     </span>
                     Pentulaskuri
                   </SheetTitle>
+                  <SheetDescription>Valitse sivu tai hallinnoi profiiliasi.</SheetDescription>
                 </SheetHeader>
-                <div className="space-y-4 px-6 py-6" role="menu">
+                <div className="space-y-4 px-6 py-6">
+                  {renderGuestIndicator()}
                   {user ? (
                     <div className="rounded-xl border border-terracotta-200 bg-terracotta-50 p-4">
-                      <p className="text-sm font-medium text-stone-900">{user.email}</p>
-                      <p className="text-xs text-stone-500">
+                      <p className="break-all text-sm font-medium text-stone-900">{user.email}</p>
+                      <p className="break-words text-xs text-stone-500">
                         {dogLoading ? 'Haetaan pentua...' : activeDogName ? `Viimeksi katsottu pentu: ${activeDogName}` : 'Lisää pentuprofiili aloittaaksesi'}
                       </p>
+                      {renderDogSelector()}
                     </div>
                   ) : (
                     <div className="rounded-xl border border-stone-200 bg-white p-4 text-sm text-stone-600 shadow-sm">
@@ -431,7 +415,17 @@ const NavigationStatic: React.FC = () => {
   );
 };
 
-export const Navigation: React.FC = () => {
+export const Navigation: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
+  const hasParentNavigation = useContext(NavigationContext);
   const inRouter = useInRouterContext();
-  return inRouter ? <NavigationWithRouter /> : <NavigationStatic />;
+
+  // The shared layout owns navigation, including on pages with a legacy Navigation call.
+  if (hasParentNavigation) return <>{children}</>;
+
+  return (
+    <>
+      {inRouter ? <NavigationWithRouter /> : <NavigationStatic />}
+      <NavigationContext.Provider value={true}>{children}</NavigationContext.Provider>
+    </>
+  );
 };
