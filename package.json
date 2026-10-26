@@ -20,6 +20,7 @@
     "test": "vitest run",
     "test:security:db": "node scripts/test-access-policies.mjs",
     "test:security:db:baseline": "node scripts/test-access-policies.mjs --baseline",
+    "test:security:storage": "node scripts/test-storage-api.mjs",
     "test:watch": "vitest",
     "test:e2e": "playwright test --project=e2e",
     "a11y-test": "playwright test --project=a11y",

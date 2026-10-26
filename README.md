@@ -74,11 +74,14 @@ To connect a domain, navigate to Project > Settings > Domains and click Connect 
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
 
-## Käyttöoikeuskorjausten paikallinen valmistelu
+## Käyttöoikeuskorjaukset
 
-`supabase/security/` sisältää kaksi tarkastettavaa SQL-muutosta. Ne eivät ole
-`supabase/migrations/`-ketjussa eivätkä tule käyttöön buildin tai testien mukana.
-Älä aja niitä tuotannossa tämän valmistelun perusteella.
+`supabase/security/` sisältää kahden käyttöoikeusmuutoksen SQL-lähteet.
+Niistä on luotu Supabase CLI:n `migration new` -komennolla vastaavat tiedostot
+`supabase/migrations/`-hakemistoon. SQL ei tule käyttöön Vercel-buildin mukana.
+Kohdekannan migraatiohistoria on tarkistettava ennen ajoa: tuotannossa on myös
+erillisen ruokien lähdeaineistotyön migraatioita, jotka puuttuvat tästä haarasta.
+Älä korjaa tätä eroa ajamalla koko paikallista migraatioketjua tuotantoon.
 
 - `catalog_admin_writes.sql`: kuuden nykyisen ruokaluettelotaulun kirjoitus vaatii
   tietokannan `admin`-roolin ja muun kuin anonyymin Auth-istunnon. Julkinen luku säilyy.
@@ -171,8 +174,25 @@ npm --version   # 10.9.9
 
 Väliaikaiskansio voi poistua koneen siivouksessa. Sen jälkeen valitse Node 22
 käyttämälläsi versionhallintatyökalulla ja tarkista versio ennen ajoa.
-Paikallinen Node 22 -ajo ei sisällä Vercel Preview -julkaisua tai oikean Supabase
-Storage -rajapinnan istuntotestejä; ne tehdään erikseen hyväksytyssä jatkotyössä.
+Yllä oleva Node 22 -ajo tehtiin valmisteluvaiheessa. Julkaisun valmistelussa
+26.10.2026 ajettiin lisäksi 39 hyväksyttyä testiä oikean paikallisen Supabase Auth-,
+Data API- ja Storage HTTP -rajapinnan kautta Node 22.23.4:llä. Testi käyttää kahta
+synteettistä käyttäjää, PostgreSQL 17.11:ta ja Storage API v1.84.19:ää.
+Se tarkistaa latauksen, luvun, allekirjoituksen, vanhat polut ja lataajatiedon,
+käyttäjä- ja kirjatunnisteiden törmäykset, toisen omistajan pääsyn eston,
+tiedostorajat, pysyvän polun tallennuksen, linkin vanhenemisen ja poiston.
+Testi ei käytä tuotantotunnuksia tai pilvipalvelua.
+
+`scripts/test-storage-api.mjs` hyväksyy vain erillisen paikallisen testiprojektin,
+jonka polku on `/private/tmp/pentulaskuri-storage-http-<tunniste>`, projektitunnus
+alkaa `pentulaskuri-storage-http-` ja API-osoite on `http://127.0.0.1:55321`.
+Alusta sitä varten uusi tyhjä CLI-projekti, aseta API-portiksi 55321 ja tietokannan
+portiksi 55322 sekä käynnistä Auth, Data API ja Storage. Älä kopioi tuotannon
+config.toml-tiedostoa tai migraatioita testiprojektiin. Anna uuden projektin polku
+muuttujassa `STORAGE_TEST_WORKDIR` ja CLI:n suoritustiedoston polku muuttujassa
+`STORAGE_TEST_CLI`, ja aja `npm run test:security:storage`. Ajo edellyttää tyhjää
+testikantaa ja paikallista Dockeria. CLI:n status sisältää paikallisia avaimia;
+testi käsittelee ne muistissa eikä tulosta niitä.
 
 RLS-testit käyttävät paikallista Dockeria ja valmiiksi koneella olevaa PostgreSQL 17
 -imagea. Skripti ei lataa imagea, lue `.env`-tiedostoja tai Supabase-asetuksia eikä
@@ -208,18 +228,19 @@ omistuksen tarkistuksen.
 Testi käyttää supistettua taulurakennetta. Se ei testaa Supabase Storage HTTP API:a,
 oikeiden JWT:iden tarkistusta, palvelun välimuisteja tai tuotannon koko migraatioketjua.
 
-### Ennen myöhempää käyttöönottoa, erillinen hyväksyntä vaaditaan
+### Julkaisemisen järjestys
 
 1. Tarkista kohdekannan nykyiset säännöt, rooliapufunktiot ja kuvapolkujen muodot
-   uudelleen. Tämä valmistelu perustuu 25.10.2026 luettuun metatietoon.
-2. Luo SQL:stä varsinaiset migraatiot Supabase CLI:n `supabase migration new`
-   -komennolla vasta hyväksytyssä jatkotyössä. CLI ei ollut tämän valmistelun
-   ympäristössä asennettuna; SQL-ehdokkaat eivät siksi esitä ajettua migraatiohistoriaa.
+   uudelleen. Tuotannon rakenne tarkistettiin myös 26.10.2026 ennen julkaisuvalmistelua.
+2. Tarkista, että CLI:llä luotujen migraatioiden sisältö vastaa `supabase/security/`
+   -lähteitä. Aja vain nämä kaksi muutosta. Jos palvelun antama migraatioversio
+   poikkeaa paikallisesta, kirjaa tiedostonimeen palvelun todellinen versio.
 3. Testaa erillisessä Supabase-testiympäristössä kahden käyttäjän oikeilla
    istunnoilla: profiili, muiston lisäys ja poisto, vanha kuvapolku, allekirjoituksen
    vanheneminen sekä suora public-osoite ilman kirjautumista. Toisen omistajan
    lataus, luku, päivitys, poisto ja signed URL -pyyntö on estettävä.
-4. Tarkista Preview ja hyväksy koodin julkaisu sekä tietokantamuutokset erikseen.
+4. Tarkista Preview. Koodin julkaisu ja tietokantamuutokset edellyttävät omistajan
+   julkaisulupaa.
    Vanhat `visibility: public` -arvot eivät muodosta julkista jakamistoimintoa:
    tässä valmisteltu kuvamalli on omistajalle yksityinen. Käyttöliittymän
    julkisuusvalinnat on poistettu ja asetusten tallennus käyttää `private`-arvoa.
@@ -232,6 +253,5 @@ oikeiden JWT:iden tarkistusta, palvelun välimuisteja tai tuotannon koko migraat
    julkisia kopioita ei voi peruuttaa. Annettu signed URL on haltijansa käytettävissä
    enintään voimassaolonsa ajan, myös uloskirjautumisen jälkeen.
 
-Valmistelu ei sisällä GitHub-pushia, PR:ää, Vercel-julkaisua, ympäristömuuttujien
-muutoksia tai tuotantokannan muutoksia. Paikallisen testin läpäisy ei yksin ole
-tuotannon julkaisulupa.
+Paikallisen testin läpäisy ei yksin ole tuotannon julkaisulupa. Ympäristömuuttujien
+muutoksia tai uusia riippuvuuksia nämä korjaukset eivät edellytä.
