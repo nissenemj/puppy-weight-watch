@@ -16,9 +16,10 @@ import { useToast } from '@/hooks/use-toast';
 interface AddHealthRecordDialogProps {
   bookId: string;
   onHealthRecordAdded: () => void;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  returnFocusTo?: React.RefObject<HTMLElement>;
 }
 
 interface VaccinationTemplate {
@@ -34,7 +35,8 @@ export const AddHealthRecordDialog: React.FC<AddHealthRecordDialogProps> = ({
   onHealthRecordAdded,
   children,
   open: externalOpen,
-  onOpenChange: externalOnOpenChange
+  onOpenChange: externalOnOpenChange,
+  returnFocusTo
 }) => {
   const [internalOpen, setInternalOpen] = useState(false);
   const open = externalOpen !== undefined ? externalOpen : internalOpen;
@@ -183,10 +185,13 @@ export const AddHealthRecordDialog: React.FC<AddHealthRecordDialogProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {children}
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      {children && <DialogTrigger asChild>{children}</DialogTrigger>}
+      <DialogContent className="sm:max-w-[425px]" onCloseAutoFocus={(event) => {
+        if (returnFocusTo?.current?.isConnected) {
+          event.preventDefault();
+          returnFocusTo.current.focus();
+        }
+      }}>
         <DialogHeader>
           <DialogTitle>Lisää terveysmerkintä</DialogTitle>
           <DialogDescription>

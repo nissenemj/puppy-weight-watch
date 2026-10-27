@@ -29,12 +29,18 @@ async function expectLayout(page: Page) {
       () => document.documentElement.scrollWidth <= innerWidth,
     ),
   ).toBe(true);
-  const bounds = await page.locator("main h1").evaluate((element) => ({
-    top: element.getBoundingClientRect().top,
-    headerBottom: document.querySelector("header")!.getBoundingClientRect()
-      .bottom,
-  }));
-  expect(bounds.top).toBeGreaterThanOrEqual(bounds.headerBottom);
+  // Route styles and scroll restoration settle after the lazy page mounts.
+  await expect
+    .poll(() =>
+      page
+        .locator("main h1")
+        .evaluate(
+          (element) =>
+            element.getBoundingClientRect().top -
+            document.querySelector("header")!.getBoundingClientRect().bottom,
+        ),
+    )
+    .toBeGreaterThanOrEqual(0);
 }
 
 for (const width of [320, 768, 1024, 1440]) {
@@ -279,6 +285,104 @@ test.describe("the signed-in puppy book", () => {
           () => document.documentElement.scrollWidth <= innerWidth,
         ),
       ).toBe(true);
+    });
+  }
+
+  for (const [width, height] of [
+    [320, 568],
+    [844, 390],
+    [1440, 900],
+  ]) {
+    test(`the entry menu fits ${width}x${height}, supports keyboard use and restores focus`, async ({
+      page,
+    }, testInfo) => {
+      await mockBook(page);
+      await page.setViewportSize({ width, height });
+      await page.goto("/puppy-book");
+      const trigger = page.getByRole("button", {
+        name: "Lisää merkintä",
+        exact: true,
+      });
+      await trigger.focus();
+      await trigger.press("Enter");
+      const menu = page.getByRole("menu", {
+        name: "Lisää merkintä",
+        exact: true,
+      });
+      await expect(menu).toBeVisible();
+      await expect(menu).toHaveCSS("animation-name", "none");
+      await expect(
+        menu.getByRole("menuitem", { name: "Lisää kuva", exact: true }),
+      ).toBeFocused();
+      // Radix computes collision placement on the next layout frame.
+      await expect
+        .poll(async () => {
+          const box = await menu.boundingBox();
+          return (
+            box && [
+              box.x >= 15,
+              box.y >= 15,
+              box.x + box.width <= width - 15,
+              box.y + box.height <= height - 15,
+            ]
+          );
+        })
+        .toEqual([true, true, true, true]);
+      const bounds = await menu.boundingBox();
+      for (const item of await menu.getByRole("menuitem").all()) {
+        expect((await item.boundingBox())!.height).toBeGreaterThanOrEqual(44);
+      }
+      await expectAccessible(page, '[role="menu"]');
+      await page.keyboard.press("End");
+      const healthItem = menu.getByRole("menuitem", {
+        name: "Lisää terveysmerkintä",
+        exact: true,
+      });
+      await expect(healthItem).toBeFocused();
+      const lastBounds = await healthItem.boundingBox();
+      expect(lastBounds!.y + lastBounds!.height).toBeLessThanOrEqual(
+        bounds!.y + bounds!.height,
+      );
+      await page.screenshot({ path: testInfo.outputPath("entry-menu.png") });
+      await page.keyboard.press("Escape");
+      await expect(menu).toBeHidden();
+      await expect(trigger).toBeFocused();
+
+      await trigger.press("Enter");
+      await page.keyboard.press("ArrowDown");
+      await expect(
+        menu.getByRole("menuitem", { name: "Lisää tapahtuma", exact: true }),
+      ).toBeFocused();
+      await page.keyboard.press("Enter");
+      const eventDialog = page.getByRole("dialog", {
+        name: "Lisää tapahtuma",
+        exact: true,
+      });
+      await expect(eventDialog).toBeVisible();
+      await page.keyboard.press("Escape");
+      await expect(eventDialog).toBeHidden();
+      await expect(trigger).toBeFocused();
+
+      await trigger.click();
+      // Clicking the visible words must activate the same full-size target as the icon.
+      await menu.getByText("Lisää terveysmerkintä", { exact: true }).click();
+      const healthDialog = page.getByRole("dialog", {
+        name: "Lisää terveysmerkintä",
+        exact: true,
+      });
+      await expect(healthDialog).toBeVisible();
+      await page.keyboard.press("Escape");
+      await expect(healthDialog).toBeHidden();
+      await expect(trigger).toBeFocused();
+
+      await trigger.click();
+      await expect(menu).toBeVisible();
+      // The menu is modal: underlying controls are intentionally hidden from
+      // assistive technology. Use the verified empty margin for an outside tap.
+      await page.mouse.move(8, Math.round(height / 2), { steps: 5 });
+      await page.mouse.click(8, Math.round(height / 2));
+      await expect(menu).toBeHidden();
+      await expect(trigger).toBeFocused();
     });
   }
 

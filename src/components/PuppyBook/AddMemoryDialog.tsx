@@ -37,6 +37,7 @@ interface AddMemoryDialogProps {
   type: "photo" | "text" | "event" | "milestone";
   onMemoryAdded: () => void;
   onTypeChange?: (type: "photo" | "text" | "event" | "milestone") => void;
+  returnFocusTo?: React.RefObject<HTMLElement>;
 }
 
 const AddMemoryDialog: React.FC<AddMemoryDialogProps> = ({
@@ -46,6 +47,7 @@ const AddMemoryDialog: React.FC<AddMemoryDialogProps> = ({
   type,
   onMemoryAdded,
   onTypeChange,
+  returnFocusTo,
 }) => {
   const [uploading, setUploading] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -269,8 +271,8 @@ const AddMemoryDialog: React.FC<AddMemoryDialogProps> = ({
         }}
         onCloseAutoFocus={(event) => {
           event.preventDefault();
-          if (returnFocusRef.current?.isConnected)
-            returnFocusRef.current.focus();
+          const target = returnFocusTo?.current ?? returnFocusRef.current;
+          if (target?.isConnected) target.focus();
         }}
       >
         <DialogHeader>
