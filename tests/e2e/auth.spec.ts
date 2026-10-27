@@ -63,7 +63,7 @@ test("enabled Google login hands off to the correct OAuth endpoint", async ({
 test("Google disabled after page load does not leave the app", async ({
   page,
 }) => {
-  let settingsRequests = 0;
+  let googleDisabled = false;
   const authorizeRequests: string[] = [];
   page.on("request", (request) => {
     if (new URL(request.url()).pathname === "/auth/v1/authorize")
@@ -73,7 +73,7 @@ test("Google disabled after page load does not leave the app", async ({
     route.fulfill({
       json: {
         external: {
-          google: ++settingsRequests === 1,
+          google: !googleDisabled,
           apple: false,
           email: true,
         },
@@ -81,6 +81,11 @@ test("Google disabled after page load does not leave the app", async ({
     }),
   );
   await openPage(page, "/login");
+  // Development StrictMode may read settings twice. Disable only after the initial UI is ready.
+  await expect(
+    page.getByRole("button", { name: "Jatka Google-tilillä" }),
+  ).toBeVisible();
+  googleDisabled = true;
   await page.getByRole("button", { name: "Jatka Google-tilillä" }).click();
   await expect(page.getByRole("alert")).toContainText(
     "Google-kirjautuminen ei ole käytössä.",

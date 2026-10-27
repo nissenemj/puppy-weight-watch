@@ -4,16 +4,69 @@ import {
   ArrowRight,
   BookOpen,
   Check,
-  Heart,
   LockKeyhole,
 } from "lucide-react";
 import SEO from "@/components/SEO";
 import puppyHome from "@/assets/puppy-home-1200.webp";
-import puppyHomeSmall from "@/assets/puppy-home-640.webp";
+import puppyLater from "@/assets/puppy-book-home-1200.webp";
+import { AnnualBookPreview } from "@/features/annual-book/AnnualBookPreview";
+import { PrintBookButton } from "@/features/annual-book/PrintBookButton";
+import type { AnnualBook } from "@/features/annual-book/model";
 import "@/styles/puppy-journal.css";
 
-const pages = ["Kansi", "Ensimmäiset päivät", "Pieniä suuria hetkiä"];
-const pageKeys = ["kansi", "ensimmaiset-paivat", "hetket"];
+const pages = [
+  "Kansi",
+  "Silloin ja nyt",
+  "Ensimmäiset päivät",
+  "Kuukauden kommellus",
+  "Pieniä suuria hetkiä",
+  "Kasvu",
+];
+const pageKeys = [
+  "kansi",
+  "silloin-ja-nyt",
+  "ensimmaiset-paivat",
+  "kommellus",
+  "hetket",
+  "kasvu",
+];
+// Illustrative fixture only. These are not a real puppy's photos or measurements.
+const exampleBook: AnnualBook = {
+  bookId: "00000000-0000-4000-8000-000000000001",
+  puppyName: "Nuppu",
+  start: "2026-04-01",
+  end: "2027-03-31",
+  entries: [
+    {
+      id: "home",
+      date: "2026-06-03",
+      image: puppyHome,
+      caption:
+        "Tervetuloa kotiin, Nuppu.\nOvi aukesi ja pieni nenä tutki jokaisen nurkan. Illalla nukahdit peitolle, aivan meidän viereemme.",
+      mishap: false,
+    },
+    {
+      id: "sock",
+      date: "2026-07-12",
+      caption:
+        "Sukkavarkaan tunnustus\nPyykkikorista löytyi aarre. Kannoin sitä ylpeästi ympäri olohuonetta. Sukka palautui omistajalleen, ja sain tilalle oman lelun.",
+      mishap: true,
+    },
+    {
+      id: "autumn",
+      date: "2026-09-03",
+      image: puppyLater,
+      caption:
+        "Pieniä suuria hetkiä.\nEnsimmäinen yhteinen kävely, oma tuttu lelu ja se tavallinen tiistai. Tänäänkin olit siinä, ja se riitti.",
+      mishap: false,
+    },
+  ],
+  weights: [
+    { date: "2026-06-03", kg: 4.2 },
+    { date: "2026-07-03", kg: 6.5 },
+    { date: "2026-09-03", kg: 10.8 },
+  ],
+};
 
 export default function MemoryBookExample() {
   const [params, setParams] = useSearchParams();
@@ -30,8 +83,9 @@ export default function MemoryBookExample() {
   return (
     <div className="puppy-journal memory-example">
       <SEO
-        title="Muistokirja pennun ensimmäisestä vuodesta | Esimerkki"
-        description="Selaa kuvitteellista pentumuistokirjaa. Katso, miten kuvat, tarinat ja tärkeät hetket voisivat muodostaa oman muistokirjan."
+        title="Pentukirja: pennun ensimmäinen vuosi"
+        siteName="Pentulaskuri"
+        description="Tee pentukirja pennun ensimmäisestä vuodesta. Selaa esimerkkiä: omat kuvat, Silloin ja nyt, kuukauden kommellus ja kasvun hetket yhdessä kirjassa."
         canonicalUrl="https://pentulaskuri.com/muistokirja"
       />
       <Link className="journal-back" to="/puppy-book-landing">
@@ -40,11 +94,10 @@ export default function MemoryBookExample() {
 
       <section className="memory-intro" aria-labelledby="memory-example-title">
         <p className="journal-kicker">
-          <BookOpen size={18} aria-hidden="true" /> Pentukirjasta oma
-          muistokirja
+          <BookOpen size={18} aria-hidden="true" /> Oma pentukirja
         </p>
         <h1 id="memory-example-title" className="journal-title">
-          Pienestä pennusta kokonainen tarina.
+          Pennun ensimmäinen vuosi, omaksi pentukirjaksi.
         </h1>
         <p className="journal-lead">
           Ensimmäinen kotipäivä, hassu tapa nukkua, yhdessä opitut asiat. Näin
@@ -57,11 +110,12 @@ export default function MemoryBookExample() {
           <span>Esimerkkikirja</span>
           <p>
             Nuppu ja kaikki kirjan tiedot ovat kuvitteellisia. Kuvitus on luotu
-            tekoälyllä.
+            tekoälyllä. Silloin ja nyt -kuvat havainnollistavat taittoa, eivät
+            oikean pennun kasvua.
           </p>
         </div>
         <h2 id="sample-book-title" className="sr-only">
-          Nupun muistokirjan esimerkki
+          Nupun pentukirjan esimerkki
         </h2>
         <nav
           className="memory-page-navigation"
@@ -81,111 +135,16 @@ export default function MemoryBookExample() {
         </nav>
         <div
           id="memory-sample-page"
-          className="memory-paper"
           role="region"
           aria-label={pages[pageIndex]}
-          aria-live="polite"
         >
-          {pageIndex === 0 ? (
-            <article className="memory-cover">
-              <div className="memory-cover-copy">
-                <span>Pennun ensimmäinen vuosi</span>
-                <h3>Nupun tarina</h3>
-                <p>Meidän yhteinen alku, 2026</p>
-              </div>
-              <img
-                src={puppyHome}
-                srcSet={`${puppyHomeSmall} 640w, ${puppyHome} 1200w`}
-                sizes="(min-width: 768px) 640px, 100vw"
-                width={1200}
-                height={800}
-                alt="Kuvitteellisen Nuppu-pennun kuvituskuva kotona peitolla"
-                fetchPriority="high"
-              />
-              <p className="memory-cover-footer">
-                <Heart size={17} aria-hidden="true" /> Pienet hetket, suuri
-                paikka sydämessä.
-              </p>
-            </article>
-          ) : pageIndex === 1 ? (
-            <article className="memory-spread">
-              <div>
-                <p className="memory-date">3. kesäkuuta 2026</p>
-                <h3>Tervetuloa kotiin, Nuppu.</h3>
-                <p>
-                  Ovi aukesi ja pieni nenä tutki jokaisen nurkan. Illalla
-                  nukahdit peitolle, aivan meidän viereemme.
-                </p>
-                <p>
-                  Ensimmäisestä päivästä muistamme tassujen pehmeän rapinan ja
-                  sen, miten koti tuntui heti vähän erilaiselta.
-                </p>
-                <span className="memory-handwritten">Tästä se alkoi.</span>
-              </div>
-              <figure>
-                <img
-                  src={puppyHomeSmall}
-                  width={640}
-                  height={427}
-                  alt="Esimerkkikirjan kuvitus: Nuppu lepää peitolla"
-                />
-                <figcaption>Ensimmäinen oma lepopaikka.</figcaption>
-              </figure>
-            </article>
-          ) : (
-            <article className="memory-moments">
-              <p className="memory-date">Ensimmäisen kesän muistoja</p>
-              <h3>Pieniä suuria hetkiä.</h3>
-              <dl>
-                <div>
-                  <dt>Ensimmäinen yhteinen kävely</dt>
-                  <dd>
-                    Matka oli lyhyt. Nuuskittavaa riitti silti koko maailmaksi.
-                  </dd>
-                </div>
-                <div>
-                  <dt>Oma tuttu lelu</dt>
-                  <dd>
-                    Kaikista leluista valitsit aina saman pehmeän kaverin.
-                  </dd>
-                </div>
-                <div>
-                  <dt>Se tavallinen tiistai</dt>
-                  <dd>
-                    Ei tapahtunut mitään erityistä. Olit vain siinä, ja se
-                    riitti.
-                  </dd>
-                </div>
-              </dl>
-              <p className="memory-handwritten">
-                Tavallinenkin päivä ansaitsee tulla muistetuksi.
-              </p>
-            </article>
-          )}
+          <AnnualBookPreview
+            book={exampleBook}
+            pageIndex={pageIndex}
+            onPageChange={selectPage}
+          />
         </div>
-        <div className="memory-pagination">
-          <button
-            type="button"
-            className="journal-icon-button"
-            aria-label="Edellinen esimerkkisivu"
-            disabled={pageIndex === 0}
-            onClick={() => selectPage(pageIndex - 1)}
-          >
-            <ArrowLeft size={18} aria-hidden="true" />
-          </button>
-          <p>
-            {pageIndex + 1} / {pages.length}
-          </p>
-          <button
-            type="button"
-            className="journal-icon-button"
-            aria-label="Seuraava esimerkkisivu"
-            disabled={pageIndex === pages.length - 1}
-            onClick={() => selectPage(pageIndex + 1)}
-          >
-            <ArrowRight size={18} aria-hidden="true" />
-          </button>
-        </div>
+        <PrintBookButton book={exampleBook} />
       </section>
 
       <section className="memory-offer" aria-labelledby="memory-offer-title">
@@ -194,9 +153,9 @@ export default function MemoryBookExample() {
             Haluaisitko tällaisen omasta pennustasi?
           </h2>
           <p>
-            Suunnittelemme ladattavaa PDF-muistokirjaa pentukirjaan
-            tallentamistasi kuvista ja teksteistä. Haluamme ensin kuulla, mikä
-            tekisi siitä sinulle tärkeän.
+            Voit kokeilla omista kuvista ja teksteistä koottavaa perusmallia
+            maksutta omassa pentukirjassasi. Suunnittelemme myöhemmin laajempaa
+            kirjaa, johon voisi valita lisää sivuja ja oman kansityylin.
           </p>
           <ul className="journal-check-list">
             <li>
@@ -222,8 +181,8 @@ export default function MemoryBookExample() {
             }).format(14.9)}
           </strong>
           <p>
-            Muistokirja on suunnitteilla eikä sitä voi vielä ostaa.
-            Kiinnostuksesta kertominen ei sido tilaukseen.
+            Maksullinen laajempi pentukirja on suunnitteilla eikä sitä voi vielä
+            ostaa. Kiinnostuksesta kertominen ei sido tilaukseen.
           </p>
           <Link className="journal-button" to="/contact?aihe=muistokirja">
             Kerro kiinnostuksesta <ArrowRight size={18} aria-hidden="true" />
@@ -238,8 +197,8 @@ export default function MemoryBookExample() {
         <div>
           <h2 id="save-memories-title">Aloita muistoista jo tänään.</h2>
           <p>
-            Pentukirjan käyttäminen on ilmaista. Voit tallentaa omat hetkesi,
-            vaikka et hankkisi myöhemmin muistokirjaa.
+            Pentukirjan käyttäminen on ilmaista. Voit tallentaa omat hetkesi, ja
+            koota niistä kirjan selaimen PDF-tallennuksella.
           </p>
           <p className="memory-privacy">
             <LockKeyhole size={16} aria-hidden="true" /> Esimerkkikirja ei käytä

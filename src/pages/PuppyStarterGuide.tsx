@@ -248,7 +248,7 @@ export default function PuppyStarterGuide() {
           </p>
         </div>
         <Link className="journal-button journal-button-light" to="/muistokirja">
-          Katso muistokirjan esimerkki{" "}
+          Katso pentukirjan esimerkki{" "}
           <ArrowRight size={18} aria-hidden="true" />
         </Link>
       </section>
