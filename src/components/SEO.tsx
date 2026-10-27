@@ -11,6 +11,7 @@ interface SEOProps {
   type?: 'website' | 'article' | 'product';
   structuredData?: object;
   noindex?: boolean;
+  siteName?: string;
 }
 
 const SEO: React.FC<SEOProps> = ({
@@ -22,9 +23,10 @@ const SEO: React.FC<SEOProps> = ({
   canonicalUrl,
   type = 'website',
   structuredData,
-  noindex = false
+  noindex = false,
+  siteName = 'Koiranpennun Painonseuranta'
 }) => {
-  const fullTitle = title === 'Koiranpennun Painonseuranta' ? title : `${title} | Koiranpennun Painonseuranta`;
+  const fullTitle = title === siteName ? title : `${title} | ${siteName}`;
 
   // Generate canonical URL - always use https://pentulaskuri.com (without www)
   const baseUrl = 'https://pentulaskuri.com';
@@ -55,7 +57,7 @@ const SEO: React.FC<SEOProps> = ({
       <meta property="og:url" content={url} />
       <meta property="og:image" content={image} />
       <meta property="og:image:alt" content={title} />
-      <meta property="og:site_name" content="Koiranpennun Painonseuranta" />
+      <meta property="og:site_name" content={siteName} />
       <meta property="og:locale" content="fi_FI" />
       
       {/* Twitter Card tags */}

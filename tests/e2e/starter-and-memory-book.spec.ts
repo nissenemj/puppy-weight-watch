@@ -111,29 +111,29 @@ test("the example can be browsed, linked directly and followed to an honest inte
     page.getByRole("button", { name: "Edellinen esimerkkisivu" }),
   ).toBeDisabled();
   await page.getByRole("button", { name: "Seuraava esimerkkisivu" }).click();
-  await expect(page).toHaveURL(/sivu=ensimmaiset-paivat/);
+  await expect(page).toHaveURL(/sivu=silloin-ja-nyt/);
   await expect(
-    page.getByRole("heading", { name: "Tervetuloa kotiin, Nuppu." }),
+    page.getByRole("heading", { name: "Silloin ja nyt", exact: true }),
   ).toBeVisible();
   await page
     .getByRole("button", { name: "Pieniä suuria hetkiä", exact: true })
     .click();
   await expect(
     page.getByRole("button", { name: "Seuraava esimerkkisivu" }),
-  ).toBeDisabled();
+  ).toBeEnabled();
   await page.reload();
   await expect(
     page.getByRole("button", { name: "Pieniä suuria hetkiä", exact: true }),
   ).toHaveAttribute("aria-pressed", "true");
   await expect(
-    page.getByText("Muistokirja on suunnitteilla eikä sitä voi vielä ostaa.", {
+    page.getByText("Maksullinen laajempi pentukirja on suunnitteilla eikä sitä voi vielä ostaa.", {
       exact: false,
     }),
   ).toBeVisible();
   await page.getByRole("link", { name: "Kerro kiinnostuksesta" }).click();
   await expect(page).toHaveURL(/\/contact\?aihe=muistokirja$/);
   await expect(page.getByLabel("Aihe", { exact: true })).toHaveValue(
-    "Kiinnostus muistokirjaan (hintaehdotus 14,90 €)",
+    "Kiinnostus pentukirjaan (hintaehdotus 14,90 €)",
   );
   // Message delivery is tested with a mocked fetch in Contact.test.tsx.
 });
@@ -147,13 +147,13 @@ test("new pages are reachable from the guides and puppy-book landing page", asyn
     .click();
   await expect(page).toHaveURL(/\/guides\/pennun-hankinnat$/);
   await page
-    .getByRole("link", { name: "Katso muistokirjan esimerkki" })
+    .getByRole("link", { name: "Katso pentukirjan esimerkki" })
     .click();
   await expect(page).toHaveURL(/\/muistokirja$/);
   await expectLayout(page);
   await page.goto("/puppy-book-landing");
   await page
-    .getByRole("link", { name: "Katso muistokirjan esimerkki" })
+    .getByRole("link", { name: "Katso pentukirjan esimerkki" })
     .click();
   await expect(page).toHaveURL(/\/muistokirja$/);
   await expectLayout(page);

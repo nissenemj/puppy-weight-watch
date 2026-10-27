@@ -8,7 +8,7 @@ const PuppyBookPage: React.FC = () => {
     <MobileOptimizedLayout>
       <SEO 
         title="Pentukirja - Tallenna pennun elämäntarina"
-        description="Luo ainutlaatuinen muistokirja pennustasi. Tallenna virstanpylväitä, muistoja ja seuraa kasvua henkilökohtaisessa pentukirjassa."
+        description="Luo ainutlaatuinen pentukirja pennustasi. Tallenna virstanpylväitä, muistoja ja seuraa kasvua henkilökohtaisessa pentukirjassa."
         keywords="pentukirja, pentu, koira, muistot, virstanpylväät, kasvuseuranta"
       />
       <PuppyBook />

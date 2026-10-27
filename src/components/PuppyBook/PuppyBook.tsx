@@ -46,6 +46,8 @@ import SettingsDialog from './SettingsDialog';
 import PuppyProfileEditor from './PuppyProfileEditor';
 import PuppyBookSelector from './PuppyBookSelector';
 
+const AnnualBookBuilder = React.lazy(() => import('@/features/annual-book/AnnualBookBuilder'));
+
 // Utilities and Types
 import { getMonthNumberFromAge, getDefaultBirthDate } from '@/utils/puppyAge';
 import type { PuppyBook as PuppyBookType, TimelineEntry, Memory, Milestone, MemoryReaction, MemoryComment } from '@/types/dog';
@@ -57,7 +59,7 @@ const PuppyBook: React.FC = () => {
 
   const reduceMotion = useReducedMotion();
   const [searchParams, setSearchParams] = useSearchParams();
-  const sectionQueries: Record<string, string> = { memories: 'muistot', monthly: 'kuukaudet', timeline: 'aikajana', milestones: 'virstanpylvaat', growth: 'kasvu' };
+  const sectionQueries: Record<string, string> = { memories: 'muistot', monthly: 'kuukaudet', timeline: 'aikajana', milestones: 'virstanpylvaat', growth: 'kasvu', annual: 'vuosikirja' };
   const activeSection = Object.keys(sectionQueries).find(section => sectionQueries[section] === searchParams.get('osio')) || 'memories';
   const setActiveSection = (section: string) => {
     const next = new URLSearchParams(searchParams);
@@ -219,8 +221,10 @@ const PuppyBook: React.FC = () => {
         bannerColor={(book.theme?.bannerColor as string) || 'orange'}
       />
       <div className="journal-book-actions">
+        {activeSection !== 'annual' && <>
         <button type="button" className="journal-button" onClick={() => { setMemoryType('text'); setShowFloatingAction(true); }}><PenLine size={18} aria-hidden="true" /> Kirjoita muisto</button>
         <button type="button" className="journal-button journal-button-secondary" onClick={() => { setMemoryType('photo'); setShowFloatingAction(true); }}><CameraIcon size={18} aria-hidden="true" /> Lisää kuva</button>
+        </>}
         <p className="flex items-start gap-2">{book.privacy_settings?.visibility === 'public' ? <><Globe size={16} className="shrink-0 mt-1" aria-hidden="true" /> Kirjan asetuksissa näkyvyys on julkinen.</> : <><LockKeyhole size={16} className="shrink-0 mt-1" aria-hidden="true" /> Muistot kuuluvat omaan kirjaasi. Voit tarkistaa näkyvyyden kirjan asetuksista.</>}</p>
       </div>
       <PuppyBookNavigation
@@ -229,6 +233,7 @@ const PuppyBook: React.FC = () => {
       />
       <section id="puppy-book-content" className="journal-book-content" aria-label="Pentukirjan sisältö">
         <AnimatePresence mode="wait">
+          {activeSection === 'annual' && <React.Suspense fallback={<p role="status">Avataan kirjan kokoamista…</p>}><AnnualBookBuilder key={`${user.id}-${book.id}`} book={book} userId={user.id} /></React.Suspense>}
           {activeSection === 'monthly' && (
             <motion.div
               key="monthly"
@@ -300,11 +305,12 @@ const PuppyBook: React.FC = () => {
           )}
         </AnimatePresence>
       </section>
-      <div className="journal-profile-footer rounded-lg mt-6"><p>Katso, miltä omista hetkistä koottu muistokirja voisi näyttää.</p><Link to="/muistokirja" className="journal-text-link">Muistokirjan esimerkki <ArrowRight size={16} aria-hidden="true" /></Link></div>
+      <div className="journal-profile-footer rounded-lg mt-6"><p>Katso, miltä omista hetkistä koottu pentukirja voisi näyttää.</p><Link to="/muistokirja" className="journal-text-link">Pentukirjan esimerkki <ArrowRight size={16} aria-hidden="true" /></Link></div>
       <FloatingActionButton
         key={book.id}
         bookId={book.id}
         initialType={memoryType}
+        hideLauncher={activeSection === 'annual'}
         showDialog={showFloatingAction}
         onShowDialogChange={setShowFloatingAction}
         onMemoryAdded={() => {

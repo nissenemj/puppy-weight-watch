@@ -39,7 +39,7 @@ function form() {
     target: { value: "example@example.invalid" },
   });
   fireEvent.change(screen.getByLabelText("Viesti *"), {
-    target: { value: "Haluaisin muistokirjaan oman kannen." },
+    target: { value: "Haluaisin pentukirjaan oman kannen." },
   });
   return screen.getByRole("button", { name: "Lähetä viesti" }).closest("form")!;
 }
@@ -48,13 +48,13 @@ describe("memory-book interest via the existing contact form", () => {
   it("prefills an editable subject without claiming that an order was placed", () => {
     form();
     expect(screen.getByLabelText("Aihe")).toHaveValue(
-      "Kiinnostus muistokirjaan (hintaehdotus 14,90 €)",
+      "Kiinnostus pentukirjaan (hintaehdotus 14,90 €)",
     );
     fireEvent.change(screen.getByLabelText("Aihe"), {
-      target: { value: "Oma kysymys muistokirjasta" },
+      target: { value: "Oma kysymys pentukirjasta" },
     });
     expect(screen.getByLabelText("Aihe")).toHaveValue(
-      "Oma kysymys muistokirjasta",
+      "Oma kysymys pentukirjasta",
     );
     expect(fetchMock).not.toHaveBeenCalled();
   });
@@ -76,7 +76,7 @@ describe("memory-book interest via the existing contact form", () => {
     expect(fetchMock).toHaveBeenCalledOnce();
     const [url, request] = fetchMock.mock.calls[0];
     expect(url).toBe("https://formspree.io/f/xbdlaeel");
-    expect(request.body.get("subject")).toContain("Kiinnostus muistokirjaan");
+    expect(request.body.get("subject")).toContain("Kiinnostus pentukirjaan");
   });
 
   it("keeps the message available after a delivery failure", async () => {
@@ -95,7 +95,7 @@ describe("memory-book interest via the existing contact form", () => {
       ),
     );
     expect(screen.getByLabelText("Viesti *")).toHaveValue(
-      "Haluaisin muistokirjaan oman kannen.",
+      "Haluaisin pentukirjaan oman kannen.",
     );
     expect(screen.queryByText("Kiitos viestistäsi!")).not.toBeInTheDocument();
   });

@@ -627,6 +627,44 @@
   font-size: 0.8rem;
   color: var(--journal-muted);
 }
+.annual-builder {max-width:860px;margin:0 auto;}
+.annual-builder-intro {padding:1.5rem 0;border-bottom:1px solid var(--journal-line);}
+.annual-builder h2 {font-size:clamp(1.45rem,3vw,2rem);font-weight:650;line-height:1.25;margin-bottom:1rem;}
+.annual-builder p {margin:0.75rem 0;}
+.annual-builder .annual-draft-note {font-size:0.875rem;color:var(--journal-muted);max-width:72ch;}
+.annual-builder fieldset {min-width:0;border:0;padding:1.5rem 0;margin:0;border-bottom:1px solid var(--journal-line);}
+.annual-builder legend {font-size:1.1rem;font-weight:650;padding:1.5rem 0 0;}
+.annual-fields {display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));}
+.annual-builder label:not(.annual-checkbox) {display:grid;gap:0.5rem;font-size:0.875rem;font-weight:600;min-width:0;}
+.annual-builder input:not([type="checkbox"]),.annual-pagination select {width:100%;min-width:0;min-height:48px;padding:0.65rem;border:1px solid #81968b;border-radius:0.4rem;background:#fff;color:var(--journal-ink);font-size:1rem;}
+.annual-builder input:disabled {background:#edf3ef;color:#53625d;}
+.annual-checkbox {display:flex;align-items:center;gap:0.75rem;min-height:44px;font-size:0.95rem;font-weight:600;cursor:pointer;}
+.annual-checkbox input[type="checkbox"] {appearance:auto!important;-webkit-appearance:checkbox!important;width:22px;height:22px;min-width:22px;min-height:22px!important;padding:0!important;margin:0!important;flex-shrink:0;accent-color:var(--journal-green);}
+.annual-memory-list {list-style:none;padding:0;margin:1rem 0;display:grid;gap:1rem;}
+.annual-memory-list > li {padding:1.25rem;border:1px solid var(--journal-line);border-radius:0.65rem;background:#fff;min-width:0;content-visibility:auto;contain-intrinsic-size:auto 280px;}
+.annual-memory-list > .annual-memory-selected {border-color:var(--journal-green);background:#f7faf8;}
+.annual-source-caption {white-space:pre-wrap;overflow-wrap:anywhere;font-size:0.95rem;}
+.annual-builder .annual-upload-date {font-size:0.8rem;color:var(--journal-muted);}
+.annual-memory-options {display:grid;gap:0.75rem;margin-top:1rem;}
+.annual-builder form > .journal-button {margin-top:1.5rem;}
+.puppy-journal button:disabled {cursor:not-allowed;opacity:0.6;}
+.annual-error {color:#9c2525;}
+.annual-empty {padding:2rem 0;}
+.annual-empty h3 {font-size:1.25rem;font-weight:600;}
+.annual-builder-result {border-top:1px solid var(--journal-line);margin-top:2rem;padding-top:2rem;}
+.annual-builder-result > h2:focus {outline:3px solid var(--journal-green);outline-offset:4px;}
+.annual-preview {max-width:640px;margin:1.5rem auto;}
+.annual-pagination {display:grid;grid-template-columns:44px minmax(0,1fr) 44px;align-items:center;gap:0.5rem;}
+.annual-page-status {text-align:center;font-size:0.875rem;color:var(--journal-muted);margin:0.75rem 0;}
+.annual-print-actions {margin:1.5rem 0;}
+.annual-print-actions > p {max-width:68ch;font-size:0.875rem;color:var(--journal-muted);margin-top:0.75rem;}
+.annual-builder :is(h2,[role="alert"]) {scroll-margin-top:7rem;}
+.annual-leave-overlay {position:fixed;inset:0;z-index:310;background:#14271f99;}
+.annual-leave-dialog {position:fixed;z-index:320;top:50%;left:50%;transform:translate(-50%,-50%);width:min(560px,calc(100vw - 2rem));max-height:calc(100dvh - 2rem);overflow:auto;overscroll-behavior:contain;background:#fffef9;border:1px solid #d9e2dd;border-radius:0.75rem;padding:1.5rem;box-shadow:0 16px 60px #14271f40;}
+.annual-leave-dialog h2 {font-size:1.4rem;line-height:1.3;font-weight:650;margin:0 0 1rem;}
+.annual-leave-dialog p {line-height:1.6;}
+@media (min-width:768px) {.annual-memory-options {grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:end;}}
+
 .journal-book-nav {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -647,9 +685,6 @@
   font-weight: 500;
   border-radius: 0.5rem;
   color: #43594c;
-}
-.journal-book-nav button:last-child {
-  grid-column: span 2;
 }
 .journal-book-nav button:hover {
   background: #f7faf8;
@@ -995,7 +1030,7 @@
     align-items: center;
   }
   .journal-book-nav {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(6, minmax(0, 1fr));
   }
   .journal-book-nav button:last-child {
     grid-column: auto;

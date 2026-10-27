@@ -15,6 +15,7 @@ interface FloatingActionButtonProps {
   onHealthRecordAdded?: () => void;
   showDialog?: boolean;
   initialType?: 'photo' | 'text';
+  hideLauncher?: boolean;
   onShowDialogChange?: (show: boolean) => void;
 }
 
@@ -24,6 +25,7 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
   onHealthRecordAdded,
   showDialog = false,
   initialType = 'text',
+  hideLauncher = false,
   onShowDialogChange 
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -96,7 +98,7 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
         }}
       />
 
-      <div className="journal-entry-launcher">
+      <div className="journal-entry-launcher" hidden={hideLauncher}>
         <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
           <DropdownMenuTrigger asChild>
             <button ref={triggerRef} type="button" className="journal-entry-trigger">

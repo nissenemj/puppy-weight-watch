@@ -49,7 +49,7 @@ const PuppyBookLanding: React.FC = () => {
     },
     {
       icon: Book,
-      title: "Digitaalinen muistokirja",
+      title: "Digitaalinen pentukirja",
       description: "Koko ensimmäinen vuosi yhdessä kirjassa"
     }
   ];
@@ -189,8 +189,8 @@ const PuppyBookLanding: React.FC = () => {
 
         <section className="puppy-journal container mx-auto px-4 md:px-6" aria-labelledby="memory-example-link-title">
           <div className="journal-callout">
-            <div><h2 id="memory-example-link-title">Miltä pennun oma muistokirja voisi näyttää?</h2><p>Selaa kuvitteellista esimerkkikirjaa ja tutustu suunnitteilla olevaan PDF-muistokirjaan.</p></div>
-            <Link to="/muistokirja" className="journal-button journal-button-light">Katso muistokirjan esimerkki</Link>
+            <div><h2 id="memory-example-link-title">Miltä pennun oma pentukirja voisi näyttää?</h2><p>Selaa kuvitteellista esimerkkikirjaa ja tutustu pennun ensimmäisestä vuodesta koottavaan pentukirjaan.</p></div>
+            <Link to="/muistokirja" className="journal-button journal-button-light">Katso pentukirjan esimerkki</Link>
           </div>
         </section>
 

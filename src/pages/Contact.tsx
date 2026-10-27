@@ -17,7 +17,7 @@ const FORMSPREE_FORM_ID = 'xbdlaeel';
 
 const Contact = () => {
   const [searchParams] = useSearchParams();
-  const initialSubject = searchParams.get('aihe') === 'muistokirja' ? 'Kiinnostus muistokirjaan (hintaehdotus 14,90 €)' : '';
+  const initialSubject = ['pentukirja', 'muistokirja'].includes(searchParams.get('aihe') || '') ? 'Kiinnostus pentukirjaan (hintaehdotus 14,90 €)' : '';
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
   const [formStartTime] = useState<number>(Date.now());
