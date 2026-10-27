@@ -51,6 +51,10 @@ const AddMemoryDialog: React.FC<AddMemoryDialogProps> = ({
 }) => {
   const [uploading, setUploading] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [errorField, setErrorField] = useState<"photo" | "caption" | null>(null);
+  const captionRef = useRef<HTMLTextAreaElement>(null);
+  const photoPickerRef = useRef<HTMLButtonElement>(null);
+  const errorRef = useRef<HTMLParagraphElement>(null);
   const returnFocusRef = useRef<HTMLElement | null>(null);
   const [caption, setCaption] = useState("");
   const [tags, setTags] = useState("");
@@ -66,18 +70,28 @@ const AddMemoryDialog: React.FC<AddMemoryDialogProps> = ({
     };
   }, [previewUrl]);
 
+  useEffect(() => {
+    if (!submitError) return;
+    if (errorField === "photo") photoPickerRef.current?.focus();
+    else if (errorField === "caption") captionRef.current?.focus();
+    else errorRef.current?.focus();
+  }, [submitError, errorField]);
+
+  useEffect(() => {
+    setSubmitError(null);
+    setErrorField(null);
+  }, [type]);
+
   const selectFile = (file: File) => {
     if (uploading) return;
     const validationError = validatePuppyImage(file);
     if (validationError) {
+      setErrorField("photo");
       setSubmitError(validationError);
-      toast({
-        title: "Virheellinen tiedosto",
-        description: validationError,
-        variant: "destructive",
-      });
+      photoPickerRef.current?.focus();
       return;
     }
+    setErrorField(null);
     setSubmitError(null);
     setSelectedFile(file);
     setPreviewUrl(URL.createObjectURL(file));
@@ -100,23 +114,18 @@ const AddMemoryDialog: React.FC<AddMemoryDialogProps> = ({
     if (uploading) return;
 
     setSubmitError(null);
+    setErrorField(null);
     if (type === "photo" && !selectedFile) {
+      setErrorField("photo");
       setSubmitError("Valitse kuva ensin.");
-      toast({
-        title: "Virhe",
-        description: "Valitse kuva ensin",
-        variant: "destructive",
-      });
+      photoPickerRef.current?.focus();
       return;
     }
 
     if (type === "text" && !caption.trim()) {
+      setErrorField("caption");
       setSubmitError("Kirjoita muisto ensin.");
-      toast({
-        title: "Virhe",
-        description: "Kirjoita muisto ensin",
-        variant: "destructive",
-      });
+      captionRef.current?.focus();
       return;
     }
 
@@ -208,11 +217,6 @@ const AddMemoryDialog: React.FC<AddMemoryDialogProps> = ({
           ? error.message
           : "Muiston lisääminen epäonnistui. Tarkista käyttöoikeus ja yhteys.";
       setSubmitError(errorMessage);
-      toast({
-        title: "Virhe",
-        description: errorMessage,
-        variant: "destructive",
-      });
     } finally {
       setUploading(false);
     }
@@ -315,14 +319,19 @@ const AddMemoryDialog: React.FC<AddMemoryDialogProps> = ({
           <fieldset disabled={uploading} className="space-y-4 min-w-0">
             {type === "photo" && (
               <div>
-                <Label htmlFor="memory-photo">Valitse kuva</Label>
+                <Label htmlFor="memory-photo-trigger">
+                  Valitse kuva (pakollinen)
+                </Label>
                 <button
+                  id="memory-photo-trigger"
+                  ref={photoPickerRef}
                   type="button"
                   onDrop={handleDrop}
                   onDragOver={(event) => event.preventDefault()}
                   onClick={() => fileInputRef.current?.click()}
                   className="block w-full border-2 border-dashed border-stone-300 rounded-xl p-4 text-center hover:border-[#245246] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#245246]"
-                  aria-label="Valitse tai vaihda muiston kuva"
+                  aria-invalid={errorField === "photo" || undefined}
+                  aria-describedby={`memory-photo-hint${errorField === "photo" ? " memory-save-error" : ""}`}
                 >
                   {previewUrl ? (
                     <>
@@ -345,16 +354,17 @@ const AddMemoryDialog: React.FC<AddMemoryDialogProps> = ({
                       <span className="block text-sm">
                         Valitse kuva tai pudota se tähän
                       </span>
-                      <span className="block text-xs mt-1 text-stone-600">
-                        JPEG, PNG tai WebP, enintään 5 Mt
-                      </span>
                     </>
                   )}
                 </button>
+                <p id="memory-photo-hint" className="text-sm text-stone-600 mt-2">
+                  JPEG, PNG tai WebP, enintään 5 Mt.
+                </p>
                 <input
                   id="memory-photo"
                   ref={fileInputRef}
                   type="file"
+                  name="photo"
                   accept={PUPPY_IMAGE_ACCEPT}
                   aria-label="Valitse muiston kuva"
                   disabled={uploading}
@@ -369,9 +379,16 @@ const AddMemoryDialog: React.FC<AddMemoryDialogProps> = ({
               </Label>
               <Textarea
                 id="caption"
+                ref={captionRef}
                 name="caption"
                 value={caption}
-                onChange={(event) => setCaption(event.target.value)}
+                onChange={(event) => {
+                  setCaption(event.target.value);
+                  if (errorField === "caption") {
+                    setSubmitError(null);
+                    setErrorField(null);
+                  }
+                }}
                 placeholder={
                   type === "photo"
                     ? "Esimerkiksi: ensimmäinen päivä kotona…"
@@ -379,8 +396,20 @@ const AddMemoryDialog: React.FC<AddMemoryDialogProps> = ({
                 }
                 className="resize-y min-h-28"
                 rows={4}
-                aria-describedby={submitError ? "memory-save-error" : undefined}
+                aria-required={type === "text"}
+                aria-invalid={errorField === "caption" || undefined}
+                aria-describedby={
+                  [
+                    type === "text" ? "memory-caption-hint" : null,
+                    errorField === "caption" ? "memory-save-error" : null,
+                  ].filter(Boolean).join(" ") || undefined
+                }
               />
+              {type === "text" && (
+                <p id="memory-caption-hint" className="text-sm text-stone-600 mt-2">
+                  Pakollinen kenttä.
+                </p>
+              )}
             </div>
             <details className="text-sm text-stone-700">
               <summary className="cursor-pointer py-3 font-medium min-h-11">
@@ -414,7 +443,9 @@ const AddMemoryDialog: React.FC<AddMemoryDialogProps> = ({
             {submitError && (
               <p
                 id="memory-save-error"
+                ref={errorRef}
                 role="alert"
+                tabIndex={-1}
                 className="text-sm text-red-800 bg-red-50 border border-red-200 p-3 rounded-lg"
               >
                 {submitError}

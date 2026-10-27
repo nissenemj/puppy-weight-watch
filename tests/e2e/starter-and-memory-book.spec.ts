@@ -177,9 +177,15 @@ const book = {
 
 async function mockBook(
   page: Page,
-  options: { failFirstSave?: boolean; title?: string } = {},
+  options: {
+    failFirstSave?: boolean;
+    title?: string;
+    initialMemories?: Record<string, unknown>[];
+  } = {},
 ) {
-  const memories: Record<string, unknown>[] = [];
+  const memories: Record<string, unknown>[] = [
+    ...(options.initialMemories || []),
+  ];
   const writes: Record<string, unknown>[] = [];
   await page.route(
     /https:\/\/[^/]+\.supabase\.co\/rest\/v1\/puppy_books(?:\?|$)/,
@@ -242,6 +248,202 @@ async function mockBook(
 
 test.describe("the signed-in puppy book", () => {
   test.use({ userState: "signed-in" });
+
+  for (const width of [320, 1440]) {
+    for (const type of ["text", "image"]) {
+      test(`stored ${type} memory actions and comments are accessible at ${width}`, async ({
+        page,
+      }) => {
+        const caption =
+          "Ensimmäinen yhteinen aamumme kotona. Kaikki tuntui uudelta.";
+        const writes = await mockBook(page, {
+          initialMemories: [
+            {
+              id: "44444444-4444-4444-8444-444444444444",
+              book_id: bookId,
+              content_type: type,
+              caption,
+              tags: ["koti"],
+              reactions: [],
+              comments: [],
+              content_url:
+                type === "image" ? `${owner}/books/${bookId}/test.webp` : null,
+              created_at: "2026-06-03T10:00:00Z",
+              created_by: owner,
+            },
+          ],
+        });
+        await page.route(
+          "**/storage/v1/object/sign/puppy-books/**",
+          async (route) => {
+            if (route.request().method() === "POST")
+              return route.fulfill({
+                json: {
+                  signedURL:
+                    "/object/sign/puppy-books/test.webp?token=ui-test-only",
+                },
+              });
+            if (route.request().method() === "GET")
+              return route.fulfill({
+                contentType: "image/webp",
+                path: `${process.cwd()}/src/assets/puppy-home-640.webp`,
+              });
+            return route.abort();
+          },
+        );
+        await page.setViewportSize({ width, height: 900 });
+        await page.goto("/puppy-book");
+        const card = page.getByRole("article").filter({ hasText: caption });
+        await expect(card).toBeVisible();
+        if (type === "image") await expect(card.locator("img")).toBeVisible();
+        await expectAccessible(page, "main");
+        const actions = card.getByRole("group", {
+          name: "Muiston toiminnot",
+          exact: true,
+        });
+        for (const button of await actions.getByRole("button").all()) {
+          const bounds = await button.boundingBox();
+          expect(bounds!.height).toBeGreaterThanOrEqual(44);
+          expect(bounds!.width).toBeGreaterThanOrEqual(44);
+          await button.focus();
+          expect(
+            await button.evaluate((el) => {
+              const r = el.getBoundingClientRect();
+              return el.contains(
+                document.elementFromPoint(
+                  r.x + r.width / 2,
+                  r.y + r.height / 2,
+                ),
+              );
+            }),
+          ).toBe(true);
+        }
+        const choices = card.getByRole("button", {
+          name: "Muiston valinnat",
+          exact: true,
+        });
+        await choices.press("Enter");
+        await expect(choices).toHaveAttribute("aria-expanded", "true");
+        const options = card.getByRole("group", {
+          name: "Muiston valinnat",
+          exact: true,
+        });
+        await options
+          .getByRole("button", { name: "Poista", exact: true })
+          .focus();
+        await page.keyboard.press("Escape");
+        await expect(options).toBeHidden();
+        await expect(choices).toBeFocused();
+        await card
+          .getByRole("button", { name: "Näytä kommentit", exact: true })
+          .click();
+        await card
+          .getByRole("button", { name: "Kommentoi", exact: true })
+          .click();
+        await expect(
+          card.getByRole("textbox", {
+            name: "Kirjoita kommentti",
+            exact: true,
+          }),
+        ).toBeVisible();
+        await expect(
+          card.getByRole("button", { name: "Lähetä kommentti", exact: true }),
+        ).toBeDisabled();
+        await expectAccessible(page, "main");
+        expect(writes).toHaveLength(0);
+      });
+    }
+  }
+
+  test("missing memory fields announce errors and receive keyboard focus", async ({
+    page,
+  }) => {
+    const writes = await mockBook(page);
+    await page.goto("/puppy-book");
+    await page
+      .getByRole("button", { name: "Kirjoita muisto", exact: true })
+      .click();
+    const dialog = page.getByRole("dialog", {
+      name: "Lisää muisto",
+      exact: true,
+    });
+    await expect(dialog).toHaveCSS("animation-name", "none");
+    const caption = dialog.getByLabel("Muisto", { exact: true });
+    await expect(caption).toHaveAttribute("aria-required", "true");
+    const save = dialog.getByRole("button", { name: "Tallenna", exact: true });
+    await save.focus();
+    await save.press("Enter");
+    await expect(caption).toBeFocused();
+    await expect(caption).toHaveAttribute("aria-invalid", "true");
+    await expect
+      .poll(() =>
+        caption.evaluate((el) =>
+          parseFloat(getComputedStyle(el).outlineWidth),
+        ),
+      )
+      .toBeGreaterThanOrEqual(2);
+    const focusContrast = await caption.evaluate((el) => {
+      const luminance = (colour: string) =>
+        colour
+          .match(/[\d.]+/g)!
+          .slice(0, 3)
+          .map(Number)
+          .map((value) => value / 255)
+          .map((value) =>
+            value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4,
+          )
+          .reduce(
+            (sum, value, index) =>
+              sum + value * [0.2126, 0.7152, 0.0722][index],
+            0,
+          );
+      const outline = luminance(getComputedStyle(el).outlineColor);
+      const background = luminance(
+        getComputedStyle(el.closest('[role="dialog"]')!).backgroundColor,
+      );
+      return (
+        (Math.max(outline, background) + 0.05) /
+        (Math.min(outline, background) + 0.05)
+      );
+    });
+    expect(focusContrast).toBeGreaterThanOrEqual(3);
+    await expect(caption).toHaveAttribute(
+      "aria-describedby",
+      /memory-save-error/,
+    );
+    await expect(dialog.getByRole("alert")).toHaveText(
+      "Kirjoita muisto ensin.",
+    );
+    await caption.fill("Pieni tärkeä hetki.");
+    await expect(caption).not.toHaveAttribute("aria-invalid", "true");
+    await expect(dialog.getByRole("alert")).toBeHidden();
+    await dialog.getByRole("button", { name: "Kuva", exact: true }).click();
+    const photoDialog = page.getByRole("dialog", {
+      name: "Lisää kuva",
+      exact: true,
+    });
+    const photoSave = photoDialog.getByRole("button", {
+      name: "Tallenna",
+      exact: true,
+    });
+    await photoSave.focus();
+    await photoSave.press("Enter");
+    const photo = photoDialog.getByRole("button", {
+      name: "Valitse kuva (pakollinen)",
+      exact: true,
+    });
+    await expect(photo).toBeFocused();
+    await expect(photo).toHaveAttribute("aria-invalid", "true");
+    await expect(photo).toHaveAttribute(
+      "aria-describedby",
+      /memory-save-error/,
+    );
+    await expect(photoDialog.getByRole("alert")).toHaveText(
+      "Valitse kuva ensin.",
+    );
+    await expectAccessible(page, '[role="dialog"]');
+    expect(writes).toHaveLength(0);
+  });
 
   for (const width of [320, 768, 1024, 1440]) {
     test(`has one header, usable actions and accessible month controls at ${width}`, async ({
@@ -359,6 +561,11 @@ test.describe("the signed-in puppy book", () => {
         exact: true,
       });
       await expect(eventDialog).toBeVisible();
+      await expect
+        .poll(() =>
+          eventDialog.evaluate((el) => el.contains(document.activeElement)),
+        )
+        .toBe(true);
       await page.keyboard.press("Escape");
       await expect(eventDialog).toBeHidden();
       await expect(trigger).toBeFocused();
@@ -371,6 +578,11 @@ test.describe("the signed-in puppy book", () => {
         exact: true,
       });
       await expect(healthDialog).toBeVisible();
+      await expect
+        .poll(() =>
+          healthDialog.evaluate((el) => el.contains(document.activeElement)),
+        )
+        .toBe(true);
       await page.keyboard.press("Escape");
       await expect(healthDialog).toBeHidden();
       await expect(trigger).toBeFocused();

@@ -39,7 +39,7 @@ test.describe("Kirjautumislomakkeen saavutettavuus", () => {
 });
 
 test.describe("Navigaation saavutettavuus", () => {
-  for (const width of [320, 1280]) {
+  for (const width of [320, 768, 1024, 1440]) {
     test(`pentukirjan esittelyn teksti ja linkit ${width}`, async ({
       page,
     }) => {
@@ -51,10 +51,17 @@ test.describe("Navigaation saavutettavuus", () => {
         ),
       ).toBe(true);
       const hero = await new AxeBuilder({ page })
-        .include('section[aria-label="Pentukirjan esittely"]')
+        .include("main")
         .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
         .analyze();
       expect(hero.violations).toEqual([]);
+      await expect(page.locator("main a button")).toHaveCount(0);
+      await expect(
+        page.getByRole("link", {
+          name: "Luo pentukirja ilmaiseksi",
+          exact: true,
+        }),
+      ).toHaveAttribute("href", "/puppy-book");
     });
   }
   for (const width of [320, 768, 1280]) {

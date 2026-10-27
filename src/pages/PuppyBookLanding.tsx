@@ -1,7 +1,6 @@
 import '@/styles/puppy-journal.css';
 import '@/styles/puppy-book-landing.css';
 import React from 'react';
-import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
   Book,
@@ -111,41 +110,32 @@ const PuppyBookLanding: React.FC = () => {
         {/* Features Section */}
         <section className="full-width-section py-20 bg-white/30 mobile-text-wrap responsive-media no-horizontal-scroll mobile-container-safe mobile-card-safe focus-visible:outline focus-visible:outline-2 focus-visible:outline-terracotta-700" aria-labelledby="features-heading" id="puppy-book-features" tabIndex={-1}>
           <div className="full-width-content mobile-grid-1">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="text-center mb-16"
-            >
+            <div className="text-center mb-16">
               <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-playful font-bold text-gray-800 mb-4" id="features-heading">
-                Miksi pentukirja? ✨
+                Miksi pentukirja? <span aria-hidden="true">✨</span>
               </h2>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
                 Pennun ensimmäinen vuosi on täynnä ihmeellisiä hetkiä.
                 Älä anna niiden kadota - tallenna jokainen tärkeä hetki!
               </p>
-            </motion.div>
+            </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mobile-grid-1">
               {features.map((feature, index) => (
-                <motion.div
+                <div
                   key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  whileHover={{ scale: 1.05 }}
-                  className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all"
+                  className="bg-white rounded-2xl p-6 shadow-lg"
                 >
                   <div className="bg-gradient-to-r from-orange-100 to-pink-100 w-16 h-16 rounded-2xl flex items-center justify-center mb-4">
-                    <feature.icon className="w-8 h-8 text-orange-600" />
+                    <feature.icon className="w-8 h-8 text-orange-600" aria-hidden="true" />
                   </div>
                   <h3 className="text-xl font-semibold text-gray-800 mb-3">
                     {feature.title}
                   </h3>
-                  <p className="text-gray-600" style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                  <p className="text-gray-600">
                     {feature.description}
                   </p>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
@@ -155,13 +145,9 @@ const PuppyBookLanding: React.FC = () => {
         <section className="full-width-section py-20 mobile-text-wrap responsive-media no-horizontal-scroll mobile-container-safe mobile-flex-safe" role="region" aria-labelledby="growth-stages-heading">
           <div className="full-width-content">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
-              <motion.div
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6 }}
-              >
+              <div>
                 <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-playful font-bold text-gray-800 mb-6" id="growth-stages-heading">
-                  Seuraa pennun kasvua 📈
+                  Seuraa pennun kasvua <span aria-hidden="true">📈</span>
                 </h2>
                 <p className="text-lg text-gray-600 mb-8">
                   Jokainen kuukausi tuo mukanaan uusia oppeja ja hetkiä.
@@ -170,25 +156,18 @@ const PuppyBookLanding: React.FC = () => {
 
                 <div className="space-y-4">
                   {milestones.map((milestone, index) => (
-                    <motion.div
+                    <div
                       key={index}
-                      initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.4, delay: index * 0.1 }}
                       className="flex items-start gap-3"
                     >
-                      <CheckCircle className="w-6 h-6 text-green-500 mt-1 flex-shrink-0" />
+                      <CheckCircle className="w-6 h-6 text-green-500 mt-1 flex-shrink-0" aria-hidden="true" />
                       <span className="text-gray-700">{milestone}</span>
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
-              </motion.div>
+              </div>
 
-              <motion.div
-                initial={{ opacity: 0, x: 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-              >
+              <div>
                 <figure className="puppy-journal puppy-book-moment-photo">
                   <img
                     src={puppyHome}
@@ -203,7 +182,7 @@ const PuppyBookLanding: React.FC = () => {
                   />
                   <figcaption>Arjen pienet hetket jäävät kirjaan. Tekoälyllä luotu kuvituskuva.</figcaption>
                 </figure>
-              </motion.div>
+              </div>
             </div>
           </div>
         </section>
@@ -215,32 +194,15 @@ const PuppyBookLanding: React.FC = () => {
           </div>
         </section>
 
-        {/* CTA Section */}
-        <section className="full-width-section py-20 bg-gradient-warm text-white mobile-text-wrap responsive-media no-horizontal-scroll mobile-container-safe mobile-text-container" role="region" aria-labelledby="cta-heading">
-          <div className="content-narrow text-center mobile-button mobile-container-safe mobile-text-container">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-playful font-bold mb-6" id="cta-heading">
-                Aloita pennun tarinan kirjoittaminen tänään! 📖
-              </h2>
-              <p className="text-xl mb-8 max-w-2xl mx-auto opacity-90">
-                Luo ainutlaatuinen muistokirja, jota koko perhe voi täyttää ja josta voitte nauttia vuosien ajan.
-              </p>
-
-              <Link to="/puppy-book">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="bg-white text-orange-600 px-10 py-4 rounded-2xl font-bold text-xl shadow-lg hover:shadow-xl transition-all inline-flex items-center gap-3"
-                >
-                  <Book className="w-6 h-6" />
-                  Luo pentukirja ilmaiseksi
-                </motion.button>
-              </Link>
-            </motion.div>
+        <section className="puppy-journal full-width-section py-12" aria-labelledby="cta-heading">
+          <div className="journal-callout">
+            <div>
+              <h2 id="cta-heading">Aloita pennun tarinan kirjoittaminen tänään.</h2>
+              <p>Tallenna yhteiset hetket omaan pentukirjaan ja palaa niihin myöhemmin.</p>
+            </div>
+            <Link to="/puppy-book" className="journal-button journal-button-light">
+              <Book size={20} aria-hidden="true" /> Luo pentukirja ilmaiseksi
+            </Link>
           </div>
         </section>
       </div>
