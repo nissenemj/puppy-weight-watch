@@ -1,0 +1,54 @@
+.puppy-book-intro {
+  display: grid;
+  align-items: center;
+  gap: 2rem;
+  padding: clamp(1rem, 3vw, 2.5rem);
+  background: #fff;
+  border: 1px solid var(--journal-line);
+  border-radius: 1.25rem;
+}
+
+.puppy-book-intro > * {
+  min-width: 0;
+}
+
+.puppy-book-intro-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.puppy-book-intro-photo,
+.puppy-book-moment-photo {
+  margin: 0;
+}
+
+.puppy-book-intro-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 0.85rem;
+}
+
+.puppy-book-intro-photo figcaption,
+.puppy-book-moment-photo figcaption {
+  margin-top: 0.65rem;
+  color: var(--journal-muted);
+  font-size: 0.75rem;
+  line-height: 1.6;
+}
+
+@media (min-width: 1024px) {
+  .puppy-book-intro {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 2.5rem;
+  }
+}
+
+@media (max-width: 639px) {
+  .puppy-book-intro-actions > a {
+    flex: 1 1 100%;
+  }
+}

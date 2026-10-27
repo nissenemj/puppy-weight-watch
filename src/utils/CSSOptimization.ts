@@ -8,7 +8,7 @@ export const CRITICAL_CSS = `
 /* Mobile-first reset and base styles */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{font-size:16px;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}
-body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;color:hsl(var(--foreground));background:hsl(var(--background));overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;color:hsl(var(--foreground));background:hsl(var(--background));overflow-x:clip;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 
 /* Critical design tokens */
 :root{

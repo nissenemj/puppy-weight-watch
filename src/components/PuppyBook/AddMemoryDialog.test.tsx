@@ -108,13 +108,8 @@ describe('saving private memory images', () => {
     form();
     choosePhoto();
     fireEvent.click(screen.getByRole('button', { name: 'Tallenna' }));
-    await waitFor(() =>
-      expect(sdk.toast).toHaveBeenCalledWith(
-        expect.objectContaining({
-          description: 'Sinulla ei ole oikeutta muokata tätä pentukirjaa',
-        }),
-      ),
-    );
+    expect(await screen.findByRole('alert')).toHaveTextContent('Sinulla ei ole oikeutta muokata tätä pentukirjaa');
+    expect(screen.getByRole('alert')).toHaveFocus();
     expect(sdk.upload).not.toHaveBeenCalled();
     expect(sdk.insert).not.toHaveBeenCalled();
   });
@@ -127,11 +122,7 @@ describe('saving private memory images', () => {
     form();
     choosePhoto();
     fireEvent.click(screen.getByRole('button', { name: 'Tallenna' }));
-    await waitFor(() =>
-      expect(sdk.toast).toHaveBeenCalledWith(
-        expect.objectContaining({ variant: 'destructive' }),
-      ),
-    );
+    expect(await screen.findByRole('alert')).toHaveTextContent('Kuvan tallennus epäonnistui. Tarkista yhteys ja käyttöoikeus.');
     expect(sdk.insert).not.toHaveBeenCalled();
     expect(onAdded).not.toHaveBeenCalled();
   });
@@ -144,9 +135,8 @@ describe('saving private memory images', () => {
       },
     });
     expect(URL.createObjectURL).not.toHaveBeenCalled();
-    expect(sdk.toast).toHaveBeenCalledWith(
-      expect.objectContaining({ title: 'Virheellinen tiedosto' }),
-    );
+    expect(screen.getByRole('alert')).toHaveTextContent('Valitse JPEG-, PNG- tai WebP-kuva.');
+    expect(screen.getByRole('button', {name:'Valitse kuva (pakollinen)'})).toHaveFocus();
     expect(sdk.upload).not.toHaveBeenCalled();
     expect(sdk.getUser).not.toHaveBeenCalled();
   });

@@ -20,7 +20,7 @@ const DialogOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      "fixed inset-0 z-[1200] bg-black/60 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      "fixed inset-0 z-[1200] bg-black/60 backdrop-blur-sm motion-reduce:!animate-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
       className
     )}
     {...props}
@@ -29,7 +29,7 @@ const DialogOverlay = React.forwardRef<
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
 
 const dialogContentVariants = cva(
-  "fixed z-[1200] grid gap-4 border-2 bg-white shadow-xl ring-1 ring-black/10 duration-200 overflow-y-auto data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+  "fixed z-[1200] grid gap-4 border-2 bg-white shadow-xl ring-1 ring-black/10 duration-200 overflow-y-auto overscroll-contain motion-reduce:!animate-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
   {
     variants: {
       variant: {
@@ -62,11 +62,11 @@ const DialogContent = React.forwardRef<
     >
       {children}
       <DialogPrimitive.Close className={cn(
-        "absolute rounded-sm opacity-70 text-gray-500 hover:text-gray-700 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:pointer-events-none",
+        "absolute inline-flex min-h-11 min-w-11 items-center justify-center rounded-sm opacity-70 text-gray-500 hover:text-gray-700 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:pointer-events-none",
         variant === "mobile-fullscreen" ? "right-4 top-4 md:right-4 md:top-4" : "right-4 top-4"
       )}>
         <X className="h-4 w-4" />
-        <span className="sr-only">Close</span>
+        <span className="sr-only">Sulje</span>
       </DialogPrimitive.Close>
     </DialogPrimitive.Content>
   </DialogPortal>

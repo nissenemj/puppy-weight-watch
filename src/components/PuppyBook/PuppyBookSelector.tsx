@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Plus, Book } from '@/utils/iconImports';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
@@ -47,6 +47,9 @@ export default function PuppyBookSelector({ user, selectedBookId, onBookSelect }
   const [selectedDogId, setSelectedDogId] = useState<string>('');
   const [selectedDog, setSelectedDog] = useState<Dog | null>(null);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState('');
   const { toast } = useToast();
 
   useEffect(() => {
@@ -56,6 +59,8 @@ export default function PuppyBookSelector({ user, selectedBookId, onBookSelect }
   }, [user?.id]);
 
   const loadBooks = async () => {
+    setLoading(true);
+    setLoadError(false);
     try {
       const { data, error } = await supabase
         .from('puppy_books')
@@ -83,6 +88,7 @@ export default function PuppyBookSelector({ user, selectedBookId, onBookSelect }
         onBookSelect(data[0].id, data[0] as any);
       }
     } catch (error) {
+      setLoadError(true);
       console.error('Error loading puppy books:', error);
       toast({
         title: "Virhe",
@@ -100,7 +106,9 @@ export default function PuppyBookSelector({ user, selectedBookId, onBookSelect }
   };
 
   const addBook = async () => {
-    if (!newBookTitle.trim() || !selectedDogId) return;
+    if (saving || !newBookTitle.trim() || !selectedDogId) return;
+    setSaving(true);
+    setSaveError('');
 
     try {
       const { data, error } = await supabase
@@ -108,7 +116,7 @@ export default function PuppyBookSelector({ user, selectedBookId, onBookSelect }
         .insert({
           owner_id: user.id,
           dog_id: selectedDogId,
-          title: newBookTitle,
+          title: newBookTitle.trim(),
           theme: {
             colorScheme: 'warm',
             fontFamily: 'sans-serif'
@@ -147,21 +155,27 @@ export default function PuppyBookSelector({ user, selectedBookId, onBookSelect }
         description: `${newBook.title} on nyt valittu aktiiviseksi pentukirjaksi.`
       });
     } catch (error) {
+      setSaveError('Pentukirjaa ei voitu luoda. Tarkista yhteys ja yritä uudelleen.');
       console.error('Error adding puppy book:', error);
       toast({
         title: "Virhe",
         description: "Pentukirjan luominen epäonnistui",
         variant: "destructive"
       });
+    } finally {
+      setSaving(false);
     }
   };
 
   if (loading) {
-    return <div className="animate-pulse bg-muted h-10 rounded-md"></div>;
+    return <div role="status" className="text-sm text-stone-600 py-3">Pentukirjoja ladataan…</div>;
   }
 
+  if (loadError) return <div role="alert" className="journal-error"><p>Pentukirjoja ei voitu ladata.</p><button type="button" onClick={() => void loadBooks()}>Yritä kirjojen lataamista uudelleen</button></div>;
+
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 min-w-0 w-full sm:max-w-sm">
+      {books.length > 0 ? <>
       <Select 
         value={selectedBookId || ''} 
         onValueChange={(value) => {
@@ -169,7 +183,7 @@ export default function PuppyBookSelector({ user, selectedBookId, onBookSelect }
           if (book) onBookSelect(value, book);
         }}
       >
-        <SelectTrigger className="min-w-[150px] sm:min-w-[200px]">
+        <SelectTrigger aria-label="Valitse pentukirja" className="min-w-0 flex-1 [&>span]:truncate [&>span]:min-w-0">
           <SelectValue placeholder="Valitse pentukirja" />
         </SelectTrigger>
         <SelectContent className="z-[1300]">
@@ -187,11 +201,13 @@ export default function PuppyBookSelector({ user, selectedBookId, onBookSelect }
           ))}
         </SelectContent>
       </Select>
+      </> : <p className="text-sm text-stone-600">Sinulla ei ole vielä pentukirjaa.</p>}
 
       <Dialog open={isAddingBook} onOpenChange={setIsAddingBook}>
         <DialogTrigger asChild>
-          <Button variant="outline" size="icon">
-            <Plus className="h-4 w-4" />
+          <Button variant="outline" className="shrink-0 !text-[#245246] !border-[#cbd8d0] !bg-white" type="button">
+            <Plus className="h-4 w-4" aria-hidden="true" />
+            Uusi kirja
           </Button>
         </DialogTrigger>
         <DialogContent>
@@ -200,15 +216,19 @@ export default function PuppyBookSelector({ user, selectedBookId, onBookSelect }
               <Book className="h-5 w-5" />
               Luo uusi pentukirja
             </DialogTitle>
+            <DialogDescription>Anna kirjalle nimi ja valitse koiran profiili. Profiilin voi luoda koiranvalinnan yhteydessä.</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div>
               <Label htmlFor="bookTitle" className="text-gray-900 dark:text-white">Pentukirjan nimi *</Label>
               <Input
                 id="bookTitle"
+                name="bookTitle"
+                autoComplete="off"
                 value={newBookTitle}
                 onChange={(e) => setNewBookTitle(e.target.value)}
-                placeholder="esim. Bella pentukirja"
+                placeholder="Esimerkiksi: Bellan pentukirja…"
+                disabled={saving}
               />
             </div>
             <div>
@@ -219,10 +239,13 @@ export default function PuppyBookSelector({ user, selectedBookId, onBookSelect }
                 onDogSelect={handleDogSelect}
               />
             </div>
+            {saveError && <p role="alert" className="text-sm text-red-800">{saveError}</p>}
             <div className="flex gap-2">
               <Button 
                 onClick={addBook} 
-                disabled={!newBookTitle.trim() || !selectedDogId}
+                disabled={saving || !newBookTitle.trim() || !selectedDogId}
+                isLoading={saving}
+                loadingText="Luodaan kirjaa…"
                 className="flex-1 text-white"
               >
                 Luo pentukirja
@@ -230,6 +253,7 @@ export default function PuppyBookSelector({ user, selectedBookId, onBookSelect }
               <Button 
                 variant="outline" 
                 onClick={() => setIsAddingBook(false)}
+                disabled={saving}
                 className="flex-1 text-gray-900 dark:text-white"
               >
                 Peruuta

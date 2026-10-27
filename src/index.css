@@ -59,7 +59,7 @@
   body {
     @apply bg-background text-foreground font-sans antialiased;
     /* Prevent horizontal scroll on mobile */
-    overflow-x: hidden;
+    overflow-x: clip;
   }
 
   /* Typography Defaults */
@@ -76,6 +76,9 @@
 /* Mobile Optimizations */
 @layer base {
   html {
+    /* Leave room for the sticky header and mobile bottom navigation on focus/anchors. */
+    scroll-padding-top: calc(6rem + env(safe-area-inset-top));
+    scroll-padding-bottom: calc(5rem + env(safe-area-inset-bottom));
     /* Prevent text size adjustment on orientation change */
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;

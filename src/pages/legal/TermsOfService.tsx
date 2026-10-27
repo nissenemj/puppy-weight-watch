@@ -13,7 +13,7 @@ const TermsOfService = () => {
   return (
     <MobileOptimizedLayout>
       <Navigation />
-      <main id="main-content" className="full-width-section bg-gradient-soft pt-20 md:pt-24">
+      <div className="full-width-section bg-gradient-soft">
         <Section className="mobile-container-safe">
           <Container className="content-narrow">
             <h1 className="text-h1 mb-8">Käyttöehdot</h1>
@@ -228,7 +228,7 @@ const TermsOfService = () => {
             </div>
           </Container>
         </Section>
-      </main>
+      </div>
       <Footer />
       <div className="h-20 md:hidden" aria-hidden="true" />
     </MobileOptimizedLayout>

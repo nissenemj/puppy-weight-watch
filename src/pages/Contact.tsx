@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Mail, Send, CheckCircle, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -15,6 +16,8 @@ import { entranceAnimations } from '@/animations';
 const FORMSPREE_FORM_ID = 'xbdlaeel';
 
 const Contact = () => {
+  const [searchParams] = useSearchParams();
+  const initialSubject = searchParams.get('aihe') === 'muistokirja' ? 'Kiinnostus muistokirjaan (hintaehdotus 14,90 €)' : '';
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
   const [formStartTime] = useState<number>(Date.now());
@@ -33,7 +36,8 @@ const Contact = () => {
 
     // Bot protection: Time check (must be at least 3 seconds)
     if (Date.now() - formStartTime < 3000) {
-      setStatus('success'); // Fake success for bots
+      setErrorMessage('Lomake avautui juuri. Odota muutama sekunti ja lähetä viesti uudelleen.');
+      setStatus('error');
       return;
     }
 
@@ -72,7 +76,7 @@ const Contact = () => {
       />
 
       {/* Hero Section */}
-      <section className="relative pt-20 md:pt-28 pb-12 bg-gradient-to-br from-stone-50 to-terracotta-50">
+      <section className="relative pt-8 md:pt-12 pb-12 bg-gradient-to-br from-stone-50 to-terracotta-50">
         <div className="container px-4 md:px-6 mx-auto text-center">
           <motion.div
             initial="hidden"
@@ -147,6 +151,7 @@ const Contact = () => {
                       id="name"
                       name="name"
                       type="text"
+                      autoComplete="name"
                       required
                       placeholder="Nimesi"
                       disabled={status === 'submitting'}
@@ -159,6 +164,8 @@ const Contact = () => {
                       id="email"
                       name="email"
                       type="email"
+                      autoComplete="email"
+                      spellCheck={false}
                       required
                       placeholder="sinun@email.fi"
                       disabled={status === 'submitting'}
@@ -171,6 +178,7 @@ const Contact = () => {
                       id="subject"
                       name="subject"
                       type="text"
+                      defaultValue={initialSubject}
                       placeholder="Viestin aihe"
                       disabled={status === 'submitting'}
                     />
@@ -189,7 +197,7 @@ const Contact = () => {
                   </div>
 
                   {status === 'error' && (
-                    <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+                    <div role="alert" className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
                       <AlertCircle className="w-4 h-4 shrink-0" />
                       <span>{errorMessage}</span>
                     </div>

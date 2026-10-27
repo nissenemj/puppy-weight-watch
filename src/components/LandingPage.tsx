@@ -13,6 +13,7 @@ import MeshBackground from '@/components/MeshBackground'
 import { createWebApplicationSchema, createWeightTrackingSchema, createFAQSchema } from '@/utils/structuredData'
 import { trackHeroCTAClicked, trackPageViewed } from '@/utils/analytics'
 import { entranceAnimations } from '@/animations'
+import '@/styles/puppy-journal.css'
 
 
 const LandingPage = () => {
@@ -223,6 +224,16 @@ const LandingPage = () => {
             </section>
 
             {/* Partner Banner */}
+            <section className="puppy-journal container px-4 md:px-6 mx-auto" aria-labelledby="prepare-for-puppy-title">
+                <div className="journal-callout">
+                    <div>
+                        <h2 id="prepare-for-puppy-title">Pentu tulossa kotiin?</h2>
+                        <p>Tarkista perustarvikkeet ja valmistaudu yhteiseen alkuun. Hankintalistasta näet, mitä kannattaa hankkia heti ja mitä voi odottaa.</p>
+                    </div>
+                    <Link to="/guides/pennun-hankinnat" className="journal-button journal-button-light">Avaa pennun hankintalista <ArrowRight size={18} aria-hidden="true" /></Link>
+                </div>
+            </section>
+
             <section className="container px-4 md:px-6 mx-auto">
                 <PartnerBanner />
             </section>

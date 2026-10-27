@@ -15,8 +15,10 @@ const routes = [
     { path: '/calculator', priority: '0.9', changefreq: 'weekly' },
     { path: '/guides', priority: '0.9', changefreq: 'weekly' },
     { path: '/puppy-book', priority: '0.8', changefreq: 'weekly' },
+    { path: '/muistokirja', priority: '0.7', changefreq: 'monthly' },
 
     // Guide Sub-Pages
+    { path: '/guides/pennun-hankinnat', priority: '0.8', changefreq: 'monthly' },
     { path: '/guides/puppy-guide', priority: '0.8', changefreq: 'monthly' },
     { path: '/guides/socialization', priority: '0.8', changefreq: 'monthly' },
     { path: '/guides/safety', priority: '0.8', changefreq: 'monthly' },

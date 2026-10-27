@@ -1,7 +1,7 @@
 import React, { useMemo, useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Home, Scale, Book, Calculator, Menu, type LucideIcon } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { trackTabChanged } from '@/utils/analytics';
 
@@ -41,12 +41,13 @@ const navItems: NavItem[] = [
 ];
 
 interface BottomNavigationProps {
-  onMenuClick?: () => void;
+  onMenuClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   badges?: Record<string, number | string>;
 }
 
 export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onMenuClick, badges = {} }) => {
   const location = useLocation();
+  const reduceMotion = useReducedMotion();
   const [activeIndex, setActiveIndex] = useState(0);
   const [mounted, setMounted] = useState(false);
   const [previousTab, setPreviousTab] = useState<string | undefined>(undefined);
@@ -88,8 +89,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onMenuClick,
     <nav
       className="fixed bottom-0 left-0 right-0 z-50 border-t border-stone-200/50 bg-white/95 backdrop-blur-xl md:hidden"
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
-      role="navigation"
-      aria-label="Päänavigaatio"
+      aria-label="Alapalkin navigaatio"
     >
       {/* Active indicator pill - more visible than thin line */}
       {mounted && (
@@ -99,7 +99,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onMenuClick,
         >
           <motion.div
             className="h-1 w-10 rounded-full bg-terracotta-500 shadow-sm"
-            layoutId="bottomNavIndicator"
+            layoutId={reduceMotion ? undefined : 'bottomNavIndicator'}
             initial={false}
             animate={{ opacity: 1 }}
             transition={{
@@ -137,8 +137,8 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onMenuClick,
               <div className="relative">
                 <motion.div
                   animate={{
-                    scale: active ? 1.1 : 1,
-                    rotate: active ? [0, -10, 10, 0] : 0,
+                    scale: active && !reduceMotion ? 1.1 : 1,
+                    rotate: active && !reduceMotion ? [0, -10, 10, 0] : 0,
                   }}
                   transition={{
                     scale: { type: "spring", stiffness: 400, damping: 17 },
@@ -172,7 +172,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onMenuClick,
                 className="transition-all"
                 animate={{
                   fontWeight: active ? 600 : 500,
-                  scale: active ? 1.05 : 1
+                  scale: active && !reduceMotion ? 1.05 : 1
                 }}
                 transition={{ duration: 0.2 }}
               >
@@ -184,7 +184,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ onMenuClick,
         <button
           onClick={(e) => {
             handleTabClick('Valikko', '/menu')(e);
-            onMenuClick?.();
+            onMenuClick?.(e);
           }}
           className="flex min-h-[56px] touch-target flex-col items-center justify-center gap-1 px-3 py-2 text-xs font-medium text-stone-500 transition-all duration-150 hover:text-terracotta-500 active:bg-stone-100 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracotta-500/60 focus-visible:ring-offset-2"
           aria-label="Avaa valikko"

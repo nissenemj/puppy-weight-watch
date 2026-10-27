@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef, ReactNode } from 'react'
 import { User } from '@supabase/supabase-js'
 import { supabase } from '@/integrations/supabase/client'
+import { signInWithEnabledProvider } from '@/services/authProviderService'
 
 interface GuestWeightEntry {
   id: string
@@ -263,14 +264,11 @@ export function GuestAuthProvider({ children }: GuestAuthProviderProps) {
 
   const signInWithOAuth = async (provider: 'google' | 'apple'): Promise<boolean> => {
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider,
-        options: {
-          redirectTo: `${window.location.origin}/`,
-          queryParams: {
-            access_type: 'offline',
-            prompt: 'consent'
-          }
+      const { error } = await signInWithEnabledProvider(provider, {
+        redirectTo: `${window.location.origin}/`,
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent'
         }
       })
       if (error) throw error

@@ -177,7 +177,7 @@ const WeightTrackerPage = () => {
   }
 
   return (
-    <div className="min-h-screen pt-16 md:pt-20">
+    <div className="min-h-screen">
       <div className="container mx-auto px-4 py-6 md:py-8 space-y-6">
       {/* Guest Mode Bar */}
       {isGuest && guestWeightEntries.length > 0 && (

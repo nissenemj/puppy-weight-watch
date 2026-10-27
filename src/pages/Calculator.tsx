@@ -85,8 +85,8 @@ const Calculator = () => {
         structuredData={structuredData}
       />
 
-      {/* Video Hero Section - pt-20 for fixed navigation, contained with rounded corners */}
-      <section className="container px-4 md:px-6 mx-auto pt-20 md:pt-24">
+      {/* Video Hero Section */}
+      <section className="container px-4 md:px-6 mx-auto">
         <div className="relative rounded-2xl overflow-hidden min-h-[50vh] md:min-h-[60vh] flex items-start justify-end">
           {/* Video Background */}
           <video

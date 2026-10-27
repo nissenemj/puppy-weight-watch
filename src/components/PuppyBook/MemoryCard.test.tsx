@@ -87,7 +87,7 @@ describe('memory image deletion', () => {
         onMemoryUpdated={onUpdated}
       />,
     );
-    expect(screen.getByTitle('Vain omistajalle')).toBeInTheDocument();
+    expect(screen.getByText('Vain omistajalle', {exact:true})).toBeInTheDocument();
     expect(screen.queryByTitle('Julkinen')).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'Muiston valinnat' }));
     expect(

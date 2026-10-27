@@ -4,6 +4,7 @@ import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { LazyImage } from '@/components/LazyImage'
 import { Button } from '@/components/ui/button'
 import { Scale, Calculator } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 const MotionBG = React.lazy(() => import('./ScrollPanBackgroundMotion'))
 
@@ -77,7 +78,7 @@ export default function ScrollPanBackground({
 
       {/* Content overlay slot */}
       {children && (
-        <div className={`absolute inset-0 z-30 flex ${overlayClassName}`} style={{ zIndex: 30 }}>
+        <div className={cn('absolute inset-0 z-30 flex', overlayClassName)} style={{ zIndex: 30 }}>
           {children}
         </div>
       )}

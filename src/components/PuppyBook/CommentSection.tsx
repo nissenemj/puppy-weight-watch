@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { MessageCircle, Send, Heart, MoreVertical, Trash2 } from '@/utils/iconImports';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -35,6 +35,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
   const [isExpanded, setIsExpanded] = useState(false);
   const [showMenu, setShowMenu] = useState<string | null>(null);
   const { toast } = useToast();
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     if (isExpanded) {
@@ -153,9 +154,10 @@ const CommentSection: React.FC<CommentSectionProps> = ({
 
   return (
     <motion.div
-      initial={{ opacity: 0, height: 0 }}
+      initial={reduceMotion ? false : { opacity: 0, height: 0 }}
       animate={{ opacity: 1, height: 'auto' }}
-      exit={{ opacity: 0, height: 0 }}
+      exit={reduceMotion ? undefined : { opacity: 0, height: 0 }}
+      transition={{ duration: reduceMotion ? 0 : 0.2 }}
       className="border-t border-gray-100 pt-3 mt-3"
     >
       {/* Comments List */}
@@ -164,24 +166,28 @@ const CommentSection: React.FC<CommentSectionProps> = ({
           {comments.map((comment) => (
             <motion.div
               key={comment.id}
-              initial={{ opacity: 0, x: -20 }}
+              initial={reduceMotion ? false : { opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 20 }}
+              exit={reduceMotion ? undefined : { opacity: 0, x: 20 }}
+              transition={{ duration: reduceMotion ? 0 : 0.2 }}
               className="flex gap-3 relative"
             >
               <Avatar className="w-6 h-6 flex-shrink-0">
-                <AvatarFallback className="text-xs bg-orange-100 text-orange-600">
+                <AvatarFallback className="text-xs bg-[#edf3ef] text-[#245246]">
                   {comment.user_id.slice(-2).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               
               <div className="flex-1 min-w-0">
-                <div className="bg-gray-50 rounded-lg px-3 py-2 relative">
+                <div className="bg-gray-50 rounded-lg pl-3 pr-14 py-2 min-h-12 relative">
                   <p className="text-sm text-gray-800 break-words">{comment.comment_text}</p>
                   
                   <button
+                    type="button"
+                    aria-label="Kommentin valinnat"
+                    aria-expanded={showMenu === comment.id}
                     onClick={() => setShowMenu(showMenu === comment.id ? null : comment.id)}
-                    className="absolute top-1 right-1 text-gray-400 hover:text-gray-600 p-1"
+                    className="absolute top-1 right-1 min-h-11 min-w-11 text-gray-600 hover:text-gray-800 p-1"
                   >
                     <MoreVertical className="w-3 h-3" />
                   </button>
@@ -214,7 +220,10 @@ const CommentSection: React.FC<CommentSectionProps> = ({
       {/* Add Comment Form */}
       <div className="flex gap-2">
         <Input
-          placeholder="Kirjoita kommentti..."
+          aria-label="Kirjoita kommentti"
+          name="comment"
+          autoComplete="off"
+          placeholder="Kirjoita kommentti…"
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
           onKeyPress={(e) => {
@@ -227,10 +236,12 @@ const CommentSection: React.FC<CommentSectionProps> = ({
           disabled={loading}
         />
         <Button
+          type="button"
+          aria-label={loading ? "Lähetetään kommenttia" : "Lähetä kommentti"}
           onClick={handleAddComment}
           disabled={loading || !newComment.trim()}
           size="sm"
-          className="px-3"
+          className="journal-button px-3 min-h-11 min-w-11"
         >
           <Send className="w-4 h-4" />
         </Button>
@@ -240,7 +251,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
         variant="ghost"
         size="sm"
         onClick={() => setIsExpanded(false)}
-        className="text-gray-400 hover:text-gray-600 mt-2 text-xs"
+        className="text-gray-600 hover:text-gray-800 mt-2 text-sm min-h-11"
       >
         Sulje kommentit
       </Button>
