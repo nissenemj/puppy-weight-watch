@@ -1,6 +1,7 @@
 import '@/styles/puppy-journal.css';
+import '@/styles/puppy-book-landing.css';
 import React from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
   Book,
@@ -15,14 +16,12 @@ import {
 import { Navigation } from '@/components/Navigation';
 import SEO from '@/components/SEO';
 import { MobileOptimizedLayout } from '@/components/MobileOptimizedLayout';
-import ScrollPanBackground from '@/components/ScrollPanBackground';
-import LazyImage from '@/components/LazyImage';
-import heroIllustration from '@/assets/hero-illustration.png';
-import puppyWaveGif from '@/assets/puppy-wave-gif.png';
-import growthStages from '@/assets/growth-stages.png';
+import puppyBookHome from '@/assets/puppy-book-home-1200.webp';
+import puppyBookHomeSmall from '@/assets/puppy-book-home-640.webp';
+import puppyHome from '@/assets/puppy-home-1200.webp';
+import puppyHomeSmall from '@/assets/puppy-home-640.webp';
 
 const PuppyBookLanding: React.FC = () => {
-  const reduceMotion = useReducedMotion();
   const features = [
     {
       icon: Calendar,
@@ -75,70 +74,38 @@ const PuppyBookLanding: React.FC = () => {
 
         <Navigation />
 
-        {/* Hero Section with pan background */}
-        <section className="full-width-section relative py-8 overflow-hidden rounded-2xl mobile-text-wrap responsive-media no-horizontal-scroll mobile-container-safe mobile-flex-safe" aria-label="Pentukirjan esittely">
-          <ScrollPanBackground src={heroIllustration} alt="" panX={40} panY={20} zoom={1.04} minHeightClass="min-h-[50svh]" className="no-horizontal-scroll" overlayClassName="relative inset-auto min-h-[inherit] w-full items-center px-4 py-8 sm:p-8">
-            <div className="hero-content relative z-30 w-full min-w-0">
-              <div className="grid lg:grid-cols-2 gap-12 items-center">
-                <motion.div
-                  initial={reduceMotion ? false : { opacity: 0, x: -30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: reduceMotion ? 0 : 0.6 }}
-                  className="min-w-0"
-                >
-                  <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-playful font-bold text-white mb-6 drop-shadow" id="main-heading">
-                    Pennun Ensimmäinen Vuosi 🐶
-                  </h1>
-                  <p className="text-xl text-white/90 mb-8 leading-relaxed">
-                    Luo ainutlaatuinen muistokirja pennustasi. Tallenna virstanpylväitä,
-                    muistoja ja seuraa kasvua henkilökohtaisessa pentukirjassa.
-                  </p>
-
-                  <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4">
-                    <Link to="/puppy-book" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-white px-6 py-3 text-center text-base font-semibold text-terracotta-700 shadow-lg transition-colors hover:bg-stone-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-stone-900 motion-reduce:transition-none">
-                      Aloita pentukirja
-                      <ArrowRight className="w-5 h-5 shrink-0" aria-hidden="true" />
-                    </Link>
-
-                    <a
-                      href="#puppy-book-features"
-                      className="inline-flex min-h-12 items-center justify-center rounded-2xl border-2 border-white/80 px-6 py-3 text-center text-base font-semibold text-white transition-colors hover:bg-black/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-stone-900 motion-reduce:transition-none"
-                    >
-                      Katso ominaisuudet
-                    </a>
-                  </div>
-                </motion.div>
-
-                <motion.div
-                  initial={reduceMotion ? false : { opacity: 0, x: 30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: reduceMotion ? 0 : 0.6, delay: reduceMotion ? 0 : 0.2 }}
-                  className="hidden lg:flex items-center justify-center"
-                  aria-hidden="true"
-                >
-                  <motion.div
-                    className="bg-white rounded-2xl p-4 shadow-lg"
-                    animate={reduceMotion ? { y: 0, rotate: 0 } : {
-                      y: [0, -10, 0],
-                      rotate: [0, 5, 0]
-                    }}
-                    transition={reduceMotion ? { duration: 0 } : {
-                      duration: 3,
-                      repeat: Infinity,
-                      ease: "easeInOut"
-                    }}
-                  >
-                    <LazyImage
-                      src={puppyWaveGif}
-                      alt=""
-                      className="w-32 h-32 rounded-xl"
-                    />
-                  </motion.div>
-                </motion.div>
-              </div>
+        <section className="puppy-journal puppy-book-intro" aria-label="Pentukirjan esittely">
+          <div className="puppy-book-intro-copy">
+            <h1 className="journal-title" id="main-heading">
+              Pennun ensimmäinen vuosi talteen.
+            </h1>
+            <p className="journal-lead">
+              Tallenna kuvat, muistot ja tärkeät hetket omaan pentukirjaan.
+              Pienestä pennusta kasvaa yhteinen tarina.
+            </p>
+            <div className="puppy-book-intro-actions">
+              <Link to="/puppy-book" className="journal-button">
+                Aloita pentukirja
+                <ArrowRight size={18} aria-hidden="true" />
+              </Link>
+              <a href="#puppy-book-features" className="journal-button journal-button-secondary">
+                Katso ominaisuudet
+              </a>
             </div>
-            <div className="pointer-events-none absolute inset-0 bg-black/60" aria-hidden="true" />
-          </ScrollPanBackground>
+          </div>
+          <figure className="puppy-book-intro-photo">
+            <img
+              src={puppyBookHome}
+              srcSet={`${puppyBookHomeSmall} 640w, ${puppyBookHome} 1200w`}
+              sizes="(min-width: 1024px) 50vw, 100vw"
+              width={1200}
+              height={900}
+              alt="Kuvituskuva kultaisennoutajan pennusta kotona, vierellään vihreä muistikirja"
+              fetchPriority="high"
+              decoding="async"
+            />
+            <figcaption>Tekoälyllä luotu kuvituskuva.</figcaption>
+          </figure>
         </section>
 
         {/* Features Section */}
@@ -222,11 +189,20 @@ const PuppyBookLanding: React.FC = () => {
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
-                <LazyImage
-                  src={growthStages}
-                  alt="Infograafi pennun kasvuvaiheista 0-12 kuukauden ikään, näyttää tärkeimmät virstanpylväät"
-                  className="w-full h-auto rounded-2xl shadow-xl"
-                />
+                <figure className="puppy-journal puppy-book-moment-photo">
+                  <img
+                    src={puppyHome}
+                    srcSet={`${puppyHomeSmall} 640w, ${puppyHome} 1200w`}
+                    sizes="(min-width: 1024px) 50vw, 100vw"
+                    width={1200}
+                    height={800}
+                    alt="Kuvituskuva pennusta omalla peitollaan kotona"
+                    className="w-full h-auto rounded-2xl"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <figcaption>Arjen pienet hetket jäävät kirjaan. Tekoälyllä luotu kuvituskuva.</figcaption>
+                </figure>
               </motion.div>
             </div>
           </div>

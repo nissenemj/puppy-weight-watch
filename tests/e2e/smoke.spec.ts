@@ -83,6 +83,8 @@ test.describe("Pentukirjan esittely", () => {
   for (const viewport of [
     { width: 320, height: 568 },
     { width: 375, height: 812 },
+    { width: 768, height: 900 },
+    { width: 1024, height: 900 },
     { width: 844, height: 390 },
     { width: 1440, height: 900 },
   ]) {
@@ -98,10 +100,10 @@ test.describe("Pentukirjan esittely", () => {
       await expect
         .poll(() =>
           hero.evaluate((section) => {
-            const background = section
-              .querySelector("section")!
-              .getBoundingClientRect();
-            return [...section.querySelectorAll("h1, p, a, button")]
+            const background = section.getBoundingClientRect();
+            return [
+              ...section.querySelectorAll("h1, p, a, button, img, figcaption"),
+            ]
               .filter((element) => {
                 const bounds = element.getBoundingClientRect();
                 return (
