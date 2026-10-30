@@ -1065,12 +1065,15 @@ for (const width of [320, 768, 1024, 1440]) {
       exact: true,
     });
     await expect(canvas).toBeFocused();
+    // Wait for Radix to register the dialog's pointer layer before checking the stack.
     // The site's fixed reading-progress bar must stay behind the full-screen book.
-    expect(
-      await page.evaluate(() =>
-        Boolean(document.elementFromPoint(1, 1)?.closest(".book-reader")),
-      ),
-    ).toBe(true);
+    await expect
+      .poll(() =>
+        page.evaluate(() =>
+          Boolean(document.elementFromPoint(1, 1)?.closest(".book-reader")),
+        ),
+      )
+      .toBe(true);
     await canvas.press("ArrowRight");
     await expect(reader.locator(".annual-sheet")).toHaveCount(
       width >= 1024 ? 2 : 1,

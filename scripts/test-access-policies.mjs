@@ -160,9 +160,9 @@ try {
     );
   sql('tests/security/access_policies.sql');
   if (!baseline) {
-    sql('supabase/migrations/20261027135728_annual_book_drafts.sql');
+    sql('supabase/migrations/20261030124915_annual_book_drafts.sql');
     sql('tests/security/annual_book_drafts.sql');
-    sql('supabase/migrations/20261027165251_annual_book_design.sql');
+    sql('supabase/migrations/20261030124939_annual_book_design.sql');
     sql('tests/security/annual_book_design.sql');
   }
   if (annualApi) {
