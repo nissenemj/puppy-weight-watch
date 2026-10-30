@@ -31,6 +31,8 @@ async function sourceFixtures(page: Page) {
     emptyFoods: false,
     failDogs: false,
     adultFood: false,
+    emptyGuidelines: false,
+    unsupportedFood: false,
   };
   const writes: string[] = [];
   page.on("request", (request) => {
@@ -62,19 +64,23 @@ async function sourceFixtures(page: Page) {
           : [
               {
                 ...food,
-                dosage_method: state.adultFood
-                  ? "Odotettu_Aikuispaino_Ja_Ikä"
-                  : food.dosage_method,
+                dosage_method: state.unsupportedFood
+                  ? "Ei_Tietoa"
+                  : state.adultFood
+                    ? "Odotettu_Aikuispaino_Ja_Ikä"
+                    : food.dosage_method,
               },
             ];
       if (table === "feeding_guidelines")
-        data = [4, 8].map((kg, i) => ({
-          id: `guideline-${i}`,
-          dog_food_id: food.id,
-          current_weight_kg: kg,
-          daily_amount_min: kg * 25,
-          daily_amount_max: kg * 25,
-        }));
+        data = state.emptyGuidelines
+          ? []
+          : [4, 8].map((kg, i) => ({
+              id: `guideline-${i}`,
+              dog_food_id: food.id,
+              current_weight_kg: kg,
+              daily_amount_min: kg * 25,
+              daily_amount_max: kg * 25,
+            }));
       if (table === "dogs")
         data = [
           {
@@ -297,6 +303,44 @@ test("a failed food-data load can be retried and an empty catalogue cannot produ
   ).toHaveCount(0);
   expect(calls.writes).toEqual([]);
 });
+
+for (const failure of ["emptyGuidelines", "unsupportedFood"] as const) {
+  test(`food calculation explains ${failure}, keeps the inputs and can recover`, async ({
+    page,
+  }) => {
+    const calls = await sourceFixtures(page);
+    calls.state[failure] = true;
+    await page.setViewportSize({ width: 320, height: 1000 });
+    await page.goto("/calculator");
+    await calculateFood(page);
+    const error = page.getByRole("alert");
+    await expect(error).toContainText(
+      failure === "emptyGuidelines"
+        ? "ei löytynyt annostelutietoa"
+        : "ei ole saatavilla laskentamenetelmää",
+    );
+    await expect(error).toContainText("tuotepakkauksesta tai valmistajalta");
+    await expect(
+      page.getByRole("region", { name: "Laskentatulokset", exact: true }),
+    ).toHaveCount(0);
+    await expect(
+      page.getByLabel("Nykyinen paino (kg) *", { exact: true }),
+    ).toHaveValue("6");
+    await expect(
+      page.getByLabel("Ikä kuukausina *", { exact: true }),
+    ).toHaveValue("4");
+    await checkLayout(page);
+    await page.getByLabel("Nykyinen paino (kg) *", { exact: true }).fill("7");
+    await expect(error).toHaveCount(0);
+    calls.state[failure] = false;
+    await page.reload();
+    await calculateFood(page);
+    await expect(
+      page.getByRole("region", { name: "Laskentatulokset", exact: true }),
+    ).toContainText("150 g");
+    expect(calls.writes).toEqual([]);
+  });
+}
 
 test.describe("the redesigned signed-in workspace", () => {
   test.use({ userState: "signed-in" });

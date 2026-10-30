@@ -43,7 +43,6 @@ import { cn } from "@/lib/utils";
 import { User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { dbToAppTypes } from "@/utils/typeUtils";
-import { toast } from "sonner";
 import {
   getBreedMultiplier,
   getBreedCategory,
@@ -123,6 +122,12 @@ export default function AdvancedFoodCalculator({
     selectedFoodId,
   ]);
   const [resultSignature, setResultSignature] = useState("");
+  const [calculationError, setCalculationError] = useState<{
+    message: string;
+    signature: string;
+  } | null>(null);
+  const visibleCalculationError =
+    calculationError?.signature === inputSignature ? calculationError.message : "";
   const [dogFoods, setDogFoods] = useState<DogFood[]>([]);
   const needsAdultWeight =
     dogFoods.find((food) => food.id === selectedFoodId)?.dosage_method ===
@@ -203,6 +208,10 @@ export default function AdvancedFoodCalculator({
     return "45-60 kg"; // fallback for very large dogs
   };
   const calculateFeeding = () => {
+    setCalculationError(null);
+    setResult(null);
+    const reportError = (message: string) =>
+      setCalculationError({ message, signature: inputSignature });
     if (!selectedFoodId) {
       setFoodSelectionError("Valitse koiranruoka, jotta annos voidaan laskea.");
       foodTrigger.current?.focus();
@@ -213,11 +222,14 @@ export default function AdvancedFoodCalculator({
     const months = parseFloat(ageMonths);
     const adultWeight = parseFloat(expectedAdultWeight);
     if (!weight || !months || !selectedFoodId) {
-      toast.error("Täytä kaikki pakolliset kentät");
+      reportError("Täytä kaikki pakolliset kentät.");
       return;
     }
     const selectedFood = dogFoods.find((f) => f.id === selectedFoodId);
-    if (!selectedFood) return;
+    if (!selectedFood) {
+      reportError("Valittua ruokaa ei löytynyt. Valitse ruoka uudelleen.");
+      return;
+    }
     const foodGuidelines = feedingGuidelines.filter(
       (g) => g.dog_food_id === selectedFoodId,
     );
@@ -237,7 +249,7 @@ export default function AdvancedFoodCalculator({
     switch (selectedFood.dosage_method) {
       case "Odotettu_Aikuispaino_Ja_Ikä": {
         if (!adultWeight) {
-          toast.error("Syötä odotettu aikuispaino");
+          reportError("Syötä odotettu aikuispaino.");
           return;
         }
         const ageCategory = getAgeCategory(months);
@@ -339,11 +351,15 @@ export default function AdvancedFoodCalculator({
         usedGuidelines = foodGuidelines;
         break;
       default:
-        toast.error("Tälle ruoalle ei ole saatavilla laskentamenetelmää");
+        reportError(
+          "Valitulle ruoalle ei ole saatavilla laskentamenetelmää. Tarkista annostelu tuotepakkauksesta tai valmistajalta.",
+        );
         return;
     }
     if (dailyAmount === 0) {
-      toast.error("Annosta ei voitu laskea annetuilla arvoilla");
+      reportError(
+        "Annosta ei voitu laskea: valitulle ruoalle ei löytynyt annostelutietoa näillä arvoilla. Tarkista annostelu tuotepakkauksesta tai valmistajalta.",
+      );
       return;
     }
 
@@ -616,12 +632,24 @@ export default function AdvancedFoodCalculator({
 
             <Button
               type="submit"
+              aria-describedby={
+                visibleCalculationError ? `${controlId}-calculation-error` : undefined
+              }
               className="w-full mt-6 bg-white text-terracotta-600 hover:bg-white/90 font-semibold"
               disabled={Boolean(loadError) || !dogFoods.length}
             >
               <Dog className="mr-2 h-4 w-4" aria-hidden="true" />
               Laske ruokamäärä
             </Button>
+            {visibleCalculationError && (
+              <p
+                id={`${controlId}-calculation-error`}
+                role="alert"
+                className="mt-3 text-sm text-red-700"
+              >
+                {visibleCalculationError}
+              </p>
+            )}
           </form>
         </CardContent>
       </Card>
