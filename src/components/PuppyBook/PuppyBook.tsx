@@ -206,7 +206,7 @@ const PuppyBook: React.FC = () => {
   }
 
   return (
-    <div className="puppy-journal">
+    <div className="puppy-journal journal-book-app">
       <div className="journal-book-toolbar">
         <PuppyBookSelector user={user} selectedBookId={selectedBookId} onBookSelect={handleBookSelect} />
         <div className="journal-book-toolbar-actions"><button type="button" className="journal-text-link" onClick={() => setShowSettingsDialog(true)}><SettingsIcon size={16} aria-hidden="true" /> Kirjan asetukset</button></div>

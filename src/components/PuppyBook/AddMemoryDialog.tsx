@@ -38,6 +38,7 @@ interface AddMemoryDialogProps {
   onMemoryAdded: () => void;
   onTypeChange?: (type: "photo" | "text" | "event" | "milestone") => void;
   returnFocusTo?: React.RefObject<HTMLElement>;
+  inspiration?: { title: string; question: string };
 }
 
 const AddMemoryDialog: React.FC<AddMemoryDialogProps> = ({
@@ -48,10 +49,13 @@ const AddMemoryDialog: React.FC<AddMemoryDialogProps> = ({
   onMemoryAdded,
   onTypeChange,
   returnFocusTo,
+  inspiration,
 }) => {
   const [uploading, setUploading] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [errorField, setErrorField] = useState<"photo" | "caption" | null>(null);
+  const [errorField, setErrorField] = useState<"photo" | "caption" | null>(
+    null,
+  );
   const captionRef = useRef<HTMLTextAreaElement>(null);
   const photoPickerRef = useRef<HTMLButtonElement>(null);
   const errorRef = useRef<HTMLParagraphElement>(null);
@@ -262,7 +266,7 @@ const AddMemoryDialog: React.FC<AddMemoryDialogProps> = ({
       }}
     >
       <DialogContent
-        className="puppy-journal max-w-md"
+        className="puppy-journal journal-book-app journal-memory-dialog max-w-md"
         onEscapeKeyDown={(event) => {
           if (uploading) event.preventDefault();
         }}
@@ -281,7 +285,11 @@ const AddMemoryDialog: React.FC<AddMemoryDialogProps> = ({
       >
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 pr-8">
-            <Icon size={22} className="text-[#245246]" aria-hidden="true" />
+            <Icon
+              size={22}
+              style={{ color: "var(--journal-green)" }}
+              aria-hidden="true"
+            />
             {getDialogTitle()}
           </DialogTitle>
           <DialogDescription>
@@ -289,6 +297,16 @@ const AddMemoryDialog: React.FC<AddMemoryDialogProps> = ({
             kirjaan.
           </DialogDescription>
         </DialogHeader>
+        {inspiration && (
+          <aside
+            className="annual-memory-prompt"
+            aria-label="Apukysymys muistolle"
+          >
+            <strong>{inspiration.title}</strong>
+            <p id="memory-inspiration">{inspiration.question}</p>
+            <p>Kirjoita omin sanoin. Voit käyttää ideaa myös kuvatekstinä.</p>
+          </aside>
+        )}
         {onTypeChange && (type === "photo" || type === "text") && (
           <div className="flex gap-2" role="group" aria-label="Muiston tyyppi">
             <button
@@ -357,7 +375,10 @@ const AddMemoryDialog: React.FC<AddMemoryDialogProps> = ({
                     </>
                   )}
                 </button>
-                <p id="memory-photo-hint" className="text-sm text-stone-600 mt-2">
+                <p
+                  id="memory-photo-hint"
+                  className="text-sm text-stone-600 mt-2"
+                >
                   JPEG, PNG tai WebP, enintään 5 Mt.
                 </p>
                 <input
@@ -401,12 +422,18 @@ const AddMemoryDialog: React.FC<AddMemoryDialogProps> = ({
                 aria-describedby={
                   [
                     type === "text" ? "memory-caption-hint" : null,
+                    inspiration ? "memory-inspiration" : null,
                     errorField === "caption" ? "memory-save-error" : null,
-                  ].filter(Boolean).join(" ") || undefined
+                  ]
+                    .filter(Boolean)
+                    .join(" ") || undefined
                 }
               />
               {type === "text" && (
-                <p id="memory-caption-hint" className="text-sm text-stone-600 mt-2">
+                <p
+                  id="memory-caption-hint"
+                  className="text-sm text-stone-600 mt-2"
+                >
                   Pakollinen kenttä.
                 </p>
               )}

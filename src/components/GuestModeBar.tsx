@@ -1,46 +1,47 @@
-import React, { useState } from 'react'
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
+import React, { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   User,
   Database,
   X,
   ArrowRight,
   Clock,
-  AlertTriangle
-} from 'lucide-react'
-import { useGuestAuth } from '@/contexts/GuestAuthContext'
-import { motion, AnimatePresence } from 'framer-motion'
+  AlertTriangle,
+} from "lucide-react";
+import { useGuestAuth } from "@/contexts/GuestAuthContext";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 
 interface GuestModeBarProps {
-  onSignUpClick: () => void
-  onSignInClick: () => void
-  className?: string
+  onSignUpClick: () => void;
+  onSignInClick: () => void;
+  className?: string;
 }
 
 export default function GuestModeBar({
   onSignUpClick,
   onSignInClick,
-  className = ""
+  className = "",
 }: GuestModeBarProps) {
-  const { guestWeightEntries, guestDogProfile } = useGuestAuth()
-  const [isDismissed, setIsDismissed] = useState(false)
+  const { guestWeightEntries, guestDogProfile } = useGuestAuth();
+  const [isDismissed, setIsDismissed] = useState(false);
+  const reduceMotion = useReducedMotion();
 
   // Don't show if dismissed or no guest data
   if (isDismissed || guestWeightEntries.length === 0) {
-    return null
+    return null;
   }
 
-  const entryCount = guestWeightEntries.length
-  const hasProfile = !!guestDogProfile
+  const entryCount = guestWeightEntries.length;
+  const hasProfile = !!guestDogProfile;
 
   return (
     <AnimatePresence>
       <motion.div
-        initial={{ opacity: 0, y: -20 }}
+        initial={reduceMotion ? false : { opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -20 }}
+        exit={reduceMotion ? undefined : { opacity: 0, y: -20 }}
         transition={{ duration: 0.3 }}
         className={`relative z-50 ${className}`}
       >
@@ -51,7 +52,10 @@ export default function GuestModeBar({
               <div className="flex items-center gap-3 flex-1">
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-amber-400 animate-pulse" />
-                  <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-300">
+                  <Badge
+                    variant="outline"
+                    className="bg-amber-100 text-amber-800 border-amber-300"
+                  >
                     <Clock className="w-3 h-3 mr-1" />
                     Väliaikaistila
                   </Badge>
@@ -60,12 +64,15 @@ export default function GuestModeBar({
                 <div className="flex items-center gap-2 text-sm text-amber-700">
                   <Database className="w-4 h-4" />
                   <span className="font-medium">
-                    {entryCount} mittaus{entryCount !== 1 ? 'ta' : ''} tallennettu
+                    {entryCount} mittaus{entryCount !== 1 ? "ta" : ""}{" "}
+                    tallennettu
                   </span>
                   {hasProfile && (
                     <>
                       <span>•</span>
-                      <span>{guestDogProfile?.name || 'Profiilit'} tallennettu</span>
+                      <span>
+                        {guestDogProfile?.name || "Profiilit"} tallennettu
+                      </span>
                     </>
                   )}
                 </div>
@@ -75,7 +82,8 @@ export default function GuestModeBar({
               <div className="flex items-center gap-2 text-sm text-amber-700 text-center flex-1">
                 <AlertTriangle className="w-4 h-4 text-amber-600" />
                 <span>
-                  Tietosi tallennetaan väliaikaisesti. Luo tili pysyvää tallennusta varten.
+                  Tietosi tallennetaan väliaikaisesti. Luo tili pysyvää
+                  tallennusta varten.
                 </span>
               </div>
 
@@ -94,7 +102,7 @@ export default function GuestModeBar({
                 <Button
                   size="sm"
                   onClick={onSignUpClick}
-                  className="bg-amber-600 hover:bg-amber-700 text-white shadow-sm"
+                  className="bg-amber-800 hover:bg-amber-900 text-white shadow-sm"
                 >
                   Luo tili
                   <ArrowRight className="w-4 h-4 ml-1" />
@@ -104,6 +112,7 @@ export default function GuestModeBar({
                   variant="ghost"
                   size="sm"
                   onClick={() => setIsDismissed(true)}
+                  aria-label="Sulje väliaikaistilan ilmoitus"
                   className="text-amber-600 hover:text-amber-700 hover:bg-amber-100 p-1"
                 >
                   <X className="w-4 h-4" />
@@ -113,40 +122,44 @@ export default function GuestModeBar({
 
             {/* Optional: Data summary for larger screens */}
             <div className="hidden lg:flex items-center justify-center mt-2 pt-2 border-t border-amber-200">
-              <div className="text-xs text-amber-600 text-center">
-                💡 <strong>Vinkki:</strong> Tilin luominen vie alle minuutin ja synkronoi automaattisesti kaikki tietosi
+              <div className="text-xs text-amber-800 text-center">
+                Mittaukset ovat tämän selaimen muistissa. Kirjaudu, jos haluat
+                tallentaa ne tilillesi.
               </div>
             </div>
           </CardContent>
         </Card>
       </motion.div>
     </AnimatePresence>
-  )
+  );
 }
 
 // Lightweight version for mobile
 export function GuestModeBarMobile({
   onSignUpClick,
-  onSignInClick
-}: Omit<GuestModeBarProps, 'className'>) {
-  const { guestWeightEntries } = useGuestAuth()
-  const [isDismissed, setIsDismissed] = useState(false)
+  onSignInClick,
+}: Omit<GuestModeBarProps, "className">) {
+  const { guestWeightEntries } = useGuestAuth();
+  const [isDismissed, setIsDismissed] = useState(false);
+  const reduceMotion = useReducedMotion();
 
   if (isDismissed || guestWeightEntries.length === 0) {
-    return null
+    return null;
   }
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: -10 }}
+      initial={reduceMotion ? false : { opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
+      exit={reduceMotion ? undefined : { opacity: 0, y: -10 }}
       className="bg-amber-50 border-b border-amber-200 px-4 py-3"
     >
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-2 text-sm text-amber-700">
           <div className="w-2 h-2 rounded-full bg-amber-400" />
-          <span>{guestWeightEntries.length} mittausta tallennettu väliaikaisesti</span>
+          <span>
+            {guestWeightEntries.length} mittausta tallennettu väliaikaisesti
+          </span>
         </div>
 
         <div className="flex items-center gap-2">
@@ -161,7 +174,7 @@ export function GuestModeBarMobile({
           <Button
             size="sm"
             onClick={onSignUpClick}
-            className="bg-amber-600 text-white text-xs px-3 py-1 h-auto"
+            className="bg-amber-800 text-white text-xs px-3 py-1 h-auto"
           >
             Luo tili
           </Button>
@@ -169,6 +182,7 @@ export function GuestModeBarMobile({
             variant="ghost"
             size="sm"
             onClick={() => setIsDismissed(true)}
+            aria-label="Sulje väliaikaistilan ilmoitus"
             className="text-amber-600 p-1 h-auto"
           >
             <X className="w-3 h-3" />
@@ -176,5 +190,5 @@ export function GuestModeBarMobile({
         </div>
       </div>
     </motion.div>
-  )
+  );
 }

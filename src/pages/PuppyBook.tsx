@@ -5,7 +5,7 @@ import { MobileOptimizedLayout } from '@/components/MobileOptimizedLayout';
 
 const PuppyBookPage: React.FC = () => {
   return (
-    <MobileOptimizedLayout>
+    <MobileOptimizedLayout className="journal-book-page">
       <SEO 
         title="Pentukirja - Tallenna pennun elämäntarina"
         description="Luo ainutlaatuinen pentukirja pennustasi. Tallenna virstanpylväitä, muistoja ja seuraa kasvua henkilökohtaisessa pentukirjassa."

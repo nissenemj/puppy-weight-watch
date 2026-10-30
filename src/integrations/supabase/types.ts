@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      annual_book_drafts: {
+        Row: {
+          book_id: string
+          owner_id: string
+          payload: Json
+          revision: number
+          updated_at: string
+        }
+        Insert: {
+          book_id: string
+          owner_id: string
+          payload: Json
+          revision?: number
+          updated_at?: string
+        }
+        Update: {
+          payload?: Json
+          revision?: number
+        }
+        Relationships: [{
+          foreignKeyName: "annual_book_drafts_book_id_fkey"
+          columns: ["book_id"]
+          isOneToOne: true
+          referencedRelation: "puppy_books"
+          referencedColumns: ["id"]
+        }]
+      }
       contact_messages: {
         Row: {
           created_at: string | null

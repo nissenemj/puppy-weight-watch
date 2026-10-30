@@ -1,11 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine, Scatter, ComposedChart } from 'recharts';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { AlertTriangle } from '@/utils/iconImports';
-import { supabase } from '@/integrations/supabase/client';
-import { SizeClass, CentilePoint } from '@/types/veterinary';
+import React, { useState, useEffect } from "react";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  ReferenceLine,
+  Scatter,
+  ComposedChart,
+} from "recharts";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertTriangle } from "@/utils/iconImports";
+import { supabase } from "@/integrations/supabase/client";
+import { SizeClass, CentilePoint } from "@/types/veterinary";
 
 interface WeightPoint {
   age_weeks: number;
@@ -19,14 +35,14 @@ interface GrowthChartProps {
 }
 
 const SIZE_CLASS_LABELS = {
-  toy_small: 'Pieni/Toy (2-10kg)',
-  medium: 'Keskikokoinen (10-25kg)', 
-  large_giant: 'Suuri/Jättiläinen (25-70kg+)'
+  toy_small: "Pieni/Toy (2-10kg)",
+  medium: "Keskikokoinen (10-25kg)",
+  large_giant: "Suuri/Jättiläinen (25-70kg+)",
 };
 
-const GrowthChart: React.FC<GrowthChartProps> = ({ 
-  weightPoints, 
-  initialSizeClass = 'medium' 
+const GrowthChart: React.FC<GrowthChartProps> = ({
+  weightPoints,
+  initialSizeClass = "medium",
 }) => {
   const [sizeClass, setSizeClass] = useState<SizeClass>(initialSizeClass);
   const [centiles, setCentiles] = useState<CentilePoint[]>([]);
@@ -38,15 +54,15 @@ const GrowthChart: React.FC<GrowthChartProps> = ({
       setLoading(true);
       try {
         const { data, error } = await supabase
-          .from('growth_centiles')
-          .select('*')
-          .eq('size_class', sizeClass)
-          .order('age_weeks');
+          .from("growth_centiles")
+          .select("*")
+          .eq("size_class", sizeClass)
+          .order("age_weeks");
 
         if (error) throw error;
         setCentiles(data || []);
       } catch (error) {
-        console.error('Error fetching centiles:', error);
+        console.error("Error fetching centiles:", error);
       } finally {
         setLoading(false);
       }
@@ -64,7 +80,9 @@ const GrowthChart: React.FC<GrowthChartProps> = ({
       const previous = weightPoints[weightPoints.length - 2];
 
       const getPercentile = (weight: number, ageWeeks: number) => {
-        const centile = centiles.find(c => Math.abs(c.age_weeks - ageWeeks) <= 2);
+        const centile = centiles.find(
+          (c) => Math.abs(c.age_weeks - ageWeeks) <= 2,
+        );
         if (!centile) return null;
 
         if (weight <= centile.p3) return 3;
@@ -74,13 +92,21 @@ const GrowthChart: React.FC<GrowthChartProps> = ({
         return 97;
       };
 
-      const latestPercentile = getPercentile(latest.weight_kg, latest.age_weeks);
-      const previousPercentile = getPercentile(previous.weight_kg, previous.age_weeks);
+      const latestPercentile = getPercentile(
+        latest.weight_kg,
+        latest.age_weeks,
+      );
+      const previousPercentile = getPercentile(
+        previous.weight_kg,
+        previous.age_weeks,
+      );
 
       if (latestPercentile && previousPercentile) {
         const change = Math.abs(latestPercentile - previousPercentile);
         if (change >= 25) {
-          setWarning(`Huomio: Paino on siirtynyt ${change} prosenttiyksikköä centile-viivojen välillä. Keskustele eläinlääkärin kanssa.`);
+          setWarning(
+            `Huomio: Paino on siirtynyt ${change} prosenttiyksikköä centile-viivojen välillä. Keskustele eläinlääkärin kanssa.`,
+          );
         } else {
           setWarning(null);
         }
@@ -93,60 +119,80 @@ const GrowthChart: React.FC<GrowthChartProps> = ({
   // Merge centile data with weight points for chart
   // Combine all unique age weeks from both centiles and user weight points
   const allAgeWeeks = [
-    ...centiles.map(c => c.age_weeks),
-    ...weightPoints.map(w => w.age_weeks)
+    ...centiles.map((c) => c.age_weeks),
+    ...weightPoints.map((w) => w.age_weeks),
   ]
     .filter((v, i, a) => a.indexOf(v) === i) // Remove duplicates
     .sort((a, b) => a - b);
 
-  const chartData = allAgeWeeks.map(ageWeeks => {
-    const centile = centiles.find(c => c.age_weeks === ageWeeks);
-    const userWeight = weightPoints.find(w => w.age_weeks === ageWeeks);
-    
+  const chartData = allAgeWeeks.map((ageWeeks) => {
+    const centile = centiles.find((c) => c.age_weeks === ageWeeks);
+    const userWeight = weightPoints.find((w) => w.age_weeks === ageWeeks);
+
     // For user weight points without exact centile match, interpolate centile values
-    const interpolateCentile = (percentile: 'p3' | 'p10' | 'p50' | 'p90' | 'p97') => {
+    const interpolateCentile = (
+      percentile: "p3" | "p10" | "p50" | "p90" | "p97",
+    ) => {
       if (centile) return centile[percentile];
-      
+
       // Find surrounding centile points for interpolation
-      const before = [...centiles].reverse().find(c => c.age_weeks < ageWeeks);
-      const after = centiles.find(c => c.age_weeks > ageWeeks);
-      
+      const before = [...centiles]
+        .reverse()
+        .find((c) => c.age_weeks < ageWeeks);
+      const after = centiles.find((c) => c.age_weeks > ageWeeks);
+
       if (before && after) {
-        const ratio = (ageWeeks - before.age_weeks) / (after.age_weeks - before.age_weeks);
-        return before[percentile] + ratio * (after[percentile] - before[percentile]);
+        const ratio =
+          (ageWeeks - before.age_weeks) / (after.age_weeks - before.age_weeks);
+        return (
+          before[percentile] + ratio * (after[percentile] - before[percentile])
+        );
       }
-      
+
       return null;
     };
-    
+
     return {
       age_weeks: ageWeeks,
-      p3: interpolateCentile('p3'),
-      p10: interpolateCentile('p10'),
-      p50: interpolateCentile('p50'),
-      p90: interpolateCentile('p90'),
-      p97: interpolateCentile('p97'),
-      user_weight: userWeight?.weight_kg || null
+      p3: interpolateCentile("p3"),
+      p10: interpolateCentile("p10"),
+      p50: interpolateCentile("p50"),
+      p90: interpolateCentile("p90"),
+      p97: interpolateCentile("p97"),
+      user_weight: userWeight?.weight_kg || null,
     };
   });
 
   // Debug logging
-  console.log('GrowthChart - weightPoints:', weightPoints);
-  console.log('GrowthChart - centiles count:', centiles.length);
-  console.log('GrowthChart - chartData:', chartData);
-  console.log('GrowthChart - user weights in chartData:', chartData.filter(d => d.user_weight !== null));
+  console.log("GrowthChart - weightPoints:", weightPoints);
+  console.log("GrowthChart - centiles count:", centiles.length);
+  console.log("GrowthChart - chartData:", chartData);
+  console.log(
+    "GrowthChart - user weights in chartData:",
+    chartData.filter((d) => d.user_weight !== null),
+  );
 
   if (loading) {
-    return <div className="h-64 flex items-center justify-center">Ladataan kasvukäyrää...</div>;
+    return (
+      <div className="h-64 flex items-center justify-center">
+        Ladataan kasvukäyrää...
+      </div>
+    );
   }
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center justify-between">
-          Kasvukäyrä
-          <Select value={sizeClass} onValueChange={(value: SizeClass) => setSizeClass(value)}>
-            <SelectTrigger className="w-64">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <CardTitle>Kasvukäyrä</CardTitle>
+          <Select
+            value={sizeClass}
+            onValueChange={(value: SizeClass) => setSizeClass(value)}
+          >
+            <SelectTrigger
+              className="w-64 max-w-full"
+              aria-label="Kasvukäyrän kokoluokka"
+            >
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -157,7 +203,7 @@ const GrowthChart: React.FC<GrowthChartProps> = ({
               ))}
             </SelectContent>
           </Select>
-        </CardTitle>
+        </div>
       </CardHeader>
       <CardContent>
         {warning && (
@@ -166,87 +212,88 @@ const GrowthChart: React.FC<GrowthChartProps> = ({
             <AlertDescription>{warning}</AlertDescription>
           </Alert>
         )}
-        
-        <div className="h-80 w-full">
+
+        <div className="h-80 w-full" aria-hidden="true">
           <ResponsiveContainer>
-            <ComposedChart data={chartData} margin={{ top: 10, right: 30, left: 20, bottom: 5 }}>
-              <XAxis 
-                dataKey="age_weeks" 
+            <ComposedChart
+              data={chartData}
+              margin={{ top: 10, right: 30, left: 20, bottom: 5 }}
+            >
+              <XAxis
+                dataKey="age_weeks"
                 tickFormatter={(weeks) => `${weeks} vk`}
               />
-              <YAxis 
-                tickFormatter={(kg) => `${kg} kg`}
-              />
-              <Tooltip 
+              <YAxis tickFormatter={(kg) => `${kg} kg`} />
+              <Tooltip
                 labelFormatter={(weeks) => `Ikä: ${weeks} viikkoa`}
                 formatter={(value: any, name: string) => {
                   const formatters: Record<string, string> = {
-                    p3: '3. persentili',
-                    p10: '10. persentili', 
-                    p50: '50. persentili (keskiarvo)',
-                    p90: '90. persentili',
-                    p97: '97. persentili',
-                    user_weight: 'Pennun paino'
+                    p3: "3. persentili",
+                    p10: "10. persentili",
+                    p50: "50. persentili (keskiarvo)",
+                    p90: "90. persentili",
+                    p97: "97. persentili",
+                    user_weight: "Pennun paino",
                   };
                   return [`${value} kg`, formatters[name] || name];
                 }}
               />
-              
+
               {/* Centile bands */}
-              <Area 
-                type="monotone" 
-                dataKey="p97" 
+              <Area
+                type="monotone"
+                dataKey="p97"
                 stackId="1"
-                stroke="hsl(var(--muted-foreground))" 
+                stroke="hsl(var(--muted-foreground))"
                 strokeOpacity={0.3}
-                fill="hsl(var(--muted))" 
-                fillOpacity={0.1} 
+                fill="hsl(var(--muted))"
+                fillOpacity={0.1}
                 connectNulls
               />
-              <Area 
-                type="monotone" 
-                dataKey="p90" 
+              <Area
+                type="monotone"
+                dataKey="p90"
                 stackId="2"
-                stroke="hsl(var(--muted-foreground))" 
+                stroke="hsl(var(--muted-foreground))"
                 strokeOpacity={0.4}
-                fill="hsl(var(--muted))" 
+                fill="hsl(var(--muted))"
                 fillOpacity={0.15}
                 connectNulls
               />
-              <Area 
-                type="monotone" 
-                dataKey="p50" 
+              <Area
+                type="monotone"
+                dataKey="p50"
                 stackId="3"
-                stroke="hsl(var(--primary))" 
+                stroke="hsl(var(--primary))"
                 strokeOpacity={0.6}
-                fill="hsl(var(--primary))" 
+                fill="hsl(var(--primary))"
                 fillOpacity={0.1}
                 connectNulls
               />
-              <Area 
-                type="monotone" 
-                dataKey="p10" 
+              <Area
+                type="monotone"
+                dataKey="p10"
                 stackId="4"
-                stroke="hsl(var(--muted-foreground))" 
+                stroke="hsl(var(--muted-foreground))"
                 strokeOpacity={0.4}
-                fill="hsl(var(--muted))" 
+                fill="hsl(var(--muted))"
                 fillOpacity={0.15}
                 connectNulls
               />
-              <Area 
-                type="monotone" 
-                dataKey="p3" 
+              <Area
+                type="monotone"
+                dataKey="p3"
                 stackId="5"
-                stroke="hsl(var(--muted-foreground))" 
+                stroke="hsl(var(--muted-foreground))"
                 strokeOpacity={0.3}
-                fill="hsl(var(--muted))" 
+                fill="hsl(var(--muted))"
                 fillOpacity={0.1}
                 connectNulls
               />
-              
+
               {/* User weight as scatter points */}
-              <Scatter 
-                dataKey="user_weight" 
+              <Scatter
+                dataKey="user_weight"
                 fill="hsl(var(--destructive))"
                 stroke="hsl(var(--destructive))"
                 strokeWidth={2}
@@ -256,9 +303,67 @@ const GrowthChart: React.FC<GrowthChartProps> = ({
             </ComposedChart>
           </ResponsiveContainer>
         </div>
-        
+
+        <details className="mt-4">
+          <summary className="min-h-12 cursor-pointer py-3 text-sm font-semibold underline underline-offset-4">
+            Näytä painomittaukset taulukkona
+          </summary>
+          <div
+            className="overflow-x-auto"
+            role="region"
+            aria-label="Kasvukäyrän painomittaukset"
+            tabIndex={0}
+          >
+            <table className="w-full text-left text-sm">
+              <caption className="sr-only">
+                Kasvukäyrän tallennetut painomittaukset
+              </caption>
+              <thead>
+                <tr className="border-b">
+                  <th scope="col" className="py-3 pr-4">
+                    Päivä
+                  </th>
+                  <th scope="col" className="py-3 pr-4">
+                    Ikä (viikkoa)
+                  </th>
+                  <th scope="col" className="py-3">
+                    Paino (kg)
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {weightPoints.map((point, index) => (
+                  <tr key={`${point.date}-${index}`} className="border-b">
+                    <td className="py-3 pr-4">
+                      {new Intl.DateTimeFormat("fi-FI", {
+                        timeZone: "UTC",
+                      }).format(new Date(`${point.date}T12:00:00Z`))}
+                    </td>
+                    <td className="py-3 pr-4">
+                      {new Intl.NumberFormat("fi-FI").format(point.age_weeks)}
+                    </td>
+                    <td className="py-3">
+                      {new Intl.NumberFormat("fi-FI").format(point.weight_kg)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </details>
+
         <div className="mt-4 text-sm text-muted-foreground">
-          <p>Viitearvo: Waltham Puppy Growth Charts. Huomio: Jos paino ylittää tai alittaa useita centile-viivoja, ota yhteyttä eläinlääkäriin.</p>
+          {centiles.length > 0 ? (
+            <p>
+              Viitearvo: Waltham Puppy Growth Charts. Huomio: Jos paino ylittää
+              tai alittaa useita centile-viivoja, ota yhteyttä eläinlääkäriin.
+            </p>
+          ) : (
+            <p>
+              Vertailukäyrän tiedot eivät ole saatavilla. Kuvassa näkyvät
+              tallennetut painomittaukset.
+            </p>
+          )}
         </div>
       </CardContent>
     </Card>

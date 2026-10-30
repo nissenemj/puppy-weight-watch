@@ -9,7 +9,7 @@ export function encodeBookImage(image: HTMLImageElement): string {
   canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
   const context = canvas.getContext("2d");
   if (!context) throw new Error("Selain ei pystynyt käsittelemään kuvaa.");
-  context.fillStyle = "#fffef9";
+  context.fillStyle = "#ffffff";
   context.fillRect(0, 0, canvas.width, canvas.height);
   context.drawImage(image, 0, 0, canvas.width, canvas.height);
   const result = canvas.toDataURL("image/jpeg", 0.84);

@@ -44,7 +44,11 @@ async function expectLayout(page: Page) {
 }
 
 for (const width of [320, 768, 1024, 1440]) {
-  for (const path of ["/guides/pennun-hankinnat", "/muistokirja"]) {
+  for (const path of [
+    "/guides/pennun-hankinnat",
+    "/muistokirja",
+    "/puppy-book-landing",
+  ]) {
     test(`${path} is readable and accessible at ${width}`, async ({
       page,
     }, testInfo) => {
@@ -63,6 +67,24 @@ for (const width of [320, 768, 1024, 1440]) {
         path: testInfo.outputPath("page.png"),
         fullPage: true,
       });
+      if (
+        path === "/puppy-book-landing" &&
+        process.env.BOOK_LANDING_SCREENSHOTS
+      ) {
+        await page.screenshot({
+          path: `${process.env.BOOK_LANDING_SCREENSHOTS}/esittely-${width}-viewport.png`,
+        });
+        await page.screenshot({
+          path: `${process.env.BOOK_LANDING_SCREENSHOTS}/esittely-${width}.png`,
+          fullPage: true,
+        });
+        if (width === 1440) {
+          await page.setViewportSize({ width: 1505, height: 1045 });
+          await page.screenshot({
+            path: `${process.env.BOOK_LANDING_SCREENSHOTS}/esittely-native.png`,
+          });
+        }
+      }
     });
   }
 }
@@ -126,9 +148,12 @@ test("the example can be browsed, linked directly and followed to an honest inte
     page.getByRole("button", { name: "Pieniä suuria hetkiä", exact: true }),
   ).toHaveAttribute("aria-pressed", "true");
   await expect(
-    page.getByText("Maksullinen laajempi pentukirja on suunnitteilla eikä sitä voi vielä ostaa.", {
-      exact: false,
-    }),
+    page.getByText(
+      "Maksullinen laajempi pentukirja on suunnitteilla eikä sitä voi vielä ostaa.",
+      {
+        exact: false,
+      },
+    ),
   ).toBeVisible();
   await page.getByRole("link", { name: "Kerro kiinnostuksesta" }).click();
   await expect(page).toHaveURL(/\/contact\?aihe=muistokirja$/);
@@ -143,18 +168,14 @@ test("new pages are reachable from the guides and puppy-book landing page", asyn
 }) => {
   await page.goto("/guides");
   await page
-    .getByRole("link", { name: "Lue Pennun hankintalista -opas" })
+    .getByRole("link", { name: "Avaa opas: Pennun hankintalista", exact: true })
     .click();
   await expect(page).toHaveURL(/\/guides\/pennun-hankinnat$/);
-  await page
-    .getByRole("link", { name: "Katso pentukirjan esimerkki" })
-    .click();
+  await page.getByRole("link", { name: "Katso pentukirjan esimerkki" }).click();
   await expect(page).toHaveURL(/\/muistokirja$/);
   await expectLayout(page);
   await page.goto("/puppy-book-landing");
-  await page
-    .getByRole("link", { name: "Katso pentukirjan esimerkki" })
-    .click();
+  await page.getByRole("link", { name: "Katso pentukirjan esimerkki" }).click();
   await expect(page).toHaveURL(/\/muistokirja$/);
   await expectLayout(page);
 });
@@ -377,9 +398,7 @@ test.describe("the signed-in puppy book", () => {
     await expect(caption).toHaveAttribute("aria-invalid", "true");
     await expect
       .poll(() =>
-        caption.evaluate((el) =>
-          parseFloat(getComputedStyle(el).outlineWidth),
-        ),
+        caption.evaluate((el) => parseFloat(getComputedStyle(el).outlineWidth)),
       )
       .toBeGreaterThanOrEqual(2);
     const focusContrast = await caption.evaluate((el) => {

@@ -21,6 +21,8 @@ const pages = [
   "Kuukauden kommellus",
   "Pieniä suuria hetkiä",
   "Kasvu",
+  "Mittaukset",
+  "Kirje pennulle",
 ];
 const pageKeys = [
   "kansi",
@@ -29,6 +31,8 @@ const pageKeys = [
   "kommellus",
   "hetket",
   "kasvu",
+  "mittaukset",
+  "kirje",
 ];
 // Illustrative fixture only. These are not a real puppy's photos or measurements.
 const exampleBook: AnnualBook = {
@@ -36,6 +40,13 @@ const exampleBook: AnnualBook = {
   puppyName: "Nuppu",
   start: "2026-04-01",
   end: "2027-03-31",
+  design: {
+    title: "Nupun pentuvuosi",
+    palette: "lake",
+    coverArt: "photo",
+    letter:
+      "Pieni Nuppu,\n\nhaluan muistaa sen, miten katsot meitä ennen jokaista yhteistä retkeä. Tavallisista päivistä on tullut vähän hauskempia sinun kanssasi.\n\nToivon meille monta uutta metsäpolkua, kiireettömiä aamuja ja aikaa opetella yhdessä. Saat kasvaa omaan tahtiisi. Me olemme tässä.",
+  },
   entries: [
     {
       id: "home",
@@ -94,14 +105,16 @@ export default function MemoryBookExample() {
 
       <section className="memory-intro" aria-labelledby="memory-example-title">
         <p className="journal-kicker">
-          <BookOpen size={18} aria-hidden="true" /> Oma pentukirja
+          <BookOpen size={18} aria-hidden="true" /> Selaa esimerkkikirjaa
         </p>
         <h1 id="memory-example-title" className="journal-title">
-          Pennun ensimmäinen vuosi, omaksi pentukirjaksi.
+          Pieni pentu.
+          <br />
+          Kokonainen tarina.
         </h1>
         <p className="journal-lead">
-          Ensimmäinen kotipäivä, hassu tapa nukkua, yhdessä opitut asiat. Näin
-          ne voisivat säilyä yhdessä kirjassa.
+          Ensimmäinen kotipäivä, hassu tapa nukkua, yhdessä opitut asiat. Astu
+          Nupun kuvitteelliseen pentuvuoteen. Avaa lukutila ja käännä sivua.
         </p>
       </section>
 
@@ -154,8 +167,9 @@ export default function MemoryBookExample() {
           </h2>
           <p>
             Voit kokeilla omista kuvista ja teksteistä koottavaa perusmallia
-            maksutta omassa pentukirjassasi. Suunnittelemme myöhemmin laajempaa
-            kirjaa, johon voisi valita lisää sivuja ja oman kansityylin.
+            maksutta omassa pentukirjassasi. Valitse oma kansiväri, lisää
+            kasvukäyrä ja kirjoita kirje pennullesi. Suunnittelemme myöhemmin
+            myös laajempaa kirjaa.
           </p>
           <ul className="journal-check-list">
             <li>

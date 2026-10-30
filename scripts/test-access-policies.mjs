@@ -1,22 +1,24 @@
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { randomUUID } from 'node:crypto';
+import { checkAnnualDraftApi } from './test-annual-draft-api.mjs';
 
 const root = new URL('../', import.meta.url);
 const image = process.env.ACCESS_TEST_POSTGRES_IMAGE || 'postgres:17';
 const baseline = process.argv
   .slice(2)
   .find((arg) => arg.startsWith('--baseline'));
+const annualApi = process.argv[2] === '--annual-api';
 if (
   process.argv.length > 3 ||
   (baseline &&
     !['--baseline', '--baseline=catalog', '--baseline=storage', '--baseline=blog'].includes(
       baseline,
     )) ||
-  (process.argv[2] && !baseline)
+  (process.argv[2] && !baseline && !annualApi)
 ) {
   throw new Error(
-    'Usage: node scripts/test-access-policies.mjs [--baseline[=catalog|storage|blog]]',
+    'Usage: node scripts/test-access-policies.mjs [--annual-api|--baseline[=catalog|storage|blog]]',
   );
 }
 
@@ -54,14 +56,17 @@ const imageId = docker([
 ]).trim();
 const containerName = `pentulaskuri-access-test-${randomUUID()}`;
 let containerId;
+let network;
+let apiContainer;
 let failure;
 try {
+  if (annualApi) network = docker(['network', 'create', '--driver', 'bridge', containerName]).trim();
   containerId = docker([
     'run',
     '--detach',
     '--rm',
     '--pull=never',
-    '--network=none',
+    ...(annualApi ? ['--network', network] : ['--network=none']),
     '--read-only',
     '--cap-drop=ALL',
     '--security-opt=no-new-privileges',
@@ -73,7 +78,9 @@ try {
     '--entrypoint=/bin/sh',
     imageId,
     '-c',
-    'initdb -D /tmp/access-db --auth-local=trust --no-locale >/tmp/init.log 2>&1 && exec postgres -D /tmp/access-db -c listen_addresses= -c unix_socket_directories=/tmp',
+    annualApi
+      ? 'initdb -D /tmp/access-db --auth-local=trust --no-locale >/tmp/init.log 2>&1 && printf "host all authenticator all scram-sha-256\\n" >> /tmp/access-db/pg_hba.conf && exec postgres -D /tmp/access-db -c listen_addresses=* -c unix_socket_directories=/tmp'
+      : 'initdb -D /tmp/access-db --auth-local=trust --no-locale >/tmp/init.log 2>&1 && exec postgres -D /tmp/access-db -c listen_addresses= -c unix_socket_directories=/tmp',
   ]).trim();
 
   let ready = false;
@@ -98,7 +105,7 @@ try {
     throw new Error(`A PostgreSQL 17 image is required: ${version}`);
   console.log(version);
   console.log(
-    'Isolated synthetic database; network disabled; no host ports or volumes.',
+    annualApi ? 'Isolated synthetic database; dedicated Docker bridge, API on host loopback only; no host volumes.' : 'Isolated synthetic database; network disabled; no host ports or volumes.',
   );
   docker([
     'exec',
@@ -111,8 +118,8 @@ try {
     'access_policy_test',
   ]);
 
-  function sql(relativePath) {
-    const input = readFileSync(new URL(relativePath, root), 'utf8');
+  function sql(relativePath, statement) {
+    const input = statement ?? readFileSync(new URL(relativePath, root), 'utf8');
     const output = docker(
       [
         'exec',
@@ -152,6 +159,24 @@ try {
       `Regression proof (${baseline}): a failing assertion is expected.`,
     );
   sql('tests/security/access_policies.sql');
+  if (!baseline) {
+    sql('supabase/migrations/20261027135728_annual_book_drafts.sql');
+    sql('tests/security/annual_book_drafts.sql');
+    sql('supabase/migrations/20261027165251_annual_book_design.sql');
+    sql('tests/security/annual_book_design.sql');
+  }
+  if (annualApi) {
+    const apiImage = docker(['image', 'inspect', process.env.ACCESS_TEST_POSTGREST_IMAGE || 'public.ecr.aws/supabase/postgrest:v16.5', '--format', '{{.Id}}']).trim();
+    const password = randomUUID().replaceAll('-', '');
+    const jwtSecret = randomUUID() + randomUUID();
+    sql(undefined, `CREATE ROLE authenticator LOGIN NOINHERIT PASSWORD '${password}'; GRANT anon, authenticated TO authenticator;`);
+    apiContainer = docker(['run', '--detach', '--rm', '--pull=never', '--read-only', '--cap-drop=ALL', '--security-opt=no-new-privileges', '--network', network,
+      '--publish', '127.0.0.1::3000', '--env', `PGRST_DB_URI=postgres://authenticator:${password}@${containerName}:5432/access_policy_test`,
+      '--env', 'PGRST_DB_SCHEMAS=public', '--env', 'PGRST_DB_ANON_ROLE=anon', '--env', `PGRST_JWT_SECRET=${jwtSecret}`, apiImage]).trim();
+    const address = docker(['port', apiContainer, '3000/tcp']).trim();
+    if (!/^127\.0\.0\.1:\d+$/.test(address)) throw new Error('REST test port must bind to host loopback only');
+    await checkAnnualDraftApi('http://' + address, jwtSecret);
+  }
   console.log('Access-policy assertions passed.');
 } catch (error) {
   failure = error;
@@ -163,6 +188,8 @@ try {
     }
   }
 } finally {
+  if (apiContainer) docker(['rm', '--force', apiContainer], { stdio: 'pipe' });
   if (containerId) docker(['rm', '--force', containerId], { stdio: 'pipe' });
+  if (network) docker(['network', 'rm', network], { stdio: 'pipe' });
 }
 if (failure) throw failure;

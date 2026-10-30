@@ -361,12 +361,12 @@ export default function EnhancedWeightChart({ weightData, birthDate, breed }: We
               <Line
                 type="monotone"
                 dataKey="avgGrowthLine"
-                stroke="hsl(var(--secondary))"
+                stroke="#607a89"
                 strokeWidth={2}
                 strokeDasharray="8 4"
                 name={growthPrediction ? "Ennuste (polynomiregressio)" : "Kasvutrendi"}
                 dot={false}
-                activeDot={{ r: 5, fill: 'hsl(var(--secondary))' }}
+                activeDot={{ r: 5, fill: '#607a89' }}
                 connectNulls={true}
               />
 

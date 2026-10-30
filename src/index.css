@@ -5,9 +5,9 @@
 @layer base {
   :root {
     /* Base Colors (Light Mode) */
-    --background: 60 5% 96%;
+    --background: 0 0% 100%;
     /* Stone 50 */
-    --foreground: 24 5% 10%;
+    --foreground: 203 39% 23%;
     /* Stone 900 */
 
     /* Card / Surface */
@@ -16,20 +16,20 @@
     --popover: 0 0% 100%;
     --popover-foreground: 24 5% 10%;
 
-    /* Primary (Terracotta) */
-    --primary: 13 68% 63%;
-    /* #E07A5F */
-    --primary-foreground: 60 9.1% 97.8%;
+    /* Primary (Ink blue) */
+    --primary: 203 39% 23%;
+    /* #233f50 */
+    --primary-foreground: 0 0% 100%;
 
     /* Secondary (Stone-200) */
-    --secondary: 30 6% 90%;
+    --secondary: 197 26% 95%;
     /* Stone 200 */
     --secondary-foreground: 24 5% 26%;
 
     /* Muted (Stone-100) */
     --muted: 30 6% 96%;
     /* Stone 100 */
-    --muted-foreground: 25 5% 45%;
+    --muted-foreground: 198 12% 37%;
 
     /* Accent (Sage) */
     --accent: 150 24% 60%;
@@ -41,12 +41,12 @@
     --destructive-foreground: 60 9.1% 97.8%;
 
     /* Borders & Input */
-    --border: 30 6% 90%;
+    --border: 201 23% 86%;
     /* Stone 200 */
-    --input: 30 6% 90%;
-    --ring: 13 68% 63%;
+    --input: 202 12% 56%;
+    --ring: 203 39% 23%;
 
-    --radius: 0.75rem;
+    --radius: 0.375rem;
     /* rounded-xl */
   }
 }

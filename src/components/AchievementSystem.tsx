@@ -1,214 +1,243 @@
-import { useState, useEffect } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Progress } from '@/components/ui/progress'
-import { Button } from '@/components/ui/button'
-import { 
-  Award, 
-  Trophy, 
-  Star, 
-  Calendar, 
+import { useState, useEffect } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
+import {
+  Award,
+  Trophy,
+  Star,
+  Calendar,
   TrendingUp,
   Target,
   Flame,
   Medal,
   Crown,
-  Zap
-} from 'lucide-react'
-import type { WeightEntry } from '@/services/weightService'
+  Zap,
+} from "lucide-react";
+import type { WeightEntry } from "@/services/weightService";
 
 interface AchievementSystemProps {
-  weightData: WeightEntry[]
-  onCelebration?: () => void
+  weightData: WeightEntry[];
+  onCelebration?: () => void;
 }
 
 interface Achievement {
-  id: string
-  title: string
-  description: string
-  icon: React.ReactNode
-  color: string
-  progress: number
-  maxProgress: number
-  isUnlocked: boolean
-  unlockedAt?: Date
-  rarity: 'common' | 'rare' | 'epic' | 'legendary'
+  id: string;
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+  color: string;
+  progress: number;
+  maxProgress: number;
+  isUnlocked: boolean;
+  unlockedAt?: Date;
+  rarity: "common" | "rare" | "epic" | "legendary";
 }
 
 const RARITY_COLORS = {
-  common: 'from-gray-400 to-gray-600',
-  rare: 'from-blue-400 to-blue-600', 
-  epic: 'from-purple-400 to-purple-600',
-  legendary: 'from-yellow-400 to-yellow-600'
-}
+  common: "bg-slate-100 text-slate-700 border-slate-300",
+  rare: "bg-blue-50 text-blue-800 border-blue-200",
+  epic: "bg-purple-50 text-purple-800 border-purple-200",
+  legendary: "bg-amber-50 text-amber-900 border-amber-300",
+};
 
 const RARITY_LABELS = {
-  common: 'Tavallinen',
-  rare: 'Harvinainen',
-  epic: 'Eeppinen', 
-  legendary: 'Legendaarinen'
-}
+  common: "Tavallinen",
+  rare: "Harvinainen",
+  epic: "Eeppinen",
+  legendary: "Legendaarinen",
+};
 
 const calculateStreak = (weightData: WeightEntry[]): number => {
-  if (weightData.length === 0) return 0
-  
-  const sortedData = [...weightData].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-  let streak = 0
-  let currentDate = new Date()
-  
+  if (weightData.length === 0) return 0;
+
+  const sortedData = [...weightData].sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+  );
+  let streak = 0;
+  let currentDate = new Date();
+
   for (const entry of sortedData) {
-    const entryDate = new Date(entry.date)
-    const daysDiff = Math.floor((currentDate.getTime() - entryDate.getTime()) / (1000 * 60 * 60 * 24))
-    
+    const entryDate = new Date(entry.date);
+    const daysDiff = Math.floor(
+      (currentDate.getTime() - entryDate.getTime()) / (1000 * 60 * 60 * 24),
+    );
+
     if (streak === 0 && daysDiff <= 7) {
-      streak = 1
-      currentDate = entryDate
+      streak = 1;
+      currentDate = entryDate;
     } else if (daysDiff <= 14) {
-      streak++
-      currentDate = entryDate
+      streak++;
+      currentDate = entryDate;
     } else {
-      break
+      break;
     }
   }
-  
-  return streak
-}
+
+  return streak;
+};
 
 const getAchievements = (weightData: WeightEntry[]): Achievement[] => {
-  const streak = calculateStreak(weightData)
-  const totalEntries = weightData.length
-  const totalGrowth = weightData.length > 1 ? 
-    weightData[weightData.length - 1].weight - weightData[0].weight : 0
-  
-  const sortedData = [...weightData].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-  const consistentWeighing = sortedData.length >= 4 ? 
-    sortedData.slice(-4).every((entry, index, arr) => 
-      index === 0 || (new Date(entry.date).getTime() - new Date(arr[index - 1].date).getTime()) / (1000 * 60 * 60 * 24) <= 10
-    ) : false
+  const streak = calculateStreak(weightData);
+  const totalEntries = weightData.length;
+  const totalGrowth =
+    weightData.length > 1
+      ? weightData[weightData.length - 1].weight - weightData[0].weight
+      : 0;
+
+  const sortedData = [...weightData].sort(
+    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+  );
+  const consistentWeighing =
+    sortedData.length >= 4
+      ? sortedData
+          .slice(-4)
+          .every(
+            (entry, index, arr) =>
+              index === 0 ||
+              (new Date(entry.date).getTime() -
+                new Date(arr[index - 1].date).getTime()) /
+                (1000 * 60 * 60 * 24) <=
+                10,
+          )
+      : false;
 
   return [
     {
-      id: 'first_weigh',
-      title: 'Aloittelija',
-      description: 'Lisää ensimmäinen painomittaus',
+      id: "first_weigh",
+      title: "Aloittelija",
+      description: "Lisää ensimmäinen painomittaus",
       icon: <Award className="h-5 w-5" />,
-      color: 'from-green-400 to-green-600',
+      color: "from-green-400 to-green-600",
       progress: Math.min(totalEntries, 1),
       maxProgress: 1,
       isUnlocked: totalEntries >= 1,
-      rarity: 'common'
+      rarity: "common",
     },
     {
-      id: 'week_streak',
-      title: 'Viikoittainen seuranta',
-      description: 'Mitata paino 7 viikon ajan säännöllisesti',
+      id: "week_streak",
+      title: "Viikoittainen seuranta",
+      description: "Mitata paino 7 viikon ajan säännöllisesti",
       icon: <Calendar className="h-5 w-5" />,
-      color: 'from-blue-400 to-blue-600',
+      color: "from-blue-400 to-blue-600",
       progress: Math.min(streak, 7),
       maxProgress: 7,
       isUnlocked: streak >= 7,
-      rarity: 'rare'
+      rarity: "rare",
     },
     {
-      id: 'growth_tracker',
-      title: 'Kasvuseuranta',
-      description: 'Seuraa 5 kg:n painonnousu',
+      id: "growth_tracker",
+      title: "Kasvuseuranta",
+      description: "Seuraa 5 kg:n painonnousu",
       icon: <TrendingUp className="h-5 w-5" />,
-      color: 'from-purple-400 to-purple-600',
+      color: "from-purple-400 to-purple-600",
       progress: Math.min(totalGrowth, 5),
       maxProgress: 5,
       isUnlocked: totalGrowth >= 5,
-      rarity: 'epic'
+      rarity: "epic",
     },
     {
-      id: 'consistency_master',
-      title: 'Johdonmukainen omistaja',
-      description: 'Mitaa paino säännöllisesti kuukauden ajan',
+      id: "consistency_master",
+      title: "Johdonmukainen omistaja",
+      description: "Mitaa paino säännöllisesti kuukauden ajan",
       icon: <Target className="h-5 w-5" />,
-      color: 'from-orange-400 to-orange-600',
+      color: "from-orange-400 to-orange-600",
       progress: consistentWeighing ? 1 : 0,
       maxProgress: 1,
       isUnlocked: consistentWeighing,
-      rarity: 'rare'
+      rarity: "rare",
     },
     {
-      id: 'dedication',
-      title: 'Omistettu hoitaja',
-      description: 'Tee 20 painomittausta',
+      id: "dedication",
+      title: "Omistettu hoitaja",
+      description: "Tee 20 painomittausta",
       icon: <Medal className="h-5 w-5" />,
-      color: 'from-red-400 to-red-600',
+      color: "from-red-400 to-red-600",
       progress: Math.min(totalEntries, 20),
       maxProgress: 20,
       isUnlocked: totalEntries >= 20,
-      rarity: 'epic'
+      rarity: "epic",
     },
     {
-      id: 'streak_master',
-      title: 'Seurantamestari',
-      description: 'Ylläpidä 12 viikon mittaussarja',
+      id: "streak_master",
+      title: "Seurantamestari",
+      description: "Ylläpidä 12 viikon mittaussarja",
       icon: <Flame className="h-5 w-5" />,
-      color: 'from-yellow-400 to-yellow-600',
+      color: "from-yellow-400 to-yellow-600",
       progress: Math.min(streak, 12),
       maxProgress: 12,
       isUnlocked: streak >= 12,
-      rarity: 'legendary'
+      rarity: "legendary",
     },
     {
-      id: 'data_collector',
-      title: 'Tiedonkerääjä',
-      description: 'Kerää 50 painomittausta',
+      id: "data_collector",
+      title: "Tiedonkerääjä",
+      description: "Kerää 50 painomittausta",
       icon: <Crown className="h-5 w-5" />,
-      color: 'from-purple-400 to-pink-600',
+      color: "from-purple-400 to-pink-600",
       progress: Math.min(totalEntries, 50),
       maxProgress: 50,
       isUnlocked: totalEntries >= 50,
-      rarity: 'legendary'
+      rarity: "legendary",
     },
     {
-      id: 'puppy_guardian',
-      title: 'Pennun suojelija',
-      description: 'Seuraa pennun kehitystä 6 kuukauden ajan',
+      id: "puppy_guardian",
+      title: "Pennun suojelija",
+      description: "Seuraa pennun kehitystä 6 kuukauden ajan",
       icon: <Trophy className="h-5 w-5" />,
-      color: 'from-cyan-400 to-blue-600',
+      color: "from-cyan-400 to-blue-600",
       progress: Math.min(Math.floor(totalEntries / 4), 24), // Rough weekly to month conversion
       maxProgress: 24,
       isUnlocked: totalEntries >= 96, // ~24 weeks of bi-weekly weighing
-      rarity: 'legendary'
-    }
-  ]
-}
+      rarity: "legendary",
+    },
+  ];
+};
 
-export default function AchievementSystem({ weightData, onCelebration }: AchievementSystemProps) {
-  const [achievements, setAchievements] = useState<Achievement[]>([])
-  const [showAll, setShowAll] = useState(false)
+export default function AchievementSystem({
+  weightData,
+  onCelebration,
+}: AchievementSystemProps) {
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
-    const newAchievements = getAchievements(weightData)
-    const previouslyUnlocked = achievements.filter(a => a.isUnlocked).length
-    const nowUnlocked = newAchievements.filter(a => a.isUnlocked).length
-    
+    const newAchievements = getAchievements(weightData);
+    const previouslyUnlocked = achievements.filter((a) => a.isUnlocked).length;
+    const nowUnlocked = newAchievements.filter((a) => a.isUnlocked).length;
+
     if (nowUnlocked > previouslyUnlocked && onCelebration) {
-      onCelebration()
+      onCelebration();
     }
-    
-    setAchievements(newAchievements)
-  }, [weightData])
 
-  const unlockedAchievements = achievements.filter(a => a.isUnlocked)
-  const inProgressAchievements = achievements.filter(a => !a.isUnlocked && a.progress > 0)
-  const lockedAchievements = achievements.filter(a => !a.isUnlocked && a.progress === 0)
+    setAchievements(newAchievements);
+  }, [weightData]);
 
-  const displayedAchievements = showAll ? achievements : [
-    ...unlockedAchievements,
-    ...inProgressAchievements.slice(0, 3)
-  ]
+  const unlockedAchievements = achievements.filter((a) => a.isUnlocked);
+  const inProgressAchievements = achievements.filter(
+    (a) => !a.isUnlocked && a.progress > 0,
+  );
+  const lockedAchievements = achievements.filter(
+    (a) => !a.isUnlocked && a.progress === 0,
+  );
+
+  const displayedAchievements = showAll
+    ? achievements
+    : [...unlockedAchievements, ...inProgressAchievements.slice(0, 3)];
 
   const totalXP = unlockedAchievements.reduce((sum, achievement) => {
-    const xpValues = { common: 100, rare: 250, epic: 500, legendary: 1000 }
-    return sum + xpValues[achievement.rarity]
-  }, 0)
+    const xpValues = { common: 100, rare: 250, epic: 500, legendary: 1000 };
+    return sum + xpValues[achievement.rarity];
+  }, 0);
 
-  const streak = calculateStreak(weightData)
+  const streak = calculateStreak(weightData);
 
   return (
     <div className="space-y-6">
@@ -224,19 +253,25 @@ export default function AchievementSystem({ weightData, onCelebration }: Achieve
         <CardContent>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <div className="text-center p-3 bg-white/50 rounded-xl">
-              <div className="text-2xl font-bold text-primary">{unlockedAchievements.length}</div>
+              <div className="text-2xl font-bold text-primary">
+                {unlockedAchievements.length}
+              </div>
               <div className="text-xs text-muted-foreground">Saavutusta</div>
             </div>
             <div className="text-center p-3 bg-white/50 rounded-xl">
-              <div className="text-2xl font-bold text-secondary">{totalXP}</div>
+              <div className="text-2xl font-bold text-primary">{totalXP}</div>
               <div className="text-xs text-muted-foreground">XP pistettä</div>
             </div>
             <div className="text-center p-3 bg-white/50 rounded-xl">
               <div className="text-2xl font-bold text-accent">{streak}</div>
-              <div className="text-xs text-muted-foreground">Päivää putkeen</div>
+              <div className="text-xs text-muted-foreground">
+                Mittauksia sarjassa
+              </div>
             </div>
             <div className="text-center p-3 bg-white/50 rounded-xl">
-              <div className="text-2xl font-bold text-green-600">{weightData.length}</div>
+              <div className="text-2xl font-bold text-green-700">
+                {weightData.length}
+              </div>
               <div className="text-xs text-muted-foreground">Mittausta</div>
             </div>
           </div>
@@ -253,82 +288,94 @@ export default function AchievementSystem({ weightData, onCelebration }: Achieve
                 Saavutukset
               </CardTitle>
               <CardDescription>
-                {unlockedAchievements.length} / {achievements.length} saavutusta avattu
+                {unlockedAchievements.length} / {achievements.length} saavutusta
+                avattu
               </CardDescription>
             </div>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               size="sm"
               onClick={() => setShowAll(!showAll)}
             >
-              {showAll ? 'Näytä vähemmän' : 'Näytä kaikki'}
+              {showAll ? "Näytä vähemmän" : "Näytä kaikki"}
             </Button>
           </div>
-          
+
           <div className="mt-4">
-            <Progress 
-              value={(unlockedAchievements.length / achievements.length) * 100} 
+            <Progress
+              value={(unlockedAchievements.length / achievements.length) * 100}
+              aria-label="Avattujen saavutusten osuus"
               className="h-2"
             />
           </div>
         </CardHeader>
-        
+
         <CardContent>
           <div className="space-y-4">
             {displayedAchievements.map((achievement) => (
-              <div 
+              <div
                 key={achievement.id}
                 className={`p-4 rounded-xl border transition-all ${
-                  achievement.isUnlocked 
-                    ? 'border-primary/30 bg-gradient-to-r from-primary/5 to-primary/10 shadow-md' 
-                    : 'border-muted bg-white/50'
+                  achievement.isUnlocked
+                    ? "border-primary/30 bg-gradient-to-r from-primary/5 to-primary/10 shadow-md"
+                    : "border-muted bg-white/50"
                 }`}
               >
                 <div className="flex items-center gap-4">
-                  <div className={`p-3 rounded-full ${
-                    achievement.isUnlocked 
-                      ? `bg-gradient-to-r ${achievement.color} text-white shadow-lg` 
-                      : 'bg-muted text-muted-foreground'
-                  }`}>
+                  <div
+                    className={`p-3 rounded-full ${
+                      achievement.isUnlocked
+                        ? `bg-gradient-to-r ${achievement.color} text-white shadow-lg`
+                        : "bg-muted text-muted-foreground"
+                    }`}
+                  >
                     {achievement.icon}
                   </div>
-                  
+
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <h3 className={`font-semibold text-[var(--color-text-primary)] ${
-                        achievement.isUnlocked ? '' : 'text-muted-foreground'
-                      }`}>
+                      <h3
+                        className={`font-semibold text-[var(--color-text-primary)] ${
+                          achievement.isUnlocked ? "" : "text-muted-foreground"
+                        }`}
+                      >
                         {achievement.title}
                       </h3>
-                      <Badge 
-                        variant="outline" 
-                        className={`text-xs bg-gradient-to-r ${RARITY_COLORS[achievement.rarity]} text-white border-0`}
+                      <Badge
+                        variant="outline"
+                        className={`text-xs ${RARITY_COLORS[achievement.rarity]}`}
                       >
                         {RARITY_LABELS[achievement.rarity]}
                       </Badge>
                     </div>
-                    
+
                     <p className="text-sm text-muted-foreground mb-2">
                       {achievement.description}
                     </p>
-                    
+
                     {!achievement.isUnlocked && (
                       <div className="space-y-1">
                         <div className="flex justify-between text-xs">
-                          <span className="text-muted-foreground">Edistyminen</span>
+                          <span className="text-muted-foreground">
+                            Edistyminen
+                          </span>
                           <span className="font-medium">
                             {achievement.progress} / {achievement.maxProgress}
                           </span>
                         </div>
-                        <Progress 
-                          value={(achievement.progress / achievement.maxProgress) * 100} 
+                        <Progress
+                          value={
+                            (achievement.progress / achievement.maxProgress) *
+                            100
+                          }
+                          aria-label={`${achievement.title}: edistyminen`}
                           className="h-1.5"
                         />
                       </div>
                     )}
-                    
+
                     {achievement.isUnlocked && (
-                      <div className="flex items-center gap-2 text-sm text-green-600">
+                      <div className="flex items-center gap-2 text-sm text-green-700">
                         <Star className="h-4 w-4" />
                         <span className="font-medium">Avattu!</span>
                       </div>
@@ -351,10 +398,11 @@ export default function AchievementSystem({ weightData, onCelebration }: Achieve
               </div>
               <div>
                 <h3 className="text-xl font-bold text-[var(--color-text-primary)]">
-                  {streak} viikon sarja!
+                  {streak} mittauksen sarja!
                 </h3>
-                <p className="text-orange-600">
-                  Loistavaa! Jatka säännöllistä mittaamista pitääksesi sarjan yllä.
+                <p className="text-orange-800">
+                  Loistavaa! Jatka säännöllistä mittaamista pitääksesi sarjan
+                  yllä.
                 </p>
               </div>
             </div>
@@ -362,5 +410,5 @@ export default function AchievementSystem({ weightData, onCelebration }: Achieve
         </Card>
       )}
     </div>
-  )
+  );
 }

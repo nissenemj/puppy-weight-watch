@@ -50,7 +50,7 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Custom "Anthropic-style" Palette
+        // Shared ink-blue palette; legacy colour names remain for existing components.
         stone: {
           50: '#fafaf9',
           100: '#f5f5f4',
@@ -64,17 +64,17 @@ module.exports = {
           900: '#1c1917',
         },
         terracotta: {
-          DEFAULT: '#E07A5F',
-          50: '#fcf2ef',
-          100: '#fae4de',
-          200: '#f5c9bd',
-          300: '#efad9c',
-          400: '#ea927b',
-          500: '#e07a5f', // Base
-          600: '#b3624c',
-          700: '#864939',
-          800: '#5a3126',
-          900: '#2d1813',
+          DEFAULT: '#233f50',
+          50: '#f5f8f9',
+          100: '#eef3f5',
+          200: '#d4dfe4',
+          300: '#acc1cc',
+          400: '#52758a',
+          500: '#233f50', // Base
+          600: '#1c3443',
+          700: '#182e3c',
+          800: '#122330',
+          900: '#0c1720',
         },
         sage: {
           DEFAULT: '#81B29A',
@@ -83,8 +83,8 @@ module.exports = {
           200: '#cce0d6',
           300: '#b3d0c2',
           400: '#99c1af',
-          500: '#81b29a', // Base
-          600: '#678e7b',
+          500: '#38624f', // Base
+          600: '#2b4d3e',
           700: '#4d6b5c',
           800: '#34473e',
           900: '#1a241f',
@@ -92,7 +92,7 @@ module.exports = {
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
-        serif: ['Merriweather', 'serif'],
+        serif: ['Georgia', 'serif'],
       },
       borderRadius: {
         lg: "var(--radius)",
