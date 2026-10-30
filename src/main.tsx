@@ -43,7 +43,10 @@ new VirtualKeyboardHandler();
 // Register service worker for production (respect base path)
 if ("serviceWorker" in navigator && import.meta.env.PROD) {
   window.addEventListener("load", () => {
-    const swUrl = new URL("sw.js", import.meta.env.BASE_URL).toString();
+    const swUrl = new URL(
+      "sw.js",
+      new URL(import.meta.env.BASE_URL, window.location.href),
+    ).toString();
     navigator.serviceWorker
       .register(swUrl)
       .then((registration) => {
