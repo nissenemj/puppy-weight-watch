@@ -2,21 +2,30 @@ import { useId } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { AnnualBookDocument } from "./AnnualBookDocument";
 import { buildBookPages, type AnnualBook } from "./model";
+import { BookReader } from "./BookReader";
 
 export function AnnualBookPreview({
   book,
   pageIndex,
   onPageChange,
+  canPrint = true,
 }: {
   book: AnnualBook;
   pageIndex: number;
   onPageChange: (index: number) => void;
+  canPrint?: boolean;
 }) {
   const id = useId();
   const pages = buildBookPages(book);
   const index = Math.max(0, Math.min(pageIndex, pages.length - 1));
   return (
     <div className="annual-preview">
+      <BookReader
+        book={book}
+        pageIndex={index}
+        onPageChange={onPageChange}
+        canPrint={canPrint}
+      />
       <nav className="annual-pagination" aria-label="Kirjan esikatselun sivut">
         <button
           type="button"

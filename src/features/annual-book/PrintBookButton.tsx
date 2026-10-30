@@ -1,11 +1,18 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Printer } from "lucide-react";
 import { AnnualBookDocument } from "./AnnualBookDocument";
 import type { AnnualBook } from "./model";
 import { encodeBookImage } from "./imageEncoding";
 
-export function PrintBookButton({ book }: { book: AnnualBook }) {
+export function PrintBookButton({
+  book,
+  compact = false,
+}: {
+  book: AnnualBook;
+  compact?: boolean;
+}) {
+  const helpId = useId();
   const [printing, setPrinting] = useState(false);
   const [error, setError] = useState("");
   const button = useRef<HTMLButtonElement>(null);
@@ -81,6 +88,7 @@ export function PrintBookButton({ book }: { book: AnnualBook }) {
         ref={button}
         type="button"
         className="journal-button"
+        aria-describedby={helpId}
         disabled={printing}
         onClick={() => {
           setError("");
@@ -91,7 +99,7 @@ export function PrintBookButton({ book }: { book: AnnualBook }) {
         <Printer size={18} aria-hidden="true" />
         {printing ? "Valmistellaan tulostusta…" : "Tulosta tai tallenna PDF"}
       </button>
-      <p>
+      <p id={helpId} className={compact ? "sr-only" : undefined}>
         Valitse tulostusikkunassa Tallenna PDF ja paperikooksi A5. Poista
         selaimen ylä- ja alatunnisteet. Voit myös tulostaa paperille.
       </p>

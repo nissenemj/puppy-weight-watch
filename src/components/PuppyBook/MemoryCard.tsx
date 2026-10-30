@@ -144,6 +144,7 @@ const MemoryCard: React.FC<MemoryCardProps> = ({
   return (
     <article
       className={`journal-memory-card ${viewMode === "list" ? "journal-memory-card-list" : ""}`}
+      data-kind={memory.content_type}
       onKeyDown={(event) => {
         if (event.key === "Escape" && showMenu) {
           event.stopPropagation();

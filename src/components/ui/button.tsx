@@ -1,32 +1,35 @@
-import * as React from "react"
-import { Slot } from "@radix-ui/react-slot"
-import { cva, type VariantProps } from "class-variance-authority"
-import { Loader2, Check } from "lucide-react"
+import * as React from "react";
+import { Slot } from "@radix-ui/react-slot";
+import { cva, type VariantProps } from "class-variance-authority";
+import { Loader2, Check } from "lucide-react";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap font-sans transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracotta-500/50 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 font-medium rounded-xl",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap font-sans transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracotta-500/50 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 font-medium rounded-md",
   {
     variants: {
       variant: {
         // Primary - Warm terracotta brand color with subtle glow
-        default: "bg-terracotta-500 text-white shadow-sm shadow-terracotta-500/20 hover:bg-terracotta-600 hover:shadow-md hover:shadow-terracotta-500/30 active:scale-95",
+        default:
+          "bg-primary text-primary-foreground hover:bg-[var(--color-primary-700)]",
 
         // Hero - Large, prominent CTA for hero sections
         hero: "bg-white text-terracotta-700 shadow-lg hover:bg-stone-50 hover:shadow-xl active:scale-95 font-semibold border-2 border-white/20",
 
         // Secondary - Sage green for secondary actions
-        secondary: "bg-sage-500 text-white shadow-sm shadow-sage-500/20 hover:bg-sage-600 hover:shadow-md hover:shadow-sage-500/30 active:scale-95",
+        secondary: "bg-[#f2dc91] text-[#233f50] hover:bg-[#ecd17a]",
 
         // Outline - Border style with gradient hover
-        outline: "border-2 border-terracotta-500 bg-transparent text-terracotta-600 hover:bg-terracotta-50 hover:shadow-sm hover:shadow-terracotta-500/10 active:scale-95",
+        outline:
+          "border border-[#81929c] bg-white text-primary hover:bg-secondary",
 
         // Ghost - Minimal style
-        ghost: "bg-transparent text-stone-600 hover:bg-stone-100 hover:text-stone-900 active:scale-95",
+        ghost:
+          "bg-transparent text-stone-600 hover:bg-stone-100 hover:text-stone-900 active:scale-95",
 
         // Destructive - Error/delete actions
-        destructive: "bg-red-500 text-white shadow-sm hover:bg-red-600 hover:shadow-md active:scale-95",
+        destructive: "bg-red-700 text-white hover:bg-red-800",
 
         // Link - Text-only link style
         link: "text-terracotta-600 underline-offset-4 hover:underline p-0 h-auto active:scale-95",
@@ -46,58 +49,68 @@ const buttonVariants = cva(
       variant: "default",
       size: "default",
     },
-  }
-)
+  },
+);
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-  VariantProps<typeof buttonVariants> {
-  asChild?: boolean
-  isLoading?: boolean
-  isSuccess?: boolean
-  loadingText?: string
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean;
+  isLoading?: boolean;
+  isSuccess?: boolean;
+  loadingText?: string;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({
-    className,
-    variant,
-    size,
-    asChild = false,
-    isLoading = false,
-    isSuccess = false,
-    loadingText,
-    children,
-    disabled,
-    ...props
-  }, ref) => {
-    const Comp = asChild ? Slot : "button"
+  (
+    {
+      className,
+      variant,
+      size,
+      asChild = false,
+      isLoading = false,
+      isSuccess = false,
+      loadingText,
+      children,
+      disabled,
+      ...props
+    },
+    ref,
+  ) => {
+    const Comp = asChild ? Slot : "button";
 
     // Disable button when loading
-    const isDisabled = disabled || isLoading
+    const isDisabled = disabled || isLoading;
 
     // Determine what to show
     const content = React.useMemo(() => {
       if (isSuccess) {
         return (
           <>
-            <Check className="h-4 w-4 animate-in zoom-in duration-200" aria-hidden="true" />
-            <span className="animate-in fade-in duration-200">Tallennettu!</span>
+            <Check
+              className="h-4 w-4 animate-in zoom-in duration-200"
+              aria-hidden="true"
+            />
+            <span className="animate-in fade-in duration-200">
+              Tallennettu!
+            </span>
           </>
-        )
+        );
       }
 
       if (isLoading) {
         return (
           <>
             <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-            <span className="animate-in fade-in duration-200">{loadingText || "Ladataan..."}</span>
+            <span className="animate-in fade-in duration-200">
+              {loadingText || "Ladataan..."}
+            </span>
           </>
-        )
+        );
       }
 
-      return children
-    }, [isSuccess, isLoading, loadingText, children])
+      return children;
+    }, [isSuccess, isLoading, loadingText, children]);
 
     return (
       <Comp
@@ -110,11 +123,10 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       >
         {content}
       </Comp>
-    )
-  }
-)
-Button.displayName = "Button"
+    );
+  },
+);
+Button.displayName = "Button";
 
 // eslint-disable-next-line react-refresh/only-export-components
-export { Button, buttonVariants }
-
+export { Button, buttonVariants };

@@ -33,14 +33,12 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
   const [healthDialogOpen, setHealthDialogOpen] = useState(false);
   const [dialogType, setDialogType] = useState<'photo' | 'text' | 'event' | 'milestone'>(initialType);
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const openingDialogRef = useRef(false);
+  const pendingActionRef = useRef<'photo' | 'text' | 'event' | 'milestone' | 'health' | null>(null);
   const restoreFocusToTrigger = useRef(false);
 
   const handleActionClick = (type: 'photo' | 'text' | 'event' | 'milestone') => {
-    openingDialogRef.current = true;
+    pendingActionRef.current = type;
     restoreFocusToTrigger.current = true;
-    setDialogType(type);
-    setDialogOpen(true);
     setIsOpen(false);
   };
 
@@ -50,9 +48,8 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
   };
 
   const handleHealthClick = () => {
-    openingDialogRef.current = true;
+    pendingActionRef.current = 'health';
     restoreFocusToTrigger.current = true;
-    setHealthDialogOpen(true);
     setIsOpen(false);
   };
 
@@ -113,9 +110,16 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
             sideOffset={10}
             collisionPadding={16}
             onCloseAutoFocus={(event) => {
-              if (openingDialogRef.current) {
+              const action = pendingActionRef.current;
+              if (action) {
                 event.preventDefault();
-                openingDialogRef.current = false;
+                pendingActionRef.current = null;
+                // Open after the menu releases its focus and dismiss handlers.
+                if (action === 'health') setHealthDialogOpen(true);
+                else {
+                  setDialogType(action);
+                  setDialogOpen(true);
+                }
               }
             }}
           >

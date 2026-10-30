@@ -102,6 +102,7 @@ describe("annual book dates and content", () => {
       "month",
       "mishap",
       "growth",
+      "measurements",
     ]);
     expect(pages[1].entries.map((entry) => entry.id)).toEqual([
       "early",
@@ -124,6 +125,45 @@ describe("annual book dates and content", () => {
       buildBookPages({ ...book, entries }).some(
         (page) => page.kind === "comparison",
       ),
+    ).toBe(false);
+  });
+
+  it("uses the full growth series before paginated tables and keeps a personal letter intact", () => {
+    const weights = Array.from({ length: 35 }, (_, n) => ({
+      date: `2026-06-${String((n % 28) + 1).padStart(2, "0")}`,
+      kg: n + 1,
+    }));
+    const letter = "Muistan tämän.\n".repeat(60);
+    const result = buildBookPages({
+      ...book,
+      weights,
+      design: {
+        title: "Nupun oma kirja",
+        palette: "berry",
+        coverArt: "illustration",
+        letter,
+      },
+    });
+    expect(result[0].title).toBe("Nupun oma kirja");
+    expect(result.find((page) => page.kind === "growth")!.weights).toHaveLength(
+      35,
+    );
+    expect(
+      result
+        .filter((page) => page.kind === "measurements")
+        .flatMap((page) => page.weights),
+    ).toHaveLength(35);
+    expect(
+      result
+        .filter((page) => page.kind === "letter")
+        .map((page) => page.text)
+        .join(""),
+    ).toBe(letter);
+    expect(
+      annualBookSchema.safeParse({
+        ...book,
+        design: { title: "", palette: "neon", coverArt: "photo", letter: "" },
+      }).success,
     ).toBe(false);
   });
 

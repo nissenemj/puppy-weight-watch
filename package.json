@@ -19,6 +19,7 @@
     "type-check": "tsc --noEmit",
     "test": "vitest run",
     "test:security:db": "node scripts/test-access-policies.mjs",
+    "test:annual-book:api": "node scripts/test-access-policies.mjs --annual-api",
     "test:security:db:baseline": "node scripts/test-access-policies.mjs --baseline",
     "test:security:storage": "node scripts/test-storage-api.mjs",
     "test:watch": "vitest",

@@ -13,6 +13,22 @@ export const day = z
     );
   }, "Tarkista päivämäärä.");
 
+export const bookDesignSchema = z
+  .object({
+    title: z.string().max(60),
+    palette: z.enum(["forest", "lake", "berry"]),
+    coverArt: z.enum(["photo", "illustration"]),
+    letter: z.string().max(1200),
+  })
+  .strict();
+export type BookDesign = z.infer<typeof bookDesignSchema>;
+export const DEFAULT_BOOK_DESIGN: BookDesign = {
+  title: "",
+  palette: "forest",
+  coverArt: "photo",
+  letter: "",
+};
+
 export const annualBookSchema = z
   .object({
     bookId: z.string().uuid(),
@@ -23,6 +39,7 @@ export const annualBookSchema = z
       .max(40, "Pennun nimi voi olla enintään 40 merkkiä."),
     start: day,
     end: day,
+    design: bookDesignSchema.optional(),
     entries: z
       .array(
         z.object({
@@ -84,10 +101,18 @@ export type AnnualBook = z.infer<typeof annualBookSchema>;
 export type BookEntry = AnnualBook["entries"][number];
 export type BookPage = {
   key: string;
-  kind: "cover" | "comparison" | "month" | "mishap" | "growth";
+  kind:
+    | "cover"
+    | "comparison"
+    | "month"
+    | "mishap"
+    | "growth"
+    | "measurements"
+    | "letter";
   title: string;
   entries: BookEntry[];
   weights?: AnnualBook["weights"];
+  text?: string;
 };
 
 export function formatDay(value: string) {
@@ -108,12 +133,16 @@ export function firstYearEnd(start: string) {
 }
 
 /** Conservative line budgets leave room for images. Every character is retained. */
-export function splitCaption(caption: string, hasImage: boolean): string[] {
+export function splitCaption(
+  caption: string,
+  hasImage: boolean,
+  firstPageLines?: number,
+): string[] {
   const chunks: string[] = [];
   let chunk = "";
   let column = 0;
   let lines = 1;
-  let budget = hasImage ? 6 : 22;
+  let budget = firstPageLines ?? (hasImage ? 6 : 18);
   for (const character of caption) {
     if (character === "\n" || column >= 50) {
       lines += 1;
@@ -123,7 +152,7 @@ export function splitCaption(caption: string, hasImage: boolean): string[] {
       chunks.push(chunk);
       chunk = "";
       lines = 1;
-      budget = 22;
+      budget = 18;
     }
     chunk += character;
     if (character !== "\n")
@@ -148,7 +177,7 @@ export function buildBookPages(book: AnnualBook): BookPage[] {
     {
       key: "cover",
       kind: "cover",
-      title: "Pennun ensimmäinen vuosi",
+      title: book.design?.title.trim() || "Pennun ensimmäinen vuosi",
       entries: photos.slice(0, 1),
     },
   ];
@@ -189,13 +218,32 @@ export function buildBookPages(book: AnnualBook): BookPage[] {
   const weights = book.weights
     .filter((weight) => weight.date >= book.start && weight.date <= book.end)
     .sort((a, b) => a.date.localeCompare(b.date));
-  for (let index = 0; index < weights.length; index += 16)
+  if (weights.length)
     pages.push({
-      key: `growth-${index}`,
+      key: "growth-chart",
       kind: "growth",
       title: "Näin kasvoin",
       entries: [],
+      weights,
+    });
+  for (let index = 0; index < weights.length; index += 16)
+    pages.push({
+      key: `measurements-${index}`,
+      kind: "measurements",
+      title: "Kasvu numeroina",
+      entries: [],
       weights: weights.slice(index, index + 16),
     });
+  if (book.design?.letter.trim()) {
+    splitCaption(book.design.letter, false, 12).forEach((text, index) =>
+      pages.push({
+        key: `letter-${index}`,
+        kind: "letter",
+        title: "Sinulle, pieni ystävä",
+        entries: [],
+        text,
+      }),
+    );
+  }
   return pages;
 }

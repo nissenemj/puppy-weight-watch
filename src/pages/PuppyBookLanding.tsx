@@ -1,213 +1,191 @@
-import '@/styles/puppy-journal.css';
-import '@/styles/puppy-book-landing.css';
-import React from 'react';
-import { Link } from 'react-router-dom';
-import {
-  Book,
-  Heart,
-  Calendar,
-  Camera,
-  Users,
-  Award,
-  ArrowRight,
-  CheckCircle
-} from 'lucide-react';
-import { Navigation } from '@/components/Navigation';
-import SEO from '@/components/SEO';
-import { MobileOptimizedLayout } from '@/components/MobileOptimizedLayout';
-import puppyBookHome from '@/assets/puppy-book-home-1200.webp';
-import puppyBookHomeSmall from '@/assets/puppy-book-home-640.webp';
-import puppyHome from '@/assets/puppy-home-1200.webp';
-import puppyHomeSmall from '@/assets/puppy-home-640.webp';
+import { Link } from "react-router-dom";
+import { ArrowRight, Camera, ChartNoAxesCombined, PenLine } from "lucide-react";
+import SEO from "@/components/SEO";
+import { MobileOptimizedLayout } from "@/components/MobileOptimizedLayout";
+import bookMockup from "@/assets/puppy-journal-books.webp";
+import shoreIllustration from "@/assets/puppy-journal-shore.webp";
+import puppyHome from "@/assets/puppy-home-1200.webp";
+import puppyHomeSmall from "@/assets/puppy-home-640.webp";
+import "@/styles/puppy-journal.css";
+import "@/styles/puppy-book-landing.css";
 
-const PuppyBookLanding: React.FC = () => {
-  const features = [
-    {
-      icon: Calendar,
-      title: "Kuukausittainen seuranta",
-      description: "Dokumentoi pennun kasvu kuukausittain 0-12 kuukauden ikään asti"
-    },
-    {
-      icon: Award,
-      title: "Virstanpylväät",
-      description: "Merkkaa tärkeät hetket: ensimmäinen rokotus, sosiaalistaminen, komennot"
-    },
-    {
-      icon: Users,
-      title: "Ystäväalbumi",
-      description: "Tallenna pennun kaverit ja sosiaaliset kohtaamiset"
-    },
-    {
-      icon: Camera,
-      title: "Muistogalleria",
-      description: "Kuvat, videot ja tarinat pennun elämästä"
-    },
-    {
-      icon: Heart,
-      title: "Terveyspäiväkirja",
-      description: "Rokotukset, madotukset ja eläinlääkärikäynnit"
-    },
-    {
-      icon: Book,
-      title: "Digitaalinen pentukirja",
-      description: "Koko ensimmäinen vuosi yhdessä kirjassa"
-    }
-  ];
+const stories = [
+  {
+    icon: Camera,
+    title: "Kuvat ja omat sanat",
+    text: "Ensimmäinen kotipäivä, lempipaikka ja se tavallinen tiistai. Lisää kuva tai kirjoita hetki talteen.",
+  },
+  {
+    icon: ChartNoAxesCombined,
+    title: "Kasvu osana tarinaa",
+    text: "Painonseurannan omat mittaukset muuttuvat kasvukäyräksi. Valitse halutessasi käyrä ja tarkat mittaukset kirjaan.",
+  },
+  {
+    icon: PenLine,
+    title: "Kirje isommalle sinulle",
+    text: "Mitä haluaisit muistaa tästä päivästä? Oma kirje saa paikan kirjan lopussa.",
+  },
+];
+const steps = [
+  {
+    title: "Tallenna hetki",
+    text: "Kuva, muutama sana tai kokonainen tarina. Yksi muisto riittää alkuun.",
+  },
+  {
+    title: "Valitse kirjan ilme",
+    text: "Oma nimi ja kansikuva, kolme kansiväriä. Lisää kasvukäyrä ja kirje, jos haluat.",
+  },
+  {
+    title: "Selaa ja tallenna PDF",
+    text: "Katsele tarinaa lukutilassa. Tallenna valmis kirja selaimen tulostusikkunasta.",
+  },
+];
 
-  const milestones = [
-    "0-2 kuukautta: Silmien avautuminen ja ensimmäiset askeleet",
-    "2-4 kuukautta: Rokotukset ja sosiaalistamisen aloitus",
-    "4-6 kuukautta: Peruskomennot ja hihnakävely",
-    "6-8 kuukautta: Teini-ikä ja itsenäistyminen",
-    "8-12 kuukautta: Aikuistuminen ja persoonallisuuden kehitys"
-  ];
-
+export default function PuppyBookLanding() {
   return (
     <MobileOptimizedLayout>
-      <div className="min-h-screen bg-gradient-soft page-with-navigation no-horizontal-scroll mobile-text-wrap responsive-media mobile-container-safe mobile-safe-margin">
+      <div className="puppy-journal journal-book-landing">
         <SEO
-          title="Pentukirja - Tallenna pennun ensimmäinen vuosi"
-          description="Digitaalinen pentukirja pennun ensimmäisen vuoden dokumentointiin. Virstanpylväät, muistot, ystävät ja kasvu yhdessä paikassa."
-          keywords="pentukirja, pentu, koira, muistot, virstanpylväät, kasvuseuranta, digitaalinen kirja"
+          title="Pentukirja: pennun ensimmäinen vuosi omaksi kirjaksi"
+          siteName="Pentulaskuri"
+          canonicalUrl="https://pentulaskuri.com/puppy-book-landing"
+          description="Kuvat, kasvun hetket ja hassut tavat omaan pentukirjaan. Valitse kirjan ilme, selaa aukeamia ja tallenna PDF. Tutustu maksuttomaan esimerkkiin."
+          keywords="pentukirja, pennun ensimmäinen vuosi, koiran oma kirja, kasvuseuranta"
         />
-
-        <Navigation />
-
-        <section className="puppy-journal puppy-book-intro" aria-label="Pentukirjan esittely">
-          <div className="puppy-book-intro-copy">
-            <h1 className="journal-title" id="main-heading">
-              Pennun ensimmäinen vuosi talteen.
+        <section className="book-landing-hero" aria-labelledby="main-heading">
+          <div className="book-landing-hero-copy">
+            <h1 id="main-heading">
+              Pennun ensimmäinen vuosi.
+              <br />
+              Teidän tarinanne.
             </h1>
             <p className="journal-lead">
-              Tallenna kuvat, muistot ja tärkeät hetket omaan pentukirjaan.
-              Pienestä pennusta kasvaa yhteinen tarina.
+              Kuvat, kasvun hetket ja hassut tavat. Tallenna ne omaan
+              pentukirjaan ja kokoa niistä kirja, johon haluat palata.
             </p>
-            <div className="puppy-book-intro-actions">
+            <div className="book-landing-actions">
               <Link to="/puppy-book" className="journal-button">
-                Aloita pentukirja
+                Aloita oma pentukirja{" "}
                 <ArrowRight size={18} aria-hidden="true" />
               </Link>
-              <a href="#puppy-book-features" className="journal-button journal-button-secondary">
-                Katso ominaisuudet
-              </a>
+              <Link to="/muistokirja" className="book-landing-text-link">
+                Selaa esimerkkikirjaa{" "}
+                <ArrowRight size={18} aria-hidden="true" />
+              </Link>
             </div>
+            <p className="book-landing-free">
+              Maksuton pentukirja. Omat kuvat ja tarinat.
+            </p>
           </div>
-          <figure className="puppy-book-intro-photo">
+          <figure className="book-landing-product">
             <img
-              src={puppyBookHome}
-              srcSet={`${puppyBookHomeSmall} 640w, ${puppyBookHome} 1200w`}
-              sizes="(min-width: 1024px) 50vw, 100vw"
+              src={bookMockup}
               width={1200}
-              height={900}
-              alt="Kuvituskuva kultaisennoutajan pennusta kotona, vierellään vihreä muistikirja"
+              height={919}
+              alt=""
               fetchPriority="high"
               decoding="async"
             />
-            <figcaption>Tekoälyllä luotu kuvituskuva.</figcaption>
+            <figcaption>
+              Kuvitettu esimerkki. Kirja tallennetaan PDF-tiedostoksi ja
+              tulostetaan itse.
+            </figcaption>
           </figure>
         </section>
 
-        {/* Features Section */}
-        <section className="full-width-section py-20 bg-white/30 mobile-text-wrap responsive-media no-horizontal-scroll mobile-container-safe mobile-card-safe focus-visible:outline focus-visible:outline-2 focus-visible:outline-terracotta-700" aria-labelledby="features-heading" id="puppy-book-features" tabIndex={-1}>
-          <div className="full-width-content mobile-grid-1">
-            <div className="text-center mb-16">
-              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-playful font-bold text-gray-800 mb-4" id="features-heading">
-                Miksi pentukirja? <span aria-hidden="true">✨</span>
-              </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Pennun ensimmäinen vuosi on täynnä ihmeellisiä hetkiä.
-                Älä anna niiden kadota - tallenna jokainen tärkeä hetki!
+        <section
+          className="book-landing-story"
+          aria-labelledby="book-story-title"
+        >
+          <figure className="book-landing-memory">
+            <img
+              src={puppyHome}
+              srcSet={`${puppyHomeSmall} 640w, ${puppyHome} 1200w`}
+              sizes="(min-width: 900px) 45vw, 100vw"
+              width={1200}
+              height={800}
+              alt="Kuvitettu pentu omalla peitollaan kotona"
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption>
+              <span>3.6.2026 · Nupun esimerkkikirjasta</span>
+              <strong>Ensimmäinen päivä kotona.</strong>
+              <p>
+                Ovi aukesi ja pieni nenä tutki jokaisen nurkan. Illalla nukahdit
+                peitolle, aivan meidän viereemme.
               </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mobile-grid-1">
-              {features.map((feature, index) => (
-                <div
-                  key={index}
-                  className="bg-white rounded-2xl p-6 shadow-lg"
-                >
-                  <div className="bg-gradient-to-r from-orange-100 to-pink-100 w-16 h-16 rounded-2xl flex items-center justify-center mb-4">
-                    <feature.icon className="w-8 h-8 text-orange-600" aria-hidden="true" />
+            </figcaption>
+          </figure>
+          <div className="book-landing-story-copy">
+            <h2 id="book-story-title">
+              Pienet hetket
+              <br />
+              tekevät tarinan.
+            </h2>
+            <div className="book-landing-stories">
+              {stories.map(({ icon: Icon, title, text }) => (
+                <div className="book-landing-story-row" key={title}>
+                  <Icon size={24} strokeWidth={1.5} aria-hidden="true" />
+                  <div>
+                    <h3>{title}</h3>
+                    <p>{text}</p>
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-800 mb-3">
-                    {feature.title}
-                  </h3>
-                  <p className="text-gray-600">
-                    {feature.description}
-                  </p>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Growth Stages Section */}
-        <section className="full-width-section py-20 mobile-text-wrap responsive-media no-horizontal-scroll mobile-container-safe mobile-flex-safe" role="region" aria-labelledby="growth-stages-heading">
-          <div className="full-width-content">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
-              <div>
-                <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-playful font-bold text-gray-800 mb-6" id="growth-stages-heading">
-                  Seuraa pennun kasvua <span aria-hidden="true">📈</span>
-                </h2>
-                <p className="text-lg text-gray-600 mb-8">
-                  Jokainen kuukausi tuo mukanaan uusia oppeja ja hetkiä.
-                  Kirjaamme ylös tärkeimmät virstanpylväät jokaisesta vaiheesta.
-                </p>
-
-                <div className="space-y-4">
-                  {milestones.map((milestone, index) => (
-                    <div
-                      key={index}
-                      className="flex items-start gap-3"
-                    >
-                      <CheckCircle className="w-6 h-6 text-green-500 mt-1 flex-shrink-0" aria-hidden="true" />
-                      <span className="text-gray-700">{milestone}</span>
-                    </div>
-                  ))}
+        <section
+          className="book-landing-process"
+          aria-labelledby="book-process-title"
+        >
+          <h2 id="book-process-title" className="sr-only">
+            Näin oma pentukirja syntyy
+          </h2>
+          <ol>
+            {steps.map((step, index) => (
+              <li key={step.title}>
+                <span aria-hidden="true">0{index + 1}</span>
+                <div>
+                  <h3>{step.title}</h3>
+                  <p>{step.text}</p>
                 </div>
-              </div>
-
-              <div>
-                <figure className="puppy-journal puppy-book-moment-photo">
-                  <img
-                    src={puppyHome}
-                    srcSet={`${puppyHomeSmall} 640w, ${puppyHome} 1200w`}
-                    sizes="(min-width: 1024px) 50vw, 100vw"
-                    width={1200}
-                    height={800}
-                    alt="Kuvituskuva pennusta omalla peitollaan kotona"
-                    className="w-full h-auto rounded-2xl"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                  <figcaption>Arjen pienet hetket jäävät kirjaan. Tekoälyllä luotu kuvituskuva.</figcaption>
-                </figure>
-              </div>
-            </div>
-          </div>
+              </li>
+            ))}
+          </ol>
         </section>
 
-        <section className="puppy-journal container mx-auto px-4 md:px-6" aria-labelledby="memory-example-link-title">
-          <div className="journal-callout">
-            <div><h2 id="memory-example-link-title">Miltä pennun oma pentukirja voisi näyttää?</h2><p>Selaa kuvitteellista esimerkkikirjaa ja tutustu pennun ensimmäisestä vuodesta koottavaan pentukirjaan.</p></div>
-            <Link to="/muistokirja" className="journal-button journal-button-light">Katso pentukirjan esimerkki</Link>
-          </div>
-        </section>
-
-        <section className="puppy-journal full-width-section py-12" aria-labelledby="cta-heading">
-          <div className="journal-callout">
-            <div>
-              <h2 id="cta-heading">Aloita pennun tarinan kirjoittaminen tänään.</h2>
-              <p>Tallenna yhteiset hetket omaan pentukirjaan ja palaa niihin myöhemmin.</p>
-            </div>
-            <Link to="/puppy-book" className="journal-button journal-button-light">
-              <Book size={20} aria-hidden="true" /> Luo pentukirja ilmaiseksi
+        <section
+          className="book-landing-finale"
+          aria-labelledby="book-start-title"
+        >
+          <img
+            src={shoreIllustration}
+            width={1400}
+            height={467}
+            alt=""
+            loading="lazy"
+            decoding="async"
+          />
+          <h2 id="book-start-title">Yksi hetki riittää alkuun.</h2>
+          <p>Voit jatkaa kirjaa omaan tahtiisi.</p>
+          <div className="book-landing-actions">
+            <Link to="/puppy-book" className="journal-button">
+              Aloita oma pentukirja <ArrowRight size={18} aria-hidden="true" />
+            </Link>
+            <Link to="/muistokirja" className="book-landing-text-link">
+              Katso pentukirjan esimerkki
             </Link>
           </div>
         </section>
+        <p className="book-landing-disclosure">
+          Esimerkin Nuppu, sen tiedot ja mittaukset ovat kuvitteellisia.
+          Esimerkkikuvat ja piirrokset on luotu tekoälyllä. Omaan kirjaasi
+          tulevat omat kuvasi ja tekstisi.
+        </p>
       </div>
     </MobileOptimizedLayout>
   );
-};
-
-export default PuppyBookLanding;
+}

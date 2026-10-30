@@ -1,32 +1,34 @@
-import * as React from 'react';
-import { useEffect, useMemo, useState } from 'react';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { supabase } from '@/integrations/supabase/client';
-import { useAuthProviders } from '@/hooks/useAuthProviders';
-import { AUTH_PROVIDER_CHECK_FAILED, signInWithEnabledProvider } from '@/services/authProviderService';
+import * as React from "react";
+import { useEffect, useMemo, useState } from "react";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuthProviders } from "@/hooks/useAuthProviders";
+import {
+  AUTH_PROVIDER_CHECK_FAILED,
+  signInWithEnabledProvider,
+} from "@/services/authProviderService";
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Card,
   CardHeader,
-  CardTitle,
   CardDescription,
   CardContent,
   CardFooter,
-} from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
-import { Loader2, Dog, LogIn } from 'lucide-react';
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { Loader2, Dog, LogIn } from "lucide-react";
 
 const emailSchema = z.object({
-  email: z.string().email('Syötä kelvollinen sähköpostiosoite'),
+  email: z.string().email("Syötä kelvollinen sähköpostiosoite"),
 });
 const emailPasswordSchema = emailSchema.extend({
-  password: z.string().min(8, 'Vähintään 8 merkkiä'),
+  password: z.string().min(8, "Vähintään 8 merkkiä"),
 });
 
 type EmailForm = z.infer<typeof emailSchema>;
@@ -39,30 +41,33 @@ declare global {
 }
 
 const track = (event: string, params?: Record<string, unknown>) => {
-  if (typeof window !== 'undefined') {
-    window.gtag?.('event', event, params);
+  if (typeof window !== "undefined") {
+    window.gtag?.("event", event, params);
   }
 };
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
-  const [mode, setMode] = useState<'signin' | 'signup'>('signin');
+  const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
   const { providers, failed: providersFailed } = useAuthProviders();
   const googleEnabled = providers?.google === true;
 
   const redirectTo = useMemo(
-    () => (typeof window !== 'undefined' ? `${window.location.origin}/auth/callback` : undefined),
-    []
+    () =>
+      typeof window !== "undefined"
+        ? `${window.location.origin}/auth/callback`
+        : undefined,
+    [],
   );
 
   useEffect(() => {
     let isMounted = true;
     supabase.auth.getSession().then(({ data }) => {
       if (!isMounted) return;
-      if (data.session && typeof window !== 'undefined') {
-        window.location.replace('/');
+      if (data.session && typeof window !== "undefined") {
+        window.location.replace("/");
       }
     });
     return () => {
@@ -72,12 +77,12 @@ export default function LoginPage() {
 
   const emailPwdForm = useForm<EmailPasswordForm>({
     resolver: zodResolver(emailPasswordSchema),
-    defaultValues: { email: '', password: '' },
+    defaultValues: { email: "", password: "" },
   });
 
   const magicForm = useForm<EmailForm>({
     resolver: zodResolver(emailSchema),
-    defaultValues: { email: '' },
+    defaultValues: { email: "" },
   });
 
   async function signInWithGoogle() {
@@ -85,10 +90,15 @@ export default function LoginPage() {
     setInfo(null);
     setLoading(true);
     try {
-      const { error } = await signInWithEnabledProvider('google', redirectTo ? { redirectTo } : undefined);
+      const { error } = await signInWithEnabledProvider(
+        "google",
+        redirectTo ? { redirectTo } : undefined,
+      );
       if (error) setError(error.message);
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : AUTH_PROVIDER_CHECK_FAILED);
+      setError(
+        error instanceof Error ? error.message : AUTH_PROVIDER_CHECK_FAILED,
+      );
     } finally {
       setLoading(false);
     }
@@ -99,7 +109,7 @@ export default function LoginPage() {
     setInfo(null);
     setLoading(true);
 
-    if (mode === 'signin') {
+    if (mode === "signin") {
       const { error } = await supabase.auth.signInWithPassword({
         email: values.email,
         password: values.password,
@@ -108,10 +118,10 @@ export default function LoginPage() {
       if (error) {
         setError(error.message);
       } else {
-        track('login', { method: 'password' });
-        setInfo('Kirjaudutaan sisään...');
-        if (typeof window !== 'undefined') {
-          window.location.assign('/');
+        track("login", { method: "password" });
+        setInfo("Kirjaudutaan sisään...");
+        if (typeof window !== "undefined") {
+          window.location.assign("/");
         }
       }
       return;
@@ -130,8 +140,8 @@ export default function LoginPage() {
     if (error) {
       setError(error.message);
     } else {
-      setInfo('Tarkista sähköpostisi ja vahvista tilisi.');
-      track('sign_up', { method: 'password' });
+      setInfo("Tarkista sähköpostisi ja vahvista tilisi.");
+      track("sign_up", { method: "password" });
     }
   }
 
@@ -147,8 +157,8 @@ export default function LoginPage() {
     if (error) {
       setError(error.message);
     } else {
-      setInfo('Magic link lähetetty! Tarkista sähköpostisi.');
-      track('login', { method: 'magic_link' });
+      setInfo("Kirjautumislinkki lähetetty. Tarkista sähköpostisi.");
+      track("login", { method: "magic_link" });
     }
   }
 
@@ -156,8 +166,11 @@ export default function LoginPage() {
     setError(null);
     setInfo(null);
     setLoading(true);
-    const resetRedirect = redirectTo ??
-      (typeof window !== 'undefined' ? `${window.location.origin}/reset-password` : undefined);
+    const resetRedirect =
+      redirectTo ??
+      (typeof window !== "undefined"
+        ? `${window.location.origin}/reset-password`
+        : undefined);
     const { error } = await supabase.auth.resetPasswordForEmail(
       values.email,
       resetRedirect ? { redirectTo: resetRedirect } : undefined,
@@ -166,8 +179,8 @@ export default function LoginPage() {
     if (error) {
       setError(error.message);
     } else {
-      setInfo('Salasanan palautuslinkki lähetetty sähköpostiisi.');
-      track('password_reset_request', { origin: 'login_page' });
+      setInfo("Salasanan palautuslinkki lähetetty sähköpostiisi.");
+      track("password_reset_request", { origin: "login_page" });
     }
   }
 
@@ -176,7 +189,7 @@ export default function LoginPage() {
   const magicEmailError = magicForm.formState.errors.email?.message;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-brand-orange/15 via-white to-white dark:from-brand-orange/25 dark:via-slate-950 dark:to-slate-950">
+    <div className="site-login min-h-screen bg-white">
       <section className="mx-auto grid max-w-6xl grid-cols-1 gap-8 p-6 md:grid-cols-2 md:p-10">
         <div className="hidden flex-col justify-center md:flex">
           <div className="relative rounded-2xl border bg-white/60 p-8 shadow-soft backdrop-blur">
@@ -184,26 +197,47 @@ export default function LoginPage() {
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-orange text-white">
                 <Dog className="h-7 w-7" aria-hidden="true" />
               </div>
-              <h2 className="text-2xl font-semibold text-brand-ink">Tervetuloa Pentulaskuriin</h2>
+              <p className="text-2xl font-semibold text-brand-ink">
+                Tervetuloa Pentulaskuriin
+              </p>
             </div>
             <p className="text-brand-ink/80">
-              Seuraa painoa 📊, laske ruoka-annokset 🍖 ja tallenna muistot 📚 yhdessä paikassa. Kirjaudu sisään jatkaaksesi.
+              Tallenna pennun mittaukset, kuvat ja yhteiset hetket omaan
+              tiliisi. Voit palata niiden pariin myöhemmin.
             </p>
             <ul className="mt-6 space-y-2 text-brand-ink/80">
               {googleEnabled ? <li>• Kirjautuminen Google-tilillä</li> : null}
-              <li>• Sähköposti & salasana tai magic link</li>
-              <li>• Yksityisyys & tietoturva by design</li>
+              <li>
+                Kirjaudu sähköpostilla ja salasanalla tai sähköpostiin
+                lähetettävällä linkillä.
+              </li>
             </ul>
           </div>
         </div>
 
-        <Card id="auth-card" className="rounded-2xl border bg-white/90 shadow-soft backdrop-blur">
+        <Card
+          id="auth-card"
+          className="rounded-2xl border bg-white/90 shadow-soft backdrop-blur"
+        >
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-xl">
+            <h1 className="flex items-center gap-2 text-2xl font-serif">
               <LogIn className="h-5 w-5 text-brand-orange" aria-hidden="true" />
-              {mode === 'signin' ? 'Kirjaudu sisään' : 'Luo tili'}
-            </CardTitle>
-            <CardDescription>{googleEnabled ? 'Jatka Googlella tai sähköpostilla.' : 'Kirjaudu sähköpostilla.'}</CardDescription>
+              {mode === "signin" ? "Kirjaudu sisään" : "Luo tili"}
+            </h1>
+            <CardDescription>
+              {googleEnabled
+                ? "Jatka Googlella tai sähköpostilla."
+                : "Kirjaudu sähköpostilla."}
+            </CardDescription>
+            <p className="pt-2 text-sm leading-relaxed text-muted-foreground">
+              <a
+                href="/weight-tracker"
+                className="underline underline-offset-4"
+              >
+                Kokeile painonseurantaa ilman tiliä.
+              </a>{" "}
+              Ilman tiliä mittaukset säilyvät vain tässä selaimessa.
+            </p>
           </CardHeader>
 
           <CardContent className="space-y-6">
@@ -230,7 +264,12 @@ export default function LoginPage() {
                     className="border border-stone-300 bg-white text-stone-900 hover:bg-stone-50"
                     variant="outline"
                   >
-                    {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" /> : null}
+                    {loading ? (
+                      <Loader2
+                        className="mr-2 h-4 w-4 animate-spin"
+                        aria-hidden="true"
+                      />
+                    ) : null}
                     Jatka Google-tilillä
                   </Button>
                 </div>
@@ -244,13 +283,19 @@ export default function LoginPage() {
               </>
             ) : (
               <p className="text-sm text-stone-600" role="status">
-                {providersFailed ? AUTH_PROVIDER_CHECK_FAILED : providers
-                  ? 'Google-kirjautuminen ei ole käytössä. Kirjaudu sähköpostilla.'
-                  : 'Tarkistetaan kirjautumistapoja…'}
+                {providersFailed
+                  ? AUTH_PROVIDER_CHECK_FAILED
+                  : providers
+                    ? "Google-kirjautuminen ei ole käytössä. Kirjaudu sähköpostilla."
+                    : "Tarkistetaan kirjautumistapoja…"}
               </p>
             )}
 
-            <form onSubmit={emailPwdForm.handleSubmit(onSubmitEmailPwd)} className="grid gap-4" noValidate>
+            <form
+              onSubmit={emailPwdForm.handleSubmit(onSubmitEmailPwd)}
+              className="grid gap-4"
+              noValidate
+            >
               <div className="grid gap-2">
                 <Label htmlFor="email">Sähköpostiosoite</Label>
                 <Input
@@ -259,9 +304,21 @@ export default function LoginPage() {
                   inputMode="email"
                   autoComplete="email"
                   placeholder="sinä@esimerkki.com"
-                  {...emailPwdForm.register('email')}
+                  aria-invalid={Boolean(emailError)}
+                  aria-describedby={
+                    emailError ? "login-email-error" : undefined
+                  }
+                  {...emailPwdForm.register("email")}
                 />
-                {emailError ? <p className="text-sm text-red-600">{emailError}</p> : null}
+                {emailError ? (
+                  <p
+                    id="login-email-error"
+                    className="text-sm text-red-600"
+                    role="alert"
+                  >
+                    {emailError}
+                  </p>
+                ) : null}
               </div>
 
               <div className="grid gap-2">
@@ -269,25 +326,52 @@ export default function LoginPage() {
                 <Input
                   id="password"
                   type="password"
-                  autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
+                  autoComplete={
+                    mode === "signin" ? "current-password" : "new-password"
+                  }
                   placeholder="••••••••"
-                  {...emailPwdForm.register('password')}
+                  aria-invalid={Boolean(passwordError)}
+                  aria-describedby={
+                    passwordError ? "login-password-error" : undefined
+                  }
+                  {...emailPwdForm.register("password")}
                 />
-                {passwordError ? <p className="text-sm text-red-600">{passwordError}</p> : null}
+                {passwordError ? (
+                  <p
+                    id="login-password-error"
+                    className="text-sm text-red-600"
+                    role="alert"
+                  >
+                    {passwordError}
+                  </p>
+                ) : null}
               </div>
 
-              <Button type="submit" disabled={loading} className="bg-terracotta-700 text-white hover:bg-terracotta-800">
-                {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" /> : null}
-                {mode === 'signin' ? 'Kirjaudu' : 'Luo tili'}
+              <Button
+                type="submit"
+                disabled={loading}
+                className="bg-terracotta-700 text-white hover:bg-terracotta-800"
+              >
+                {loading ? (
+                  <Loader2
+                    className="mr-2 h-4 w-4 animate-spin"
+                    aria-hidden="true"
+                  />
+                ) : null}
+                {mode === "signin" ? "Kirjaudu" : "Luo tili"}
               </Button>
             </form>
 
             <details className="group">
               <summary className="cursor-pointer text-sm text-brand-ink/70 hover:text-brand-ink">
-                Vaihtoehdot: Magic link & salasanan palautus
+                Kirjaudu ilman salasanaa tai palauta salasana
               </summary>
               <div className="mt-4 grid gap-4">
-                <form onSubmit={magicForm.handleSubmit(onSendMagicLink)} className="grid gap-3" noValidate>
+                <form
+                  onSubmit={magicForm.handleSubmit(onSendMagicLink)}
+                  className="grid gap-3"
+                  noValidate
+                >
                   <Label htmlFor="magic-email">Sähköposti</Label>
                   <Input
                     id="magic-email"
@@ -295,12 +379,29 @@ export default function LoginPage() {
                     inputMode="email"
                     autoComplete="email"
                     placeholder="sinä@esimerkki.com"
-                    {...magicForm.register('email')}
+                    aria-invalid={Boolean(magicEmailError)}
+                    aria-describedby={
+                      magicEmailError ? "login-link-email-error" : undefined
+                    }
+                    {...magicForm.register("email")}
                   />
-                  {magicEmailError ? <p className="text-sm text-red-600">{magicEmailError}</p> : null}
+                  {magicEmailError ? (
+                    <p
+                      id="login-link-email-error"
+                      className="text-sm text-red-600"
+                      role="alert"
+                    >
+                      {magicEmailError}
+                    </p>
+                  ) : null}
                   <div className="flex flex-wrap gap-2">
-                    <Button type="submit" variant="secondary" disabled={loading} className="bg-terracotta-700 text-white hover:bg-terracotta-800">
-                      Lähetä magic link
+                    <Button
+                      type="submit"
+                      variant="secondary"
+                      disabled={loading}
+                      className="bg-terracotta-700 text-white hover:bg-terracotta-800"
+                    >
+                      Lähetä kirjautumislinkki
                     </Button>
                     <Button
                       type="button"
@@ -321,12 +422,14 @@ export default function LoginPage() {
               type="button"
               variant="ghost"
               onClick={() => {
-                setMode(mode === 'signin' ? 'signup' : 'signin');
+                setMode(mode === "signin" ? "signup" : "signin");
                 setError(null);
                 setInfo(null);
               }}
             >
-              {mode === 'signin' ? 'Ei tiliä? Luo uusi' : 'Onko sinulla jo tili? Kirjaudu'}
+              {mode === "signin"
+                ? "Ei tiliä? Luo uusi"
+                : "Onko sinulla jo tili? Kirjaudu"}
             </Button>
             <div className="flex flex-wrap justify-center gap-x-4">
               <a

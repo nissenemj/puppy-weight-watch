@@ -94,7 +94,7 @@ test.describe("Pentukirjan esittely", () => {
       await page.setViewportSize(viewport);
       await openPage(page, "/puppy-book-landing");
       const hero = page.getByRole("region", {
-        name: "Pentukirjan esittely",
+        name: "Pennun ensimmäinen vuosi. Teidän tarinanne.",
         exact: true,
       });
       await expect
@@ -118,7 +118,7 @@ test.describe("Pentukirjan esittely", () => {
         )
         .toEqual([]);
       const startLink = hero.getByRole("link", {
-        name: "Aloita pentukirja",
+        name: "Aloita oma pentukirja",
         exact: true,
       });
       await expect(startLink).toHaveAttribute("href", "/puppy-book");
@@ -126,7 +126,7 @@ test.describe("Pentukirjan esittely", () => {
       await page.screenshot({ path: testInfo.outputPath("hero.png") });
       await startLink.press("Tab");
       const featuresLink = hero.getByRole("link", {
-        name: "Katso ominaisuudet",
+        name: "Selaa esimerkkikirjaa",
         exact: true,
       });
       await expect(featuresLink).toBeFocused();
@@ -155,15 +155,13 @@ test.describe("Pentukirjan esittely", () => {
       expect(focus.bottom).toBeLessThanOrEqual(focus.footerTop);
       expect(focus.hit).toBe(true);
       await featuresLink.press("Enter");
-      const features = page.locator("#puppy-book-features");
-      await expect(features).toBeFocused();
-      await expect(page).toHaveURL(/#puppy-book-features$/);
-      const target = await features.evaluate((element) => ({
-        top: element.getBoundingClientRect().top,
-        headerBottom: document.querySelector("header")!.getBoundingClientRect()
-          .bottom,
-      }));
-      expect(target.top).toBeGreaterThanOrEqual(target.headerBottom);
+      await expect(page).toHaveURL(/\/muistokirja/);
+      await expect(
+        page.getByRole("heading", {
+          name: "Pieni pentu. Kokonainen tarina.",
+          exact: true,
+        }),
+      ).toBeVisible();
     });
   }
 

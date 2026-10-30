@@ -1,7 +1,8 @@
 import React from "react";
 import { PrivatePuppyImage } from "./PrivatePuppyImage";
-import { BookOpen, Calendar, Clock, Settings } from "lucide-react";
-import puppyBookIcon from "@/assets/puppy-book-icon.png";
+import { Calendar, Clock, Settings } from "lucide-react";
+import journalIllustration from "@/assets/puppy-journal-illustration.webp";
+import shoreIllustration from "@/assets/puppy-journal-shore.webp";
 import {
   differenceInWeeks,
   differenceInMonths,
@@ -53,57 +54,70 @@ const AnimatedHeader: React.FC<AnimatedHeaderProps> = ({
 
   return (
     <section
-      className="journal-profile"
+      className={`journal-profile ${puppyImageUrl ? "journal-profile-photo" : "journal-profile-illustrated"}`}
       aria-label="Pennun profiili"
       style={{
-        borderTop: `4px solid ${accents[bannerColor] || accents.orange}`,
+        borderBottomColor: accents[bannerColor] || accents.orange,
       }}
     >
+      <img
+        className="journal-profile-shore"
+        src={shoreIllustration}
+        width={1400}
+        height={467}
+        alt=""
+        decoding="async"
+      />
       <div className="journal-profile-main">
         <div className="journal-profile-image">
           {puppyImageUrl ? (
             <PrivatePuppyImage
               src={puppyImageUrl}
-              fallbackSrc={puppyBookIcon}
-              alt="Pennun profiilikuva tai pentukirjan kuvake"
-              width={112}
-              height={112}
+              fallbackSrc={journalIllustration}
+              alt="Pennun profiilikuva tai piirretty pentu kirjan äärellä"
+              width={200}
+              height={160}
             />
           ) : (
-            <BookOpen size={36} aria-hidden="true" />
+            <img
+              src={journalIllustration}
+              width={200}
+              height={160}
+              alt=""
+              decoding="async"
+            />
           )}
         </div>
         <div className="journal-profile-copy">
           <h1>{puppyName || title}</h1>
           <p>{subtitle}</p>
-          {puppyAge && (
-            <div className="journal-profile-meta">
-              <span>
-                <Calendar size={15} aria-hidden="true" /> Syntynyt{" "}
-                {new Intl.DateTimeFormat("fi-FI").format(puppyAge.birth)}
-              </span>
-              <span>
-                <Clock size={15} aria-hidden="true" />{" "}
-                {puppyAge.months > 0
-                  ? `${puppyAge.months} kk`
-                  : `${puppyAge.weeks} viikkoa`}
-              </span>
-            </div>
-          )}
+          <div className="journal-profile-meta">
+            {puppyAge && (
+              <>
+                <span>
+                  <Calendar size={15} aria-hidden="true" /> Syntynyt{" "}
+                  {new Intl.DateTimeFormat("fi-FI").format(puppyAge.birth)}
+                </span>
+                <span>
+                  <Clock size={15} aria-hidden="true" />{" "}
+                  {puppyAge.months > 0
+                    ? `${puppyAge.months} kk`
+                    : `${puppyAge.weeks} viikkoa`}
+                </span>
+              </>
+            )}
+            {onEditProfile && (
+              <button
+                type="button"
+                onClick={onEditProfile}
+                className="journal-text-link"
+              >
+                <Settings size={15} aria-hidden="true" /> Muokkaa pennun tietoja
+              </button>
+            )}
+          </div>
         </div>
       </div>
-      {onEditProfile && (
-        <div className="journal-profile-footer">
-          <p>Kuva ja perustiedot tekevät kirjasta oman.</p>
-          <button
-            type="button"
-            onClick={onEditProfile}
-            className="journal-text-link"
-          >
-            <Settings size={16} aria-hidden="true" /> Muokkaa pennun tietoja
-          </button>
-        </div>
-      )}
     </section>
   );
 };
