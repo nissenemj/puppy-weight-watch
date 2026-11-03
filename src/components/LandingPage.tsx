@@ -44,8 +44,8 @@ const tools = [
 const guides = [
   {
     icon: ShoppingBag,
-    title: "Pennun hankintalista",
-    text: "Mitä uuteen kotiin tarvitaan? Merkitse omat hankinnat ja vertaile vaihtoehtoja.",
+    title: "Pennun tuloon valmistautuminen",
+    text: "Valmistele koti, sovi perheen arki ja tallenna ensimmäinen kuva pentukirjaan.",
     href: "/guides/pennun-hankinnat",
   },
   {
@@ -56,9 +56,9 @@ const guides = [
   },
   {
     icon: Shield,
-    title: "Turvallinen koti",
+    title: "Kotikierros pennun korkeudelta",
     text: "Käy läpi kodin turvallisuutta ja pennun ympäristöä.",
-    href: "/guides/safety",
+    href: "/guides/pennun-hankinnat#kotikierros",
   },
 ];
 

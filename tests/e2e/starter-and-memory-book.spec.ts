@@ -168,7 +168,10 @@ test("new pages are reachable from the guides and puppy-book landing page", asyn
 }) => {
   await page.goto("/guides");
   await page
-    .getByRole("link", { name: "Avaa opas: Pennun hankintalista", exact: true })
+    .getByRole("link", {
+      name: "Avaa opas: Pennun tuloon valmistautuminen",
+      exact: true,
+    })
     .click();
   await expect(page).toHaveURL(/\/guides\/pennun-hankinnat$/);
   await page.getByRole("link", { name: "Katso pentukirjan esimerkki" }).click();

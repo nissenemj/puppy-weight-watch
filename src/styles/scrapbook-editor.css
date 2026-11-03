@@ -1,0 +1,658 @@
+.scrap-editor {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  grid-column: 1 / -1;
+  min-width: 0;
+  color: var(--journal-ink);
+}
+.scrap-editor > * {
+  min-width: 0;
+}
+.scrap-photo-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.scrap-photo-actions .journal-button {
+  flex: 1;
+  justify-content: center;
+  min-height: 48px;
+  white-space: normal;
+}
+.scrap-save-status {
+  font-size: 0.875rem;
+  line-height: 1.65;
+  color: var(--journal-muted);
+  margin: 0.6rem 0;
+}
+.scrap-layout-picker {
+  scroll-margin-top: 1rem;
+}
+.scrap-tool-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 0 0 0.6rem;
+}
+.scrap-layout-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+.scrap-layout-options > button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.45rem;
+  min-height: 104px;
+  min-width: 0;
+  padding: 0.7rem 0.2rem;
+  border: 1px solid #81929c;
+  border-radius: 0.4rem;
+  background: #fff;
+  color: var(--journal-ink);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  touch-action: manipulation;
+  cursor: pointer;
+}
+.scrap-layout-options > button > svg {
+  position: absolute;
+  right: 6px;
+  top: 6px;
+}
+.scrap-editor button[aria-pressed="true"] {
+  border: 2px solid var(--journal-ink);
+  background: #e5eef0;
+}
+.scrap-layout-options > button:hover,
+.scrap-sticker-options button:hover {
+  background: #e5eef0;
+  border-color: var(--journal-ink);
+}
+.scrap-layout-mini {
+  display: block;
+  flex: none;
+  width: 42px;
+  height: 51px;
+  padding: 7px 6px;
+  background: #fff;
+  border: 1px solid #a5b8c2;
+}
+.scrap-layout-mini > span {
+  display: block;
+  background: #c5d3da;
+  width: 100%;
+  height: 27px;
+}
+.scrap-layout-mini img {
+  display: block;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+.scrap-layout-mini-polaroid > span {
+  transform: rotate(-5deg);
+}
+.scrap-layout-mini-poster {
+  padding: 0;
+}
+.scrap-layout-mini-poster > span {
+  height: 40px;
+}
+.scrap-layout-mini-story > span {
+  height: 19px;
+  margin-bottom: 6px;
+}
+.scrap-layout-mini-story::after {
+  content: "";
+  display: block;
+  border-top: 1px solid #a5b8c2;
+  border-bottom: 1px solid #a5b8c2;
+  height: 6px;
+}
+.scrap-editor .scrap-editor-canvas {
+  align-self: start;
+  padding: 1.25rem 0.4rem 0.5rem;
+}
+.scrap-editor .annual-document .scrap-editing-paper {
+  max-width: 440px;
+  margin: 0 auto;
+  padding: 24px 22px 22px 26px;
+  border-left-width: 10px;
+  box-shadow:
+    5px 5px 0 #d4dfe4,
+    6px 6px 0 #81929c;
+}
+.scrap-editor .annual-kicker {
+  font-size: 14px;
+}
+.book-cover-trial .scrap-editor :is(.scrap-inline-title, .scrap-inline-field) {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  resize: none;
+  overflow: hidden;
+  border: 0;
+  border-bottom: 1px dashed #a5b8c2;
+  border-radius: 0;
+  background: transparent;
+  color: #233f50;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.book-cover-trial .scrap-editor .scrap-inline-title {
+  font:
+    400 clamp(1.6rem, 3vw, 2rem) / 1.2 Georgia,
+    serif;
+  letter-spacing: -0.03em;
+  padding: 5px 0;
+  min-height: 48px;
+  margin: 8px 0 22px;
+}
+.book-cover-trial .scrap-editor .scrap-inline-field {
+  font:
+    400 18px/1.6 Georgia,
+    serif;
+  padding: 6px 0;
+  min-height: 48px;
+}
+.scrap-editor :is(.scrap-inline-title, .scrap-inline-field)::placeholder {
+  color: #53636a;
+  opacity: 1;
+}
+.scrap-editor .scrap-copy-hint {
+  font:
+    400 12px/1.5 Arial,
+    sans-serif;
+  color: #53636a;
+  margin: 4px 0 0;
+}
+.book-cover-trial .scrap-editor .scrap-quote .scrap-inline-field {
+  font:
+    400 16px/1.4 Georgia,
+    serif;
+  border: 0;
+  padding: 0;
+}
+.scrap-editor .scrap-editable-copy {
+  margin-top: 12px;
+}
+.scrap-empty-photo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 210px;
+  width: 100%;
+  padding: 20px;
+  border: 1px dashed #81929c;
+  border-radius: 0.2rem;
+  background: #eef3f5;
+  color: #233f50;
+  text-align: center;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.scrap-empty-photo strong {
+  font:
+    400 1.65rem/1.2 Georgia,
+    serif;
+}
+.scrap-empty-photo span {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  max-width: 24ch;
+}
+.scrap-empty-photo:hover {
+  background: #e0ebef;
+  border-color: #233f50;
+}
+.scrap-page-indicator {
+  font:
+    400 12px/1.6 Arial,
+    sans-serif;
+  color: #53636a;
+  padding-top: 14px;
+  margin: 18px 0 0;
+  border-top: 1px solid #d4dfe4;
+}
+.scrap-sticker-options {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.scrap-sticker-options > p {
+  flex-basis: 100%;
+}
+.scrap-sticker-options button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 48px;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid #81929c;
+  border-radius: 0.35rem;
+  background: #fff;
+  font-size: 0.875rem;
+  color: var(--journal-ink);
+  touch-action: manipulation;
+  cursor: pointer;
+}
+.scrap-editor-extras {
+  min-width: 0;
+}
+.scrap-editor-extras > .book-cover-trial-idea-button {
+  margin: 0.75rem 0;
+}
+.scrap-editor details {
+  border-top: 1px solid #c5d3da;
+}
+.scrap-editor summary {
+  padding: 0.8rem 0;
+  min-height: 48px;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+.scrap-page-details > p {
+  font-size: 0.875rem;
+  line-height: 1.7;
+  margin: 0.75rem 0 1rem;
+}
+.scrap-page-details label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.6;
+  margin: 0.75rem 0 0.5rem;
+}
+.scrap-page-details input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  min-height: 48px;
+  padding: 0.75rem;
+  border: 1px solid #81929c;
+  border-radius: 0.25rem;
+  background: #fff;
+  color: var(--journal-ink);
+  font: inherit;
+  font-size: 16px;
+}
+.scrap-editor .journal-text-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  white-space: normal;
+  margin-right: 1rem;
+}
+.scrap-undo {
+  margin-top: 1rem;
+}
+.scrap-feedback {
+  min-height: 3em;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: var(--journal-muted);
+  margin: 0.75rem 0 0;
+}
+.scrap-book-pages {
+  grid-column: 1 / -1;
+  border-top: 1px solid #c5d3da;
+  padding-top: 1.25rem;
+}
+.scrap-pages-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+.journal-book-landing .scrap-pages-heading h3 {
+  font:
+    400 1.5rem/1.25 Georgia,
+    serif;
+  letter-spacing: -0.025em;
+  margin: 0;
+}
+.scrap-book-pages ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 90px));
+  gap: 0.65rem;
+}
+.scrap-book-pages li button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.4rem;
+  width: 100%;
+  min-height: 100px;
+  padding: 0.6rem 0.35rem;
+  background: #fff;
+  border: 1px solid #81929c;
+  border-radius: 0.25rem;
+  color: var(--journal-ink);
+  font-size: 0.875rem;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.scrap-book-pages li button[aria-current="page"] {
+  border: 2px solid var(--journal-ink);
+  background: #e5eef0;
+}
+.scrap-book-pages li img {
+  display: block;
+  width: 100%;
+  height: 56px;
+  object-fit: contain;
+}
+.scrap-page-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+  margin-top: 0.75rem;
+}
+.scrap-page-actions > :last-child {
+  margin-left: auto;
+}
+.scrap-local-note {
+  font-size: 0.875rem;
+  color: var(--journal-muted);
+  line-height: 1.7;
+  margin: 1rem 0 0;
+  max-width: 65ch;
+}
+.scrap-storage-error,
+.scrap-photo-error {
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: #871f36;
+  background: #fff3f4;
+  border: 1px solid #d6a4ac;
+  padding: 0.75rem;
+  margin: 0.75rem 0;
+}
+.scrap-storage-error p {
+  margin: 0 0 0.5rem;
+}
+.scrap-editor :is(button, input, textarea, summary):focus-visible,
+.scrap-editor .scrap-editing-paper:focus-visible {
+  outline: 3px solid var(--journal-ink);
+  outline-offset: 3px;
+}
+.scrap-editor :is(button, input, textarea, summary),
+.scrap-editor .scrap-editing-paper {
+  /* The shared html scroll-padding already reserves space for the header. */
+  scroll-margin-top: 1rem;
+  scroll-margin-bottom: 7rem;
+}
+.scrap-editor button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+.scrap-open-ideas {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+}
+.scrap-idea-prompt {
+  margin: 0.5rem 0 1rem;
+  padding: 1rem 0;
+  border-block: 1px solid #c5d3da;
+}
+.scrap-idea-prompt-heading {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.scrap-idea-prompt-heading h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.scrap-idea-prompt > p {
+  font-size: 0.875rem;
+  color: #53636a;
+  margin: 0.75rem 0;
+}
+.scrap-idea-prompt .scrap-question-label {
+  color: #233f50;
+  font-weight: 600;
+  margin-top: 1.25rem;
+  margin-bottom: 0.4rem;
+}
+.scrap-idea-prompt .scrap-question {
+  font:
+    400 1.25rem/1.5 Georgia,
+    serif;
+  color: #233f50;
+  margin: 0;
+  text-wrap: pretty;
+}
+.scrap-idea-prompt .scrap-question-hint {
+  font-size: 0.8125rem;
+}
+.scrap-idea-prompt-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  font-size: 0.875rem;
+}
+.scrap-ideas-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1290;
+  background: #233f50a6;
+}
+.scrap-ideas-dialog {
+  position: fixed;
+  z-index: 1291;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  width: min(940px, calc(100% - 24px));
+  max-height: calc(
+    100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom)
+  );
+  min-height: 0;
+  border: 1px solid #81929c;
+  background: #eef3f5;
+  color: #233f50;
+  box-shadow: 0 16px 48px #233f5040;
+}
+.scrap-ideas-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 44px;
+  gap: 1rem;
+  padding: clamp(1rem, 3vw, 1.75rem);
+  border-bottom: 1px solid #d4dfe4;
+  background: #fff;
+  flex-shrink: 0;
+}
+.scrap-ideas-header h2 {
+  font:
+    400 clamp(1.6rem, 4vw, 2rem) / 1.15 Georgia,
+    serif;
+  color: #233f50;
+  margin: 0 0 0.75rem;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+.scrap-ideas-header p {
+  font-size: 0.875rem;
+  color: #53636a;
+  margin: 0;
+  max-width: 60ch;
+}
+.scrap-ideas-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid #81929c;
+  border-radius: 0.3rem;
+  color: #233f50;
+  background: #fff;
+  touch-action: manipulation;
+}
+.scrap-ideas-close:hover {
+  background: #e5eef0;
+}
+.scrap-ideas-scroll {
+  overflow-y: auto;
+  min-height: 0;
+  overscroll-behavior: contain;
+  padding: clamp(0.75rem, 3vw, 1.75rem);
+}
+.scrap-ideas-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.75rem;
+}
+.scrap-idea-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  grid-template-rows: auto 1fr auto;
+  gap: 0.4rem 0.8rem;
+  padding: 0.8rem;
+  min-width: 0;
+  border: 2px solid #d4dfe4;
+  border-radius: 0.4rem;
+  background: #fff;
+  color: #233f50;
+  text-align: left;
+  touch-action: manipulation;
+  cursor: pointer;
+}
+.scrap-idea-card:hover,
+.scrap-idea-card[aria-pressed="true"] {
+  border-color: #233f50;
+  background: #f7fafb;
+}
+.scrap-idea-cover {
+  grid-row: 1 / 4;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  width: 58px;
+  height: 94px;
+  padding: 7px 4px 8px;
+  border: 1px solid #a5b8c2;
+  border-left: 4px solid #233f50;
+  background: #fff;
+  box-shadow: 3px 3px 0 #d4dfe4;
+}
+.scrap-idea-cover > span:first-child {
+  font:
+    400 8px/1.1 Georgia,
+    serif;
+  text-align: center;
+}
+.scrap-idea-cover svg {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+}
+.scrap-idea-cover-sleep svg,
+.scrap-idea-cover-toy svg,
+.scrap-idea-cover-outfit svg {
+  background: #f2dc91;
+  border-radius: 50%;
+  padding: 3px;
+}
+.scrap-idea-cover-lines {
+  width: 70%;
+  height: 5px;
+  border-block: 1px solid #a5b8c2;
+}
+.scrap-idea-card-title {
+  font:
+    400 1.2rem/1.3 Georgia,
+    serif;
+  overflow-wrap: anywhere;
+}
+.scrap-idea-card-copy {
+  font-size: 0.8125rem;
+  line-height: 1.65;
+  color: #53636a;
+  overflow-wrap: anywhere;
+}
+.scrap-idea-selected {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.75rem;
+  color: #233f50;
+}
+.scrap-ideas-header h2:focus-visible {
+  outline: 3px solid #233f50;
+  outline-offset: 4px;
+}
+@media (min-width: 680px) {
+  .scrap-ideas-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 900px) {
+  .scrap-editor {
+    grid-template-columns: minmax(220px, 0.8fr) minmax(0, 1.2fr);
+    gap: 1.25rem 2rem;
+  }
+  .scrap-editor-top {
+    grid-column: 1 / -1;
+  }
+  .scrap-layout-picker {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .scrap-editor-canvas {
+    grid-column: 2;
+    grid-row: 2 / 4;
+  }
+  .scrap-editor-extras {
+    grid-column: 1;
+    grid-row: 3;
+  }
+  .scrap-layout-options > button {
+    min-height: 110px;
+  }
+}
+@media (max-width: 479px) {
+  .scrap-editor .annual-document .scrap-editing-paper {
+    padding: 18px 14px 18px 18px;
+    border-left-width: 8px;
+  }
+  .scrap-editor .scrap-content .scrap-photo-frame img {
+    height: 175px;
+  }
+  .scrap-editor .scrap-layout-story .scrap-photo-frame img {
+    height: 145px;
+  }
+  .scrap-pages-heading .journal-button {
+    font-size: 0.875rem;
+    padding-left: 0.65rem;
+    padding-right: 0.65rem;
+  }
+  .scrap-page-actions > :last-child {
+    margin-left: 0;
+  }
+}

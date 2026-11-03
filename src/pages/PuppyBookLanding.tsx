@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, Camera, ChartNoAxesCombined, PenLine } from "lucide-react";
 import SEO from "@/components/SEO";
+import { BookCoverTrial } from "@/features/annual-book/BookCoverTrial";
 import { MobileOptimizedLayout } from "@/components/MobileOptimizedLayout";
 import bookMockup from "@/assets/puppy-journal-books.webp";
 import shoreIllustration from "@/assets/puppy-journal-shore.webp";
@@ -64,10 +65,10 @@ export default function PuppyBookLanding() {
               pentukirjaan ja kokoa niistä kirja, johon haluat palata.
             </p>
             <div className="book-landing-actions">
-              <Link to="/puppy-book" className="journal-button">
-                Aloita oma pentukirja{" "}
+              <a href="#kokeile-kantta" className="journal-button">
+                Kokeile kirjan kantta{" "}
                 <ArrowRight size={18} aria-hidden="true" />
-              </Link>
+              </a>
               <Link to="/muistokirja" className="book-landing-text-link">
                 Selaa esimerkkikirjaa{" "}
                 <ArrowRight size={18} aria-hidden="true" />
@@ -92,6 +93,8 @@ export default function PuppyBookLanding() {
             </figcaption>
           </figure>
         </section>
+
+        <BookCoverTrial />
 
         <section
           className="book-landing-story"

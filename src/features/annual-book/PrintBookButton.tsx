@@ -2,15 +2,20 @@ import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Printer } from "lucide-react";
 import { AnnualBookDocument } from "./AnnualBookDocument";
-import type { AnnualBook } from "./model";
+import type { AnnualBook, GuidedBookPage } from "./model";
+import type { ScrapbookPage } from "./scrapbook";
 import { encodeBookImage } from "./imageEncoding";
 
 export function PrintBookButton({
   book,
   compact = false,
+  guidedPages,
+  scrapbookPages,
 }: {
   book: AnnualBook;
   compact?: boolean;
+  guidedPages?: GuidedBookPage[];
+  scrapbookPages?: ScrapbookPage[];
 }) {
   const helpId = useId();
   const [printing, setPrinting] = useState(false);
@@ -60,7 +65,11 @@ export function PrintBookButton({
         );
         if (overflowing)
           throw new Error(
-            "Teksti ei mahdu yhdelle kirjan sivulle. Lyhennä pitkää tekstiä Muistot-osiossa tai poista muisto valinnasta ja kokoa kirja uudelleen.",
+            scrapbookPages?.length
+              ? "Sivun sisältö ei mahdu tulosteeseen. Lyhennä otsikkoa tai omia sanoja ja kokeile uudelleen. Luonnoksesi säilyy."
+              : guidedPages?.length
+                ? "Kuvasivun sisältö ei mahdu tulostettavalle sivulle. Lyhennä pisintä vastausta tai kuvan nimeä, päivitä kuvasivu kirjaan ja kokeile uudelleen."
+                : "Teksti ei mahdu yhdelle kirjan sivulle. Lyhennä pitkää tekstiä Muistot-osiossa tai poista muisto valinnasta ja kokoa kirja uudelleen.",
           );
         document.title = `${book.puppyName} - Pentukirja`;
         window.print();
@@ -81,7 +90,7 @@ export function PrintBookButton({
       window.removeEventListener("afterprint", finish);
       document.title = previousTitle;
     };
-  }, [printing, book]);
+  }, [printing, book, guidedPages, scrapbookPages]);
   return (
     <div className="annual-print-actions">
       <button
@@ -116,7 +125,12 @@ export function PrintBookButton({
       {printing &&
         createPortal(
           <div ref={paper} className="annual-print-root">
-            <AnnualBookDocument book={book} standalone />
+            <AnnualBookDocument
+              book={book}
+              standalone
+              guidedPages={guidedPages}
+              scrapbookPages={scrapbookPages}
+            />
           </div>,
           document.body,
         )}

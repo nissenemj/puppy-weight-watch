@@ -55,3 +55,147 @@
  .book-landing-actions > a {flex:1 1 100%;}
  .book-landing-story {gap:2.5rem;padding:2rem 0 3rem;}
 }
+.book-cover-trial {margin:0 0 5rem;padding:clamp(1.25rem, 4vw, 3.5rem);background:var(--journal-soft);border-block:1px solid var(--journal-line);scroll-margin-top:1rem;scroll-margin-bottom:6rem;}
+.book-cover-trial:focus-visible {outline:3px solid var(--journal-ink);outline-offset:4px;}
+.book-cover-trial :is(input, textarea, button, a) {scroll-margin-top:1rem;scroll-margin-bottom:6rem;}
+.book-cover-trial :is(button, a) {touch-action:manipulation;}
+.book-cover-trial > * {min-width:0;}
+.journal-book-landing .book-cover-trial h2 {font-size:clamp(2rem, 3vw, 2.9rem);line-height:1.12;margin:0 0 1rem;max-width:28ch;}
+.book-cover-trial-lead {max-width:58ch;font-size:1rem;line-height:1.8;margin:0 0 1.5rem;}
+.book-cover-trial-tablist {display:flex;gap:0.25rem;border-bottom:1px solid #a8b8c0;margin-bottom:1.5rem;}
+.book-cover-trial-tab {display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;min-height:48px;padding:0.75rem 1rem;border:0;border-bottom:3px solid transparent;background:transparent;color:var(--journal-muted);font-size:0.95rem;font-weight:600;cursor:pointer;touch-action:manipulation;}
+.book-cover-trial-tab[data-state="active"] {border-bottom-color:var(--journal-ink);color:var(--journal-ink);}
+.book-cover-trial-tab:hover {background:#dfe8ed;}
+.book-cover-trial-tab:focus-visible {outline:3px solid var(--journal-ink);outline-offset:3px;}
+.book-cover-trial-panel[data-state="active"] {display:grid;gap:2rem;align-items:start;}
+.book-cover-trial-panel[data-state="inactive"] {display:none;}
+.book-cover-trial-panel > * {min-width:0;}
+.book-cover-trial-panel:focus-visible {outline:3px solid var(--journal-ink);outline-offset:5px;}
+.book-cover-trial-label {display:block;font-size:0.95rem;font-weight:600;margin:1.25rem 0 0.5rem;}
+.book-cover-trial-controls > .book-cover-trial-label:first-child {margin-top:0;}
+.book-cover-trial :is(input[type="text"], textarea) {display:block;width:100%;min-height:48px;padding:0.75rem;background:#fff;color:var(--journal-ink);border:1px solid #81929c;border-radius:0.25rem;font-size:16px;line-height:1.65;}
+.book-cover-trial textarea {resize:vertical;min-height:120px;}
+.book-cover-trial :is(input[type="text"], textarea):focus-visible {outline:3px solid var(--journal-ink);outline-offset:3px;}
+.book-cover-trial .annual-palette-options {margin:0.5rem 0;}
+.book-cover-trial .annual-radio {display:flex;align-items:center;gap:0.5rem;min-height:84px;font-size:0.875rem;font-weight:600;cursor:pointer;background:#fff;}
+.book-cover-trial .annual-radio:has(input:focus-visible) {outline:3px solid var(--journal-ink);outline-offset:4px;}
+.book-cover-trial-hint {font-size:0.875rem;color:var(--journal-muted);margin:0.5rem 0;}
+.book-cover-trial-open {margin-top:1.5rem;white-space:normal;text-align:left;min-height:48px;}
+.book-cover-trial-footer {margin-top:2rem;padding-top:1.5rem;border-top:1px solid #c5d3da;}
+.book-cover-trial-actions {display:flex;flex-direction:column;gap:0.75rem;align-items:stretch;}
+.book-cover-trial-actions .journal-button {justify-content:center;min-height:48px;white-space:normal;text-align:center;}
+.book-cover-trial-actions .annual-reader-trigger {margin:0;}
+.book-cover-trial-disclosure {font-size:0.875rem;line-height:1.7;color:var(--journal-muted);max-width:76ch;margin:1.25rem 0 0;}
+.book-cover-trial-loading {min-height:48px;display:flex;align-items:center;justify-content:center;font-size:0.875rem;}
+.book-cover-trial-error:focus-visible {outline:3px solid var(--journal-ink);outline-offset:4px;}
+.book-cover-trial-preview {padding:0.75rem 0.75rem 0.75rem 0;scroll-margin-top:1rem;}
+.book-cover-trial-preview:focus-visible {outline:3px solid var(--journal-ink);outline-offset:3px;}
+.book-cover-trial-return {display:flex;margin-top:1rem;}
+.book-cover-trial .annual-live-cover {width:min(360px, 100%);margin:0 auto;padding:0;background:transparent;}
+.book-cover-trial .annual-cover-swatch {min-height:470px;padding:2.2rem 1.6rem 1.4rem 2rem;border-left-width:16px;box-shadow:8px 8px 0 #d4dfe4, 9px 9px 0 #81929c;animation:trial-page-turn 300ms ease-out both;transform-origin:left center;}
+.book-cover-trial .annual-cover-swatch .annual-cover-eyebrow {font:400 1.4rem/1.25 Georgia, serif;color:var(--annual-accent);margin-bottom:1rem;}
+.book-cover-trial .annual-cover-swatch .annual-cover-tagline {font-size:0.875rem;}
+.book-cover-trial .annual-live-cover > figcaption {font-size:0.875rem;}
+.book-cover-trial-moments {border:0;padding:0;margin:0;min-width:0;}
+.book-cover-trial-moments legend {margin:0 0 0.75rem;}
+.book-cover-trial-moment-options {display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:0.5rem;}
+.book-cover-trial-moment {position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.4rem;padding:0.85rem 0.25rem;min-height:84px;border:1px solid #81929c;border-radius:0.25rem;background:#fff;font-size:0.875rem;color:var(--journal-ink);cursor:pointer;touch-action:manipulation;}
+.book-cover-trial-moment input {position:absolute;inset:0;width:100%;height:100%;opacity:0;margin:0;cursor:pointer;}
+.book-cover-trial-moment:has(input:checked) {border:2px solid var(--journal-ink);background:#e0ebef;font-weight:600;}
+.book-cover-trial-moment-check {position:absolute;top:0.2rem;right:0.2rem;visibility:hidden;}
+.book-cover-trial-moment:has(input:checked) .book-cover-trial-moment-check {visibility:visible;}
+.book-cover-trial-moment:has(input:focus-visible) {outline:3px solid var(--journal-ink);outline-offset:4px;}
+.book-cover-trial-moment:hover {background:#e0ebef;}
+.book-cover-trial-idea {padding:1rem 0 0.75rem;min-height:130px;border-bottom:1px solid #c5d3da;}
+.book-cover-trial-idea p {font:400 1.25rem/1.45 Georgia, serif;max-width:34ch;margin:0;}
+.book-cover-trial-idea-button {display:inline-flex;align-items:center;gap:0.5rem;min-height:44px;padding:0.5rem 0;border:0;background:transparent;color:var(--journal-ink);text-decoration:underline;text-underline-offset:4px;font-size:0.875rem;cursor:pointer;touch-action:manipulation;}
+.book-cover-trial-idea-button:hover {text-decoration-thickness:2px;}
+.book-cover-trial-idea-button:focus-visible {outline:3px solid var(--journal-ink);outline-offset:3px;}
+.book-cover-trial-collect {margin-top:0.75rem;min-height:48px;}
+.book-cover-trial-feedback {min-height:3.5em;margin:0.75rem 0 0;max-width:48ch;font-size:0.875rem;line-height:1.7;color:var(--journal-muted);}
+.book-cover-trial-memory {--trial-accent:#233f50;}
+.book-cover-trial-memory.annual-palette-forest {--trial-accent:#245246;}
+.book-cover-trial-memory.annual-palette-berry {--trial-accent:#74465c;}
+.book-cover-trial-sheet {width:min(400px, 100%);min-height:500px;margin:0 auto;padding:1.25rem 1.25rem 1rem 1.75rem;border:1px solid #c5d3da;border-left:9px solid var(--trial-accent);background:#fff;box-shadow:6px 6px 0 #d4dfe4, 7px 7px 0 #81929c;animation:trial-page-turn 300ms ease-out both;transform-origin:left center;}
+.book-cover-trial-owner {font-size:0.875rem;line-height:1.5;color:var(--trial-accent);overflow-wrap:anywhere;margin:0 0 1rem;}
+.book-cover-trial-sheet > img {display:block;width:100%;height:190px;}
+.book-cover-trial-photo {object-fit:cover;border-radius:0.125rem;}
+.book-cover-trial-drawing {object-fit:contain;}
+.book-cover-trial-date {font-size:0.875rem;color:var(--journal-muted);margin:1rem 0 0.5rem;}
+.journal-book-landing .book-cover-trial-sheet h3 {font:400 clamp(1.4rem, 2.5vw, 1.8rem) / 1.15 Georgia, serif;color:var(--trial-accent);letter-spacing:-0.025em;margin:0 0 0.75rem;text-wrap:balance;}
+.book-cover-trial-caption {font-size:0.95rem;line-height:1.75;overflow-wrap:anywhere;white-space:pre-wrap;margin:0;}
+.book-cover-trial-stamp-slot {display:flex;justify-content:flex-end;align-items:center;min-height:54px;margin-top:1rem;}
+.book-cover-trial-stamp {display:inline-flex;gap:0.5rem;align-items:center;border:1px solid var(--trial-accent, var(--annual-accent, var(--journal-ink)));border-radius:2rem;padding:0.5rem 0.75rem;color:var(--trial-accent, var(--annual-accent, var(--journal-ink)));font-size:0.875rem;animation:trial-stamp 380ms ease-out both;}
+.book-cover-trial-paper-note {font:italic 1rem/1.5 Georgia, serif;color:var(--journal-muted);}
+.guided-trial-form :is(select, input[type="date"]) {display:block;width:100%;min-width:0;max-width:100%;min-height:48px;padding:0.75rem;border:1px solid #81929c;border-radius:0.25rem;background:#fff;color:var(--journal-ink);font:inherit;font-size:16px;}
+.guided-trial-form :is(select, input[type="date"]):focus-visible {outline:3px solid var(--journal-ink);outline-offset:3px;}
+.guided-trial-photo-idea {font-size:0.95rem;line-height:1.75;margin:1rem 0;max-width:48ch;}
+.guided-trial-photo-actions {display:flex;flex-wrap:wrap;gap:0.5rem;}
+.guided-trial-photo-actions .journal-button {min-height:48px;flex:1;justify-content:center;white-space:normal;}
+.guided-trial-choices {min-width:0;margin:1.5rem 0 1rem;padding:0;border:0;}
+.guided-trial-choices legend, .guided-trial-photo-card legend {font-size:1rem;font-weight:600;line-height:1.5;}
+.guided-trial-choices > .book-cover-trial-hint {margin:0.35rem 0 0.75rem;}
+.guided-trial-choices > div {display:flex;flex-wrap:wrap;gap:0.5rem;}
+.guided-trial-choices label {display:flex;align-items:center;gap:0.6rem;min-height:48px;padding:0.65rem 0.8rem;border:1px solid #81929c;border-radius:0.25rem;background:#fff;color:var(--journal-ink);font-size:0.95rem;line-height:1.45;cursor:pointer;touch-action:manipulation;}
+.guided-trial-choices label:hover {border-color:var(--journal-ink);background:#eef3f5;}
+.guided-trial-choices label:has(input:checked) {border-color:var(--journal-ink);background:#e5eef0;box-shadow:inset 0 0 0 1px var(--journal-ink);}
+.guided-trial-choices label:has(:focus-visible) {outline:3px solid var(--journal-ink);outline-offset:3px;}
+.guided-trial-choices input[type="checkbox"] {appearance:auto;flex:none;width:20px;height:20px;min-height:0;margin:0;padding:0;accent-color:var(--journal-ink);}
+.guided-trial-gallery {min-width:0;}
+.guided-trial-gallery:focus-visible {outline:3px solid var(--journal-ink);outline-offset:5px;}
+.guided-trial-photo-count {font-size:0.875rem;line-height:1.65;color:var(--journal-muted);margin:0.75rem 0 0;}
+.guided-trial-photo-list {display:grid;gap:1rem;margin:0.75rem 0;}
+.guided-trial-photo-card {min-width:0;border:1px solid #c5d3da;padding:1rem;margin:0;background:#f7f9f9;}
+.guided-trial-photo-card > img {display:block;width:100%;height:130px;object-fit:contain;background:#fff;margin:0.25rem 0 1rem;}
+.guided-trial-photo-card .book-cover-trial-label {font-size:0.875rem;}
+.guided-trial-photo-card .guided-trial-photo-actions {margin-top:0.75rem;justify-content:space-between;}
+.guided-trial-photo-card .book-cover-trial-idea-button {min-height:44px;}
+.guided-trial-story-note {padding:0.75rem 0.85rem;border-left:3px solid #81929c;background:#eef3f5;font-size:0.875rem;line-height:1.7;margin:1rem 0;}
+.guided-trial-details {font-size:0.875rem;border-top:1px solid #c5d3da;margin-top:1rem;}
+.guided-trial-details summary {padding:0.75rem 0;min-height:48px;cursor:pointer;text-decoration:underline;text-underline-offset:4px;}
+.guided-trial-form > .book-cover-trial-idea-button {display:flex;margin-top:0.25rem;}
+.guided-trial-error {padding:0.75rem;color:#871f36;background:#fff3f4;border:1px solid #d6a4ac;font-size:0.875rem;margin:0.75rem 0;}
+.guided-trial-preview .annual-document .annual-sheet {margin:0 auto;max-width:420px;padding:24px 22px 22px 26px;border-left-width:10px;box-shadow:6px 6px 0 #d4dfe4, 7px 7px 0 #81929c;animation:trial-page-turn 300ms ease-out both;transform-origin:left center;}
+.guided-trial-preview .annual-document .annual-kicker {font-size:14px;}
+.guided-trial-preview .annual-guided-photo img {height:180px;}
+.guided-trial-library {grid-column:1 / -1;margin-top:0.5rem;border-top:1px solid #c5d3da;padding-top:0.5rem;}
+.guided-trial-library > summary {min-height:48px;padding:0.75rem 0;font-size:1rem;font-weight:600;cursor:pointer;}
+.guided-trial-library > p {font-size:0.95rem;line-height:1.75;max-width:72ch;}
+.guided-trial-library > ol {list-style:none;padding:0;margin:1.5rem 0 0;display:grid;gap:1.5rem;}
+.journal-book-landing .guided-trial-library h3 {font:400 1.35rem/1.3 Georgia, serif;letter-spacing:-0.025em;margin:0 0 0.75rem;}
+.guided-trial-library li ul {list-style:disc;margin:0;padding-left:1.15rem;font-size:0.9rem;line-height:1.85;}
+@keyframes trial-page-turn {
+ from {opacity:0;transform:perspective(1000px) rotateY(-8deg);}
+ to {opacity:1;transform:perspective(1000px) rotateY(0);}
+}
+@keyframes trial-stamp {
+ from {opacity:0;transform:scale(1.15) rotate(-8deg);}
+ to {opacity:1;transform:scale(1) rotate(-4deg);}
+}
+@media (prefers-reduced-motion: reduce) {
+ .book-cover-trial :is( .annual-cover-swatch, .book-cover-trial-sheet, .book-cover-trial-stamp, .guided-trial-preview .annual-document .annual-sheet ) {animation:none;}
+}
+@media (min-width: 600px) {
+ .book-cover-trial-actions {flex-direction:row;flex-wrap:wrap;}
+ .book-cover-trial-actions > :is(button, a) {flex:1 1 250px;}
+ .guided-trial-library > ol {grid-template-columns:repeat(2, minmax(0, 1fr));}
+}
+@media (min-width: 900px) {
+ .book-cover-trial-panel[data-state="active"] {grid-template-columns:minmax(0, 1fr) minmax(0, 1fr);column-gap:clamp(2rem, 5vw, 5rem);}
+ .book-cover-trial-preview {position:sticky;top:7rem;}
+ .book-cover-trial-return {display:none;}
+}
+@media (max-width: 479px) {
+ .book-cover-trial {padding:1rem;}
+ .book-cover-trial-tab {padding:0.75rem 0.3rem;font-size:0.875rem;flex:1;gap:0.25rem;}
+ .book-cover-trial-tab > svg {display:none;}
+ .book-cover-trial .annual-cover-swatch {min-height:380px;padding:1.5rem 1rem 1rem 1.25rem;}
+ .book-cover-trial .annual-cover-swatch img {height:160px;}
+ .book-cover-trial-moment-options {gap:0.4rem;}
+ .book-cover-trial-moment {font-size:0.875rem;}
+ .book-cover-trial-collect {width:100%;justify-content:center;white-space:normal;}
+ .book-cover-trial-sheet {padding:1rem 0.85rem 0.75rem 1.1rem;}
+ .book-cover-trial-sheet > img {height:160px;}
+ .guided-trial-preview .annual-document .annual-sheet {padding:18px 14px 18px 18px;border-left-width:8px;}
+ .guided-trial-preview .annual-document .annual-guided-title {font-size:26px;}
+}
