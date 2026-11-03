@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowLeft,
@@ -10,6 +9,16 @@ import {
 import SEO from "@/components/SEO";
 import puppyHome from "@/assets/puppy-home-1200.webp";
 import puppyHomeSmall from "@/assets/puppy-home-640.webp";
+import {
+  usePreparation,
+  preparationReady,
+  togglePreparation,
+} from "@/features/preparation/usePreparation";
+import {
+  PreparationStatus,
+  PreparationHome,
+  PreparationMemory,
+} from "@/features/preparation/PreparationSections";
 import "@/styles/puppy-journal.css";
 
 const essentials = [
@@ -69,7 +78,7 @@ const essentials = [
       "Siirrä vaaralliset esineet pennun ulottumattomiin. Suunnittele turvallinen kotimatka ja sovi perheen arjen käytännöistä.",
     tip: "Valmistautuminen on myös aikaa, tilaa ja yhteisiä sopimuksia.",
   },
-];
+] as const;
 
 // Existing affiliate campaigns, reused without invented product prices or deep links.
 const partners = [
@@ -84,13 +93,18 @@ const partners = [
 ];
 
 export default function PuppyStarterGuide() {
-  const [checked, setChecked] = useState<string[]>([]);
+  const preparation = usePreparation();
+  const checked = preparation.document.checked;
+  const ready = preparationReady(preparation);
+  const shoppingCount = essentials.filter((item) =>
+    checked.includes(item.id),
+  ).length;
 
   return (
-    <div className="puppy-journal starter-guide">
+    <div className="puppy-journal starter-guide preparation-guide">
       <SEO
-        title="Koiranpennun hankinnat: tarkistuslista uuteen kotiin"
-        description="Mitä koiranpennulle kannattaa hankkia? Käytännöllinen tarkistuslista, valintavinkit ja tilaa harkituille hankinnoille."
+        title="Pennun tuloon valmistautuminen ja hankintalista"
+        description="Valmistele koti, sovi perheen arki ja kokoa pennun perustarvikkeet. Tallentuva valmistautumislista ja ensimmäinen oma kuvasivu pentukirjaan."
       />
       <Link className="journal-back" to="/guides">
         <ArrowLeft size={16} aria-hidden="true" /> Takaisin oppaisiin
@@ -102,14 +116,14 @@ export default function PuppyStarterGuide() {
             <ShoppingBag size={18} aria-hidden="true" /> Valmiina pennun tuloon
           </p>
           <h1 id="starter-title" className="journal-title">
-            Hyvä alku alkaa pienistä hankinnoista.
+            Pentu tulee kotiin.
           </h1>
           <p className="journal-lead">
-            Kokoa pennulle arjen perustarvikkeet. Aloita tarpeellisista ja
-            täydennä, kun opit tuntemaan uuden perheenjäsenesi.
+            Tee kodista pennulle hyvä paikka. Sopikaa arjen käytännöt, kokoa
+            perustarvikkeet ja tallenna ensimmäinen muisto jo odottaessa.
           </p>
-          <a className="journal-button" href="#hankintalista">
-            Avaa hankintalista <ArrowRight size={18} aria-hidden="true" />
+          <a className="journal-button" href="#kotikierros">
+            Aloita kotikierros <ArrowRight size={18} aria-hidden="true" />
           </a>
           <p className="journal-note">
             Lista on käytettävissä ilman kirjautumista.
@@ -129,12 +143,25 @@ export default function PuppyStarterGuide() {
         </figure>
       </section>
 
+      <nav
+        className="preparation-navigation"
+        aria-label="Valmistautumisoppaan osiot"
+      >
+        <a href="#kotikierros">Kotikierros</a>
+        <a href="#perheen-arki">Perheen arki</a>
+        <a href="#hankintalista">Hankintalista</a>
+        <a href="#ensimmainen-sivu">Ensimmäinen kirjasivu</a>
+      </nav>
+      <PreparationStatus controller={preparation} />
+
       <aside className="journal-disclosure" aria-label="Tietoa mainoslinkeistä">
         <strong>Sisältää mainoslinkkejä.</strong> Sivun lopussa on linkkejä
         Peten Koiratarvikkeeseen ja Koiratarvike Haukkulaan. Voimme saada
         ostoksesta palkkion. Lista ei ole tuotetesti eikä kauppojen
         hintavertailu.
       </aside>
+
+      <PreparationHome controller={preparation} />
 
       <div className="starter-content">
         <section
@@ -147,12 +174,12 @@ export default function PuppyStarterGuide() {
             <div>
               <h2 id="checklist-title">Pennun hankintalista</h2>
               <p>
-                Merkitse valmiit kohdat. Valinnat ovat käytössä tällä sivulla,
-                kunnes poistut tai päivität sivun.
+                Tarkista ensin, mitä teillä jo on. Merkitse valmiit kohdat. Voit
+                palata täydentämään listaa myöhemmin.
               </p>
             </div>
             <p className="journal-count" role="status" aria-live="polite">
-              {checked.length}/{essentials.length} valmiina
+              {shoppingCount}/{essentials.length} valmiina
             </p>
           </div>
           <div className="starter-checklist">
@@ -163,12 +190,14 @@ export default function PuppyStarterGuide() {
               >
                 <input
                   type="checkbox"
+                  name={`preparation-${item.id}`}
+                  disabled={!ready}
                   checked={checked.includes(item.id)}
                   onChange={(event) =>
-                    setChecked((current) =>
-                      event.target.checked
-                        ? [...current, item.id]
-                        : current.filter((id) => id !== item.id),
+                    togglePreparation(
+                      preparation,
+                      item.id,
+                      event.target.checked,
                     )
                   }
                   aria-label={item.title}
@@ -205,12 +234,13 @@ export default function PuppyStarterGuide() {
               huolletaan?
             </li>
           </ul>
-          <Link className="journal-text-link" to="/guides/safety">
-            Lue myös kodin turvallisuudesta{" "}
-            <ArrowRight size={16} aria-hidden="true" />
-          </Link>
+          <a className="journal-text-link" href="#kotikierros">
+            Palaa kotikierrokseen <ArrowRight size={16} aria-hidden="true" />
+          </a>
         </aside>
       </div>
+
+      <PreparationMemory controller={preparation} />
 
       <section className="journal-section" aria-labelledby="stores-title">
         <h2 id="stores-title">Kun tiedät, mitä tarvitset</h2>
@@ -241,10 +271,10 @@ export default function PuppyStarterGuide() {
 
       <section className="journal-callout" aria-labelledby="first-memory-title">
         <div>
-          <h2 id="first-memory-title">Ensimmäinen päivä on jo muisto.</h2>
+          <h2 id="first-memory-title">Tältä oma pentukirja voisi näyttää.</h2>
           <p>
-            Tallenna pentukirjaan kuva kotiintulosta ja muutama sana yhteisen
-            arjen alusta.
+            Selaa kuvitettua esimerkkikirjaa ja löydä ideoita teidän yhteisen
+            tarinanne tallentamiseen.
           </p>
         </div>
         <Link className="journal-button journal-button-light" to="/muistokirja">
@@ -257,11 +287,12 @@ export default function PuppyStarterGuide() {
         className="journal-sources"
         aria-labelledby="guide-sources-title"
       >
-        <h2 id="guide-sources-title">Mihin lista perustuu?</h2>
+        <h2 id="guide-sources-title">Mihin opas perustuu?</h2>
         <p>
-          Perustarvikkeiden taustana ovat Kennelliiton ohjeet. Sivun ryhmittely
-          ja ostamisen tarkistuskysymykset ovat Pentulaskurin toimituksellisia
-          valintoja. Tarkistettu 26.10.2026.
+          Perustarvikkeiden ja kodin järjestelyn taustana ovat Kennelliiton
+          Hankikoira-ohjeet. Tarkistuslistojen ryhmittely, työnjaon kentät ja
+          kirjasivun idea ovat Pentulaskurin toimituksellisia valintoja. Lähteet
+          tarkistettu 3.11.2026.
         </p>
         <ul>
           <li>
@@ -270,8 +301,8 @@ export default function PuppyStarterGuide() {
             </a>
           </li>
           <li>
-            <a href="https://www.kennelliitto.fi/elamaa-koiran-kanssa/pentu-tulee-taloon/">
-              Kennelliitto: Pentu tulee taloon
+            <a href="https://www.hankikoira.fi/koiratietoa/koira-kotona">
+              Hankikoira: Koira kotona
             </a>
           </li>
         </ul>

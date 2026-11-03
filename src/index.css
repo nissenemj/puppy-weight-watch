@@ -100,6 +100,16 @@
     font-size: 16px !important;
   }
 
+  /* Book text stays editable at its printed hierarchy, above the iOS minimum. */
+  .book-cover-trial .scrap-editor .scrap-inline-title {
+    font-size: clamp(1.6rem, 3vw, 2rem) !important;
+    padding: 6px 0 !important;
+  }
+  .book-cover-trial .scrap-editor .scrap-inline-field {
+    font-size: 18px !important;
+    padding: 6px 0 !important;
+  }
+
   /* Ensure touch targets are minimum 44x44px */
   .touch-target {
     min-height: 44px;

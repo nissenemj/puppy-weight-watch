@@ -16,17 +16,17 @@ export default function Guides() {
   const guides = [
     {
       icon: CheckCircle,
-      title: "Pennun hankintalista",
+      title: "Pennun tuloon valmistautuminen",
       description:
-        "Mitä pentu tarvitsee uuteen kotiin? Merkitse hankinnat ja tutustu valintavinkkeihin.",
+        "Valmistele koti, sovi perheen arki ja kokoa perustarvikkeet. Tallenna ensimmäinen kuvasivu pentukirjaan.",
       href: "/guides/pennun-hankinnat",
       badge: "Tarkistuslista",
       color: "primary",
       features: [
-        "Perustarvikkeet",
-        "Valintavinkit",
-        "Kodin valmistelu",
-        "Mainoslinkit",
+        "Kotikierros",
+        "Perheen arki",
+        "Hankintalista",
+        "Ensimmäinen kirjasivu",
       ],
     },
     {

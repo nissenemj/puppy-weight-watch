@@ -3,22 +3,35 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { ArrowLeft, ArrowRight, BookOpen, X } from "lucide-react";
 import { AnnualBookDocument } from "./AnnualBookDocument";
 import { PrintBookButton } from "./PrintBookButton";
-import { buildBookPages, type AnnualBook } from "./model";
+import { buildBookPages, type AnnualBook, type GuidedBookPage } from "./model";
+import type { ScrapbookPage } from "./scrapbook";
 
 interface BookReaderProps {
   book: AnnualBook;
   pageIndex: number;
   onPageChange: (index: number) => void;
   canPrint: boolean;
+  triggerLabel?: string;
+  initiallyOpen?: boolean;
+  notice?: string;
+  guidedPages?: GuidedBookPage[];
+  scrapbookPages?: ScrapbookPage[];
 }
+const NO_GUIDED_PAGES: GuidedBookPage[] = [];
+const NO_SCRAPBOOK_PAGES: ScrapbookPage[] = [];
 
 export function BookReader({
   book,
   pageIndex,
   onPageChange,
   canPrint,
+  triggerLabel = "Avaa lukutila",
+  initiallyOpen = false,
+  notice,
+  guidedPages = NO_GUIDED_PAGES,
+  scrapbookPages = NO_SCRAPBOOK_PAGES,
 }: BookReaderProps) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(initiallyOpen);
   const [spread, setSpread] = useState(
     () => window.matchMedia("(min-width: 1024px)").matches,
   );
@@ -31,7 +44,7 @@ export function BookReader({
     query.addEventListener("change", change);
     return () => query.removeEventListener("change", change);
   }, []);
-  const pages = buildBookPages(book);
+  const pages = buildBookPages(book, guidedPages, scrapbookPages);
   const selected = Math.max(0, Math.min(pageIndex, pages.length - 1));
   const first =
     spread && selected > 0 && selected % 2 === 0 ? selected - 1 : selected;
@@ -53,7 +66,7 @@ export function BookReader({
           type="button"
           className="journal-button journal-button-secondary annual-reader-trigger"
         >
-          <BookOpen size={18} aria-hidden="true" /> Avaa lukutila
+          <BookOpen size={18} aria-hidden="true" /> {triggerLabel}
         </button>
       </Dialog.Trigger>
       <Dialog.Portal>
@@ -71,9 +84,17 @@ export function BookReader({
                 {book.design?.title.trim() ||
                   `${book.puppyName}: Pennun ensimmäinen vuosi`}
               </Dialog.Title>
+              {notice && <p className="book-reader-note">{notice}</p>}
             </div>
             <div className="book-reader-actions">
-              {canPrint && <PrintBookButton book={book} compact />}
+              {canPrint && (
+                <PrintBookButton
+                  book={book}
+                  compact
+                  guidedPages={guidedPages}
+                  scrapbookPages={scrapbookPages}
+                />
+              )}
               <Dialog.Close className="journal-button journal-button-secondary">
                 <X size={18} aria-hidden="true" /> Sulje
               </Dialog.Close>
@@ -111,9 +132,19 @@ export function BookReader({
             <div
               className={`book-reader-pages ${last > first ? "book-reader-spread" : "book-reader-single"}`}
             >
-              <AnnualBookDocument book={book} pageIndex={first} />
+              <AnnualBookDocument
+                book={book}
+                pageIndex={first}
+                guidedPages={guidedPages}
+                scrapbookPages={scrapbookPages}
+              />
               {last > first && (
-                <AnnualBookDocument book={book} pageIndex={last} />
+                <AnnualBookDocument
+                  book={book}
+                  pageIndex={last}
+                  guidedPages={guidedPages}
+                  scrapbookPages={scrapbookPages}
+                />
               )}
             </div>
           </div>

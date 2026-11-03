@@ -3,8 +3,14 @@ import {
   buildBookPages,
   DEFAULT_BOOK_DESIGN,
   formatDay,
+  splitCaption,
   type AnnualBook,
+  type GuidedBookPage as GuidedPage,
 } from "./model";
+import { GuidedBookPage } from "./GuidedBookPage";
+import { guidedPageTemplates } from "./guidedPages";
+import { SCRAPBOOK_TOPICS, type ScrapbookPage } from "./scrapbook";
+import { ScrapbookPageContent } from "./ScrapbookPage";
 import { documentStyles } from "./documentStyles";
 import { BookGrowthChart, BookWeightTable } from "./BookGrowthChart";
 import journalIllustration from "@/assets/puppy-journal-lake.webp";
@@ -15,12 +21,16 @@ export function AnnualBookDocument({
   book,
   pageIndex,
   standalone = false,
+  guidedPages = [],
+  scrapbookPages = [],
 }: {
   book: AnnualBook;
   pageIndex?: number;
   standalone?: boolean;
+  guidedPages?: GuidedPage[];
+  scrapbookPages?: ScrapbookPage[];
 }) {
-  const allPages = buildBookPages(book);
+  const allPages = buildBookPages(book, guidedPages, scrapbookPages);
   const design = book.design ?? DEFAULT_BOOK_DESIGN;
   const pages =
     pageIndex === undefined
@@ -39,11 +49,32 @@ export function AnnualBookDocument({
           <article
             key={page.key}
             className={`annual-sheet annual-page-${page.kind}`}
+            data-scrapbook-section={page.scrapbookSection}
+            data-brief-photo={
+              page.scrapbookSection === "full" &&
+              page.scrapbook &&
+              !page.scrapbook.quote &&
+              splitCaption(
+                `${page.title}\n${page.scrapbook.caption}`,
+                false,
+                4,
+                4,
+              ).length === 1
+                ? "true"
+                : undefined
+            }
             aria-label={`${page.title}, sivu ${index + 1}`}
           >
             <header className="annual-page-header">
               <p className="annual-kicker">
-                {book.puppyName} · {formatDay(book.start)}–{formatDay(book.end)}
+                {book.puppyName} ·{" "}
+                {guidedPages.length || scrapbookPages.length
+                  ? page.scrapbook
+                    ? SCRAPBOOK_TOPICS[page.scrapbook.topic].name
+                    : page.guided
+                      ? guidedPageTemplates[page.guided.templateId].chapter
+                      : "Oma pentukirja"
+                  : `${formatDay(book.start)}–${formatDay(book.end)}`}
               </p>
               <Heading>{page.title}</Heading>
             </header>
@@ -55,7 +86,27 @@ export function AnnualBookDocument({
                 <p className="annual-cover-subtitle">
                   Kuvia, kasvua ja yhteisiä kommelluksia.
                 </p>
+                {book.isExample && (
+                  <p className="annual-cover-subtitle">
+                    Kuvitteellinen esimerkkikirja. Kuvat on luotu tekoälyllä ja
+                    painot ovat esimerkkilukuja.
+                  </p>
+                )}
               </>
+            )}
+            {page.guided && (
+              <GuidedBookPage
+                page={page.guided}
+                photoIndex={page.guidedPhotoIndex}
+                section={page.guidedSection}
+              />
+            )}
+            {page.scrapbook && (
+              <ScrapbookPageContent
+                page={page.scrapbook}
+                section={page.scrapbookSection}
+                partText={page.text}
+              />
             )}
             <div
               className={
@@ -177,7 +228,11 @@ export function AnnualBookDocument({
               </>
             )}
             <p className="annual-footer">
-              <span>Pentukirja · Pentulaskuri</span>
+              <span>
+                {book.isExample
+                  ? "Esimerkkikirja · Pentulaskuri"
+                  : "Pentukirja · Pentulaskuri"}
+              </span>
               <span>
                 {index + 1} / {allPages.length}
               </span>
