@@ -41,7 +41,14 @@ export function BookCoverPreview({
               height={1000}
             />
           ) : (
-            <img src={journalIllustration} width={1000} height={1000} alt="" />
+            <img
+              src={journalIllustration}
+              width={1000}
+              height={1000}
+              loading="lazy"
+              decoding="async"
+              alt=""
+            />
           )}
         </div>
         {day.safeParse(start).success && day.safeParse(end).success && (

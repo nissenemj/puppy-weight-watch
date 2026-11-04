@@ -1,13 +1,6 @@
 import { Link } from "react-router-dom";
-import {
-  Dog,
-  Users,
-  Shield,
-  Utensils,
-  ArrowRight,
-  CheckCircle,
-  Brain,
-} from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { GuideIllustration } from "@/components/GuideIllustration";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import { PageIntro } from "@/components/PageIntro";
@@ -15,7 +8,7 @@ import { PageIntro } from "@/components/PageIntro";
 export default function Guides() {
   const guides = [
     {
-      icon: CheckCircle,
+      artwork: "home",
       title: "Pennun tuloon valmistautuminen",
       description:
         "Valmistele koti, sovi perheen arki ja kokoa perustarvikkeet. Tallenna ensimmäinen kuvasivu pentukirjaan.",
@@ -30,17 +23,16 @@ export default function Guides() {
       ],
     },
     {
-      icon: Dog,
-      title: "Pentuopas",
-      description:
-        "Kattava opas koiranpennun hoitamiseen, kasvatukseen ja hyvinvointiin",
+      artwork: "feeding",
+      title: "Pennun ruokintaopas",
+      description: "Ravintoaineet, ruokintarutiinit ja pennun kasvu.",
       href: "/guides/puppy-guide",
       badge: "Suosittu",
       color: "primary",
       features: ["Ruokinta", "Liikunta", "Koulutus", "Terveys"],
     },
     {
-      icon: Users,
+      artwork: "socialization",
       title: "Sosialisaatio-opas",
       description:
         "Opettele sosialisoimaan pentusi turvallisesti ja tehokkaasti",
@@ -50,21 +42,17 @@ export default function Guides() {
       features: ["Muut koirat", "Ihmiset", "Ympäristöt", "Äänimaisema"],
     },
     {
-      icon: Shield,
+      artwork: "safety",
       title: "Turvallisuusopas",
-      description: "Tee kodistasi turvallinen ja mukava paikka koiranpennulle",
+      description:
+        "Ruokinnan turvallisuus, yksilöllinen neuvonta ja ajankohtaiset tiedotteet.",
       href: "/guides/safety",
       badge: "Välttämätön",
       color: "warning",
-      features: [
-        "Kodin turvaaminen",
-        "Myrkylliset kasvit",
-        "Ensiapuohjeet",
-        "Varusteet",
-      ],
+      features: ["Ruokinta", "Eläinlääkärin neuvonta", "Tiedotteet"],
     },
     {
-      icon: Utensils,
+      artwork: "feeding",
       title: "Ruokintaohjeet",
       description: "Tietoa koiranpennun ruokinnasta ja ruokamääristä",
       href: "/guides/feeding",
@@ -73,7 +61,7 @@ export default function Guides() {
       features: ["Ruokamäärät", "Ruokinta-ajat", "Ruokavalio", "Herkut"],
     },
     {
-      icon: Brain,
+      artwork: "relaxation",
       title: "Rentoutusprotokolla",
       description:
         "Karen Overallin 15 päivän ohjelma koiran rauhoittamiseen ja impulssikontrolliin",
@@ -87,7 +75,7 @@ export default function Guides() {
         "15 päivän ohjelma",
       ],
     },
-  ];
+  ] as const;
 
   return (
     <div className="site-page site-guides">
@@ -102,9 +90,14 @@ export default function Guides() {
         description="Hankinnat, ensimmäiset yhteiset viikot ja uudet taidot. Löydä teille ajankohtainen opas."
       />
       <section aria-label="Kaikki pentuoppaat" className="site-guide-links">
-        {guides.map(({ icon: Icon, title, description, href, features }) => (
+        {guides.map(({ artwork, title, description, href, features }) => (
           <article className="site-guide-link" key={href}>
-            <Icon size={28} strokeWidth={1.5} aria-hidden="true" />
+            <GuideIllustration
+              artwork={artwork}
+              decorative
+              caption={false}
+              sizes="(min-width: 1280px) 544px, (min-width: 768px) calc((100vw - 96px) / 2), calc(100vw - 40px)"
+            />
             <div>
               <h2>{title}</h2>
               <p>{description}</p>
@@ -120,6 +113,9 @@ export default function Guides() {
           </article>
         ))}
       </section>
+      <p className="guide-index-caption">
+        Oppaiden kuvat on luotu tekoälyllä kuvitukseksi.
+      </p>
       <Footer />
     </div>
   );

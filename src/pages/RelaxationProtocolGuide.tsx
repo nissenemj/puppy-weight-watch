@@ -1,3 +1,4 @@
+import { IllustratedGuideIntro } from "@/components/GuideIllustration";
 import React from 'react';
 import { MobileOptimizedLayout } from '@/components/MobileOptimizedLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,7 +14,8 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import SEO from '@/components/SEO';
 import { createArticleSchema, createBreadcrumbSchema } from '@/utils/structuredData';
-import heroImage from '@/assets/relaxation-protocol-infographic.jpg';
+import { guideArtwork } from '@/data/guideArtwork';
+const heroImage = guideArtwork.relaxation.src;
 
 const RelaxationProtocolGuide = () => {
   const structuredData = [
@@ -64,16 +66,11 @@ const RelaxationProtocolGuide = () => {
       <div className="min-h-screen bg-background page-with-navigation w-full overflow-x-hidden">
         <Navigation />
         <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-full min-w-0 space-y-8">
-          {/* Hero Section with infographic */}
-          <div className="rounded-2xl overflow-hidden mb-12">
-            <div className="relative">
-              <img
-                src={heroImage}
-                alt="Karen Overallin Rentoutusprotokolla - Visuaalinen opas rauhalliseen koiraan"
-                className="w-full h-auto"
-              />
-            </div>
-          </div>
+          <IllustratedGuideIntro
+            title="Rentoutusprotokolla"
+            description="Harjoittelun rakenne, rauhallinen paikka ja eteneminen omaan tahtiin. Tutustu oppaaseen aihe kerrallaan."
+            artwork="relaxation"
+          />
 
           {/* Quick Navigation */}
           <InfoCard

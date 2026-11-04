@@ -3,20 +3,27 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { AnnualBookDocument } from "./AnnualBookDocument";
 import { buildBookPages, type AnnualBook } from "./model";
 import { BookReader } from "./BookReader";
+import type { ScrapbookPage } from "./scrapbook";
+
+const NO_SCRAPBOOK_PAGES: ScrapbookPage[] = [];
 
 export function AnnualBookPreview({
   book,
   pageIndex,
   onPageChange,
   canPrint = true,
+  scrapbookPages = NO_SCRAPBOOK_PAGES,
+  notice,
 }: {
   book: AnnualBook;
   pageIndex: number;
   onPageChange: (index: number) => void;
   canPrint?: boolean;
+  scrapbookPages?: ScrapbookPage[];
+  notice?: string;
 }) {
   const id = useId();
-  const pages = buildBookPages(book);
+  const pages = buildBookPages(book, [], scrapbookPages);
   const index = Math.max(0, Math.min(pageIndex, pages.length - 1));
   return (
     <div className="annual-preview">
@@ -25,6 +32,8 @@ export function AnnualBookPreview({
         pageIndex={index}
         onPageChange={onPageChange}
         canPrint={canPrint}
+        scrapbookPages={scrapbookPages}
+        notice={notice}
       />
       <nav className="annual-pagination" aria-label="Kirjan esikatselun sivut">
         <button
@@ -64,7 +73,11 @@ export function AnnualBookPreview({
       <p className="annual-page-status" role="status">
         Sivu {index + 1} / {pages.length}
       </p>
-      <AnnualBookDocument book={book} pageIndex={index} />
+      <AnnualBookDocument
+        book={book}
+        pageIndex={index}
+        scrapbookPages={scrapbookPages}
+      />
     </div>
   );
 }

@@ -1004,7 +1004,7 @@ test("the shared sample layout prints only book pages and restores keyboard focu
   });
   await page.goto("/muistokirja?sivu=kommellus");
   await expect(
-    page.getByRole("heading", { name: "Kuukauden kommellus", exact: true }),
+    page.getByRole("heading", { name: "Tapaus kadonnut sukka", exact: true }),
   ).toBeVisible();
   await page
     .getByRole("button", { name: "Tulosta tai tallenna PDF", exact: true })
@@ -1018,7 +1018,10 @@ test("the shared sample layout prints only book pages and restores keyboard focu
   await expect(page.locator("body > #root")).toBeHidden();
   await expect(page.locator(".annual-print-root")).toBeVisible();
   const sheets = page.locator(".annual-print-root .annual-sheet");
-  await expect(sheets).toHaveCount(8);
+  await expect(sheets).toHaveCount(13);
+  await expect(
+    page.locator(".annual-print-root .annual-page-cover"),
+  ).toContainText("Kuvat on luotu tekoälyllä ja painot ovat esimerkkilukuja.");
   expect(
     await sheets.evaluateAll((elements) =>
       elements
@@ -1079,18 +1082,24 @@ for (const width of [320, 768, 1024, 1440]) {
       width >= 1024 ? 2 : 1,
     );
     await expect(reader.getByRole("status")).toHaveText(
-      width >= 1024 ? "Sivut 2–3 / 8" : "Sivu 2 / 8",
+      width >= 1024 ? "Sivut 2–3 / 13" : "Sivu 2 / 13",
     );
     await reader
       .getByLabel("Valitse lukutilan sivu", { exact: true })
-      .selectOption("3");
+      .selectOption("5");
     await expect(
-      reader.getByRole("heading", { name: "Kuukauden kommellus", exact: true }),
+      reader.getByRole("heading", {
+        name: "Tapaus kadonnut sukka",
+        exact: true,
+      }),
     ).toBeVisible();
     await expect(
-      reader.locator(".annual-mishap-illustration img"),
+      reader.getByRole("img", {
+        name: "Piirretty kultainennoutajan pentu kantaa harmaata sukkaa. Tekoälyllä luotu kuvitus.",
+        exact: true,
+      }),
     ).toBeVisible();
-    await expect(reader.getByLabel("Valitse lukutilan sivu")).toHaveValue("3");
+    await expect(reader.getByLabel("Valitse lukutilan sivu")).toHaveValue("5");
     const violations = await new AxeBuilder({ page })
       .include(".book-reader")
       .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
@@ -1136,7 +1145,7 @@ for (const width of [320, 768, 1024, 1440]) {
         .poll(() => canvas.evaluate((element) => element.scrollTop))
         .toBe(0);
     }
-    await reader.getByLabel("Valitse lukutilan sivu").selectOption("7");
+    await reader.getByLabel("Valitse lukutilan sivu").selectOption("12");
     await expect(
       reader.getByRole("button", { name: "Seuraava lukusivu", exact: true }),
     ).toBeDisabled();
@@ -1146,7 +1155,7 @@ for (const width of [320, 768, 1024, 1440]) {
     await expect(trigger).toBeFocused();
     await expect(
       page.getByLabel("Valitse kirjan sivu", { exact: true }),
-    ).toHaveValue("7");
+    ).toHaveValue("12");
   });
 }
 
@@ -1173,7 +1182,9 @@ test("printing from the reader isolates all book pages and returns focus inside 
       page.evaluate(() => document.documentElement.dataset.readerPrint),
     )
     .toBe("true");
-  await expect(page.locator(".annual-print-root .annual-sheet")).toHaveCount(8);
+  await expect(page.locator(".annual-print-root .annual-sheet")).toHaveCount(
+    13,
+  );
   await page.emulateMedia({ media: "print" });
   await expect(reader).toBeHidden();
   await expect(page.locator(".annual-print-root")).toBeVisible();

@@ -1,3 +1,4 @@
+import { IllustratedGuideIntro } from "@/components/GuideIllustration";
 import React from 'react';
 import { MobileOptimizedLayout } from '@/components/MobileOptimizedLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -15,7 +16,8 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import SEO from '@/components/SEO';
 import { createArticleSchema, createBreadcrumbSchema } from '@/utils/structuredData';
-import puppyCareGuide from '@/assets/puppy-care-guide.jpg';
+import { guideArtwork } from '@/data/guideArtwork';
+const puppyCareGuide = guideArtwork.feeding.src;
 
 const PuppyGuide = () => {
   const structuredData = [
@@ -46,38 +48,11 @@ const PuppyGuide = () => {
 
           <div className="lg:grid lg:grid-cols-[1fr_160px] lg:gap-8">
             <div className="space-y-8 min-w-0">
-              {/* Video Hero Section */}
-              <div className="relative rounded-2xl overflow-hidden mb-12 h-60 sm:h-72 md:h-80">
-                {/* Video Background */}
-                <video
-                  autoPlay
-                  muted
-                  playsInline
-                  className="absolute inset-0 w-full h-full object-cover"
-                  onEnded={(e) => {
-                    // Pysäytä viimeiseen ruutuun
-                    const video = e.currentTarget;
-                    video.currentTime = video.duration;
-                  }}
-                >
-                  <source src="/videos/Pennut_nakertavat_kirjoja_videoksi.mp4" type="video/mp4" />
-                </video>
-
-                {/* Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-
-                {/* Hero Content */}
-                <div className="absolute inset-0 flex items-center justify-center z-10">
-                  <div className="text-center space-y-3 px-4">
-                    <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-heading font-bold text-white drop-shadow-lg">
-                      Kattava opas pennun ruokintaan
-                    </h1>
-                    <h2 className="text-xl md:text-2xl lg:text-3xl font-semibold text-white/95 drop-shadow">
-                      Selviydy, menesty ja kasvata terve aikuinen
-                    </h2>
-                  </div>
-                </div>
-              </div>
+              <IllustratedGuideIntro
+                title="Kattava opas pennun ruokintaan"
+                description="Ravintoaineet, ruokintarutiinit ja pennun kasvu. Tutustu oppaan aiheisiin ja etsi arkeenne sopiva lähtökohta."
+                artwork="feeding"
+              />
 
               <InfoCard
                 title="Pika-navigaatio"
