@@ -17,9 +17,6 @@ const picture = async () => ({
 });
 async function openEditor(page: Page) {
   await page.goto("/puppy-book-landing#kokeile-kantta");
-  await studio(page)
-    .getByRole("tab", { name: "Leikekirja", exact: true })
-    .click();
   await expect(
     editor(page).getByRole("button", { name: /^(Valitse|Vaihda) kuva$/ }),
   ).toBeEnabled();
@@ -126,11 +123,9 @@ for (const width of [320, 768, 1024, 1440]) {
         .locator(".annual-sheet")
         .screenshot({ path: testInfo.outputPath(`${slug}-${width}.png`) });
       if (process.env.SCRAPBOOK_OUTPUT) {
-        await surface
-          .locator(".annual-sheet")
-          .screenshot({
-            path: `${process.env.SCRAPBOOK_OUTPUT}/${slug}-${width}.png`,
-          });
+        await surface.locator(".annual-sheet").screenshot({
+          path: `${process.env.SCRAPBOOK_OUTPUT}/${slug}-${width}.png`,
+        });
       }
     });
   }
@@ -239,18 +234,13 @@ for (const width of [320, 768, 1024, 1440]) {
       });
       await page.setViewportSize({ width, height: 900 });
       await page.goto("/puppy-book-landing#kokeile-kantta");
+      await studio(page).getByText("Kirjan kansi", { exact: true }).click();
       await studio(page)
         .getByLabel("Pennun nimi", { exact: true })
         .fill("Sisu");
       await studio(page)
         .getByRole("radio", { name: "Marja", exact: true })
         .check();
-      await studio(page)
-        .getByRole("button", { name: "Aloita kirja kuvasta", exact: true })
-        .click();
-      await expect(
-        studio(page).getByRole("tab", { name: "Leikekirja", exact: true }),
-      ).toBeFocused();
       const board = editor(page);
       await addPhoto(page);
       if (width < 900) {
@@ -347,9 +337,7 @@ for (const width of [320, 768, 1024, 1440]) {
         }),
       ).toBeFocused();
       await page.reload();
-      await expect(
-        studio(page).getByRole("tab", { name: "Leikekirja", exact: true }),
-      ).toHaveAttribute("aria-selected", "true");
+      await expect(editor(page)).toBeVisible();
       await expect(
         board.getByLabel("Kirjasivun otsikko", { exact: true }),
       ).toHaveValue("Meidän pieni tassu");
@@ -371,7 +359,7 @@ for (const width of [320, 768, 1024, 1440]) {
       await saved(page);
       if (process.env.SCRAPBOOK_OUTPUT) {
         await page
-          .getByRole("link", { name: "Kokeile kirjan kantta", exact: true })
+          .getByRole("link", { name: "Lisää ensimmäinen kuva", exact: true })
           .click();
         await page.screenshot({
           path: process.env.SCRAPBOOK_OUTPUT + "/leikekirja-" + width + ".png",
@@ -523,9 +511,6 @@ test("an incompatible stored draft is not overwritten, including in a temporary 
     });
   }, SCRAPBOOK_DATABASE);
   await page.reload();
-  await studio(page)
-    .getByRole("tab", { name: "Leikekirja", exact: true })
-    .click();
   const board = editor(page);
   await expect(board.getByRole("alert")).toContainText("eri versiota");
   await expect(
@@ -764,13 +749,16 @@ for (const viewport of [
         name: "Oma kirjasivu",
         exact: true,
       });
-      await expect(paper).toBeFocused();
-      const bounds = await paper.boundingBox();
+      await expect(paper).toHaveCount(0);
+      const camera = board.getByRole("button", {
+        name: "Ota kuva",
+        exact: true,
+      });
+      await expect(camera).toBeFocused();
+      const bounds = await camera.boundingBox();
       const header = await page.getByRole("banner").boundingBox();
       expect(bounds!.y).toBeGreaterThanOrEqual(header!.y + header!.height);
-      await expect(
-        paper.getByRole("button", { name: /Ota kuva/ }),
-      ).toBeVisible();
+      await expect(camera).toBeVisible();
       await board
         .getByRole("button", {
           name: "Avaa sivu 1: Pieni suuri hetki",

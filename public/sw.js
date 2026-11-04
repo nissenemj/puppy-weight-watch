@@ -85,6 +85,12 @@ async function handleFetch(request) {
   const url = new URL(request.url);
   
   try {
+    // Refresh the HTML shell before resolving its hashed modules. Cached HTML
+    // remains an offline fallback, not the default for an online navigation.
+    if (request.mode === 'navigate') {
+      return await networkFirst(request, DYNAMIC_CACHE);
+    }
+
     // Strategy 1: Cache First for static assets
     if (isStaticAsset(url.pathname)) {
       return await cacheFirst(request, STATIC_CACHE);

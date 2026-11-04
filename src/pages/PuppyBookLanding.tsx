@@ -66,7 +66,7 @@ export default function PuppyBookLanding() {
             </p>
             <div className="book-landing-actions">
               <a href="#kokeile-kantta" className="journal-button">
-                Kokeile kirjan kantta{" "}
+                Lisää ensimmäinen kuva{" "}
                 <ArrowRight size={18} aria-hidden="true" />
               </a>
               <Link to="/muistokirja" className="book-landing-text-link">

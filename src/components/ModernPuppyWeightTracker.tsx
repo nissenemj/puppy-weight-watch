@@ -24,6 +24,7 @@ import GrowthChart from "./PuppyBook/GrowthChart";
 import { BookGrowthChart } from "@/features/annual-book/BookGrowthChart";
 import type { SizeClass } from "@/types/veterinary";
 import AdvancedFoodCalculator from "./AdvancedFoodCalculator";
+import AdultFoodCalculator from "./AdultFoodCalculator";
 import PuppyFeeding from "./PuppyFeeding";
 import SafetyNewsFeed from "./SafetyNewsFeed";
 import OnboardingWizard from "@/features/onboarding/components/OnboardingWizard";
@@ -70,7 +71,11 @@ interface WeightPoint {
   date: string;
 }
 
-export default function ModernPuppyWeightTracker() {
+export default function ModernPuppyWeightTracker({
+  isAdult = false,
+}: {
+  isAdult?: boolean;
+}) {
   const [currentWeight, setCurrentWeight] = useState("");
   const [weightError, setWeightError] = useState("");
   const [weightNotice, setWeightNotice] = useState("");
@@ -85,6 +90,10 @@ export default function ModernPuppyWeightTracker() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [checkingOnboarding, setCheckingOnboarding] = useState(false);
   const [activeTab, setActiveTab] = useState("weight-tracking");
+  useEffect(() => {
+    if (isAdult && activeTab === "growth-chart")
+      setActiveTab("weight-tracking");
+  }, [isAdult, activeTab]);
   const [selectedDog, setSelectedDog] = useState<{
     id: string;
     name: string;
@@ -495,7 +504,7 @@ export default function ModernPuppyWeightTracker() {
   const handleTabSwipe = (direction: "left" | "right") => {
     const tabs = [
       "weight-tracking",
-      "growth-chart",
+      ...(!isAdult ? ["growth-chart"] : []),
       "puppy-feeding",
       "news-feed",
     ];
@@ -755,7 +764,12 @@ export default function ModernPuppyWeightTracker() {
           onSwipe={handleTabSwipe}
           className="space-y-6"
         >
-          <TabsList className="grid w-full grid-cols-4 h-16 md:h-14 rounded-2xl bg-white/50 backdrop-blur-sm overflow-x-auto">
+          <TabsList
+            className={cn(
+              "grid w-full h-16 md:h-14 rounded-2xl bg-white/50 backdrop-blur-sm overflow-x-auto",
+              isAdult ? "grid-cols-3" : "grid-cols-4",
+            )}
+          >
             <TabsTrigger
               value="weight-tracking"
               className={cn(
@@ -768,18 +782,20 @@ export default function ModernPuppyWeightTracker() {
               <Scale className="h-5 w-5 sm:h-4 sm:w-4" />
               <span className="text-xs sm:text-sm">Paino</span>
             </TabsTrigger>
-            <TabsTrigger
-              value="growth-chart"
-              className={cn(
-                "flex flex-col sm:flex-row items-center gap-1 sm:gap-2 rounded-xl transition-all duration-200 hover:scale-105 px-2 sm:px-4 text-white font-medium",
-                activeTab === "growth-chart"
-                  ? "bg-gradient-purple !important"
-                  : "text-muted-foreground hover:text-foreground",
-              )}
-            >
-              <TrendingUp className="h-5 w-5 sm:h-4 sm:w-4" />
-              <span className="text-xs sm:text-sm">Kasvu</span>
-            </TabsTrigger>
+            {!isAdult && (
+              <TabsTrigger
+                value="growth-chart"
+                className={cn(
+                  "flex flex-col sm:flex-row items-center gap-1 sm:gap-2 rounded-xl transition-all duration-200 hover:scale-105 px-2 sm:px-4 text-white font-medium",
+                  activeTab === "growth-chart"
+                    ? "bg-gradient-purple !important"
+                    : "text-muted-foreground hover:text-foreground",
+                )}
+              >
+                <TrendingUp className="h-5 w-5 sm:h-4 sm:w-4" />
+                <span className="text-xs sm:text-sm">Kasvu</span>
+              </TabsTrigger>
+            )}
             <TabsTrigger
               value="puppy-feeding"
               className={cn(
@@ -855,7 +871,7 @@ export default function ModernPuppyWeightTracker() {
                 </dl>
 
                 {/* Growth Chart with Centiles */}
-                {selectedDogBirthDate && entries.length > 0 ? (
+                {!isAdult && selectedDogBirthDate && entries.length > 0 ? (
                   <div className="space-y-4">
                     {/* Share Button Header */}
                     {selectedDog && (
@@ -898,12 +914,15 @@ export default function ModernPuppyWeightTracker() {
                     </CardHeader>
                     <CardContent>
                       <BookGrowthChart
+                        title={
+                          isAdult ? "Painokäyrä omista mittauksista" : undefined
+                        }
                         weights={entries.map((entry) => ({
                           date: entry.date,
                           kg: entry.weight,
                         }))}
                       />
-                      {birthDatePicker && (
+                      {!isAdult && birthDatePicker && (
                         <div className="mt-4">
                           <p className="site-field-hint mb-3">
                             Syntymäpäivän lisääminen avaa myös kasvun vertailun.
@@ -960,15 +979,21 @@ export default function ModernPuppyWeightTracker() {
             )}
           </TabsContent>
 
-          <TabsContent value="growth-chart" className="animate-fade-in">
-            <GrowthDevelopmentSection
-              weightData={entries}
-              birthDate={selectedDogBirthDate || undefined}
-            />
-          </TabsContent>
+          {!isAdult && (
+            <TabsContent value="growth-chart" className="animate-fade-in">
+              <GrowthDevelopmentSection
+                weightData={entries}
+                birthDate={selectedDogBirthDate || undefined}
+              />
+            </TabsContent>
+          )}
 
           <TabsContent value="puppy-feeding" className="animate-fade-in">
-            {user ? (
+            {isAdult ? (
+              <AdultFoodCalculator
+                currentWeight={getLatestWeight() || undefined}
+              />
+            ) : user ? (
               <AdvancedFoodCalculator
                 currentWeight={getLatestWeight()}
                 user={user}

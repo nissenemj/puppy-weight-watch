@@ -6,6 +6,7 @@ import {
 import {
   readScrapbook,
   writeScrapbook,
+  restoreScrapbook,
   ScrapbookConflict,
 } from "./scrapbookStorage";
 import { useLocalDraft, type LocalDraftRepository } from "./useLocalDraft";
@@ -19,6 +20,11 @@ const repository: LocalDraftRepository<ScrapbookDraft> = {
 };
 
 export function useScrapbookDraft() {
-  return useLocalDraft(repository);
+  const controller = useLocalDraft(repository);
+  return {
+    ...controller,
+    restore: (draft: ScrapbookDraft) =>
+      controller.replace(draft, restoreScrapbook),
+  };
 }
 export type ScrapbookController = ReturnType<typeof useScrapbookDraft>;

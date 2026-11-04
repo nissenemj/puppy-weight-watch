@@ -17,6 +17,8 @@ export function useLocalDraft<T>(repository: LocalDraftRepository<T>) {
   const [restored, setRestored] = useState(false);
   const [canUndo, setCanUndo] = useState(false);
   const [writing, setWriting] = useState(false);
+  const [isReplacing, setIsReplacing] = useState(false);
+  const replacing = useRef(false);
   const inFlight = useRef(0);
   const current = useRef(document);
   const savedRef = useRef<T | null>(null);
@@ -32,10 +34,12 @@ export function useLocalDraft<T>(repository: LocalDraftRepository<T>) {
 
   const flush = useCallback(
     (snapshot: T) => {
+      if (replacing.current) return queue.current;
       const epoch = generation.current;
       const run = async () => {
         if (
           epoch !== generation.current ||
+          replacing.current ||
           modeRef.current !== "ready" ||
           conflict.current ||
           snapshot === savedRef.current
@@ -73,6 +77,7 @@ export function useLocalDraft<T>(repository: LocalDraftRepository<T>) {
   );
 
   const reload = useCallback(async () => {
+    if (replacing.current) return;
     const epoch = ++generation.current;
     modeRef.current = "loading";
     setMode("loading");
@@ -130,6 +135,7 @@ export function useLocalDraft<T>(repository: LocalDraftRepository<T>) {
   useEffect(() => {
     const warn = (event: BeforeUnloadEvent) => {
       if (
+        replacing.current ||
         (modeRef.current === "ready" &&
           (current.current !== savedRef.current || inFlight.current > 0)) ||
         (modeRef.current === "session" &&
@@ -145,6 +151,7 @@ export function useLocalDraft<T>(repository: LocalDraftRepository<T>) {
 
   const change = useCallback(
     (update: (draft: T) => T, group?: string, remember = true) => {
+      if (replacing.current) return;
       if (modeRef.current !== "ready" && modeRef.current !== "session") return;
       const next = update(current.current);
       if (next === current.current) return;
@@ -160,6 +167,7 @@ export function useLocalDraft<T>(repository: LocalDraftRepository<T>) {
     [],
   );
   const undo = useCallback(() => {
+    if (replacing.current) return;
     const previous = history.current.pop();
     if (
       !previous ||
@@ -172,11 +180,70 @@ export function useLocalDraft<T>(repository: LocalDraftRepository<T>) {
     setCanUndo(history.current.length > 0);
   }, []);
   const continueWithoutSaving = useCallback(() => {
+    if (replacing.current) return;
     generation.current += 1;
     modeRef.current = "session";
     setMode("session");
     setError("");
   }, []);
+
+  const replace = async (
+    next: T,
+    write: LocalDraftRepository<T>["write"] = repository.write,
+  ): Promise<boolean> => {
+    if (replacing.current) return false;
+    if (modeRef.current === "session") {
+      history.current = [...history.current.slice(-19), current.current];
+      editGroup.current = undefined;
+      current.current = next;
+      setDocument(next);
+      setCanUndo(true);
+      return true;
+    }
+    // A restore may replace only an acknowledged draft, never unsaved edits.
+    if (
+      modeRef.current !== "ready" ||
+      conflict.current ||
+      current.current !== savedRef.current ||
+      inFlight.current > 0
+    )
+      return false;
+    replacing.current = true;
+    setIsReplacing(true);
+    const epoch = ++generation.current;
+    try {
+      await queue.current;
+      const nextRevision = await write(next, revision.current);
+      history.current = [...history.current.slice(-19), current.current];
+      editGroup.current = undefined;
+      current.current = next;
+      savedRef.current = next;
+      revision.current = nextRevision;
+      if (mounted.current && epoch === generation.current) {
+        setDocument(next);
+        setSaved(next);
+        setCanUndo(true);
+        setRestored(true);
+        setError("");
+      }
+      return true;
+    } catch (cause) {
+      if (repository.isConflict(cause)) {
+        conflict.current = true;
+        if (mounted.current) setHasConflict(true);
+      }
+      if (mounted.current)
+        setError(
+          cause instanceof Error
+            ? cause.message
+            : "Varmuuskopiota ei palautettu. Nykyinen luonnos säilyi.",
+        );
+      return false;
+    } finally {
+      replacing.current = false;
+      if (mounted.current) setIsReplacing(false);
+    }
+  };
   return {
     document,
     mode,
@@ -187,14 +254,17 @@ export function useLocalDraft<T>(repository: LocalDraftRepository<T>) {
     change,
     undo,
     reload,
+    replace,
+    isReplacing,
     finishEdit: () => {
       editGroup.current = undefined;
     },
     retry: () => void flush(current.current),
     continueWithoutSaving,
-    isSaved: mode === "ready" && document === saved && !writing,
+    isSaved: mode === "ready" && document === saved && !writing && !isReplacing,
     hasStoredDraft: revision.current > 0,
     save: async () => {
+      if (replacing.current) return false;
       const snapshot = current.current;
       await flush(snapshot);
       return (

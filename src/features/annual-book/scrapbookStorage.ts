@@ -4,6 +4,7 @@ import { scrapbookDraftSchema, type ScrapbookDraft } from "./scrapbook";
 export const SCRAPBOOK_DATABASE = "pentulaskuri-local-scrapbook";
 const STORE = "drafts";
 const KEY = "public-trial";
+const PREVIOUS_KEY = "before-restore";
 const recordSchema = z
   .object({
     revision: z.number().int().positive(),
@@ -53,11 +54,11 @@ function openDatabase(): Promise<IDBDatabase> {
     };
   });
 }
-export async function readScrapbook(): Promise<SavedScrapbook | null> {
+async function readRecord(key: string): Promise<SavedScrapbook | null> {
   const db = await openDatabase();
   return new Promise((resolve, reject) => {
     const transaction = db.transaction(STORE, "readonly");
-    const request = transaction.objectStore(STORE).get(KEY);
+    const request = transaction.objectStore(STORE).get(key);
     transaction.oncomplete = () => {
       db.close();
       try {
@@ -74,9 +75,13 @@ export async function readScrapbook(): Promise<SavedScrapbook | null> {
     };
   });
 }
-export async function writeScrapbook(
+export const readScrapbook = () => readRecord(KEY);
+export const readPreviousScrapbook = () => readRecord(PREVIOUS_KEY);
+
+async function writeRecord(
   draft: ScrapbookDraft,
   expectedRevision: number,
+  preservePrevious: boolean,
 ): Promise<number> {
   const checked = scrapbookDraftSchema.safeParse(draft);
   if (!checked.success)
@@ -96,6 +101,8 @@ export async function writeScrapbook(
         if ((current?.revision ?? 0) !== expectedRevision)
           throw new ScrapbookConflict();
         nextRevision = expectedRevision + 1;
+        // Both records commit together. A quota error leaves the old book intact.
+        if (preservePrevious && current) store.put(current, PREVIOUS_KEY);
         store.put({ revision: nextRevision, draft: checked.data }, KEY);
       } catch (error) {
         failure =
@@ -124,3 +131,8 @@ export async function writeScrapbook(
     };
   });
 }
+
+export const writeScrapbook = (draft: ScrapbookDraft, revision: number) =>
+  writeRecord(draft, revision, false);
+export const restoreScrapbook = (draft: ScrapbookDraft, revision: number) =>
+  writeRecord(draft, revision, true);

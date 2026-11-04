@@ -125,7 +125,7 @@ muiston tietuetta ei poisteta. Jo kadonneen kuvan tietue tarvitsee erillisen sii
 JavaScript-testit käyttävät Supabase-kutsujen korvikkeita, eivät oikeaa palvelua:
 
 ```sh
-npm test -- --maxWorkers=2
+npm test -- --maxWorkers=1
 npm run lint
 ./node_modules/.bin/tsc --noEmit -p tsconfig.app.json
 ./node_modules/.bin/tsc --noEmit -p tsconfig.node.json
@@ -136,6 +136,25 @@ Rajoitettu rinnakkaisuus vähentää tämän ympäristön aikakatkaisuja. Älä 
 ja tyyppitarkistusta samaan aikaan testisarjan kanssa. `npm run type-check` ei
 tarkista sovellusta kattavasti, joten käytä yllä olevia `tsconfig.app.json`- ja
 `tsconfig.node.json`-komentoja.
+
+### Pull requestin tarkistukset
+
+`.github/workflows/ci.yml` ajaa Node 22:lla lintin, sovelluksen ja build-asetusten
+tyyppitarkistukset, yksikkötestit, buildin ja Chromium-selaintestit `main`-haaraan
+tehtävistä pull requesteista. Testit korvaavat palvelukutsut paikallisesti eivätkä
+käytä palveluiden salaisuuksia. Työnkulku ei julkaise sovellusta. Epäonnistuneen
+selaintestin jälki ja kuvakaappaus säilyvät GitHubissa seitsemän päivää.
+
+Saman selaintestiajon voi tehdä paikallisesti buildin jälkeen:
+
+```sh
+PLAYWRIGHT_START_PREVIEW=1 npm run test:e2e
+```
+
+Tämä avaa testipalvelimen osoitteeseen `http://127.0.0.1:4173`. Portin on oltava
+vapaa. Ilman muuttujaa käytetään olemassa olevaa `PLAYWRIGHT_BASE_URL`-osoitetta
+(tai oletusta `http://localhost:8081`). Työnkulku tulee käyttöön vasta, kun muutos
+viedään GitHubiin; pakollinen yhdistämisehto määritetään siellä erikseen.
 
 Lähtöversion `04b393b7ca45cd178936673e48042d74de6861ba` neljä aiempaa tyyppivirhettä
 korjattiin 26.10.2026 samoilla muutoksilla, jotka ovat jo

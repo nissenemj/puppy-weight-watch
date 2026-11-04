@@ -142,7 +142,7 @@ export function newScrapbookDraft(): ScrapbookDraft {
   const page = newScrapbookPage();
   return {
     version: 1,
-    puppyName: "Nuppu",
+    puppyName: "",
     palette: "lake",
     pages: [page],
     selectedPageId: page.id,

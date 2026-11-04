@@ -30,8 +30,10 @@ export function BookWeightTable({
 
 export function BookGrowthChart({
   weights,
+  title = "Kasvukäyrä omista painomittauksista",
 }: {
   weights: AnnualBook["weights"];
+  title?: string;
 }) {
   const id = useId();
   const svg = useRef<SVGSVGElement>(null);
@@ -60,7 +62,7 @@ export function BookGrowthChart({
         aria-labelledby={`${id}-title`}
         aria-describedby={`${id}-description`}
       >
-        <title id={`${id}-title`}>Kasvukäyrä omista painomittauksista</title>
+        <title id={`${id}-title`}>{title}</title>
         <desc id={`${id}-description`}>
           {points.length} mittausta. Ensimmäinen {formatDay(first.date)}:{" "}
           {formatKg(first.kg)} kg. Viimeinen {formatDay(last.date)}:{" "}

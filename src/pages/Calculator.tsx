@@ -1,9 +1,12 @@
 import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { ExternalLink } from "lucide-react";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import { PageIntro } from "@/components/PageIntro";
 import AdvancedFoodCalculator from "@/components/AdvancedFoodCalculator";
+import AdultFoodCalculator from "@/components/AdultFoodCalculator";
+import "@/styles/adult-food.css";
 import VeterinaryDisclaimer from "@/components/VeterinaryDisclaimer";
 import { trackPageViewed } from "@/utils/analytics";
 
@@ -31,22 +34,42 @@ const MANUFACTURER_LINKS = {
 };
 
 export default function Calculator() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const adult = searchParams.get("vaihe") === "aikuinen";
   useEffect(() => {
     trackPageViewed("Calculator", "/calculator");
   }, []);
   return (
     <div className="site-page site-tool site-food-page">
       <SEO
-        title="Ruokalaskuri: arvio pennun ruokamäärästä"
+        title="Ruokalaskuri pennulle ja aikuiselle koiralle"
         siteName="Pentulaskuri"
-        description="Valitse koiranruoka ja pennun tiedot. Arvioi päiväannosta ja tarkista laskennan käyttämät tiedot."
+        description="Arvioi pennun tai aikuisen koiran päiväannosta. Näe laskennan perusteet ja valmistajan ohje."
         canonicalUrl="https://pentulaskuri.com/calculator"
       />
       <PageIntro
         title="Ruokamäärät arkeen."
-        description="Valitse ruoka ja pennun tiedot. Saat arvion päiväannoksesta ja näet, mihin laskenta perustuu."
+        description="Valitse pentu tai aikuinen koira ja käytössä oleva ruoka. Näet annoksen sekä laskennan perusteet."
       />
-      <AdvancedFoodCalculator user={null} />
+      <div className="dog-life-stage">
+        <label htmlFor="food-life-stage">Koiran elämänvaihe</label>
+        <select
+          id="food-life-stage"
+          name="dog-life-stage"
+          value={adult ? "aikuinen" : "pentu"}
+          onChange={(event) => {
+            const next = new URLSearchParams(searchParams);
+            if (event.target.value === "aikuinen")
+              next.set("vaihe", "aikuinen");
+            else next.delete("vaihe");
+            setSearchParams(next, { replace: true, preventScrollReset: true });
+          }}
+        >
+          <option value="pentu">Pentu, kasvu on vielä kesken</option>
+          <option value="aikuinen">Aikuinen, täysikasvuinen koira</option>
+        </select>
+      </div>
+      {adult ? <AdultFoodCalculator /> : <AdvancedFoodCalculator user={null} />}
       <section
         className="site-manufacturers"
         aria-labelledby="manufacturer-title"

@@ -1,8 +1,10 @@
+export const BOOK_IMAGE_MAX_EDGE = 1400;
+
 /** Keep A5 photos sharp enough to print without embedding huge decoded WebP bitmaps. */
 export function encodeBookImage(image: HTMLImageElement): string {
   const scale = Math.min(
     1,
-    1400 / Math.max(image.naturalWidth, image.naturalHeight),
+    BOOK_IMAGE_MAX_EDGE / Math.max(image.naturalWidth, image.naturalHeight),
   );
   const canvas = document.createElement("canvas");
   canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
