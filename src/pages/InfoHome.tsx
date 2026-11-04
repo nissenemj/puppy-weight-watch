@@ -1,4 +1,4 @@
-
+import { IllustratedGuideIntro } from "@/components/GuideIllustration";
 import React from 'react'
 import { MobileOptimizedLayout } from '@/components/MobileOptimizedLayout'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -10,7 +10,8 @@ import SEO from '@/components/SEO'
 import FAQ from '@/components/FAQ'
 import { AnimatedCard } from '@/components/ui/animated-card'
 import { createArticleSchema, createFAQSchema, createBreadcrumbSchema } from '@/utils/structuredData'
-import heroImage from '@/assets/puppy-care-guide.jpg'
+import { guideArtwork } from '@/data/guideArtwork'
+const heroImage = guideArtwork.home.src
 
 export default function InfoHome() {
   const faqs = [
@@ -36,7 +37,7 @@ export default function InfoHome() {
   const structuredData = [
     createArticleSchema(
       "Penturuoka-opas - Koiranpentujen ruokinta ja ravitsemus",
-      "Laaja katsaus Suomessa myytäviin koiranpentujen ruokiin ja niiden annosteluun ohjelmistokehityksen näkökulmasta",
+      "Tietoa koiranpennun ruokinnasta, kasvusta ja turvallisuudesta",
       heroImage
     ),
     createFAQSchema(faqs),
@@ -48,6 +49,7 @@ export default function InfoHome() {
       <div className="min-h-screen bg-gradient-soft page-with-navigation no-horizontal-scroll mobile-text-wrap responsive-media full-width-section">
         <SEO
           title="Tietopankki - Penturuoka-opas"
+          image={heroImage}
           description="Laaja katsaus koiranpentujen ruokintaan ja ravitsemukseen. Kuiva-, märkä- ja raakaruokien analyysi, annostelutiedot ja turvallisuusohjeet."
           keywords="penturuoka, koiranpennun ruokinta, ruokatyypit, annostelu, turvallisuus, Helsingin yliopisto, DogRisk"
           type="article"
@@ -55,57 +57,11 @@ export default function InfoHome() {
         />
         <Navigation />
 
-        {/* Dribbble-inspired Hero Header */}
-        <div className="relative overflow-hidden bg-gradient-warm mobile-text-wrap responsive-media">
-          {/* Background Pattern */}
-          <div className="absolute inset-0 opacity-20">
-            <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.3)_0%,transparent_50%)]"></div>
-            <div className="absolute bottom-0 right-0 w-full h-full bg-[radial-gradient(circle_at_70%_80%,rgba(255,255,255,0.2)_0%,transparent_50%)]"></div>
-          </div>
-
-          <div className="relative max-w-7xl mx-auto px-4 py-20 sm:py-32">
-            <div className="grid lg:grid-cols-2 gap-12 items-center mobile-grid-1">
-              {/* Left Content */}
-              <div className="text-white m-6">
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium mb-6">
-                  <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                  Reaaliaikainen tietopankki
-                </div>
-
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 leading-tight">
-                  Penturuoka-
-                  <span className="block text-transparent bg-gradient-to-r from-yellow-300 to-orange-200 bg-clip-text">
-                    opas
-                  </span>
-                </h1>
-
-                <p className="text-xl sm:text-2xl text-white/90 mb-8 leading-relaxed">
-                  Laaja katsaus Suomessa myytäviin koiranpentujen ruokiin ja niiden annosteluun
-                  <span className="font-semibold">ohjelmistokehityksen näkökulmasta</span>
-                </p>
-
-
-              </div>
-
-              {/* Right Visual */}
-              <div className="relative">
-                <div className="relative z-10">
-                  <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20">
-                    <img
-                      src={heroImage}
-                      alt="Penturuoka-opas dashboard"
-                      className="w-full h-auto object-contain rounded-2xl"
-                    />
-                  </div>
-                </div>
-
-                {/* Floating Elements */}
-                <div className="absolute -top-4 -right-4 w-20 h-20 bg-yellow-400 rounded-full opacity-20 animate-pulse"></div>
-                <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-pink-400 rounded-full opacity-10 animate-bounce"></div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <IllustratedGuideIntro
+          title="Tietoa pennun arkeen"
+          description="Ruokinta, kasvu ja turvallisuus. Valitse aihe, johon kaipaat tietoa, ja tutustu oppaisiin."
+          artwork="home"
+        />
 
         <div className="full-width-content py-16">
 

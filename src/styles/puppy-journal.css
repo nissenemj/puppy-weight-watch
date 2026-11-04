@@ -370,9 +370,33 @@
   max-width: 19ch;
 }
 .memory-showcase {
-  background: #e6eee8;
-  padding: 1.25rem;
-  border-radius: 1.25rem;
+  background: #eef3f5;
+  padding: clamp(0.75rem, 3vw, 2rem);
+  border: 1px solid #d4dfe4;
+  border-radius: 0.4rem;
+}
+.memory-reader-layout {display:grid;grid-template-columns:minmax(0,1fr);gap:1.5rem;align-items:start;}
+.memory-reader-layout > * {min-width:0;}
+.memory-contents {min-width:0;border-block:1px solid #c5d3da;}
+.memory-contents summary {display:flex;align-items:center;justify-content:space-between;gap:1rem;min-height:48px;padding:0.75rem 0.4rem;color:#233f50;font-size:0.875rem;font-weight:600;cursor:pointer;}
+.memory-contents summary::after {content:"+";font-size:1.3rem;line-height:1;}
+.memory-contents[open] summary::after {content:"−";}
+.memory-contents summary span {margin-left:auto;font-weight:400;font-variant-numeric:tabular-nums;}
+.memory-contents .memory-page-navigation {display:grid;grid-template-columns:minmax(0,1fr);gap:0.4rem;overflow:visible;padding:0.75rem 0;margin:0;}
+.memory-contents .memory-page-navigation button {display:flex;align-items:center;gap:0.65rem;min-width:0;min-height:68px;padding:0.5rem;text-align:left;border:1px solid #c5d3da;border-radius:0.25rem;background:#fff;color:#233f50;white-space:normal;font-size:0.8125rem;line-height:1.4;}
+.memory-contents .memory-page-navigation button:hover,.memory-contents .memory-page-navigation button[aria-pressed="true"] {border-color:#233f50;background:#e1ebee;color:#233f50;}
+.memory-page-thumb {display:flex;flex:none;align-items:center;justify-content:center;width:30px;height:40px;border:1px solid #a5b8c2;border-left:3px solid #233f50;background:#fff;}
+.memory-page-thumb img {display:block;width:100%;height:100%;object-fit:cover;}
+.memory-page-navigation small {display:block;font-size:0.6875rem;color:#53636a;margin-top:0.3rem;}
+.memory-contents .memory-page-navigation button > span:last-child {min-width:0;overflow-wrap:anywhere;}
+#memory-sample-page {scroll-margin-top:1rem;}
+#memory-sample-page:focus-visible {outline:3px solid #233f50;outline-offset:5px;}
+.memory-reader-layout .annual-preview {margin-top:0;}
+.memory-offer .journal-check-list + .journal-button {margin-top:1.25rem;}
+@media (min-width:480px) and (max-width:1023px) {.memory-contents .memory-page-navigation {grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media (min-width:1024px) {
+ .memory-reader-layout {grid-template-columns:220px minmax(0,1fr);gap:2rem;}
+ .memory-contents .memory-page-navigation {grid-template-columns:minmax(0,1fr);max-height:640px;overflow-y:auto;overscroll-behavior:contain;padding:0.75rem 0.4rem;}
 }
 .memory-sample-note {
   display: flex;

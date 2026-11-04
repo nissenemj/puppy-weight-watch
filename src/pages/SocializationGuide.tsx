@@ -1,3 +1,4 @@
+import { IllustratedGuideIntro } from "@/components/GuideIllustration";
 import React from 'react';
 import { MobileOptimizedLayout } from '@/components/MobileOptimizedLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,8 +13,6 @@ import InfoBadge from '@/components/InfoBadge';
 import BackToTopButton from '@/components/BackToTopButton';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import heroImage from '@/assets/welcome-illustration.png';
-import ScrollPanBackground from '@/components/ScrollPanBackground';
 
 const SocializationGuide = () => {
   const faqs = [
@@ -40,20 +39,11 @@ const SocializationGuide = () => {
       <div className="min-h-screen bg-background page-with-navigation w-full overflow-x-hidden">
         <Navigation />
         <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-full min-w-0 space-y-8">
-          {/* Hero Section with pan background */}
-          <div className="rounded-2xl overflow-hidden mb-12">
-            <ScrollPanBackground src={heroImage} alt="Koiranpennun sosialisaatio ja käyttäytyminen" panX={30} panY={20} zoom={1.04} minHeightClass="h-60 sm:h-72 md:h-80">
-              <div className="text-center space-y-3">
-                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-heading font-bold text-white drop-shadow">
-                  🐕 Kattava opas pennun sosiaalistamiseen
-                </h1>
-                <h2 className="text-2xl md:text-3xl font-semibold text-white/95">
-                  Selviydy, menesty ja kasva tasapainoiseksi aikuiseksi
-                </h2>
-              </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-            </ScrollPanBackground>
-          </div>
+          <IllustratedGuideIntro
+            title="Kattava opas pennun sosiaalistamiseen"
+            description="Ihmiset, toiset koirat ja uudet ympäristöt. Tutustu sosiaalistamisen aiheisiin pennun oma tahti huomioiden."
+            artwork="socialization"
+          />
 
           <InfoCard
             title="Pika-navigaatio"

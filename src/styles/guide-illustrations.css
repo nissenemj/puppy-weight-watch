@@ -1,0 +1,129 @@
+/* The same puppy and everyday materials connect the guides to the puppy book. */
+.guide-illustration-intro {
+  display: grid;
+  align-items: center;
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  padding: clamp(1rem, 3vw, 2.5rem);
+  margin-bottom: 3rem;
+  background: #eef3f5;
+  color: #233f50;
+}
+
+.guide-illustration-intro > * {
+  min-width: 0;
+}
+.site-frame .guide-intro-copy h1 {
+  font:
+    400 clamp(2rem, 3.5vw, 3.25rem) / 1.13 Georgia,
+    serif;
+  color: #233f50;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+  margin: 0 0 1.25rem;
+}
+.guide-intro-copy p {
+  max-width: 48ch;
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.8;
+  color: #53636a;
+}
+.guide-illustration {
+  min-width: 0;
+  margin: 0;
+}
+.guide-illustration-frame {
+  position: relative;
+  aspect-ratio: 3 / 2;
+  background: #d4dfe4;
+}
+.guide-illustration picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.guide-illustration picture[hidden] {
+  display: none;
+}
+.guide-illustration img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  object-position: center;
+}
+.guide-illustration figcaption {
+  margin: 0.65rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: #53636a;
+}
+.guide-illustration-error {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  text-align: center;
+  color: #233f50;
+  background: #eef3f5;
+  border: 1px solid #81929c;
+}
+.guide-illustration-error p {
+  margin: 0;
+  max-width: 32ch;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+.guide-illustration-error button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #233f50;
+  background: #fff;
+  color: #233f50;
+  font-size: 0.875rem;
+  line-height: 1.3;
+}
+.guide-illustration-error button:hover {
+  background: #d4dfe4;
+}
+.site-guides .site-guide-link {
+  display: block;
+}
+.site-guides .site-guide-link .guide-illustration {
+  margin-bottom: 1.25rem;
+}
+.site-guides .site-guide-link h2 {
+  margin-top: 0;
+}
+.site-guides .site-guide-link p {
+  margin-bottom: 0.5rem;
+}
+.guide-index-caption {
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: #53636a;
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 768px) {
+  .guide-illustration-intro {
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  }
+}
+
+@media (forced-colors: active) {
+  .guide-illustration-intro,
+  .guide-illustration-error {
+    border: 1px solid CanvasText;
+  }
+}

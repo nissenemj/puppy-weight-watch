@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import {
   ArrowLeft,
@@ -7,87 +8,36 @@ import {
   LockKeyhole,
 } from "lucide-react";
 import SEO from "@/components/SEO";
-import puppyHome from "@/assets/puppy-home-1200.webp";
-import puppyLater from "@/assets/puppy-book-home-1200.webp";
 import { AnnualBookPreview } from "@/features/annual-book/AnnualBookPreview";
 import { PrintBookButton } from "@/features/annual-book/PrintBookButton";
-import type { AnnualBook } from "@/features/annual-book/model";
+import {
+  exampleBook,
+  exampleBookPages,
+  exampleScrapbookPages,
+} from "@/features/annual-book/exampleBook";
 import "@/styles/puppy-journal.css";
-
-const pages = [
-  "Kansi",
-  "Silloin ja nyt",
-  "Ensimmäiset päivät",
-  "Kuukauden kommellus",
-  "Pieniä suuria hetkiä",
-  "Kasvu",
-  "Mittaukset",
-  "Kirje pennulle",
-];
-const pageKeys = [
-  "kansi",
-  "silloin-ja-nyt",
-  "ensimmaiset-paivat",
-  "kommellus",
-  "hetket",
-  "kasvu",
-  "mittaukset",
-  "kirje",
-];
-// Illustrative fixture only. These are not a real puppy's photos or measurements.
-const exampleBook: AnnualBook = {
-  bookId: "00000000-0000-4000-8000-000000000001",
-  puppyName: "Nuppu",
-  start: "2026-04-01",
-  end: "2027-03-31",
-  design: {
-    title: "Nupun pentuvuosi",
-    palette: "lake",
-    coverArt: "photo",
-    letter:
-      "Pieni Nuppu,\n\nhaluan muistaa sen, miten katsot meitä ennen jokaista yhteistä retkeä. Tavallisista päivistä on tullut vähän hauskempia sinun kanssasi.\n\nToivon meille monta uutta metsäpolkua, kiireettömiä aamuja ja aikaa opetella yhdessä. Saat kasvaa omaan tahtiisi. Me olemme tässä.",
-  },
-  entries: [
-    {
-      id: "home",
-      date: "2026-06-03",
-      image: puppyHome,
-      caption:
-        "Tervetuloa kotiin, Nuppu.\nOvi aukesi ja pieni nenä tutki jokaisen nurkan. Illalla nukahdit peitolle, aivan meidän viereemme.",
-      mishap: false,
-    },
-    {
-      id: "sock",
-      date: "2026-07-12",
-      caption:
-        "Sukkavarkaan tunnustus\nPyykkikorista löytyi aarre. Kannoin sitä ylpeästi ympäri olohuonetta. Sukka palautui omistajalleen, ja sain tilalle oman lelun.",
-      mishap: true,
-    },
-    {
-      id: "autumn",
-      date: "2026-09-03",
-      image: puppyLater,
-      caption:
-        "Pieniä suuria hetkiä.\nEnsimmäinen yhteinen kävely, oma tuttu lelu ja se tavallinen tiistai. Tänäänkin olit siinä, ja se riitti.",
-      mishap: false,
-    },
-  ],
-  weights: [
-    { date: "2026-06-03", kg: 4.2 },
-    { date: "2026-07-03", kg: 6.5 },
-    { date: "2026-09-03", kg: 10.8 },
-  ],
-};
 
 export default function MemoryBookExample() {
   const [params, setParams] = useSearchParams();
+  const preview = useRef<HTMLDivElement>(null);
+  const [contentsOpen, setContentsOpen] = useState(
+    () => window.matchMedia("(min-width: 1024px)").matches,
+  );
+  useEffect(() => {
+    const query = window.matchMedia("(min-width: 1024px)");
+    const update = () => setContentsOpen(query.matches);
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
   const pageIndex = Math.max(
     0,
-    pageKeys.indexOf(params.get("sivu") || "kansi"),
+    exampleBookPages.findIndex(
+      (item) => item.slug === (params.get("sivu") || "kansi"),
+    ),
   );
   const selectPage = (index: number) => {
     const next = new URLSearchParams(params);
-    next.set("sivu", pageKeys[index]);
+    next.set("sivu", exampleBookPages[index].slug);
     setParams(next, { preventScrollReset: true });
   };
 
@@ -113,8 +63,9 @@ export default function MemoryBookExample() {
           Kokonainen tarina.
         </h1>
         <p className="journal-lead">
-          Ensimmäinen kotipäivä, hassu tapa nukkua, yhdessä opitut asiat. Astu
-          Nupun kuvitteelliseen pentuvuoteen. Avaa lukutila ja käännä sivua.
+          Tassunjälki, lempilelu nimeltä Ankka ja yksi kadonnut sukka. Nupun
+          kuvitteellinen pentuvuosi näyttää, mitä yhdestä kuvasta ja muutamasta
+          omasta sanasta voi syntyä.
         </p>
       </section>
 
@@ -130,34 +81,89 @@ export default function MemoryBookExample() {
         <h2 id="sample-book-title" className="sr-only">
           Nupun pentukirjan esimerkki
         </h2>
-        <nav
-          className="memory-page-navigation"
-          aria-label="Esimerkkikirjan sivut"
-        >
-          {pages.map((page, index) => (
-            <button
-              key={page}
-              type="button"
-              aria-pressed={pageIndex === index}
-              aria-controls="memory-sample-page"
-              onClick={() => selectPage(index)}
+        <div className="memory-reader-layout">
+          <details
+            className="memory-contents"
+            open={contentsOpen}
+            onToggle={(event) => setContentsOpen(event.currentTarget.open)}
+          >
+            <summary>
+              Kirjan sivut{" "}
+              <span>
+                {pageIndex + 1} / {exampleBookPages.length}
+              </span>
+            </summary>
+            <nav
+              className="memory-page-navigation"
+              aria-label="Esimerkkikirjan sivut"
             >
-              {page}
-            </button>
-          ))}
-        </nav>
-        <div
-          id="memory-sample-page"
-          role="region"
-          aria-label={pages[pageIndex]}
-        >
-          <AnnualBookPreview
-            book={exampleBook}
-            pageIndex={pageIndex}
-            onPageChange={selectPage}
-          />
+              {exampleBookPages.map((item, index) => (
+                <button
+                  key={item.slug}
+                  type="button"
+                  aria-label={item.label}
+                  aria-pressed={pageIndex === index}
+                  aria-controls="memory-sample-page"
+                  onClick={() => {
+                    selectPage(index);
+                    if (!window.matchMedia("(min-width: 1024px)").matches)
+                      setContentsOpen(false);
+                    window.requestAnimationFrame(() => {
+                      preview.current?.focus({ preventScroll: true });
+                      preview.current
+                        ?.querySelector(".annual-sheet")
+                        ?.scrollIntoView({
+                          block: "start",
+                          behavior: "instant",
+                        });
+                    });
+                  }}
+                >
+                  <span className="memory-page-thumb" aria-hidden="true">
+                    {item.page.scrapbook?.image ||
+                    item.page.entries[0]?.image ? (
+                      <img
+                        src={
+                          item.page.scrapbook?.image ||
+                          item.page.entries[0]?.image
+                        }
+                        alt=""
+                        width={36}
+                        height={48}
+                        loading="lazy"
+                      />
+                    ) : (
+                      <BookOpen size={19} />
+                    )}
+                  </span>
+                  <span>
+                    {item.label}
+                    <small>Sivu {index + 1}</small>
+                  </span>
+                </button>
+              ))}
+            </nav>
+          </details>
+          <div
+            ref={preview}
+            tabIndex={-1}
+            id="memory-sample-page"
+            role="region"
+            aria-label={exampleBookPages[pageIndex].label}
+          >
+            <AnnualBookPreview
+              book={exampleBook}
+              pageIndex={pageIndex}
+              onPageChange={selectPage}
+              scrapbookPages={exampleScrapbookPages}
+              notice="Kuvitteellinen esimerkkikirja. Kaikki kuvat ja kuvitukset on luotu tekoälyllä. Mittaukset ovat esimerkkilukuja."
+            />
+          </div>
         </div>
-        <PrintBookButton book={exampleBook} />
+        <PrintBookButton
+          book={exampleBook}
+          scrapbookPages={exampleScrapbookPages}
+        />
       </section>
 
       <section className="memory-offer" aria-labelledby="memory-offer-title">
@@ -166,10 +172,10 @@ export default function MemoryBookExample() {
             Haluaisitko tällaisen omasta pennustasi?
           </h2>
           <p>
-            Voit kokeilla omista kuvista ja teksteistä koottavaa perusmallia
-            maksutta omassa pentukirjassasi. Valitse oma kansiväri, lisää
-            kasvukäyrä ja kirjoita kirje pennullesi. Suunnittelemme myöhemmin
-            myös laajempaa kirjaa.
+            Kokeile ensin yhtä omaa kuvaa leikekirjassa. Valitse kuvausidea,
+            kirjoita halutessasi muutama sana ja selaa omaa sivuasi kirjassa.
+            Kirjautuneen käyttäjän pentukirjassa voit myös tallentaa muistoja,
+            seurata painoa ja koota vuosikirjan.
           </p>
           <ul className="journal-check-list">
             <li>
@@ -185,6 +191,12 @@ export default function MemoryBookExample() {
               käyttöön
             </li>
           </ul>
+          <Link
+            className="journal-button"
+            to="/puppy-book-landing#kokeile-kantta"
+          >
+            Kokeile omalla kuvalla <ArrowRight size={18} aria-hidden="true" />
+          </Link>
         </div>
         <div className="memory-price">
           <p>Hintaehdotus kertamaksulle</p>

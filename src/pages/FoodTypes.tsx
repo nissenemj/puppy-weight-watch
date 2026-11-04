@@ -1,4 +1,4 @@
-
+import { IllustratedGuideIntro } from "@/components/GuideIllustration";
 import React from 'react'
 import { MobileOptimizedLayout } from '@/components/MobileOptimizedLayout'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -10,27 +10,16 @@ import InfoCard from '@/components/InfoCard'
 import InfoSection from '@/components/InfoSection'
 import InfoBadge from '@/components/InfoBadge'
 import BackToTopButton from '@/components/BackToTopButton'
-import heroImage from '@/assets/welcome-illustration.png'
-import ScrollPanBackground from '@/components/ScrollPanBackground'
 
 export default function FoodTypes() {
   return (
     <MobileOptimizedLayout>
       <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-full min-w-0">
-        {/* Hero Section with pan background */}
-        <div className="rounded-2xl overflow-hidden mb-12">
-          <ScrollPanBackground src={heroImage} alt="Erilaisia koiranpennun ruokatyyppejä ja vaihtoehtoja" panX={25} panY={15} zoom={1.03} minHeightClass="h-60 sm:h-72 md:h-80">
-            <div className="text-center">
-              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-3 drop-shadow">
-                🥘 Penturuokien tyypit
-              </h1>
-              <p className="text-xl text-white/90 max-w-3xl mx-auto">
-                Tieteellinen analyysi kuiva-, märkä- ja raakaruokien eroista ja hyödyistä
-              </p>
-            </div>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-          </ScrollPanBackground>
-        </div>
+        <IllustratedGuideIntro
+          title="Penturuokien tyypit"
+          description="Kuiva-, märkä- ja raakaruoka. Tutustu eri ruokatyyppeihin, niiden eroihin ja turvallisuuteen liittyviin kysymyksiin."
+          artwork="feeding"
+        />
 
         <InfoCard
           title="Helsingin yliopiston DogRisk-tutkimuksen keskeiset löydökset"
