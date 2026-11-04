@@ -77,6 +77,13 @@ export function BookReader({
             event.preventDefault();
             readingArea.current?.focus();
           }}
+          onKeyDown={(event) => {
+            // Escape must work before the dialog's deferred layer is registered.
+            if (event.key === "Escape" && !event.defaultPrevented) {
+              event.preventDefault();
+              setOpen(false);
+            }
+          }}
         >
           <header className="book-reader-toolbar">
             <div>

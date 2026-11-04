@@ -1122,14 +1122,16 @@ for (const width of [320, 768, 1024, 1440]) {
       expect(bounds!.y).toBeGreaterThanOrEqual(banner!.y + banner!.height);
       const image = preview.locator(".scrap-photo-frame img");
       await expect(image).toBeVisible();
-      expect(
-        await image.evaluate(
-          (element) =>
-            element instanceof HTMLImageElement &&
-            element.complete &&
-            element.naturalWidth >= 1200,
-        ),
-      ).toBe(true);
+      await expect
+        .poll(() =>
+          image.evaluate(
+            (element) =>
+              element instanceof HTMLImageElement &&
+              element.complete &&
+              element.naturalWidth >= 1200,
+          ),
+        )
+        .toBe(true);
       await page.reload();
       await expect(preview).toContainText("Unen pieni mestari");
       expect(
@@ -1153,9 +1155,15 @@ for (const width of [320, 768, 1024, 1440]) {
       });
       await launch.click();
       const reader = page.getByRole("dialog");
+      const canvas = reader.getByRole("region", {
+        name: "Kirjan lukusivut",
+        exact: true,
+      });
+      await expect(canvas).toBeFocused();
       await expect(reader).toContainText("Unen pieni mestari");
       await expect(reader).toContainText("Mittaukset ovat esimerkkilukuja.");
-      await reader.press("Escape");
+      await canvas.press("Escape");
+      await expect(reader).toBeHidden();
       await expect(launch).toBeFocused();
       await expect(
         page.getByRole("link", { name: "Kokeile omalla kuvalla", exact: true }),
