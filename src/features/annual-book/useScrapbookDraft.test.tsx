@@ -6,17 +6,22 @@ import { useScrapbookDraft } from "./useScrapbookDraft";
 const mock = vi.hoisted(() => ({
   read: vi.fn(),
   write: vi.fn(),
+  restore: vi.fn(),
   Conflict: class extends Error {},
 }));
 vi.mock("./scrapbookStorage", () => ({
   readScrapbook: mock.read,
   writeScrapbook: mock.write,
+  restoreScrapbook: mock.restore,
   ScrapbookConflict: mock.Conflict,
 }));
 beforeEach(() => {
   vi.useFakeTimers();
   mock.read.mockReset().mockResolvedValue(null);
   mock.write
+    .mockReset()
+    .mockImplementation(async (_draft, revision: number) => revision + 1);
+  mock.restore
     .mockReset()
     .mockImplementation(async (_draft, revision: number) => revision + 1);
 });
@@ -44,6 +49,91 @@ function pending() {
 }
 
 describe("browser scrapbook autosave", () => {
+  it("replaces a saved draft only after storage acknowledges it and ignores late changes while restoring", async () => {
+    const hook = await start();
+    const original = hook.result.current.document;
+    const imported = { ...newScrapbookDraft(), puppyName: "Palautettu" };
+    const slow = pending();
+    mock.restore.mockReturnValueOnce(slow.promise);
+    let restore!: Promise<boolean>;
+    act(() => {
+      restore = hook.result.current.restore(imported);
+    });
+    await act(async () => {});
+    expect(hook.result.current.isReplacing).toBe(true);
+    expect(hook.result.current.document).toBe(original);
+    act(() =>
+      hook.result.current.change((draft) => ({
+        ...draft,
+        puppyName: "Myöhäinen",
+      })),
+    );
+    act(() => hook.result.current.undo());
+    expect(hook.result.current.document).toBe(original);
+    await act(async () => {
+      slow.resolve(1);
+      expect(await restore).toBe(true);
+    });
+    expect(hook.result.current.document).toBe(imported);
+    expect(hook.result.current.isSaved).toBe(true);
+    await tick();
+    expect(mock.write).not.toHaveBeenCalled();
+    act(() => hook.result.current.undo());
+    expect(hook.result.current.document).toBe(original);
+    await tick();
+    expect(mock.write).toHaveBeenLastCalledWith(original, 1);
+  });
+  it("refuses to replace unsaved changes", async () => {
+    const hook = await start();
+    act(() =>
+      hook.result.current.change((draft) => ({
+        ...draft,
+        puppyName: "Kesken",
+      })),
+    );
+    await act(async () =>
+      expect(await hook.result.current.restore(newScrapbookDraft())).toBe(
+        false,
+      ),
+    );
+    expect(mock.restore).not.toHaveBeenCalled();
+    expect(hook.result.current.document.puppyName).toBe("Kesken");
+  });
+  it.each([
+    new Error("Tallennustila täynnä."),
+    new mock.Conflict("Toinen välilehti tallensi."),
+  ])("keeps the current draft when restore fails", async (cause) => {
+    const hook = await start();
+    const original = hook.result.current.document;
+    mock.restore.mockRejectedValueOnce(cause);
+    await act(async () =>
+      expect(await hook.result.current.restore(newScrapbookDraft())).toBe(
+        false,
+      ),
+    );
+    expect(hook.result.current.document).toBe(original);
+    expect(hook.result.current.isReplacing).toBe(false);
+    expect(hook.result.current.error).toBe(cause.message);
+    expect(hook.result.current.hasConflict).toBe(
+      cause instanceof mock.Conflict,
+    );
+    await tick();
+    expect(mock.write).not.toHaveBeenCalled();
+  });
+  it("imports into an explicit temporary session without any persistence", async () => {
+    mock.read.mockRejectedValueOnce(new Error("Estetty"));
+    const hook = renderHook(() => useScrapbookDraft());
+    await act(async () => {});
+    act(() => hook.result.current.continueWithoutSaving());
+    const imported = newScrapbookDraft();
+    await act(async () =>
+      expect(await hook.result.current.restore(imported)).toBe(true),
+    );
+    expect(hook.result.current.document).toBe(imported);
+    expect(hook.result.current.mode).toBe("session");
+    expect(mock.restore).not.toHaveBeenCalled();
+    expect(mock.write).not.toHaveBeenCalled();
+  });
   it("does not write a read-only visit, debounces typing and undoes a whole text edit", async () => {
     const hook = await start();
     await tick();
@@ -64,10 +154,10 @@ describe("browser scrapbook autosave", () => {
     expect(mock.write).toHaveBeenCalledTimes(1);
     expect(hook.result.current.isSaved).toBe(true);
     act(() => hook.result.current.undo());
-    expect(hook.result.current.document.puppyName).toBe("Nuppu");
+    expect(hook.result.current.document.puppyName).toBe("");
     await tick();
     expect(mock.write).toHaveBeenLastCalledWith(
-      expect.objectContaining({ puppyName: "Nuppu" }),
+      expect.objectContaining({ puppyName: "" }),
       1,
     );
   });

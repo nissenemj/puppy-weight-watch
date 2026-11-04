@@ -34,8 +34,10 @@ import type { ScrapbookController } from "./useScrapbookDraft";
 
 export function ScrapbookEditor({
   controller,
+  onPhotoBusyChange,
 }: {
   controller: ScrapbookController;
+  onPhotoBusyChange?: (busy: boolean) => void;
 }) {
   const { document, mode, change, finishEdit } = controller;
   const id = useId();
@@ -43,25 +45,33 @@ export function ScrapbookEditor({
     (item) => item.id === document.selectedPageId,
   )!;
   const index = document.pages.indexOf(page);
-  const ready = mode === "ready" || mode === "session";
+  const ready =
+    (mode === "ready" || mode === "session") && !controller.isReplacing;
   const [busy, setBusy] = useState(false);
   const [photoError, setPhotoError] = useState("");
   const [feedback, setFeedback] = useState("");
   const [quotePages, setQuotePages] = useState<string[]>([]);
   const [ideasOpen, setIdeasOpen] = useState(false);
+  const [textPages, setTextPages] = useState<string[]>([]);
+  const pageHasContent = hasScrapbookContent(page);
+  const editing = pageHasContent || textPages.includes(page.id);
   const ideaOpener = useRef<HTMLButtonElement | null>(null);
   const ideaChosen = useRef(false);
   const picker = useRef<HTMLInputElement>(null);
   const camera = useRef<HTMLInputElement>(null);
+  const cameraTrigger = useRef<HTMLButtonElement>(null);
   const paper = useRef<HTMLElement>(null);
   const sequence = useRef(0);
   const alive = useRef(true);
-  const revealPaper = () =>
-    window.requestAnimationFrame(() => {
-      if (!alive.current) return;
-      paper.current?.focus({ preventScroll: true });
-      paper.current?.scrollIntoView({ block: "start", behavior: "instant" });
-    });
+  const [revealVersion, setRevealVersion] = useState(0);
+  const revealPaper = () => setRevealVersion((value) => value + 1);
+  // Move focus only after the newly revealed page has mounted.
+  useEffect(() => {
+    if (!revealVersion) return;
+    const target = paper.current ?? cameraTrigger.current;
+    target?.focus({ preventScroll: true });
+    target?.scrollIntoView({ block: "start", behavior: "instant" });
+  }, [revealVersion]);
   const openIdeas = (event: MouseEvent<HTMLButtonElement>) => {
     ideaOpener.current = event.currentTarget;
     ideaChosen.current = false;
@@ -79,6 +89,16 @@ export function ScrapbookEditor({
     setBusy(false);
     setPhotoError("");
   }, [page.id]);
+  useEffect(() => {
+    if (pageHasContent)
+      setTextPages((current) =>
+        current.includes(page.id) ? current : [...current, page.id],
+      );
+  }, [page.id, pageHasContent]);
+  useEffect(() => {
+    onPhotoBusyChange?.(busy);
+    return () => onPhotoBusyChange?.(false);
+  }, [busy, onPhotoBusyChange]);
 
   const patch = (patch: Partial<ScrapbookPage>, group?: string) =>
     change(
@@ -91,6 +111,7 @@ export function ScrapbookEditor({
       group ? `${page.id}-${group}` : undefined,
     );
   async function loadPhoto(file?: File, example = false) {
+    if (!ready || busy) return;
     if (!example && !file) return;
     const invalid = file && validatePuppyImage(file);
     if (invalid) {
@@ -125,8 +146,7 @@ export function ScrapbookEditor({
       }));
       setFeedback("Kuva on sivulla. Kokeile pohjaa tai lisää tarra.");
       if (window.matchMedia("(max-width: 899px)").matches) {
-        paper.current?.focus({ preventScroll: true });
-        paper.current?.scrollIntoView({ block: "start", behavior: "instant" });
+        revealPaper();
       }
     } catch {
       if (alive.current && ticket === sequence.current)
@@ -158,7 +178,7 @@ export function ScrapbookEditor({
   }
   return (
     <section className="scrap-editor" aria-label="Leikekirjan kokoaminen">
-      <div className="scrap-editor-top">
+      <div className="scrap-editor-top" tabIndex={-1}>
         <div
           className="scrap-photo-actions"
           role="group"
@@ -166,6 +186,7 @@ export function ScrapbookEditor({
           aria-busy={busy}
         >
           <button
+            ref={cameraTrigger}
             type="button"
             className="journal-button"
             disabled={!ready || busy}
@@ -299,322 +320,361 @@ export function ScrapbookEditor({
         )}
       </div>
 
-      <div
-        className="scrap-layout-picker"
-        role="group"
-        aria-label="Kirjasivun pohja"
-      >
-        <p className="scrap-tool-label">Vaihda pohjaa</p>
-        <div className="scrap-layout-options">
-          {SCRAPBOOK_LAYOUTS.map((layout) => (
-            <button
-              key={layout}
-              type="button"
-              aria-pressed={page.layout === layout}
-              disabled={!ready}
-              onClick={() => {
-                if (layout !== page.layout) patch({ layout });
-                setFeedback(
-                  `${scrapbookLayoutNames[layout]} valittu. Kuva, tekstit ja tapahtumapäivä säilyivät.`,
-                );
-              }}
-            >
-              <span
-                className={`scrap-layout-mini scrap-layout-mini-${layout}`}
-                aria-hidden="true"
-              >
-                <span>
-                  {page.image && (
-                    <img src={page.image} alt="" width={60} height={50} />
-                  )}
-                </span>
-              </span>
-              <span>{scrapbookLayoutNames[layout]}</span>
-              {page.layout === layout && <Check size={14} aria-hidden="true" />}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div
-        className={`annual-document annual-palette-${document.palette} scrap-editor-canvas`}
-      >
-        <style>{documentStyles}</style>
-        <article
-          ref={paper}
-          className="annual-sheet annual-page-scrapbook scrap-editing-paper"
-          tabIndex={-1}
-          aria-label="Oma kirjasivu"
-        >
-          <header className="annual-page-header">
-            <p className="annual-kicker">
-              {document.puppyName.trim() || "Oma pentu"} · Oma pentukirja
-            </p>
-            <h3 className="sr-only">Muokattava kirjasivu</h3>
-            <label htmlFor={`${id}-title`} className="sr-only">
-              Kirjasivun otsikko
-            </label>
-            <GrowingBookField
-              id={`${id}-title`}
-              name="scrapbook-title"
-              className="scrap-inline-title"
-              value={page.title}
-              maxLength={60}
-              autoComplete="off"
-              disabled={!ready}
-              placeholder="Oman hetken otsikko…"
-              onChange={(event) =>
-                patch({ title: event.target.value }, "title")
-              }
-              onBlur={finishEdit}
-            />
-          </header>
-          <ScrapbookPageContent
-            page={page}
-            editor={{
-              onChange: patch,
-              onFinish: finishEdit,
-              onCamera: () => camera.current?.click(),
-              showQuote: quotePages.includes(page.id),
-              disabled: !ready || busy,
-            }}
-          />
-          <p className="scrap-page-indicator">
-            {hasScrapbookContent(page)
-              ? "Sivu on mukana kokeilukirjassa."
-              : "Lisää kuva tai omat sanat. Sivu tulee mukaan kirjaan heti."}
-          </p>
-        </article>
-      </div>
-
-      <div className="scrap-editor-extras">
-        <div
-          className="scrap-sticker-options"
-          role="group"
-          aria-label="Kirjasivun tarra"
-        >
-          <p className="scrap-tool-label">Lisää tarra</p>
-          {(
-            [
-              ["paw", "Tassu", PawPrint],
-              ["heart", "Sydän", Heart],
-              ["star", "Tähti", Star],
-            ] as const
-          ).map(([sticker, label, Icon]) => (
-            <button
-              type="button"
-              key={sticker}
-              disabled={!ready}
-              aria-pressed={page.sticker === sticker}
-              onClick={() => {
-                patch({ sticker: page.sticker === sticker ? "none" : sticker });
-                setFeedback(
-                  page.sticker === sticker
-                    ? "Tarra poistettu. Voit perua muutoksen."
-                    : `${label} lisätty kirjasivulle.`,
-                );
-              }}
-            >
-              <Icon size={20} aria-hidden="true" />
-              {label}
-            </button>
-          ))}
-        </div>
-        <button
-          type="button"
-          className="book-cover-trial-idea-button"
-          disabled={!ready}
-          onClick={() => {
-            setQuotePages((current) =>
-              current.includes(page.id) ? current : [...current, page.id],
-            );
-            window.requestAnimationFrame(() => {
-              const field = paper.current?.querySelector<HTMLTextAreaElement>(
-                '[name="scrapbook-quote"]',
-              );
-              field?.focus({ preventScroll: true });
-              field?.scrollIntoView({ block: "center", behavior: "instant" });
-            });
-          }}
-        >
-          <MessageCircle size={19} aria-hidden="true" />{" "}
-          {page.quote || quotePages.includes(page.id)
-            ? "Muokkaa puhekuplaa"
-            : "Lisää puhekupla"}
-        </button>
-        <ScrapbookIdeaPrompt
-          key={`${page.id}-${page.topic}`}
-          topic={page.topic}
-          disabled={!ready || busy}
-          onOpenIdeas={openIdeas}
-        />
-        <details className="scrap-page-details">
-          <summary>Päivä ja kuvan kuvaus</summary>
-          <label htmlFor={`${id}-date`}>Tapahtumapäivä (valinnainen)</label>
-          <input
-            id={`${id}-date`}
-            name="scrapbook-date"
-            type="date"
-            disabled={!ready}
-            value={page.date}
-            onChange={(event) => patch({ date: event.target.value }, "date")}
-            onBlur={finishEdit}
-          />
+      {!editing && (
+        <div className="scrap-photo-start">
+          <Camera size={40} strokeWidth={1.4} aria-hidden="true" />
+          <h3>Millaisen hetken haluat talteen?</h3>
           <p>
-            Jätä tyhjäksi, jos et muista päivää. Tallennuspäivää ei käytetä
-            tapahtumapäivänä.
+            Tassu, hassu uniasento tai lempilelu. Yksi kuva riittää
+            ensimmäiseksi sivuksi.
           </p>
-          <label htmlFor={`${id}-description`}>
-            Kuvan kuvaus ruudunlukijalle (valinnainen)
-          </label>
-          <input
-            id={`${id}-description`}
-            name="scrapbook-description"
-            type="text"
-            autoComplete="off"
-            maxLength={180}
-            disabled={!ready}
-            value={page.imageDescription}
-            placeholder="Mitä kuvassa näkyy?…"
-            onChange={(event) =>
-              patch({ imageDescription: event.target.value }, "description")
-            }
-            onBlur={finishEdit}
-          />
-          {page.image && (
-            <button
-              type="button"
-              className="journal-text-link"
-              disabled={!ready || busy}
-              onClick={() => {
-                patch({ image: undefined });
-                setFeedback(
-                  "Kuva poistettiin sivulta. Tekstit säilyivät. Voit perua poiston.",
-                );
-              }}
-            >
-              Poista kuva sivulta
-            </button>
-          )}
-        </details>
-        <button
-          type="button"
-          className="journal-button journal-button-secondary scrap-undo"
-          disabled={!ready || !controller.canUndo}
-          onClick={() => {
-            controller.undo();
-            setFeedback("Edellinen muutos peruttu.");
-            revealPaper();
-          }}
-        >
-          <Undo2 size={19} aria-hidden="true" /> Peru muutos
-        </button>
-        <p
-          role="status"
-          aria-label="Leikekirjan palaute"
-          aria-atomic="true"
-          className="scrap-feedback"
-        >
-          {feedback ||
-            "Kokeile rohkeasti. Pohjan ja tarrojen vaihtamisen voi aina perua."}
-        </p>
-      </div>
-
-      <div className="scrap-book-pages">
-        <div className="scrap-pages-heading">
-          <h3>Kirjan sivut</h3>
           <button
             type="button"
-            className="journal-button journal-button-secondary"
-            disabled={!ready || busy || document.pages.length >= 24}
-            onClick={() => {
-              const next = newScrapbookPage(page.layout);
-              change((draft) => ({
-                ...draft,
-                pages: [...draft.pages, next],
-                selectedPageId: next.id,
-              }));
-              setFeedback("Uusi sivu odottaa kuvaa. Aiemmat sivut säilyivät.");
-              revealPaper();
-            }}
-          >
-            <Plus size={19} aria-hidden="true" /> Uusi sivu
-          </button>
-        </div>
-        <ol aria-label="Leikekirjan sivut">
-          {document.pages.map((item, position) => (
-            <li key={item.id}>
-              <button
-                type="button"
-                disabled={!ready || busy}
-                aria-current={item.id === page.id ? "page" : undefined}
-                aria-label={`Avaa sivu ${position + 1}: ${item.title.trim() || "Oma kuvahetki"}`}
-                onClick={() => select(item.id)}
-              >
-                {item.image ? (
-                  <img src={item.image} alt="" width={80} height={60} />
-                ) : (
-                  <Camera size={24} aria-hidden="true" />
-                )}
-                <span>Sivu {position + 1}</span>
-              </button>
-            </li>
-          ))}
-        </ol>
-        <div
-          className="scrap-page-actions"
-          role="group"
-          aria-label="Valitun sivun järjestys"
-        >
-          <button
-            type="button"
-            className="book-cover-trial-idea-button"
-            disabled={!ready || busy || index === 0}
-            onClick={() => move(-1)}
-          >
-            <ArrowLeft size={18} aria-hidden="true" /> Aikaisemmaksi
-          </button>
-          <button
-            type="button"
-            className="book-cover-trial-idea-button"
-            disabled={!ready || busy || index === document.pages.length - 1}
-            onClick={() => move(1)}
-          >
-            Myöhemmäksi <ArrowRight size={18} aria-hidden="true" />
-          </button>
-          <button
-            type="button"
-            className="book-cover-trial-idea-button"
+            className="journal-text-link"
             disabled={!ready || busy}
             onClick={() => {
-              change((draft) => {
-                const remaining = draft.pages.filter(
-                  (item) => item.id !== page.id,
-                );
-                const pages = remaining.length
-                  ? remaining
-                  : [newScrapbookPage(page.layout)];
-                return {
-                  ...draft,
-                  pages,
-                  selectedPageId: pages[Math.min(index, pages.length - 1)].id,
-                };
-              });
-              setFeedback(
-                "Sivu poistettiin kokeilukirjasta. Voit palauttaa sen Peru muutos -painikkeella.",
-              );
+              setTextPages((current) => [...current, page.id]);
               revealPaper();
             }}
           >
-            Poista tämä sivu
+            Aloita pelkillä sanoilla
           </button>
         </div>
-        <p className="scrap-local-note">
-          Kuvat ja leikekirjan luonnos tallennetaan vain tähän selaimeen. JPEG,
-          PNG tai WebP, enintään 5 Mt/kuva. Kokeiluun mahtuu 24 sivua. Ne eivät
-          siirry kirjautuneen käyttäjän pentukirjaan.
-        </p>
-      </div>
+      )}
+      {editing && (
+        <>
+          <div
+            className="scrap-layout-picker"
+            role="group"
+            aria-label="Kirjasivun pohja"
+          >
+            <p className="scrap-tool-label">Vaihda pohjaa</p>
+            <div className="scrap-layout-options">
+              {SCRAPBOOK_LAYOUTS.map((layout) => (
+                <button
+                  key={layout}
+                  type="button"
+                  aria-pressed={page.layout === layout}
+                  disabled={!ready}
+                  onClick={() => {
+                    if (layout !== page.layout) patch({ layout });
+                    setFeedback(
+                      `${scrapbookLayoutNames[layout]} valittu. Kuva, tekstit ja tapahtumapäivä säilyivät.`,
+                    );
+                  }}
+                >
+                  <span
+                    className={`scrap-layout-mini scrap-layout-mini-${layout}`}
+                    aria-hidden="true"
+                  >
+                    <span>
+                      {page.image && (
+                        <img src={page.image} alt="" width={60} height={50} />
+                      )}
+                    </span>
+                  </span>
+                  <span>{scrapbookLayoutNames[layout]}</span>
+                  {page.layout === layout && (
+                    <Check size={14} aria-hidden="true" />
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div
+            className={`annual-document annual-palette-${document.palette} scrap-editor-canvas`}
+          >
+            <style>{documentStyles}</style>
+            <article
+              ref={paper}
+              className="annual-sheet annual-page-scrapbook scrap-editing-paper"
+              tabIndex={-1}
+              aria-label="Oma kirjasivu"
+            >
+              <header className="annual-page-header">
+                <p className="annual-kicker">
+                  {document.puppyName.trim() || "Oma pentu"} · Oma pentukirja
+                </p>
+                <h3 className="sr-only">Muokattava kirjasivu</h3>
+                <label htmlFor={`${id}-title`} className="sr-only">
+                  Kirjasivun otsikko
+                </label>
+                <GrowingBookField
+                  id={`${id}-title`}
+                  name="scrapbook-title"
+                  className="scrap-inline-title"
+                  value={page.title}
+                  maxLength={60}
+                  autoComplete="off"
+                  disabled={!ready}
+                  placeholder="Oman hetken otsikko…"
+                  onChange={(event) =>
+                    patch({ title: event.target.value }, "title")
+                  }
+                  onBlur={finishEdit}
+                />
+              </header>
+              <ScrapbookPageContent
+                page={page}
+                editor={{
+                  onChange: patch,
+                  onFinish: finishEdit,
+                  onCamera: () => camera.current?.click(),
+                  showQuote: quotePages.includes(page.id),
+                  disabled: !ready || busy,
+                }}
+              />
+              <p className="scrap-page-indicator">
+                {hasScrapbookContent(page)
+                  ? "Sivu on mukana kokeilukirjassa."
+                  : "Lisää kuva tai omat sanat. Sivu tulee mukaan kirjaan heti."}
+              </p>
+            </article>
+          </div>
+
+          <div className="scrap-editor-extras">
+            <div
+              className="scrap-sticker-options"
+              role="group"
+              aria-label="Kirjasivun tarra"
+            >
+              <p className="scrap-tool-label">Lisää tarra</p>
+              {(
+                [
+                  ["paw", "Tassu", PawPrint],
+                  ["heart", "Sydän", Heart],
+                  ["star", "Tähti", Star],
+                ] as const
+              ).map(([sticker, label, Icon]) => (
+                <button
+                  type="button"
+                  key={sticker}
+                  disabled={!ready}
+                  aria-pressed={page.sticker === sticker}
+                  onClick={() => {
+                    patch({
+                      sticker: page.sticker === sticker ? "none" : sticker,
+                    });
+                    setFeedback(
+                      page.sticker === sticker
+                        ? "Tarra poistettu. Voit perua muutoksen."
+                        : `${label} lisätty kirjasivulle.`,
+                    );
+                  }}
+                >
+                  <Icon size={20} aria-hidden="true" />
+                  {label}
+                </button>
+              ))}
+            </div>
+            <button
+              type="button"
+              className="book-cover-trial-idea-button"
+              disabled={!ready}
+              onClick={() => {
+                setQuotePages((current) =>
+                  current.includes(page.id) ? current : [...current, page.id],
+                );
+                window.requestAnimationFrame(() => {
+                  const field =
+                    paper.current?.querySelector<HTMLTextAreaElement>(
+                      '[name="scrapbook-quote"]',
+                    );
+                  field?.focus({ preventScroll: true });
+                  field?.scrollIntoView({
+                    block: "center",
+                    behavior: "instant",
+                  });
+                });
+              }}
+            >
+              <MessageCircle size={19} aria-hidden="true" />{" "}
+              {page.quote || quotePages.includes(page.id)
+                ? "Muokkaa puhekuplaa"
+                : "Lisää puhekupla"}
+            </button>
+            <ScrapbookIdeaPrompt
+              key={`${page.id}-${page.topic}`}
+              topic={page.topic}
+              disabled={!ready || busy}
+              onOpenIdeas={openIdeas}
+            />
+            <details className="scrap-page-details">
+              <summary>Päivä ja kuvan kuvaus</summary>
+              <label htmlFor={`${id}-date`}>Tapahtumapäivä (valinnainen)</label>
+              <input
+                id={`${id}-date`}
+                name="scrapbook-date"
+                type="date"
+                disabled={!ready}
+                value={page.date}
+                onChange={(event) =>
+                  patch({ date: event.target.value }, "date")
+                }
+                onBlur={finishEdit}
+              />
+              <p>
+                Jätä tyhjäksi, jos et muista päivää. Tallennuspäivää ei käytetä
+                tapahtumapäivänä.
+              </p>
+              <label htmlFor={`${id}-description`}>
+                Kuvan kuvaus ruudunlukijalle (valinnainen)
+              </label>
+              <input
+                id={`${id}-description`}
+                name="scrapbook-description"
+                type="text"
+                autoComplete="off"
+                maxLength={180}
+                disabled={!ready}
+                value={page.imageDescription}
+                placeholder="Mitä kuvassa näkyy?…"
+                onChange={(event) =>
+                  patch({ imageDescription: event.target.value }, "description")
+                }
+                onBlur={finishEdit}
+              />
+              {page.image && (
+                <button
+                  type="button"
+                  className="journal-text-link"
+                  disabled={!ready || busy}
+                  onClick={() => {
+                    patch({ image: undefined });
+                    setFeedback(
+                      "Kuva poistettiin sivulta. Tekstit säilyivät. Voit perua poiston.",
+                    );
+                  }}
+                >
+                  Poista kuva sivulta
+                </button>
+              )}
+            </details>
+            <button
+              type="button"
+              className="journal-button journal-button-secondary scrap-undo"
+              disabled={!ready || !controller.canUndo}
+              onClick={() => {
+                controller.undo();
+                setFeedback("Edellinen muutos peruttu.");
+                revealPaper();
+              }}
+            >
+              <Undo2 size={19} aria-hidden="true" /> Peru muutos
+            </button>
+            <p
+              role="status"
+              aria-label="Leikekirjan palaute"
+              aria-atomic="true"
+              className="scrap-feedback"
+            >
+              {feedback ||
+                "Kokeile rohkeasti. Pohjan ja tarrojen vaihtamisen voi aina perua."}
+            </p>
+          </div>
+        </>
+      )}
+
+      {(editing || document.pages.length > 1) && (
+        <div className="scrap-book-pages">
+          <div className="scrap-pages-heading">
+            <h3>Kirjan sivut</h3>
+            <button
+              type="button"
+              className="journal-button journal-button-secondary"
+              disabled={!ready || busy || document.pages.length >= 24}
+              onClick={() => {
+                const next = newScrapbookPage(page.layout);
+                change((draft) => ({
+                  ...draft,
+                  pages: [...draft.pages, next],
+                  selectedPageId: next.id,
+                }));
+                setFeedback(
+                  "Uusi sivu odottaa kuvaa. Aiemmat sivut säilyivät.",
+                );
+                revealPaper();
+              }}
+            >
+              <Plus size={19} aria-hidden="true" /> Uusi sivu
+            </button>
+          </div>
+          <ol aria-label="Leikekirjan sivut">
+            {document.pages.map((item, position) => (
+              <li key={item.id}>
+                <button
+                  type="button"
+                  disabled={!ready || busy}
+                  aria-current={item.id === page.id ? "page" : undefined}
+                  aria-label={`Avaa sivu ${position + 1}: ${item.title.trim() || "Oma kuvahetki"}`}
+                  onClick={() => select(item.id)}
+                >
+                  {item.image ? (
+                    <img src={item.image} alt="" width={80} height={60} />
+                  ) : (
+                    <Camera size={24} aria-hidden="true" />
+                  )}
+                  <span>Sivu {position + 1}</span>
+                </button>
+              </li>
+            ))}
+          </ol>
+          <div
+            className="scrap-page-actions"
+            role="group"
+            aria-label="Valitun sivun järjestys"
+          >
+            <button
+              type="button"
+              className="book-cover-trial-idea-button"
+              disabled={!ready || busy || index === 0}
+              onClick={() => move(-1)}
+            >
+              <ArrowLeft size={18} aria-hidden="true" /> Aikaisemmaksi
+            </button>
+            <button
+              type="button"
+              className="book-cover-trial-idea-button"
+              disabled={!ready || busy || index === document.pages.length - 1}
+              onClick={() => move(1)}
+            >
+              Myöhemmäksi <ArrowRight size={18} aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              className="book-cover-trial-idea-button"
+              disabled={!ready || busy}
+              onClick={() => {
+                change((draft) => {
+                  const remaining = draft.pages.filter(
+                    (item) => item.id !== page.id,
+                  );
+                  const pages = remaining.length
+                    ? remaining
+                    : [newScrapbookPage(page.layout)];
+                  return {
+                    ...draft,
+                    pages,
+                    selectedPageId: pages[Math.min(index, pages.length - 1)].id,
+                  };
+                });
+                setFeedback(
+                  "Sivu poistettiin kokeilukirjasta. Voit palauttaa sen Peru muutos -painikkeella.",
+                );
+                revealPaper();
+              }}
+            >
+              Poista tämä sivu
+            </button>
+          </div>
+          <p className="scrap-local-note">
+            Kuvat ja leikekirjan luonnos tallennetaan vain tähän selaimeen.
+            JPEG, PNG tai WebP, enintään 5 Mt/kuva. Kokeiluun mahtuu 24 sivua.
+            Ne eivät siirry kirjautuneen käyttäjän pentukirjaan.
+          </p>
+        </div>
+      )}
       <ScrapbookIdeas
         open={ideasOpen}
         onOpenChange={setIdeasOpen}
@@ -622,6 +682,9 @@ export function ScrapbookEditor({
         onChoose={(topic) => {
           if (!ready || busy) return;
           if (topic !== page.topic) patch(chooseScrapbookTopic(page, topic));
+          setTextPages((current) =>
+            current.includes(page.id) ? current : [...current, page.id],
+          );
           ideaChosen.current = true;
           setIdeasOpen(false);
           setFeedback(

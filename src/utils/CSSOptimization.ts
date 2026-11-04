@@ -66,8 +66,8 @@ input,textarea,select{font-size:16px!important;-webkit-appearance:none;appearanc
 /* Touch interaction improvements */
 *{-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
 
-/* Keyboard handling */
-.keyboard-open{position:fixed;width:100%}
+/* Keep the document scrollable while the software keyboard is open. */
+.keyboard-open{width:100%}
 
 /* Safe area support */
 .safe-area-padding-bottom{padding-bottom:env(safe-area-inset-bottom)}

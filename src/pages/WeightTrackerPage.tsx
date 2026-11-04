@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import AuthenticationWrapper from "@/components/AuthenticationWrapper";
 import ModernPuppyWeightTracker from "@/components/ModernPuppyWeightTracker";
 import VeterinaryDisclaimer from "@/components/VeterinaryDisclaimer";
@@ -20,8 +20,11 @@ import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { PageIntro } from "@/components/PageIntro";
 import SEO from "@/components/SEO";
+import "@/styles/adult-food.css";
 
 const WeightTrackerPage = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const isAdult = searchParams.get("vaihe") === "aikuinen";
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -198,9 +201,9 @@ const WeightTrackerPage = () => {
   return (
     <div className="site-page site-tool site-weight-page">
       <SEO
-        title="Painonseuranta: pennun painot ja kasvu"
+        title="Painonseuranta pennulle ja aikuiselle koiralle"
         siteName="Pentulaskuri"
-        description="Tallenna pennun painomittaukset ja seuraa muutosta ajan myötä."
+        description="Tallenna koiran painomittaukset ja seuraa muutosta ajan myötä."
         canonicalUrl="https://pentulaskuri.com/weight-tracker"
       />
       <div className="space-y-6">
@@ -223,11 +226,42 @@ const WeightTrackerPage = () => {
 
         <div className="space-y-6">
           <PageIntro
-            title="Pennun kasvu, hetki kerrallaan."
+            title={
+              isAdult
+                ? "Aikuisen koiran painonseuranta."
+                : "Pennun kasvu, hetki kerrallaan."
+            }
             description="Tallenna painomittaukset ja seuraa muutosta ajan myötä."
           />
 
-          <ModernPuppyWeightTracker />
+          <div className="dog-life-stage">
+            <label htmlFor="weight-life-stage">Koiran elämänvaihe</label>
+            <select
+              id="weight-life-stage"
+              name="dog-life-stage"
+              value={isAdult ? "aikuinen" : "pentu"}
+              onChange={(event) => {
+                const next = new URLSearchParams(searchParams);
+                if (event.target.value === "aikuinen")
+                  next.set("vaihe", "aikuinen");
+                else next.delete("vaihe");
+                setSearchParams(next, {
+                  replace: true,
+                  preventScrollReset: true,
+                });
+              }}
+            >
+              <option value="pentu">Pentu, kasvu on vielä kesken</option>
+              <option value="aikuinen">Aikuinen, täysikasvuinen koira</option>
+            </select>
+          </div>
+          {isAdult && (
+            <p>
+              Aikuiselle näytetään omat painomittaukset. Pennun kasvukäyriä tai
+              aikuispainon ennustetta ei sovelleta aikuiseen koiraan.
+            </p>
+          )}
+          <ModernPuppyWeightTracker isAdult={isAdult} />
 
           {/* Veterinary Disclaimer - E-E-A-T */}
           <VeterinaryDisclaimer variant="compact" className="mt-8" />

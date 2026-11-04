@@ -118,7 +118,7 @@ test.describe("Pentukirjan esittely", () => {
         )
         .toEqual([]);
       const startLink = hero.getByRole("link", {
-        name: "Kokeile kirjan kantta",
+        name: "Lisää ensimmäinen kuva",
         exact: true,
       });
       await expect(startLink).toHaveAttribute("href", "#kokeile-kantta");

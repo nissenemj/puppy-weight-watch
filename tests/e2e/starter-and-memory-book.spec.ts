@@ -90,389 +90,120 @@ for (const width of [320, 768, 1024, 1440]) {
 }
 
 for (const width of [320, 768, 1024, 1440]) {
-  test(`the public cover trial works without an account, with keyboard and accessible reading at ${width}`, async ({
+  test(`photo-first trial and secondary cover work by keyboard at ${width}`, async ({
     page,
-  }, testInfo) => {
-    const writes: string[] = [];
-    page.on("request", (request) => {
-      if (
-        /\.supabase\.co\//.test(request.url()) &&
-        !["GET", "OPTIONS"].includes(request.method())
-      )
-        writes.push(request.url());
-    });
+  }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/puppy-book-landing");
     await page
-      .getByRole("link", { name: "Kokeile kirjan kantta", exact: true })
+      .getByRole("link", { name: "Lisää ensimmäinen kuva", exact: true })
       .click();
     const trial = page.getByRole("region", {
-      name: "Kokeile kantta pennun nimellä.",
+      name: "Aloita yhdestä kuvasta.",
       exact: true,
     });
     await expect(trial).toBeFocused();
     await expect(
-      trial.getByText("Kokeilu toimii ilman kirjautumista.", { exact: false }),
-    ).toBeVisible();
+      trial.getByRole("button", { name: "Ota kuva", exact: true }),
+    ).toBeEnabled();
+    await expect(
+      trial.getByRole("button", { name: "Polaroidi", exact: true }),
+    ).toHaveCount(0);
+    await expect(
+      trial.getByLabel("Pennun nimi", { exact: true }),
+    ).not.toBeVisible();
+    const coverSummary = trial.getByText("Kirjan kansi", { exact: true });
+    await coverSummary.focus();
+    await coverSummary.press("Enter");
     await trial.getByLabel("Pennun nimi", { exact: true }).fill("Lumi");
-    const cover = trial.getByRole("region", {
-      name: "Kannen esikatselu",
-      exact: true,
-    });
-    await expect(cover.getByText("Lumi", { exact: true })).toBeVisible();
-    expect(
-      await cover
-        .getByText("Lumi", { exact: true })
-        .evaluate((element) => parseFloat(getComputedStyle(element).fontSize)),
-    ).toBeGreaterThanOrEqual(16);
-    expect(
-      await cover.evaluate(
-        (element) => element.scrollWidth <= element.clientWidth,
-      ),
-    ).toBe(true);
     const lake = trial.getByRole("radio", { name: "Järvi", exact: true });
     await lake.focus();
     await lake.press("ArrowRight");
     await expect(
       trial.getByRole("radio", { name: "Marja", exact: true }),
     ).toBeChecked();
-    await expect(cover.locator(".annual-cover-swatch")).toHaveClass(
-      /annual-palette-berry/,
-    );
     await expect(
-      trial.getByRole("status", { name: "Kansiväri", exact: true }),
-    ).toContainText("Valittu kansiväri: Marja.");
-    for (const label of await trial.locator(".annual-radio").all()) {
-      const size = await label.boundingBox();
-      expect(size!.width).toBeGreaterThanOrEqual(44);
-      expect(size!.height).toBeGreaterThanOrEqual(44);
-    }
+      trial.getByRole("region", { name: "Kannen esikatselu", exact: true }),
+    ).toContainText("Lumi");
+    await expect(
+      trial.getByRole("button", { name: "Selaa kokeilukirjaa", exact: true }),
+    ).toBeDisabled();
+    await expectAccessible(page, "main");
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,
       ),
     ).toBe(true);
-    await expectAccessible(page, "main");
-    await trial.screenshot({ path: testInfo.outputPath("cover-trial.png") });
-    if (process.env.BOOK_COVER_TRIAL_SCREENSHOTS)
-      await trial.screenshot({
-        path: `${process.env.BOOK_COVER_TRIAL_SCREENSHOTS}/kansikokeilu-${width}.png`,
-      });
-    const readerTrigger = trial.getByRole("button", {
-      name: "Katso esimerkkiaukeamaa",
-      exact: true,
-    });
-    await readerTrigger.focus();
-    await readerTrigger.press("Enter");
-    const reader = page.getByRole("dialog");
-    await expect(reader).toBeVisible();
-    await expect(
-      reader.getByRole("region", { name: "Kirjan lukusivut", exact: true }),
-    ).toBeFocused();
-    await expect(reader).toContainText(
-      "Esimerkin kuvat, päivämäärät ja tarinat ovat kuvitteellisia.",
+    await expect(trial.getByLabel("Leikekirjan tallennus")).toHaveText(
+      "Luonnos tallessa tässä selaimessa.",
     );
-    await expect(reader.locator(".annual-kicker").first()).toContainText(
-      "Lumi",
-    );
-    await expect(reader.locator(".annual-sheet")).toHaveCount(
-      width >= 1024 ? 2 : 1,
-    );
-    await expect(
-      reader.getByRole("button", {
-        name: "Tulosta tai tallenna PDF",
-        exact: true,
-      }),
-    ).toHaveCount(0);
-    await expectAccessible(page, ".book-reader");
-    await reader.press("Escape");
-    await expect(reader).toHaveCount(0);
-    await expect(readerTrigger).toBeFocused();
+    await page.reload();
+    await trial.getByText("Kirjan kansi", { exact: true }).click();
     await expect(trial.getByLabel("Pennun nimi", { exact: true })).toHaveValue(
       "Lumi",
     );
     await expect(
       trial.getByRole("radio", { name: "Marja", exact: true }),
     ).toBeChecked();
-    await trial
-      .getByRole("tab", { name: "Ensimmäinen hetki", exact: true })
-      .press("Enter");
-    const memoryTab = trial.getByRole("tab", {
-      name: "Ensimmäinen hetki",
-      exact: true,
-    });
-    await expect(memoryTab).toHaveAttribute("aria-selected", "true");
-    await trial.getByRole("radio", { name: "Kommellus", exact: true }).check();
-    await trial
-      .getByLabel("Yksi lause teistä", { exact: true })
-      .fill("Sukka löytyi pennun pedistä.");
-    await trial
-      .getByRole("button", { name: "Poimi hetki kirjaan", exact: true })
-      .click();
-    await expect(
-      trial.getByRole("status", { name: "Kokeilun palaute", exact: true }),
-    ).toContainText("Kirjassa on 1 hetki.");
-    const memory = trial.getByRole("region", {
-      name: "Muiston esikatselu",
-      exact: true,
-    });
-    if (width < 900) {
-      await expect(memory).toBeFocused();
-      const bounds = await memory.boundingBox();
-      const header = await page.getByRole("banner").boundingBox();
-      expect(bounds!.y).toBeGreaterThanOrEqual(header!.y + header!.height);
-      await trial
-        .getByRole("link", { name: "Palaa kirjoittamaan", exact: true })
-        .click();
-      await expect(
-        trial.getByLabel("Yksi lause teistä", { exact: true }),
-      ).toBeFocused();
-    }
-    await expect(memory).toContainText("Sukka löytyi pennun pedistä.");
-    await expect(memory).toContainText("Hetki poimittu");
-    expect(
-      await memory
-        .locator(".book-cover-trial-stamp")
-        .evaluate((element) => getComputedStyle(element).animationName),
-    ).toBe("none");
-    await expectAccessible(page, "main");
-    expect(
-      await page.evaluate(
-        () => document.documentElement.scrollWidth <= innerWidth,
-      ),
-    ).toBe(true);
-    if (process.env.BOOK_COVER_TRIAL_SCREENSHOTS)
-      await trial.screenshot({
-        path: `${process.env.BOOK_COVER_TRIAL_SCREENSHOTS}/muistokokeilu-${width}.png`,
-      });
-    await memoryTab.focus();
-    await memoryTab.press("ArrowLeft");
-    await expect(
-      trial.getByRole("tab", { name: "Kansi", exact: true }),
-    ).toHaveAttribute("aria-selected", "true");
-    await expect(trial.getByLabel("Pennun nimi", { exact: true })).toHaveValue(
-      "Lumi",
-    );
-    await trial
-      .getByRole("link", { name: "Aloita oma pentukirja", exact: true })
-      .click();
-    await expect(page).toHaveURL(/\/puppy-book$/);
-    await expect(
-      page.getByRole("link", { name: "Kirjaudu sisään", exact: true }),
-    ).toBeVisible();
-    expect(writes).toEqual([]);
-    expect(page.url()).not.toContain("Lumi");
   });
 }
 
-test("the interactive trial retains each draft, updates rather than duplicates a moment and reads collected words without saving them", async ({
-  page,
-}) => {
-  const writes: string[] = [];
-  page.on("request", (request) => {
-    if (
-      /\.supabase\.co\//.test(request.url()) &&
-      !["GET", "OPTIONS"].includes(request.method())
-    )
-      writes.push(request.url());
-  });
-  await page.setViewportSize({ width: 320, height: 900 });
-  await page.goto("/puppy-book-landing#kokeile-kantta");
-  const trial = page.locator("#kokeile-kantta");
-  await trial.getByLabel("Pennun nimi", { exact: true }).fill("Lumi");
-  await trial
-    .getByRole("tab", { name: "Ensimmäinen hetki", exact: true })
-    .click();
-  await expect(
-    trial.getByRole("tab", { name: "Ensimmäinen hetki", exact: true }),
-  ).toBeFocused();
-  const draft = trial.getByLabel("Yksi lause teistä", { exact: true });
-  await draft.fill("Nukahdit villasukka tyynynäsi.");
-  const idea = trial.getByRole("status", {
-    name: "Kirjoitusidea",
-    exact: true,
-  });
-  const firstIdea = await idea.innerText();
-  await trial
-    .getByRole("button", { name: "Vaihda kirjoitusideaa", exact: true })
-    .click();
-  await expect(idea).not.toHaveText(firstIdea);
-  await expect(draft).toHaveValue("Nukahdit villasukka tyynynäsi.");
-  await trial
-    .getByRole("button", { name: "Poimi hetki kirjaan", exact: true })
-    .click();
-  const feedback = trial.getByRole("status", {
-    name: "Kokeilun palaute",
-    exact: true,
-  });
-  await expect(feedback).toContainText("Kirjassa on 1 hetki.");
-  await trial
-    .getByRole("button", { name: "Päivitä hetki kirjassa", exact: true })
-    .click();
-  await expect(feedback).toContainText("hetki päivitetty");
-  await expect(feedback).toContainText("Kirjassa on 1 hetki.");
-  const home = trial.getByRole("radio", { name: "Kotipäivä", exact: true });
-  await home.focus();
-  await home.press("ArrowRight");
-  await expect(
-    trial.getByRole("radio", { name: "Kommellus", exact: true }),
-  ).toBeChecked();
-  await expect(draft).toHaveValue("");
-  await draft.fill("Sukka olikin tärkeä aarre.");
-  await trial
-    .getByRole("button", { name: "Poimi hetki kirjaan", exact: true })
-    .click();
-  await expect(feedback).toContainText("Kirjassa on 2 hetkeä.");
-  await home.check();
-  await expect(draft).toHaveValue("Nukahdit villasukka tyynynäsi.");
-  await draft.fill("Nukahdit lopulta kainalooni.");
-  await expect(trial.getByText("Hetki poimittu", { exact: true })).toHaveCount(
-    0,
-  );
-  await trial
-    .getByRole("button", { name: "Päivitä hetki kirjassa", exact: true })
-    .click();
-  await expect(feedback).toContainText("Kirjassa on 2 hetkeä.");
-  await trial
-    .getByRole("button", { name: "Katso esimerkkiaukeamaa", exact: true })
-    .click();
-  const reader = page.getByRole("dialog");
-  await expect(reader).toContainText(
-    "mukana on myös kokeilussa lisäämäsi teksti",
-  );
-  const pageMenu = reader.getByLabel("Valitse lukutilan sivu", { exact: true });
-  const options = await pageMenu.locator("option").allTextContents();
-  const homePage = options.findIndex((label) => label.includes("kesäkuu"));
-  const mishapPage = options.findIndex((label) =>
-    label.includes("Kuukauden kommellus"),
-  );
-  expect(homePage).toBeGreaterThan(0);
-  expect(mishapPage).toBeGreaterThan(homePage);
-  await pageMenu.selectOption(String(homePage));
-  await expect(reader).toContainText("Nukahdit lopulta kainalooni.");
-  await expect(reader).not.toContainText("Nukahdit villasukka tyynynäsi.");
-  await pageMenu.selectOption(String(mishapPage));
-  await expect(reader).toContainText("Sukka olikin tärkeä aarre.");
-  await expectAccessible(page, ".book-reader");
-  await reader.press("Escape");
-  await expect(
-    trial.getByRole("button", { name: "Katso esimerkkiaukeamaa", exact: true }),
-  ).toBeFocused();
-  expect(writes).toEqual([]);
-  expect(page.url()).not.toContain("Lumi");
-  expect(page.url()).not.toContain("kainalooni");
-  await page.reload();
-  await trial
-    .getByRole("tab", { name: "Ensimmäinen hetki", exact: true })
-    .click();
-  await expect(draft).toHaveValue("");
-  await expect(
-    trial.getByRole("button", { name: "Poimi hetki kirjaan", exact: true }),
-  ).toBeVisible();
-  await expect(feedback).toContainText("Kokeile omia sanoja");
-});
-
-test("the interactive trial handles long text, whitespace, all moment choices and reduced motion on a small phone", async ({
+test("text-only pages are explicit, persist and can be read without fictional sample content", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 320, height: 568 });
   await page.goto("/puppy-book-landing#kokeile-kantta");
   const trial = page.locator("#kokeile-kantta");
   await trial
-    .getByRole("tab", { name: "Ensimmäinen hetki", exact: true })
+    .getByRole("button", { name: "Aloita pelkillä sanoilla", exact: true })
     .click();
-  const draft = trial.getByLabel("Yksi lause teistä", { exact: true });
-  const memory = trial.getByRole("region", {
-    name: "Muiston esikatselu",
-    exact: true,
-  });
-  await draft.fill("Pentu".repeat(36));
-  await expect(draft).toHaveValue("Pentu".repeat(36));
-  await expect(memory).toContainText("Pentu".repeat(36));
-  for (const label of await trial.locator(".book-cover-trial-moment").all()) {
-    const size = await label.boundingBox();
-    expect(size!.width).toBeGreaterThanOrEqual(44);
-    expect(size!.height).toBeGreaterThanOrEqual(44);
-  }
-  expect(
-    await page.evaluate(
-      () => document.documentElement.scrollWidth <= innerWidth,
-    ),
-  ).toBe(true);
-  expect(
-    await memory
-      .locator(".book-cover-trial-sheet")
-      .evaluate((element) => getComputedStyle(element).animationName),
-  ).toBe("none");
-  await expectAccessible(page, "main");
-  await draft.fill("   ");
-  await trial
-    .getByRole("button", { name: "Poimi hetki kirjaan", exact: true })
-    .click();
-  await expect(memory).toContainText("Pieni nenä tutki jokaisen nurkan.");
-  await trial.getByRole("radio", { name: "Seikkailu", exact: true }).check();
-  await expect(draft).toHaveValue("");
-  await trial
-    .getByRole("button", { name: "Poimi hetki kirjaan", exact: true })
-    .click();
-  await expect(memory).toContainText("Löysimme uuden metsäpolun.");
-  await expect(
-    trial.getByRole("status", { name: "Kokeilun palaute", exact: true }),
-  ).toContainText("Kirjassa on 2 hetkeä.");
-  await expectAccessible(page, "main");
-});
-
-test("the public cover trial handles an empty or long name and restores its local cover draft", async ({
-  page,
-}) => {
-  await page.setViewportSize({ width: 320, height: 900 });
-  await page.goto("/puppy-book-landing#kokeile-kantta");
-  const trial = page.locator("#kokeile-kantta");
-  const name = trial.getByLabel("Pennun nimi", { exact: true });
-  await name.fill("");
-  await expect(
-    trial.getByRole("region", { name: "Kannen esikatselu", exact: true }),
-  ).toContainText("Oma pentu");
-  const longName = "Pentu".repeat(8);
-  await name.fill(longName);
-  await expect(name).toHaveValue(longName);
-  expect(
-    await page.evaluate(
-      () => document.documentElement.scrollWidth <= innerWidth,
-    ),
-  ).toBe(true);
-  await expectAccessible(page, "main");
-  await expect(
-    trial.locator('[aria-label="Leikekirjan tallennus"]'),
-  ).toHaveText("Luonnos tallessa tässä selaimessa.");
+  const caption = trial.getByLabel("Omat sanat (valinnainen)", { exact: true });
+  await caption.fill("Nukahdit lopulta kainalooni.");
+  await expect(trial.getByLabel("Leikekirjan tallennus")).toHaveText(
+    "Luonnos tallessa tässä selaimessa.",
+  );
   await page.reload();
-  await expect(name).toHaveValue(longName);
+  await expect(caption).toHaveValue("Nukahdit lopulta kainalooni.");
+  await trial
+    .getByRole("button", { name: "Selaa kokeilukirjaa", exact: true })
+    .click();
+  const reader = page.getByRole("dialog");
+  await expect(reader).toContainText("Nukahdit lopulta kainalooni.");
+  await expect(reader).not.toContainText("Nuppu");
+  await expect(reader).not.toContainText("1.4.2026");
+  await expectAccessible(page, ".book-reader");
+  await reader.press("Escape");
   await expect(
-    trial.getByRole("radio", { name: "Järvi", exact: true }),
-  ).toBeChecked();
+    trial.getByRole("button", { name: "Selaa kokeilukirjaa", exact: true }),
+  ).toBeFocused();
 });
 
-test("a failed public reader load leaves the cover trial usable", async ({
+test("the secondary cover supports long names and a failed reader keeps the draft usable", async ({
   page,
 }) => {
   await page.route(/\/assets\/BookReader-[^/]+\.js$/, (route) => route.abort());
+  await page.setViewportSize({ width: 320, height: 900 });
   await page.goto("/puppy-book-landing#kokeile-kantta");
   const trial = page.locator("#kokeile-kantta");
-  await trial.getByLabel("Pennun nimi", { exact: true }).fill("Lumi");
   await trial
-    .getByRole("button", { name: "Katso esimerkkiaukeamaa", exact: true })
+    .getByRole("button", { name: "Kokeile esimerkkikuvalla", exact: true })
+    .click();
+  await trial.getByText("Kirjan kansi", { exact: true }).click();
+  const name = trial.getByLabel("Pennun nimi", { exact: true });
+  await name.fill("Pentu".repeat(8));
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  await trial
+    .getByRole("button", { name: "Selaa kokeilukirjaa", exact: true })
     .click();
   await expect(trial.getByRole("alert")).toContainText(
-    "Esimerkkiaukeamaa ei saatu ladattua",
+    "Kirjaa ei saatu ladattua",
   );
   await expect(trial.getByRole("alert")).toBeFocused();
-  await expect(
-    trial.getByRole("link", {
-      name: "Avaa esimerkkikirja omalla sivulla",
-      exact: true,
-    }),
-  ).toHaveAttribute("href", "/muistokirja");
-  await trial.getByLabel("Pennun nimi", { exact: true }).fill("Kuura");
+  await name.fill("Kuura");
   await expect(
     trial.getByRole("region", { name: "Kannen esikatselu", exact: true }),
   ).toContainText("Kuura");
