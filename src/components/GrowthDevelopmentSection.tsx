@@ -1,3 +1,6 @@
+import { useMemo } from 'react'
+import { Link } from 'react-router-dom'
+import { differenceInCalendarDays, differenceInMonths, endOfDay, isValid, parseISO } from 'date-fns'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
@@ -14,6 +17,7 @@ import {
   Info
 } from 'lucide-react'
 import type { WeightEntry } from '@/services/weightService'
+import { calculateGrowthPrediction } from '@/utils/growthPrediction'
 
 interface GrowthDevelopmentSectionProps {
   weightData: WeightEntry[]
@@ -69,44 +73,52 @@ const DEVELOPMENT_STAGES: DevelopmentStage[] = [
   }
 ]
 
-const calculateAgeInWeeks = (birthDate: string): number => {
-  const birth = new Date(birthDate)
-  const now = new Date()
-  const diffTime = Math.abs(now.getTime() - birth.getTime())
-  const diffWeeks = Math.ceil(diffTime / (1000 * 60 * 60 * 24 * 7))
-  return diffWeeks
-}
-
 const getCurrentStage = (ageWeeks: number): DevelopmentStage | null => {
   return DEVELOPMENT_STAGES.find(stage => 
     ageWeeks >= stage.ageWeeks[0] && ageWeeks <= stage.ageWeeks[1]
   ) || DEVELOPMENT_STAGES[DEVELOPMENT_STAGES.length - 1]
 }
 
-const getGrowthPrediction = (weightData: WeightEntry[], ageWeeks: number): number => {
-  if (weightData.length < 2) return 0
-  
-  const sortedData = [...weightData].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-  const latestWeight = sortedData[sortedData.length - 1].weight
-  
-  // Simple prediction based on breed size estimates
-  if (ageWeeks < 16) {
-    return latestWeight * 3.5 // Small breeds
-  } else if (ageWeeks < 24) {
-    return latestWeight * 2.5 // Medium breeds  
-  } else {
-    return latestWeight * 1.5 // Large breeds
-  }
-}
-
 export default function GrowthDevelopmentSection({ weightData, birthDate }: GrowthDevelopmentSectionProps) {
-  const ageWeeks = birthDate ? calculateAgeInWeeks(birthDate) : 0
+  const today = new Date()
+  const birth = birthDate ? parseISO(birthDate) : null
+  const validBirth = birth && isValid(birth) && differenceInCalendarDays(today, birth) >= 0
+  const ageWeeks = validBirth ? Math.floor(differenceInCalendarDays(today, birth) / 7) : 0
+  // Size is not known here. Use a conservative upper end of the growth period
+  // (24 months), rather than treating an adult's weight gain as puppy growth.
+  const isAdult = Boolean(validBirth && differenceInMonths(today, birth) >= 24)
+  const lastPermittedTime = endOfDay(today).getTime()
+  const validEntries = useMemo(() => {
+    const born = birthDate ? parseISO(birthDate) : null
+    if (!born || !isValid(born)) return []
+    return weightData.filter(entry => {
+      const measured = parseISO(entry.date)
+      return Number.isFinite(entry.weight) && entry.weight > 0 &&
+        isValid(measured) && measured >= born && measured.getTime() <= lastPermittedTime
+    }).sort((a, b) => parseISO(a.date).getTime() - parseISO(b.date).getTime() ||
+      (a.created_at ?? '').localeCompare(b.created_at ?? ''))
+  }, [weightData, birthDate, lastPermittedTime])
+  const latest = validEntries[validEntries.length - 1]
+  const prediction = useMemo(() => {
+    const born = birthDate ? parseISO(birthDate) : null
+    if (!born || !isValid(born) || isAdult || !latest ||
+      differenceInCalendarDays(parseISO(latest.date), born) < 42) return null
+    // Multiple weigh-ins on one day are not independent growth observations.
+    const byDay = new Map(validEntries.map(entry => [entry.date.slice(0, 10), entry]))
+    if (byDay.size < 2) return null
+    // This shared model uses the age at each measurement, not today's age.
+    const result = calculateGrowthPrediction([...byDay.values()], born)
+    return result && Number.isFinite(result.predictedAdultWeight) &&
+      result.predictedAdultWeight >= latest.weight ? result : null
+  }, [birthDate, validEntries, latest, isAdult])
   const currentStage = getCurrentStage(ageWeeks)
-  const predictedAdultWeight = getGrowthPrediction(weightData, ageWeeks)
-  const currentWeight = weightData.length > 0 ? weightData[weightData.length - 1].weight : 0
-  const growthProgress = predictedAdultWeight > 0 ? (currentWeight / predictedAdultWeight) * 100 : 0
+  const predictedAdultWeight = prediction?.predictedAdultWeight
+  const currentWeight = latest?.weight ?? 0
+  const growthProgress = predictedAdultWeight ? Math.min(100, Math.max(0, (currentWeight / predictedAdultWeight) * 100)) : null
+  const stageProgress = currentStage ? Math.min(100, Math.max(0,
+    ((ageWeeks - currentStage.ageWeeks[0]) / (currentStage.ageWeeks[1] - currentStage.ageWeeks[0])) * 100)) : 0
 
-  if (!birthDate) {
+  if (!validBirth) {
     return (
       <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
         <CardHeader>
@@ -121,8 +133,35 @@ export default function GrowthDevelopmentSection({ weightData, birthDate }: Grow
         <CardContent>
           <div className="text-center py-8 text-muted-foreground">
             <Calendar className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
-            <p>Syntymäaika puuttuu</p>
+            <p>{birthDate ? 'Tarkista syntymäaika. Päivämäärä ei voi olla tulevaisuudessa.' : 'Syntymäaika puuttuu'}</p>
           </div>
+        </CardContent>
+      </Card>
+    )
+  }
+
+  if (isAdult) {
+    return (
+      <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
+        <CardHeader>
+          <CardTitle>Aikuisen koiran paino</CardTitle>
+          <CardDescription>
+            Koirasi on vähintään 2-vuotias. Pennun kasvuennustetta ei sovelleta aikuiseen koiraan.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {latest ? (
+            <div>
+              <p className="text-2xl font-bold text-primary">{latest.weight.toFixed(1)} kg</p>
+              <p className="text-sm text-muted-foreground">Viimeisin mitattu paino ({parseISO(latest.date).toLocaleDateString('fi-FI')})</p>
+            </div>
+          ) : <p>Lisää painomittaus aloittaaksesi seurannan.</p>}
+          <p className="text-sm text-muted-foreground">
+            Mitattu paino ei ole tavoitepaino. Seuraa painon muutoksia omista punnituksista.
+          </p>
+          <Button asChild className="min-h-11 h-auto whitespace-normal text-center">
+            <Link to="/weight-tracker?vaihe=aikuinen">Avaa aikuisen koiran painonseuranta</Link>
+          </Button>
         </CardContent>
       </Card>
     )
@@ -135,13 +174,13 @@ export default function GrowthDevelopmentSection({ weightData, birthDate }: Grow
         <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl overflow-hidden">
           <div className={`h-2 bg-gradient-to-r ${currentStage.color}`} />
           <CardHeader>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
+            <div className="flex flex-col items-start gap-3 sm:flex-row sm:justify-between">
+              <div className="flex w-full min-w-0 flex-1 items-start gap-3">
                 <div className={`p-3 rounded-full bg-gradient-to-r ${currentStage.color} text-white`}>
                   {currentStage.icon}
                 </div>
-                <div>
-                  <CardTitle className="text-xl">{currentStage.title}</CardTitle>
+                <div className="min-w-0">
+                  <CardTitle className="text-xl break-words">{currentStage.title}</CardTitle>
                   <CardDescription>
                     Ikä: {ageWeeks} viikkoa • {Math.floor(ageWeeks / 4.33)} kuukautta
                   </CardDescription>
@@ -160,11 +199,12 @@ export default function GrowthDevelopmentSection({ weightData, birthDate }: Grow
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Kehitysvaihe</span>
                 <span className="font-medium">
-                  {Math.round(((ageWeeks - currentStage.ageWeeks[0]) / (currentStage.ageWeeks[1] - currentStage.ageWeeks[0])) * 100)}%
+                  {Math.round(stageProgress)}%
                 </span>
               </div>
               <Progress 
-                value={((ageWeeks - currentStage.ageWeeks[0]) / (currentStage.ageWeeks[1] - currentStage.ageWeeks[0])) * 100}
+                value={stageProgress}
+                aria-label="Kehitysvaihe"
                 className="h-2"
               />
             </div>
@@ -205,7 +245,7 @@ export default function GrowthDevelopmentSection({ weightData, birthDate }: Grow
       )}
 
       {/* Growth Prediction Card */}
-      {weightData.length > 0 && (
+      {latest && (
         <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -213,39 +253,41 @@ export default function GrowthDevelopmentSection({ weightData, birthDate }: Grow
               Kasvuennuste
             </CardTitle>
             <CardDescription>
-              Arvio aikuispainosta nykyisen kasvun perusteella
+              Suuntaa antava arvio painomittausten ja punnituspäivien iän perusteella
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="text-center p-4 bg-gradient-to-br from-primary/10 to-primary/5 rounded-xl">
                 <div className="text-2xl font-bold text-primary">{currentWeight.toFixed(1)} kg</div>
-                <div className="text-sm text-muted-foreground">Nykypaino</div>
+                <div className="text-sm text-muted-foreground">Viimeisin mitattu paino</div>
               </div>
               <div className="text-center p-4 bg-gradient-to-br from-secondary/10 to-secondary/5 rounded-xl">
-                <div className="text-2xl font-bold text-secondary">{predictedAdultWeight.toFixed(1)} kg</div>
+                <div className="text-2xl font-bold text-secondary">{predictedAdultWeight ? `${predictedAdultWeight.toFixed(1)} kg` : 'Ei vielä arviota'}</div>
                 <div className="text-sm text-muted-foreground">Ennustettu aikuispaino</div>
               </div>
               <div className="text-center p-4 bg-gradient-to-br from-accent/10 to-accent/5 rounded-xl">
-                <div className="text-2xl font-bold text-accent">{growthProgress.toFixed(0)}%</div>
-                <div className="text-sm text-muted-foreground">Kasvusta valmiina</div>
+                <div className="text-2xl font-bold text-accent">{growthProgress !== null ? `${growthProgress.toFixed(0)}%` : 'Ei vielä arviota'}</div>
+                <div className="text-sm text-muted-foreground">Osuus painoarviosta</div>
               </div>
             </div>
 
-            <div className="space-y-2">
+            {growthProgress !== null ? <div className="space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Kasvun edistyminen</span>
+                <span className="text-muted-foreground">Osuus painoarviosta</span>
                 <span className="font-medium">{growthProgress.toFixed(1)}%</span>
               </div>
-              <Progress value={growthProgress} className="h-3" />
-            </div>
+              <Progress value={growthProgress} aria-label="Osuus painoarviosta" className="h-3" />
+            </div> : <p className="text-sm text-muted-foreground">
+              Arvio edellyttää vähintään kahta painomittausta eri päiviltä ja vähintään 6 viikon ikää viimeisessä mittauksessa.
+            </p>}
 
             <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
               <div className="flex items-start gap-2">
                 <Info className="h-4 w-4 text-blue-600 mt-0.5" />
                 <div className="text-sm text-blue-800">
                   <p className="font-medium mb-1">Huomio:</p>
-                  <p>Tämä on arvio perustuen nykyiseen kasvutahtiin. Todellinen aikuispaino voi vaihdella rodun, ruokinnan ja yksilöllisten tekijöiden mukaan.</p>
+                  <p>Arvio ei ole tavoitepaino. Rotu, vanhempien koko ja yksilöllinen kasvu vaikuttavat aikuispainoon. Prosenttiluku kuvaa osuutta painoarviosta, ei biologisen kehityksen valmiutta.</p>
                 </div>
               </div>
             </div>
@@ -291,8 +333,8 @@ export default function GrowthDevelopmentSection({ weightData, birthDate }: Grow
                     }`}>
                       {stage.icon}
                     </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-[var(--color-text-primary)]">{stage.title}</h3>
+                    <div className="min-w-0 flex-1">
+                      <h3 className="break-words font-semibold text-[var(--color-text-primary)]">{stage.title}</h3>
                       <p className="text-sm text-muted-foreground">
                         {stage.ageWeeks[0]}-{stage.ageWeeks[1]} viikkoa
                       </p>
