@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Calendar, Award, Target, Heart, List, BookOpen } from "lucide-react";
+import { Calendar, Award, Target, Heart, List, BookOpen, Sparkles } from "lucide-react";
 
 interface PuppyBookNavigationProps {
   activeSection: string;
@@ -18,6 +18,7 @@ export const PuppyBookNavigation: React.FC<PuppyBookNavigationProps> = ({
     { id: "milestones", label: "Virstanpylväät", icon: Award },
     { id: "growth", label: "Kasvu", icon: Target },
     { id: "annual", label: "Oma kirja", icon: BookOpen },
+    { id: "images", label: "Satukuvat", icon: Sparkles },
   ];
 
   return (

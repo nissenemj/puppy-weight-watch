@@ -1,23 +1,12 @@
 import React, { useState, useEffect } from 'react'
+import { PREPARATION_RETAILERS } from '@/data/retailers'
 
 interface BannerData {
   href: string
-  src: string
-  alt: string
+  name: string
 }
 
-const banners: BannerData[] = [
-  {
-    href: 'https://to.koiratarvikehaukkula.fi/t/t?a=2005863340&as=2037227635&t=2&tk=1',
-    src: 'https://track.adtraction.com/t/t?a=2005863340&as=2037227635&t=1&tk=1&i=1',
-    alt: 'Koiratarvike Haukkula - Koiratarvikkeita verkosta'
-  },
-  {
-    href: 'https://pin.petenkoiratarvike.com/t/t?a=1984341102&as=2037227635&t=2&tk=1',
-    src: 'https://track.adtraction.com/t/t?a=1984341102&as=2037227635&t=1&tk=1&i=1',
-    alt: 'Peten Koiratarvike - Laaja valikoima koiratarvikkeita'
-  }
-]
+const banners: BannerData[] = PREPARATION_RETAILERS
 
 export default function PartnerBanner() {
   const [currentIndex, setCurrentIndex] = useState(() =>
@@ -39,17 +28,12 @@ export default function PartnerBanner() {
       <a
         href={banner.href}
         target="_blank"
-        rel="noopener noreferrer sponsored"
-        className="block max-w-[980px] w-full hover:opacity-90 transition-opacity"
+        rel="noopener noreferrer"
+        className="block max-w-[980px] w-full rounded-lg border border-stone-200 bg-stone-50 p-5 text-center hover:bg-stone-100 transition-colors"
       >
-        <img
-          src={banner.src}
-          width={980}
-          height={120}
-          alt={banner.alt}
-          className="w-full h-auto rounded-lg shadow-sm"
-          loading="lazy"
-        />
+        <span className="block text-xs text-stone-600">Kauppalinkki</span>
+        <strong className="my-2 block">{banner.name}</strong>
+        <span className="text-sm underline underline-offset-4">Siirry kaupan sivuille (avautuu uuteen välilehteen)</span>
       </a>
     </div>
   )

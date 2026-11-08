@@ -1,0 +1,7 @@
+{
+  "imports": {
+    "@supabase/supabase-js": "npm:@supabase/supabase-js@2.50.2",
+    "linkedom": "npm:linkedom@0.18.15",
+    "zod": "npm:zod@3.23.8"
+  }
+}

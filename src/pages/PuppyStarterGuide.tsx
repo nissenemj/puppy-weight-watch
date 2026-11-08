@@ -7,6 +7,7 @@ import {
   ShoppingBag,
 } from "lucide-react";
 import SEO from "@/components/SEO";
+import { PREPARATION_RETAILERS } from "@/data/retailers";
 import puppyHome from "@/assets/puppy-home-1200.webp";
 import puppyHomeSmall from "@/assets/puppy-home-640.webp";
 import {
@@ -80,17 +81,7 @@ const essentials = [
   },
 ] as const;
 
-// Existing affiliate campaigns, reused without invented product prices or deep links.
-const partners = [
-  {
-    name: "Peten Koiratarvike",
-    href: "https://pin.petenkoiratarvike.com/t/t?a=1984341102&as=2037227635&t=2&tk=1",
-  },
-  {
-    name: "Koiratarvike Haukkula",
-    href: "https://to.koiratarvikehaukkula.fi/t/t?a=2005863340&as=2037227635&t=2&tk=1",
-  },
-];
+const partners = PREPARATION_RETAILERS;
 
 export default function PuppyStarterGuide() {
   const preparation = usePreparation();
@@ -256,10 +247,10 @@ export default function PuppyStarterGuide() {
               className="starter-partner"
               href={partner.href}
               target="_blank"
-              rel="noopener noreferrer sponsored"
+              rel="noopener noreferrer"
             >
               <span>
-                <span className="journal-note">Mainoslinkki</span>
+                <span className="journal-note">Kauppalinkki</span>
                 <strong>{partner.name}</strong>
                 <span>Siirry kauppaan (avautuu uuteen välilehteen)</span>
               </span>

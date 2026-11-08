@@ -20,14 +20,14 @@ const PrivacyPolicy = () => {
 
             <div className="prose prose-lg max-w-none space-y-6">
               <p className="text-body-lg text-muted-foreground mb-8">
-                Viimeksi päivitetty: {new Date().toLocaleDateString('fi-FI')}
+                Viimeksi päivitetty: 8.11.2026
               </p>
 
               <section>
                 <h2 className="text-h2 mb-4">1. Rekisterinpitäjä</h2>
                 <p className="text-body mb-4">
                   Pentulaskuri.com<br />
-                  Sähköposti: nissenemj@gmail.com
+                  Sähköposti: asiakaspalvelu@pentulaskuri.com
                 </p>
               </section>
 
@@ -65,6 +65,7 @@ const PrivacyPolicy = () => {
                   <li>Koiran tiedot (nimi, rotu, syntymäaika)</li>
                   <li>Painomittaukset ja niiden päivämäärät</li>
                   <li>Pentukirjan merkinnät ja kuvat</li>
+                  <li>Kuvamuokkaukseen itse valitsemasi koiran kuva, muokkausvalinnat ja tekoälyllä tuotetut kuvat</li>
                   <li>Palvelun käyttöön liittyvät tekniset tiedot (IP-osoite, selaintyyppi, käyttöjärjestelmä)</li>
                   <li>Analytiikkatiedot (sivukäynnit, toiminnot)</li>
                 </ul>
@@ -95,6 +96,9 @@ const PrivacyPolicy = () => {
                 <p className="text-body mt-4">
                   Kun poistat tilisi, poistamme kaikki henkilötietosi 30 päivän kuluessa, paitsi tiedot joita meidän on säilytettävä lain nojalla.
                 </p>
+                <p className="text-body mt-4">
+                  Kuvamuokkauksen lähtökuvan käyttöoikeus vanhenee vuorokaudessa. Se poistetaan tämän jälkeen automaattisessa siivouksessa käsittelyn päätyttyä. Valmiit kuvat säilyvät tilisi yksityisessä kuvahistoriassa. Pentukirjaan lisätään erillinen kopio vain pyynnöstäsi.
+                </p>
               </section>
 
               <section>
@@ -107,10 +111,11 @@ const PrivacyPolicy = () => {
                 </p>
                 <ul className="list-disc list-inside space-y-2 text-body ml-4">
                   <li><strong>Supabase</strong> - Tietokanta ja autentikointi (EU-alue)</li>
-                  <li><strong>Vercel/Cloudflare</strong> - Hosting ja CDN (EU-alue)</li>
+                  <li><strong>Vercel/Cloudflare</strong> - Hosting ja CDN</li>
+                  <li><strong>OpenAI</strong> - Vapaaehtoinen koiran kuvan muokkaus. Kuvan käsittely käynnistyy vain omasta pyynnöstäsi.</li>
                 </ul>
                 <p className="text-body mt-4">
-                  Kaikki alihankkijat ovat sitoutuneet GDPR-vaatimuksiin ja käsittelevät tietoja ainoastaan ohjeidemme mukaisesti.
+                  Kuvamuokkauksessa OpenAI:lle lähetetään valitsemasi kuva pienennettynä, valittu tyyli, mahdollinen lisätoive sekä käyttäjätunnuksesta muodostettu tekninen tiiviste väärinkäytösten ehkäisemiseksi. Alkuperäistä tiedostonimeä, kuvan metatietoja, sähköpostiosoitetta tai pentukirjan muita tietoja ei lähetetä. Käytä kuvaa, jossa ei ole ihmisiä tai yksityisiä tietoja. Palveluntarjoajan oma käsittely ja säilytys kuvataan sen <a href="https://developers.openai.com/api/docs/guides/your-data" target="_blank" rel="noopener noreferrer" className="underline">API-palvelun tietosuojakuvauksessa</a>.
                 </p>
               </section>
 
@@ -144,7 +149,7 @@ const PrivacyPolicy = () => {
                   <li><strong>Oikeus peruuttaa suostumus</strong> - Peruuttaa antamasi suostumus milloin tahansa</li>
                 </ul>
                 <p className="text-body mt-4">
-                  Voit käyttää oikeuksiasi ottamalla yhteyttä sähköpostitse osoitteeseen nissenemj@gmail.com
+                  Voit käyttää oikeuksiasi ottamalla yhteyttä sähköpostitse osoitteeseen asiakaspalvelu@pentulaskuri.com
                 </p>
               </section>
 
@@ -185,7 +190,7 @@ const PrivacyPolicy = () => {
                   Jos sinulla on kysymyksiä tietosuojaselosteesta tai henkilötietojesi käsittelystä, ota yhteyttä:
                 </p>
                 <p className="text-body">
-                  Sähköposti: nissenemj@gmail.com
+                  Sähköposti: asiakaspalvelu@pentulaskuri.com
                 </p>
               </section>
             </div>

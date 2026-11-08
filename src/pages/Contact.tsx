@@ -102,8 +102,9 @@ const Contact = () => {
               variants={entranceAnimations.staggerChild}
               className="text-lg text-stone-600 leading-relaxed"
             >
-              Onko sinulla kysyttävää, palautetta tai ehdotuksia? Kuulemme mielellämme sinusta!
+              Lähetä kysymys tai palaute lomakkeella tai sähköpostilla.
             </motion.p>
+            <p><a className="inline-flex min-h-11 max-w-full items-center break-all text-sm underline underline-offset-4" href="mailto:asiakaspalvelu@pentulaskuri.com">asiakaspalvelu@pentulaskuri.com</a></p>
           </motion.div>
         </div>
       </section>

@@ -12,9 +12,12 @@ const links = [
   { href: "/weight-tracker", label: "Painonseuranta" },
   { href: "/calculator", label: "Ruokalaskuri" },
   { href: "/puppy-book-landing", label: "Pentukirja" },
+  { href: "/satukuvat", label: "Satukuvat" },
   { href: "/guides", label: "Tietopankki" },
+  { href: "/guides/safety", label: "Turvallisuusohjeet" },
   { href: "/privacy", label: "Tietosuoja" },
   { href: "/terms", label: "Käyttöehdot" },
+  { href: "/cookies", label: "Evästeet" },
   { href: "/contact", label: "Ota yhteyttä" },
 ];
 
@@ -95,6 +98,12 @@ export default function Footer({ compact = false }: { compact?: boolean }) {
         <div>
           <strong>Pentulaskuri</strong>
           <p>Kasvua, arkea ja yhteisiä tarinoita.</p>
+          <a
+            className="inline-flex min-h-11 max-w-full items-center break-all text-sm underline underline-offset-4"
+            href="mailto:asiakaspalvelu@pentulaskuri.com"
+          >
+            asiakaspalvelu@pentulaskuri.com
+          </a>
         </div>
         <nav aria-label="Alatunnisteen linkit">
           {links.map((link) => (

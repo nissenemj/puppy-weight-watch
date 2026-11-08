@@ -1,1 +1,11 @@
 project_id = "ckwwxuyteyaaxfcvozvb"
+
+[edge_runtime]
+policy = "per_worker"
+
+[functions.safety-news]
+verify_jwt = false
+
+[functions.storybook-images]
+# JWT validation is performed with auth.getUser in the handler; worker calls use a separate secret.
+verify_jwt = false

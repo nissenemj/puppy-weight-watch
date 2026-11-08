@@ -1,165 +1,287 @@
+import { useEffect, useState } from "react";
+import { ExternalLink, RefreshCw, ShieldCheck } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  fetchSafetyNews,
+  sourceIsCurrent,
+  SAFETY_SOURCES,
+  SAFETY_GUIDES,
+  type SafetySnapshot,
+} from "@/services/rssFeedService";
 
-import React, { useState, useEffect } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { AlertTriangle, Clock, ExternalLink, RefreshCw } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { fetchAllFeeds, getPriorityColor, getCategoryBadgeText, type NewsItem } from '@/services/rssFeedService'
+const KINDS = {
+  recall: "Takaisinveto",
+  warning: "Viranomaisen varoitus",
+  disease: "Eläintautitiedote",
+  notice: "Tiedote",
+};
+const date = (value: string) => new Date(value).toLocaleDateString("fi-FI");
+const time = (value: string) => new Date(value).toLocaleString("fi-FI");
 
-export default function SafetyNewsFeed() {
-  const [news, setNews] = useState<NewsItem[]>([])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
-
-  const loadNews = async () => {
-    setLoading(true)
-    setError(null)
-    
-    try {
-      const articles = await fetchAllFeeds()
-      setNews(articles)
-      setLastUpdated(new Date())
-    } catch (err) {
-      setError('Uutisten lataaminen epäonnistui. Tarkista internetyhteytesi.')
-      console.error('Error loading news:', err)
-    } finally {
-      setLoading(false)
-    }
-  }
+export default function SafetyNewsFeed({
+  loadSnapshot = fetchSafetyNews,
+}: {
+  loadSnapshot?: typeof fetchSafetyNews;
+}) {
+  const [snapshot, setSnapshot] = useState<SafetySnapshot | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [attempt, setAttempt] = useState(0);
+  const [archive, setArchive] = useState(false);
+  const [now, setNow] = useState(Date.now());
 
   useEffect(() => {
-    loadNews()
-    
-    // Set up automatic refresh every 15 minutes for critical feeds
-    const interval = setInterval(loadNews, 15 * 60 * 1000)
-    
-    return () => clearInterval(interval)
-  }, [])
+    const controller = new AbortController();
+    setLoading(true);
+    setError("");
+    loadSnapshot(controller.signal)
+      .then((data) => {
+        if (controller.signal.aborted) return;
+        setSnapshot(data);
+        setNow(Date.now());
+      })
+      .catch(() => {
+        if (!controller.signal.aborted)
+          setError(
+            "Tiedotteiden päivitystä ei saatu tarkistettua. Viimeksi ladattu aineisto säilyy näkyvissä. Tarkista tarvittaessa viranomaisen alkuperäissivu.",
+          );
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setLoading(false);
+      });
+    return () => controller.abort();
+  }, [attempt, loadSnapshot]);
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setNow(Date.now());
+      setAttempt((value) => value + 1);
+    }, 5 * 60_000);
+    return () => clearInterval(timer);
+  }, []);
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('fi-FI', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric'
-    })
-  }
+  const checks = snapshot?.checks ?? [];
+  const current = SAFETY_SOURCES.filter((source) =>
+    sourceIsCurrent(
+      checks.find((check) => check.source_id === source.id),
+      now,
+    ),
+  ).length;
+  const allItems = [...(snapshot?.items ?? [])].sort(
+    (a, b) =>
+      (b.published_at ? Date.parse(b.published_at) : 0) -
+      (a.published_at ? Date.parse(a.published_at) : 0),
+  );
+  const recent = allItems.filter(
+    (item) =>
+      item.published_at &&
+      now - Date.parse(item.published_at) <= 90 * 24 * 60 * 60_000,
+  );
+  const items = archive ? allItems : recent;
+  const label = error
+    ? "Päivitystä ei voitu tarkistaa"
+    : !snapshot
+      ? "Tarkistetaan seurantaa"
+      : current === SAFETY_SOURCES.length
+        ? "Lähteet tarkistettu"
+        : current > 0
+          ? "Seuranta on osittainen"
+          : "Lähteiden tarkistus puuttuu tai on vanhentunut";
 
   return (
-    <Card className="bg-red-50 border-red-200">
-      <CardHeader>
-        <CardTitle className="flex items-center justify-between text-red-800">
-          <div className="flex items-center gap-2">
-            <AlertTriangle className="h-6 w-6" />
-            Ajankohtaiset turvallisuusuutiset
-          </div>
-          <div className="flex items-center gap-2">
-            {lastUpdated && (
-              <span className="text-xs text-red-600">
-                RSS-syötteet haettu: {lastUpdated.toLocaleDateString('fi-FI')} {lastUpdated.toLocaleTimeString('fi-FI')}
-              </span>
-            )}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={loadNews}
-              disabled={loading}
-              className="text-red-700 hover:text-red-800"
-            >
-              <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
-            </Button>
-          </div>
-        </CardTitle>
+    <Card
+      className="min-w-0 border-stone-200 bg-white"
+      aria-labelledby="safety-news-title"
+    >
+      <CardHeader className="gap-3">
+        <div className="flex flex-col items-start justify-between gap-3 sm:flex-row">
+          <CardTitle
+            id="safety-news-title"
+            className="flex items-center gap-2 font-serif text-xl"
+          >
+            <ShieldCheck aria-hidden="true" className="h-5 w-5 shrink-0" />
+            Turvallisuustiedotteet
+          </CardTitle>
+          <Button
+            variant="outline"
+            onClick={() => setAttempt((value) => value + 1)}
+            disabled={loading}
+            className="min-h-11 shrink-0"
+          >
+            <RefreshCw
+              aria-hidden="true"
+              className={`mr-2 h-4 w-4 ${loading ? "animate-spin" : ""}`}
+            />
+            Päivitä näkymä
+          </Button>
+        </div>
+        <p role="status" className="text-sm text-stone-700">
+          {loading ? "Ladataan seurantatietoja…" : label}
+        </p>
+        <p className="text-sm leading-relaxed text-stone-600">
+          Ruokaviraston julkaisuista poimittuja koiriin ja lemmikkiruokiin
+          liittyviä otsikoita. Avaa alkuperäinen tiedote tarkistaaksesi
+          tuotteen, erän, alueen ja toimintaohjeen.
+        </p>
       </CardHeader>
-      <CardContent>
-        {loading && (
-          <div className="text-center py-4">
-            <p className="text-red-700">Ladataan uutisia...</p>
-          </div>
-        )}
-        
+      <CardContent className="space-y-5">
         {error && (
-          <div className="bg-red-100 p-4 rounded-lg border border-red-300 mb-4">
-            <p className="text-red-800 text-sm">{error}</p>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={loadNews}
-              className="mt-2"
-            >
-              Yritä uudelleen
-            </Button>
-          </div>
+          <p
+            role="alert"
+            className="rounded-md border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950"
+          >
+            {error}
+          </p>
         )}
-        
-        {news.length > 0 && (
-          <div className="space-y-4">
-            {news.map((item, index) => (
-              <div key={index} className={`p-4 rounded-lg border ${getPriorityColor(item.priority)}`}>
-                <div className="flex justify-between items-start mb-2">
-                  <h3 className="font-semibold text-sm leading-tight flex-1">
-                    {item.title}
-                  </h3>
-                  <div className="flex items-center gap-2 ml-2">
-                    <Badge variant="outline" className="text-xs">
-                      {getCategoryBadgeText(item.category)}
-                    </Badge>
-                    <Badge variant="secondary" className="text-xs">
-                      {item.source}
-                    </Badge>
-                  </div>
-                </div>
-                
-                <p className="text-sm mb-3 leading-relaxed">
-                  {item.description}
+        {!loading && !error && snapshot && current < SAFETY_SOURCES.length && (
+          <p className="rounded-md border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950">
+            Kaikkien lähteiden ajantasaisuutta ei ole vahvistettu. Julkaisujen
+            puuttuminen tästä näkymästä ei tarkoita, ettei varoituksia olisi.
+          </p>
+        )}
+        <ul
+          className="space-y-2 text-sm"
+          aria-label="Seurattavat viranomaislähteet"
+        >
+          {SAFETY_SOURCES.map((source) => {
+            const check = checks.find((check) => check.source_id === source.id);
+            return (
+              <li key={source.id} className="rounded-md bg-stone-50 p-3">
+                <a
+                  className="inline-flex min-h-11 items-center gap-1 underline underline-offset-4"
+                  href={source.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {source.name}
+                  <ExternalLink aria-hidden="true" className="h-3 w-3" />
+                </a>
+                <p className="text-xs leading-relaxed text-stone-600">
+                  {check?.last_success_at
+                    ? `Viimeinen onnistunut tarkistus: ${time(check.last_success_at)}.`
+                    : "Onnistunutta tarkistusta ei vielä ole."}{" "}
+                  {check?.status === "error"
+                    ? "Viimeisin haku epäonnistui."
+                    : check && !sourceIsCurrent(check, now)
+                      ? "Tarkistus ei ole ajantasainen."
+                      : ""}
                 </p>
-                
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-1 text-xs opacity-75">
-                    <Clock className="h-3 w-3" />
-                    {formatDate(item.publishedAt)}
-                  </div>
-                  
-                  <div className="flex items-center gap-2">
-                    {item.priority === 'critical' && (
-                      <div className="flex items-center gap-1 text-xs font-medium">
-                        <AlertTriangle className="h-3 w-3" />
-                        Kriittinen varoitus
-                      </div>
-                    )}
-                    
-                    {item.url && item.url !== '#' && (
-                      <a 
-                        href={item.url} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 hover:underline"
-                      >
-                        <ExternalLink className="h-3 w-3" />
-                        Lue lisää
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </div>
+              </li>
+            );
+          })}
+        </ul>
+        {items.length > 0 && (
+          <ul
+            className="space-y-3"
+            aria-label={
+              archive
+                ? "Kaikki tallennetut tiedotteet"
+                : "Viimeisen 90 päivän tiedotteet"
+            }
+          >
+            {items.map((item) => (
+              <li
+                key={item.id}
+                className="space-y-2 rounded-md border border-stone-200 p-4"
+              >
+                <Badge variant="outline">{KINDS[item.kind]}</Badge>
+                <h3 className="break-words font-semibold leading-relaxed">
+                  <a
+                    className="underline underline-offset-4"
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {item.title}
+                    <span className="sr-only">
+                      , avaa Ruokaviraston tiedote
+                    </span>
+                  </a>
+                </h3>
+                <p className="text-xs leading-relaxed text-stone-600">
+                  {item.published_at
+                    ? `Julkaistu ${date(item.published_at)}`
+                    : "Julkaisupäivä ei ole saatavilla"}{" "}
+                  ·{" "}
+                  {
+                    SAFETY_SOURCES.find(
+                      (source) => source.id === item.source_id,
+                    )?.name
+                  }
+                  {item.region
+                    ? ` · ${item.region}`
+                    : " · Alue ja voimassaolo: katso alkuperäinen tiedote"}
+                </p>
+              </li>
             ))}
-            
-            <div className="bg-amber-50 border border-amber-200 p-3 rounded-lg mt-4">
-              <p className="text-xs text-amber-800">
-                <strong>Huomio:</strong> Tämä järjestelmä hakee uutisia useista luotettavista lähteistä. 
-                Seuraa aina virallisia tiedotuskanavia ja ota yhteyttä eläinlääkäriin kiireellisissä tilanteissa. 
-                RSS-syötteiden käyttö tapahtuu lähteiden käyttöehtojen mukaisesti.
-              </p>
-            </div>
-          </div>
+          </ul>
         )}
-        
-        {!loading && !error && news.length === 0 && (
-          <div className="text-center py-4">
-            <p className="text-red-700 text-sm">Ei uusia turvallisuusuutisia tällä hetkellä.</p>
-          </div>
+        {!loading &&
+          !error &&
+          current === SAFETY_SOURCES.length &&
+          items.length === 0 && (
+            <p className="text-sm">
+              {archive
+                ? "Tarkistetuista julkaisuista ei löytynyt koiriin liittyviä tiedotteita."
+                : "Seuratuista julkaisuista ei löytynyt viimeisen 90 päivän koiriin liittyviä tiedotteita."}
+            </p>
+          )}
+        {allItems.length > recent.length && (
+          <Button
+            variant="outline"
+            className="h-auto min-h-11 whitespace-normal"
+            onClick={() => setArchive((value) => !value)}
+          >
+            {archive
+              ? "Näytä viimeisen 90 päivän julkaisut"
+              : `Näytä myös aiemmat tiedotteet (${allItems.length - recent.length})`}
+          </Button>
         )}
+        <p className="text-xs leading-relaxed text-stone-600">
+          Vanha päiväys ei tarkoita takaisinvedon tai rajoituksen päättymistä.
+          Seuranta ei kata kaikkia julkaisuja. Lähteet tarkistetaan palvelimella
+          noin 30 minuutin välein.
+        </p>
+        <div className="border-t pt-4">
+          <h3 className="font-semibold">Viranomaisen pysyvät ohjeet</h3>
+          <ul>
+            {SAFETY_GUIDES.map((guide) => (
+              <li key={guide.url}>
+                <a
+                  className="inline-flex min-h-11 items-center gap-2 text-sm underline underline-offset-4"
+                  href={guide.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {guide.name}
+                  <ExternalLink
+                    className="h-3 w-3 shrink-0"
+                    aria-hidden="true"
+                  />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <details className="border-t pt-4">
+          <summary className="min-h-11 cursor-pointer py-3 font-semibold">
+            Muita koiranomistajan uutislähteitä
+          </summary>
+          <p className="py-2 text-sm text-stone-600">
+            Nämä linkit täydentävät viranomaisohjeita. Mukana voi olla
+            järjestöjen tai yritysten tiedotteita.
+          </p>
+          <a
+            className="inline-flex min-h-11 items-center text-sm underline"
+            href="https://www.kennelliitto.fi/ajankohtaista/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Kennelliiton ajankohtaiset
+          </a>
+        </details>
       </CardContent>
     </Card>
-  )
+  );
 }
