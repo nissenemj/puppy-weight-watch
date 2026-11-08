@@ -23,7 +23,9 @@ do $$ declare job record; begin
     perform cron.unschedule(job.jobid);
   end loop;
 end $$;
-select cron.schedule('pentulaskuri-safety-refresh','*/30 * * * *',$job$
+-- A five-minute tick checks the source's own 30-minute interval. Scheduling jitter
+-- must not skip a whole half-hour tick after a request started a few milliseconds late.
+select cron.schedule('pentulaskuri-safety-refresh','*/5 * * * *',$job$
   select net.http_post(
     url := (select decrypted_secret from vault.decrypted_secrets where name='pentulaskuri_feature_base_url') || '/safety-news',
     headers := jsonb_build_object('Content-Type','application/json','x-refresh-secret',
