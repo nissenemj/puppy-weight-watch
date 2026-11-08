@@ -104,6 +104,15 @@ create table pentulaskuri_features.image_book_copies (
   primary key(job_id, book_id)
 );
 
+-- Private tables have no client policies. Only the existing service role can use them.
+-- Keep RLS enabled in addition to revoking client access to the entire schema.
+alter table pentulaskuri_features.refresh_lease enable row level security;
+alter table pentulaskuri_features.image_config enable row level security;
+alter table pentulaskuri_features.image_access enable row level security;
+alter table pentulaskuri_features.image_budgets enable row level security;
+alter table pentulaskuri_features.image_payloads enable row level security;
+alter table pentulaskuri_features.image_book_copies enable row level security;
+
 create function public.storybook_access(p_owner uuid) returns boolean
 language sql stable security invoker set search_path = '' as $$
   select c.enabled and exists(select 1 from pentulaskuri_features.image_access a where a.user_id=p_owner)

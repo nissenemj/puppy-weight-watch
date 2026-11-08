@@ -183,6 +183,10 @@ try {
     ),
   );
   check(
+    sql("select count(*) from pg_class c join pg_namespace n on n.oid=c.relnamespace where c.relkind='r' and not c.relrowsecurity and (n.nspname='pentulaskuri_features' or n.nspname='public' and c.relname in ('image_jobs','storybook_inputs','safety_source_checks','safety_news_items'));") === "0",
+    "all new public and private feature tables have row security enabled",
+  );
+  check(
     sql("select count(*) from public.safety_source_checks;", "anon") === "2",
     "public source health is readable",
   );

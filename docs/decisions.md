@@ -46,3 +46,9 @@ Käyttäjän videoidea säilyy jatkokehityksessä. Pienin arvioitava versio on y
 ### Tarkistetut palvelulähteet
 
 OpenAI: [kuvamuokkaus](https://developers.openai.com/api/reference/resources/images/methods/edit), [malli](https://developers.openai.com/api/docs/models/gpt-image-2.6-flare), [hinnasto](https://developers.openai.com/api/docs/pricing) ja [API-datan käsittely](https://developers.openai.com/api/docs/guides/your-data). Toteutuneessa kustannuksessa tekstisyöte on 5 USD/miljoona tokenia, kuvasyöte 8 USD/miljoona ja kuvatulos 30 USD/miljoona. Käytössä on yksi 1024 × 1024 PNG, low-laatu ja low-complexity. Tilin omia erityisiä datansäilytysehtoja tai EU-käsittelyä ei oletettu.
+
+### Rajatun tuotantokokeilun valmistelu 8.11.2026
+
+Käyttäjä hyväksyi kokonaisuuden tuotantojulkaisun rajattuna kokeiluna, myynnin säilyttämisen suljettuna ja enintään 20 USD:n kuukausibudjetin. Kokeilu rajataan aluksi omistajan vahvistettuun tiliin. Kolmen paikallisen koekuvan 87 199 mikro-USD:n kulut ja ensimmäisen laatukokeen seitsemän jäljellä olevaa kuvaa huomioidaan tuotannon rajoissa ennen kuvien luonnin avaamista.
+
+Kaikille kuudelle sisäiselle asetustaululle lisättiin RLS myös suljetun skeeman käyttöoikeuksien rinnalle. Kaikissa uusissa julkisissa ja yksityisissä ominaisuustauluissa on nyt RLS. Palvelimen service_role-käyttö ja omistajakohtaiset oikeudet varmennettiin uudelleen: 42 eristettyä tietokanta- ja Storage-tarkistusta läpi. Nykyinen GitHubin CI-putki säilytetään julkaisussa. Paikallinen ehdotus sen laajentamisesta lisätietokantatesteihin säilyy työpuussa, koska käytössä oleva GitHub-tunnus ei sisällä työnkulkujen muokkausoikeutta.
