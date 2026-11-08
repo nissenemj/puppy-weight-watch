@@ -54,7 +54,7 @@ for (const width of [320, 768, 1024, 1440]) {
 test("safety news shows source health and returns to the current guide index", async ({
   page,
 }) => {
-  const now = new Date().toISOString();
+  const now = new Date().toISOString().replace("Z", "+00:00");
   await page.route("**/functions/v1/safety-news", (route) =>
     route.fulfill({
       contentType: "application/json",
