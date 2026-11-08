@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import { RootLayout } from "./components/RootLayout";
+import RouteErrorPage from "./components/RouteErrorPage";
 
 // Critical pages - load immediately
 import Index from "./pages/Index";
@@ -14,6 +15,7 @@ const PuppyBook = lazy(() => import("./pages/PuppyBook"));
 const PuppyBookLanding = lazy(() => import("./pages/PuppyBookLanding"));
 const PuppyStarterGuide = lazy(() => import("./pages/PuppyStarterGuide"));
 const MemoryBookExample = lazy(() => import("./pages/MemoryBookExample"));
+const StorybookImages = lazy(() => import("./pages/StorybookImages"));
 const LoginPage = lazy(() => import("./pages/auth/LoginPage"));
 const AuthCallbackPage = lazy(() => import("./pages/auth/AuthCallback"));
 
@@ -64,6 +66,7 @@ const withSuspense = (Component: React.ComponentType) => (
 const router = createBrowserRouter([
   {
     element: <RootLayout />,
+    errorElement: <RouteErrorPage />,
     children: [
       // Main pages - simplified 5-category structure
       {
@@ -107,6 +110,10 @@ const router = createBrowserRouter([
       {
         path: "/muistokirja",
         element: withSuspense(MemoryBookExample),
+      },
+      {
+        path: "/satukuvat",
+        element: withSuspense(StorybookImages),
       },
 
       // Guide sub-pages - new organized structure

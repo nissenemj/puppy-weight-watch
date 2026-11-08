@@ -195,21 +195,21 @@ test("AVIF loading failure falls back to WebP without hiding the guide", async (
   await expect(page.locator(".guide-illustration-error")).toHaveCount(0);
 });
 
-test("a blocked advertisement keeps a labelled, usable fallback", async ({
+test("a store card stays usable without external tracking images", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1024, height: 900 });
   await openPage(page, "/guides/puppy-guide");
   const advert = page.locator("[data-ad-banner]");
   await advert.scrollIntoViewIfNeeded();
-  await expect(advert).toHaveAccessibleName("Mainos");
+  await expect(advert).toHaveAccessibleName("Kauppalinkki");
   const link = advert.getByRole("link", {
-    name: "Muotitassu Tutustu koiratarvikkeisiin",
+    name: "Muotitassu Tutustu koiratarvikkeisiin Avautuu uuteen välilehteen",
   });
   await expect(link).toBeVisible();
   await expect(link).toHaveAttribute(
     "href",
-    "https://in.muotitassu.fi/t/t?a=1962036177&as=2037227635&t=2&tk=1",
+    "https://muotitassu.fi/",
   );
   await expect(advert.locator("img")).toHaveCount(0);
   await expectAccessible(page, "[data-ad-banner]");

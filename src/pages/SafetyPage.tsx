@@ -140,9 +140,9 @@ export default function SafetyPage() {
                 Edellinen: Annostelutiedot
               </Button>
             </Link>
-            <Link to="/info">
+            <Link to="/guides">
               <Button className="w-full sm:w-auto">
-                Takaisin etusivulle
+                Takaisin tietopankkiin
               </Button>
             </Link>
           </div>

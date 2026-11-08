@@ -210,7 +210,7 @@ test("the secondary cover supports long names and a failed reader keeps the draf
   await expectAccessible(page, "main");
 });
 
-test("the checklist works by keyboard and identifies the existing commercial links", async ({
+test("the checklist works by keyboard and opens verified direct store links", async ({
   page,
 }) => {
   await page.goto("/guides/pennun-hankinnat");
@@ -227,18 +227,18 @@ test("the checklist works by keyboard and identifies the existing commercial lin
   await expect(
     page.locator("#hankintalista").getByRole("status"),
   ).toContainText("0/8 valmiina");
-  const partners = page.locator('a[rel~="sponsored"]');
+  const partners = page.locator('.starter-partner');
   await expect(partners).toHaveCount(2);
   for (const link of await partners.all()) {
-    await expect(link).toContainText("Mainoslinkki");
+    await expect(link).toContainText("Kauppalinkki");
     await expect(link).toContainText("avautuu uuteen välilehteen");
     await expect(link).toHaveAttribute("target", "_blank");
     await expect(link).toHaveAttribute("rel", /noopener/);
-    expect(
-      new URL((await link.getAttribute("href"))!).searchParams.get("as"),
-    ).toBe("2037227635");
+    const url = new URL((await link.getAttribute("href"))!);
+    expect(["www.petenkoiratarvike.com", "koiratarvikehaukkula.fi"]).toContain(url.hostname);
+    expect(url.search).toBe("");
   }
-  // Intentionally do not click affiliate URLs.
+  // External destinations are checked separately; this browser test stays on the site.
 });
 
 test("the example can be browsed, linked directly and followed to an honest interest form", async ({

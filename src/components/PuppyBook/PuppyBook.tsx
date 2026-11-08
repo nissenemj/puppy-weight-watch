@@ -47,6 +47,7 @@ import PuppyProfileEditor from './PuppyProfileEditor';
 import PuppyBookSelector from './PuppyBookSelector';
 
 const AnnualBookBuilder = React.lazy(() => import('@/features/annual-book/AnnualBookBuilder'));
+const StorybookGenerator = React.lazy(() => import('@/components/StorybookGenerator'));
 
 // Utilities and Types
 import { getMonthNumberFromAge, getDefaultBirthDate } from '@/utils/puppyAge';
@@ -59,7 +60,7 @@ const PuppyBook: React.FC = () => {
 
   const reduceMotion = useReducedMotion();
   const [searchParams, setSearchParams] = useSearchParams();
-  const sectionQueries: Record<string, string> = { memories: 'muistot', monthly: 'kuukaudet', timeline: 'aikajana', milestones: 'virstanpylvaat', growth: 'kasvu', annual: 'vuosikirja' };
+  const sectionQueries: Record<string, string> = { memories: 'muistot', monthly: 'kuukaudet', timeline: 'aikajana', milestones: 'virstanpylvaat', growth: 'kasvu', annual: 'vuosikirja', images: 'satukuvat' };
   const activeSection = Object.keys(sectionQueries).find(section => sectionQueries[section] === searchParams.get('osio')) || 'memories';
   const setActiveSection = (section: string) => {
     const next = new URLSearchParams(searchParams);
@@ -282,6 +283,11 @@ const PuppyBook: React.FC = () => {
             >
               <WeightGrowthSection bookId={book.id} birthDate={book.birth_date} />
             </motion.div>
+          )}
+          {activeSection === 'images' && user && (
+            <React.Suspense fallback={<p role="status">Ladataan satukuvia…</p>}>
+              <StorybookGenerator key={`${user.id}:${book.id}`} signedIn ownerId={user.id} bookId={book.id} onShowMemories={() => setActiveSection('memories')} />
+            </React.Suspense>
           )}
           {activeSection === 'memories' && (
             <motion.div
