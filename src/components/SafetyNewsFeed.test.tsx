@@ -2,9 +2,16 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import SafetyNewsFeed from "./SafetyNewsFeed";
-import { SAFETY_SOURCES, type SafetySnapshot } from "@/services/rssFeedService";
+import {
+  fetchSafetyNews,
+  SAFETY_SOURCES,
+  type SafetySnapshot,
+} from "@/services/rssFeedService";
 
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  vi.unstubAllGlobals();
+});
 const fresh = (): SafetySnapshot => ({
   items: [],
   checks: SAFETY_SOURCES.map((source) => ({
@@ -16,6 +23,43 @@ const fresh = (): SafetySnapshot => ({
   })),
 });
 describe("safety monitoring status", () => {
+  it("renders persisted PostgreSQL timestamps while rejecting invalid dates", async () => {
+    const timestamp = new Date().toISOString().replace("Z", "+00:00");
+    const data = fresh();
+    data.checks = data.checks.map((check) => ({
+      ...check,
+      last_attempt_at: timestamp,
+      last_success_at: timestamp,
+    }));
+    data.items = [
+      {
+        id: "persisted-notice",
+        source_id: SAFETY_SOURCES[0].id,
+        title: "Koiranruoan tarkistustiedote",
+        url: "https://www.ruokavirasto.fi/elaimet/rehut/notice/",
+        published_at: timestamp,
+        kind: "notice",
+        region: null,
+      },
+    ];
+    const fetcher = vi.fn().mockImplementation(async () =>
+      new Response(JSON.stringify(data), {
+        headers: { "Content-Type": "application/json" },
+      }),
+    );
+    vi.stubGlobal("fetch", fetcher);
+    render(<SafetyNewsFeed />);
+    await waitFor(() =>
+      expect(screen.getByRole("status")).toHaveTextContent(
+        "Lähteet tarkistettu",
+      ),
+    );
+    expect(
+      screen.getByRole("link", { name: /Koiranruoan tarkistustiedote/ }),
+    ).toBeVisible();
+    data.items[0].published_at = "2026-02-31T18:40:02+00:00";
+    await expect(fetchSafetyNews()).rejects.toThrow();
+  });
   it("distinguishes a failed fetch from a successful check with no notices", async () => {
     const load = vi.fn().mockRejectedValue(new Error("offline"));
     render(<SafetyNewsFeed loadSnapshot={load} />);

@@ -30,7 +30,7 @@ const officialLink = z
       !url.password
     );
   });
-const date = z.string().datetime().nullable();
+const date = z.string().datetime({ offset: true }).nullable();
 const snapshotSchema = z.object({
   items: z
     .array(
