@@ -18,6 +18,12 @@ for (const width of [320, 768, 1024, 1440]) {
     await expect(page.locator("main h1")).toHaveCount(1);
     await expect(page.getByRole("radio")).toHaveCount(5);
     await expect(
+      page.getByText(/Maksuton kokeilu on avoin kirjautuneille käyttäjille/),
+    ).toBeVisible();
+    await expect(
+      page.getByText(/Kaikille yhteisen kuukausirajan täyttyessä/),
+    ).toBeVisible();
+    await expect(
       page.getByRole("button", { name: "Luo muokattu kuva" }),
     ).toBeDisabled();
     await expect(

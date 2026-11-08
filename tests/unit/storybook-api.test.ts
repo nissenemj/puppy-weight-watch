@@ -312,6 +312,37 @@ function post(body: unknown, token?: string, suffix = "") {
 }
 
 describe("image HTTP authorization", () => {
+  it("admits another verified user without admitting unverified or unsigned requests", async () => {
+    const repo = repositoryFixture();
+    const handler = createImageHandler(repo, {
+      apiKey: "test-key",
+      background: () => undefined,
+    });
+    const get = (token?: string) =>
+      new Request("https://app.example/storybook-images", {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+    const permitted = await handler(get("other"));
+    expect(permitted.status).toBe(200);
+    expect(await permitted.json()).toMatchObject({
+      available: true,
+      reason: null,
+      jobs: [],
+    });
+    const unverified = await handler(get("unverified"));
+    expect(await unverified.json()).toMatchObject({
+      available: false,
+      reason: "email_not_verified",
+    });
+    expect((await handler(get())).status).toBe(401);
+    const input = await handler(post({ inputId: jobId }, "other", "/input"));
+    expect(input.status).toBe(200);
+    expect(repo.reserveInput).toHaveBeenCalledWith(other, jobId);
+    expect(
+      (await handler(post({ inputId: jobId }, "unverified", "/input"))).status,
+    ).toBe(403);
+    expect(repo.reserveInput).toHaveBeenCalledTimes(1);
+  });
   it("rejects unsigned, unverified and client-selected model requests before reservation", async () => {
     const repo = repositoryFixture();
     const handler = createImageHandler(repo, {

@@ -182,6 +182,18 @@ try {
       "utf8",
     ),
   );
+  const openPilotMigrations = readdirSync(
+    new URL("../supabase/migrations/", import.meta.url),
+  ).filter((x) => x.endsWith("_open_verified_image_pilot.sql"));
+  assert.equal(openPilotMigrations.length, 1);
+  sql(readFileSync(
+    new URL(`../supabase/migrations/${openPilotMigrations[0]}`, import.meta.url),
+    "utf8",
+  ));
+  check(
+    sql("select access_mode from pentulaskuri_features.image_config;") === "allowlist",
+    "migration preserves the existing audience until explicitly opened",
+  );
   check(
     sql("select count(*) from pg_class c join pg_namespace n on n.oid=c.relnamespace where c.relkind='r' and not c.relrowsecurity and (n.nspname='pentulaskuri_features' or n.nspname='public' and c.relname in ('image_jobs','storybook_inputs','safety_source_checks','safety_news_items'));") === "0",
     "all new public and private feature tables have row security enabled",
@@ -545,6 +557,93 @@ try {
       `select count(*) from public.storybook_inputs where path='${expiredPath}';`,
     ) === "0",
     "successful private storage cleanup clears expired metadata",
+  );
+  // A separate fixture phase opens the audience without widening data access.
+  const c = randomUUID(), d = randomUUID(), e = randomUUID();
+  const inputC = randomUUID(), inputD = randomUUID(), inputE = randomUUID();
+  sql(`insert into auth.users(id,email_confirmed_at) values('${c}',now()),('${d}',now()),('${e}',now());
+    truncate public.image_jobs cascade;
+    update pentulaskuri_features.image_budgets set blocked=false,reserved_micros=0,spent_micros=0;
+    update pentulaskuri_features.image_config set pilot_limit=1;`);
+  check(
+    sql(`select public.storybook_access('${c}');`, "service_role") === "f" &&
+      denied(`select public.reserve_storybook_input('${c}','${inputC}');`, "service_role"),
+    "a new user remains excluded in allowlist mode",
+  );
+  sql("update pentulaskuri_features.image_config set access_mode='verified_users';");
+  check(
+    sql(`select public.storybook_access('${c}') and public.storybook_access('${d}');`, "service_role") === "t" &&
+      sql(`select count(*) from pentulaskuri_features.image_access where user_id in ('${c}','${d}');`) === "0",
+    "open audience includes new users without individual grants",
+  );
+  check(
+    denied("update pentulaskuri_features.image_config set monthly_budget_micros=21000000;"),
+    "configuration cannot raise the approved 20 USD ceiling",
+  );
+  check(
+    denied("update pentulaskuri_features.image_config set access_mode='public';"),
+    "an anonymous audience cannot be configured",
+  );
+  check(
+    denied("update pentulaskuri_features.image_config set access_mode='allowlist';", "authenticated", c) &&
+      denied(`select public.storybook_access('${c}');`, "authenticated", c),
+    "users cannot change the audience or call its service-only RPC",
+  );
+  const openSpec = (owner, input) => ({ ...spec, inputPath: `${owner}/${input}.png` });
+  const openReserve = (owner, input, request = randomUUID()) =>
+    `select public.reserve_storybook_image('${owner}','${request}',${quote(JSON.stringify(openSpec(owner,input)))}::jsonb);`;
+  for (const [owner, input] of [[c,inputC],[d,inputD],[e,inputE]]) {
+    sql(`select public.reserve_storybook_input('${owner}','${input}');`, "service_role");
+    sql(`insert into storage.objects(bucket_id,name) values('storybook-inputs','${owner}/${input}.png');`, "authenticated", owner);
+  }
+  // Even with the initial allowlist's global image cap reached, the open
+  // audience is limited by the shared monthly budget and per-user daily quota.
+  sql(`insert into public.image_jobs(owner_id,request_id,spec,budget_month,reserved_micros,status)
+    values('${a}','${randomUUID()}',${specSql},date_trunc('month',now() at time zone 'UTC')::date,0,'failed');`);
+  check(
+    sql(`select public.reserve_storybook_input('${c}','${randomUUID()}');`, "service_role").startsWith(`${c}/`),
+    "the open audience is not stopped by the old quality-test lifetime cap",
+  );
+  sql("update pentulaskuri_features.image_budgets set spent_micros=19000000;");
+  const openBoundary = await Promise.allSettled([
+    asyncSql(openReserve(c,inputC)), asyncSql(openReserve(d,inputD)),
+  ]);
+  check(
+    openBoundary.filter((x) => x.status === "fulfilled").length === 1 &&
+      sql("select spent_micros+reserved_micros from pentulaskuri_features.image_budgets;") === "20000000",
+    "two newly eligible users share one atomic 20 USD monthly budget",
+  );
+  const openWinner = JSON.parse(openBoundary.find((x) => x.status === "fulfilled").value);
+  check(
+    denied(openReserve(e,inputE), "service_role"),
+    "another user cannot reserve after the shared budget is exhausted",
+  );
+  check(
+    sql("select count(*) from public.image_jobs;", "authenticated", e) === "0" &&
+      sql("select count(*) from storage.objects where bucket_id='storybook-inputs';", "authenticated", e) === "1",
+    "a newly eligible user still cannot read other owners' jobs or photos",
+  );
+  sql(`select public.claim_storybook_image('${openWinner.id}');select public.fail_storybook_image('${openWinner.id}','moderation_blocked',false);`, "service_role");
+  sql("update pentulaskuri_features.image_budgets set spent_micros=0;");
+  for(let i=0;i<2;i++) {
+    const item = JSON.parse(sql(openReserve(e,inputE), "service_role"));
+    sql(`select public.claim_storybook_image('${item.id}');select public.fail_storybook_image('${item.id}','moderation_blocked',false);`, "service_role");
+  }
+  check(
+    denied(openReserve(e,inputE), "service_role"),
+    "the open audience retains the two-request daily quota for each user",
+  );
+  sql("update pentulaskuri_features.image_config set access_mode='allowlist';");
+  check(
+    sql(`select public.storybook_access('${c}');`, "service_role") === "f" &&
+      denied(openReserve(c,inputC), "service_role"),
+    "the audience can be rolled back without changing budget or owner policies",
+  );
+  sql("update pentulaskuri_features.image_config set access_mode='verified_users',enabled=false;");
+  check(
+    sql(`select public.storybook_access('${d}');`, "service_role") === "f" &&
+      denied(`select public.reserve_storybook_input('${d}','${randomUUID()}');`, "service_role"),
+    "the global stop switch still closes new photo reservations",
   );
   console.log(
     `${checks} isolated database and storage-policy checks passed. No cloud database changed.`,
