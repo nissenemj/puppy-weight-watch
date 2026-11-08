@@ -319,7 +319,7 @@ export default function StorybookGenerator({
     <section className="min-w-0 space-y-6" aria-labelledby={`${id}-title`}>
       <div className="space-y-3">
         <p className="text-sm text-stone-600">
-          Oman koiran kuvahaasteet · rajattu kokeilu
+          Oman koiran kuvahaasteet · maksuton kokeilu
         </p>
         <Title id={`${id}-title`} className="font-serif text-3xl">
           Pentukirjan satukuvat
@@ -333,7 +333,8 @@ export default function StorybookGenerator({
       {!signedIn && (
         <div className="rounded-md border bg-stone-50 p-4">
           <p className="mb-3">
-            Kirjaudu sisään nähdäksesi omat kuvasi ja kokeilun käyttöoikeuden.
+            Kirjaudu sisään ja vahvista sähköpostiosoitteesi kokeillaksesi
+            kuvamuokkauksia. Näet täällä myös omat aiemmat kuvasi.
           </p>
           <Button asChild className="min-h-11">
             <Link to="/login">Kirjaudu sisään</Link>
@@ -436,9 +437,10 @@ export default function StorybookGenerator({
           </Link>
         </p>
         <p className="text-xs leading-relaxed text-stone-600">
-          Kokeilussa enintään kaksi kuvapyyntöä päivässä käyttöoikeuden
-          saaneelle tilille. Ensimmäinen yhteinen laatukoe on rajattu kymmeneen
-          kuvaan.
+          Maksuton kokeilu on avoin kirjautuneille käyttäjille, joiden
+          sähköpostiosoite on vahvistettu. Enintään kaksi kuvapyyntöä päivässä
+          käyttäjää kohti. Kaikille yhteisen kuukausirajan täyttyessä uusien
+          kuvien luonti keskeytyy. Aiemmat kuvasi säilyvät käytettävissä.
         </p>
         <Button
           type="submit"

@@ -54,3 +54,11 @@ Käyttäjä hyväksyi kokonaisuuden tuotantojulkaisun rajattuna kokeiluna, myynn
 Kaikille kuudelle sisäiselle asetustaululle lisättiin RLS myös suljetun skeeman käyttöoikeuksien rinnalle. Kaikissa uusissa julkisissa ja yksityisissä ominaisuustauluissa on nyt RLS. Palvelimen service_role-käyttö ja omistajakohtaiset oikeudet varmennettiin uudelleen: 42 eristettyä tietokanta- ja Storage-tarkistusta läpi. Nykyinen GitHubin CI-putki säilytetään julkaisussa. Paikallinen ehdotus sen laajentamisesta lisätietokantatesteihin säilyy työpuussa, koska käytössä oleva GitHub-tunnus ei sisällä työnkulkujen muokkausoikeutta.
 
 Ajastuksen kellotus tarkennettiin viiteen minuuttiin. Lähteen oma vähintään 30 minuutin hakuväli säilyy palvelimella, joten kellotuksen pieni viive ei siirrä seuraavaa hakua kokonaisen ylimääräisen puolen tunnin päähän. Käytännön hakuväli on noin 30–35 minuuttia, eikä selain laukaise hakuja suoraan viranomaiselle.
+
+### Kokeilun avaaminen kirjautuneille käyttäjille 8.11.2026
+
+Käyttäjä pyysi avaamaan kuvakokeilun myös muille kirjautuneille käyttäjille. Palvelin tarkistaa edelleen tuoreen kirjautumisen, vahvistetun sähköpostin ja sen, ettei tili ole anonyymi. Uusi `access_mode` erottaa nimetyn laatukokeen (`allowlist`) kaikille vahvistetuille käyttäjille avoimesta kokeilusta (`verified_users`). Migraatio säilyttää alkuperäisen tilan, kunnes asetus vaihdetaan erikseen tarkistusten jälkeen. Asetuksen voi palauttaa ilman tietojen poistamista.
+
+Avoimessa kokeilussa ensimmäisen laatukokeen yhteinen kuvamäärä ei rajoita kaikkien käyttäjien käyttöä. Sen tilalla sovelletaan kaikkien yhteistä enintään 20 USD:n kuukausibudjettia, mukaan lukien aiemmat saman kuukauden koekulut ja keskeneräisten pyyntöjen varaukset. Kaksi kuvapyyntöä ja neljä lähtökuvan varausta päivässä käyttäjää kohti säilyvät. Yhden käyttäjän kuvat, lähdekuvat ja pentukirjat säilyvät muiden käyttäjien ulottumattomissa. Maksullinen myynti pysyy suljettuna.
+
+Jatkokehityksen suositeltu järjestys, mittarit ja erillistä päätöstä vaativat asiat on kuvattu [jatkokehityssuunnitelmassa](development-plan.md). Suunnitelma ei ole lupa uusiin palvelusopimuksiin tai maksullisen myynnin avaamiseen.

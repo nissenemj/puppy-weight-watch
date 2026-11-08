@@ -17,7 +17,7 @@ const ERRORS: Record<string, string> = {
   authentication_required: "Kirjaudu sisään ennen kuvien luontia.",
   email_not_verified: "Vahvista sähköpostiosoitteesi ennen kuvien luontia.",
   pilot_closed:
-    "Satukuvat ovat rajatussa kokeilussa. Tililläsi ei vielä ole käyttöoikeutta.",
+    "Satukuvien kokeilu ei ole tällä hetkellä avoinna. Aiemmat kuvasi säilyvät käytettävissä.",
   not_configured:
     "Kuvapalvelun yhteys ei ole vielä käytössä. Voit tutustua kuvatilanteisiin alla.",
   daily_limit:
