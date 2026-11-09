@@ -6,6 +6,9 @@ import {
 } from "@/integrations/supabase/client";
 import {
   imageJobSchema,
+  imageUsageSchema,
+  type ImageUsage,
+  type ImageRating,
   type StorybookSpec,
 } from "../../supabase/functions/_shared/storybook";
 
@@ -13,6 +16,7 @@ const jobSchema = imageJobSchema.extend({
   signed_url: z.string().url().nullable(),
 });
 export type StorybookJob = z.infer<typeof jobSchema>;
+export type { ImageUsage, ImageRating };
 const ERRORS: Record<string, string> = {
   authentication_required: "Kirjaudu sisään ennen kuvien luontia.",
   email_not_verified: "Vahvista sähköpostiosoitteesi ennen kuvien luontia.",
@@ -36,6 +40,8 @@ const ERRORS: Record<string, string> = {
   input_expired: "Lähtökuvan säilytysaika päättyi. Valitse kuva uudelleen.",
   input_upload_failed:
     "Lähtökuvan lähetys ei onnistunut. Voit yrittää uudelleen samalla kuvalla.",
+  image_busy: "Kuva on vielä käsittelyssä. Voit poistaa sen käsittelyn valmistuttua.",
+  not_found: "Kuvaa ei löydy tältä tililtä tai se on jo poistettu.",
 };
 export interface StorybookClient {
   list(
@@ -44,12 +50,15 @@ export interface StorybookClient {
     available: boolean;
     reason: string | null;
     jobs: StorybookJob[];
+    usage: ImageUsage;
   }>;
   get(id: string, signal?: AbortSignal): Promise<StorybookJob>;
   uploadPhoto(photo: Blob, inputId: string): Promise<string>;
   create(requestId: string, spec: StorybookSpec): Promise<StorybookJob>;
   retryDelivery(id: string): Promise<StorybookJob>;
   attach(id: string, bookId: string): Promise<void>;
+  remove(id: string): Promise<"deleted" | "pending">;
+  rate(id: string, rating: ImageRating): Promise<void>;
 }
 
 export function storybookMessage(code: string | null): string {
@@ -182,6 +191,7 @@ export function makeStorybookClient(
           available: z.boolean(),
           reason: z.string().nullable(),
           jobs: z.array(jobSchema).max(12),
+          usage: imageUsageSchema,
         })
         .parse(await request("", undefined, signal));
     },
@@ -206,6 +216,14 @@ export function makeStorybookClient(
       z.object({ memory_id: z.string().uuid() }).parse(
         await request("/book", { jobId: id, bookId }),
       );
+    },
+    async remove(id) {
+      return z.object({status:z.enum(["deleted","pending"])}).parse(
+        await request("/remove", {jobId:id}),
+      ).status;
+    },
+    async rate(id,rating) {
+      z.object({saved:z.literal(true)}).parse(await request("/feedback",{jobId:id,rating}));
     },
   };
 }

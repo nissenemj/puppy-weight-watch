@@ -31,6 +31,7 @@ import { useUser } from '@/contexts/UserContext';
 import { PuppyBookSkeleton } from '@/components/features/puppy-book/PuppyBookSkeleton';
 import { CreateBookPrompt } from '@/components/features/puppy-book/CreateBookPrompt';
 import { PuppyBookNavigation } from '@/components/features/puppy-book/PuppyBookNavigation';
+import { BookJourney } from '@/features/annual-book/BookJourney';
 import { DEFAULT_MILESTONES } from '@/data/constants';
 
 // Sub-components
@@ -66,6 +67,11 @@ const PuppyBook: React.FC = () => {
     const next = new URLSearchParams(searchParams);
     next.set('osio', sectionQueries[section]);
     setSearchParams(next, { preventScrollReset: true });
+    window.requestAnimationFrame(()=>{
+      const content=document.getElementById('puppy-book-content');
+      content?.focus({preventScroll:true});
+      content?.scrollIntoView({block:'start',behavior:reduceMotion?'auto':'smooth'});
+    });
   };
   const [book, setBook] = useState<PuppyBookType | null>(null);
   const [loading, setLoading] = useState(true);
@@ -198,7 +204,7 @@ const PuppyBook: React.FC = () => {
       <p className="journal-kicker">Oma pentukirja</p>
       <h1>Pennun pienet hetket talteen.</h1>
       <p>Kirjaudu sisään nähdäksesi pentukirjasi</p>
-      <div className="journal-book-actions"><Link className="journal-button" to="/login">Kirjaudu sisään</Link><Link className="journal-button journal-button-secondary" to="/muistokirja">Katso esimerkkikirjaa</Link></div>
+      <div className="journal-book-actions"><Link className="journal-button" to={`/login?next=puppy-book&osio=${sectionQueries[activeSection]}`}>Kirjaudu ja aloita oma kirja</Link><Link className="journal-button journal-button-secondary" to="/muistokirja">Katso esimerkkikirjaa</Link></div>
     </section></div>;
   }
 
@@ -228,11 +234,12 @@ const PuppyBook: React.FC = () => {
         </>}
         <p className="flex items-start gap-2">{book.privacy_settings?.visibility === 'public' ? <><Globe size={16} className="shrink-0 mt-1" aria-hidden="true" /> Kirjan asetuksissa näkyvyys on julkinen.</> : <><LockKeyhole size={16} className="shrink-0 mt-1" aria-hidden="true" /> Muistot kuuluvat omaan kirjaasi. Voit tarkistaa näkyvyyden kirjan asetuksista.</>}</p>
       </div>
+      {activeSection !== 'annual' && <BookJourney compact onSectionChange={setActiveSection} onAddMemory={()=>{setMemoryType('photo');setShowFloatingAction(true);}} />}
       <PuppyBookNavigation
         activeSection={activeSection}
         onSectionChange={setActiveSection}
       />
-      <section id="puppy-book-content" className="journal-book-content" aria-label="Pentukirjan sisältö">
+      <section id="puppy-book-content" tabIndex={-1} className="journal-book-content" aria-label="Pentukirjan sisältö">
         <AnimatePresence mode="wait">
           {activeSection === 'annual' && <React.Suspense fallback={<p role="status">Avataan kirjan kokoamista…</p>}><AnnualBookBuilder key={`${user.id}-${book.id}`} book={book} userId={user.id} /></React.Suspense>}
           {activeSection === 'monthly' && (

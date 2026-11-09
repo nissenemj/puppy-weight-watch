@@ -5,6 +5,7 @@ import {
   ImageFailure,
   PHOTO_STYLE,
   imageJobSchema,
+  imageUsageSchema,
   pngFromBase64,
   type ImageJob,
 } from "./storybook.ts";
@@ -41,6 +42,7 @@ export function supabaseImageRepository(
       .from("image_jobs")
       .select("*")
       .eq("id", id)
+      .is("deleted_at", null)
       .maybeSingle();
     if (error) throw new Error("job_unavailable");
     return data ? imageJobSchema.parse(data) : null;
@@ -50,13 +52,11 @@ export function supabaseImageRepository(
     path: string,
     bytes: Uint8Array,
   ): Promise<void> => {
-    const { error } = await client.storage
-      .from(bucket)
-      .upload(path, bytes, {
-        contentType: "image/png",
-        cacheControl: "300",
-        upsert: false,
-      });
+    const { error } = await client.storage.from(bucket).upload(path, bytes, {
+      contentType: "image/png",
+      cacheControl: "300",
+      upsert: false,
+    });
     if (!error) return;
     // A previous upload may have succeeded before its response was lost. Verify its bytes.
     const existing = await client.storage.from(bucket).download(path);
@@ -69,6 +69,32 @@ export function supabaseImageRepository(
     )
       throw new Error("image_upload_failed");
   };
+  const purge = async (owner: string, id: string) => {
+    const { error } = await client.storage
+      .from(IMAGE_BUCKET)
+      .remove([`${owner}/${id}.png`]);
+    if (error) throw new Error("image_deletion_pending");
+    await rpc("finish_storybook_deletion", { p_job: id });
+  };
+  const cleanupOrphanedCopies = async () => {
+    const paths = z
+      .array(
+        z.object({
+          path: z
+            .string()
+            .regex(
+              /^[0-9a-f-]{36}\/books\/[0-9a-f-]{36}\/satukuva-[0-9a-f-]{36}\.png$/i,
+            ),
+        }),
+      )
+      .max(20)
+      .parse(await rpc("orphaned_storybook_copies"));
+    if (!paths.length) return;
+    const { error } = await client.storage
+      .from("puppy-books")
+      .remove(paths.map((item) => item.path));
+    if (error) throw new Error("book_copy_cleanup_pending");
+  };
   return {
     async authenticate(token) {
       const { data, error } = await client.auth.getUser(token);
@@ -79,6 +105,42 @@ export function supabaseImageRepository(
     },
     async access(owner) {
       return (await rpc("storybook_access", { p_owner: owner })) === true;
+    },
+    async usage(owner) {
+      return imageUsageSchema.parse(
+        await rpc("storybook_usage", { p_owner: owner }),
+      );
+    },
+    async remove(owner, id) {
+      await rpc("request_storybook_deletion", { p_owner: owner, p_job: id });
+      try {
+        await purge(owner, id);
+        return "deleted";
+      } catch {
+        return "pending";
+      } // The durable tombstone is retried by the minute worker.
+    },
+    async rate(owner, id, rating) {
+      await rpc("rate_storybook_image", {
+        p_owner: owner,
+        p_job: id,
+        p_rating: rating,
+      });
+    },
+    async cleanupDeleted() {
+      const { data, error } = await client
+        .from("image_jobs")
+        .select("id,owner_id")
+        .not("deleted_at", "is", null)
+        .is("purged_at", null)
+        .limit(10);
+      if (error || !data) throw new Error("image_deletion_cleanup_unavailable");
+      const results = await Promise.allSettled(
+        data.map((row) => purge(row.owner_id, row.id)),
+      );
+      await cleanupOrphanedCopies();
+      if (results.some((result) => result.status === "rejected"))
+        throw new Error("image_deletion_pending");
     },
     async reserveInput(owner, id) {
       const path = await rpc("reserve_storybook_input", {
@@ -147,6 +209,7 @@ export function supabaseImageRepository(
         .from("image_jobs")
         .select("*")
         .eq("owner_id", owner)
+        .is("deleted_at", null)
         .order("created_at", { ascending: false })
         .limit(12);
       if (error) throw new Error("jobs_unavailable");
@@ -157,6 +220,7 @@ export function supabaseImageRepository(
       return job?.owner_id === owner ? job : null;
     },
     async signedUrl(job) {
+      if (!(await getInternal(job.id))) throw new Error("not_found");
       const expected = `${job.owner_id}/${job.id}.png`;
       if (job.status !== "ready" || job.object_path !== expected)
         throw new Error("image_not_ready");
@@ -254,16 +318,25 @@ export function supabaseImageRepository(
         `${owner}/books/${book}/satukuva-${id}.png`,
         new Uint8Array(await image.data.arrayBuffer()),
       );
-      return z
-        .string()
-        .uuid()
-        .parse(
-          await rpc("attach_storybook_image", {
-            p_owner: owner,
-            p_job: id,
-            p_book: book,
-          }),
-        );
+      try {
+        return z
+          .string()
+          .uuid()
+          .parse(
+            await rpc("attach_storybook_image", {
+              p_owner: owner,
+              p_job: id,
+              p_book: book,
+            }),
+          );
+      } catch (cause) {
+        try {
+          await cleanupOrphanedCopies();
+        } catch {
+          console.warn("storybook_book_copy_cleanup_pending");
+        }
+        throw cause;
+      }
     },
     async pending() {
       const cutoff = new Date(Date.now() - 4 * 60_000).toISOString();
@@ -271,6 +344,7 @@ export function supabaseImageRepository(
       const { data, error } = await client
         .from("image_jobs")
         .select("*")
+        .is("deleted_at", null)
         .or(
           `status.eq.queued,and(status.eq.processing,started_at.lt.${cutoff}),and(status.in.(delivery_pending,delivery_failed),next_delivery_at.lte.${now},delivery_attempts.lt.10)`,
         )

@@ -194,6 +194,9 @@ try {
     sql("select access_mode from pentulaskuri_features.image_config;") === "allowlist",
     "migration preserves the existing audience until explicitly opened",
   );
+  const ownerMigrations = readdirSync(new URL("../supabase/migrations/", import.meta.url)).filter(x=>x.endsWith('_image_usage_and_owner_controls.sql'));
+  assert.equal(ownerMigrations.length,1);
+  sql(readFileSync(new URL(`../supabase/migrations/${ownerMigrations[0]}`,import.meta.url),'utf8'));
   check(
     sql("select count(*) from pg_class c join pg_namespace n on n.oid=c.relnamespace where c.relkind='r' and not c.relrowsecurity and (n.nspname='pentulaskuri_features' or n.nspname='public' and c.relname in ('image_jobs','storybook_inputs','safety_source_checks','safety_news_items'));") === "0",
     "all new public and private feature tables have row security enabled",
@@ -645,6 +648,38 @@ try {
       denied(`select public.reserve_storybook_input('${d}','${randomUUID()}');`, "service_role"),
     "the global stop switch still closes new photo reservations",
   );
+  // Owner removal must never erase billing history or re-open daily quotas.
+  sql("update pentulaskuri_features.image_config set enabled=true;");
+  const usageBefore=JSON.parse(sql(`select public.storybook_usage('${e}');`,'service_role'));
+  check(usageBefore.daily_remaining===0 && usageBefore.reason==='daily_limit','usage reports exhausted daily requests before photo upload');
+  const ownerJob=JSON.parse(sql(`select to_jsonb(j) from public.image_jobs j where owner_id='${e}' order by created_at limit 1;`));
+  sql(`update public.image_jobs set status='ready',object_path='${e}/${ownerJob.id}.png',spec=jsonb_set(spec,'{notes}','"Private note"'::jsonb) where id='${ownerJob.id}';
+    insert into storage.objects(bucket_id,name) values('generated-storybook','${e}/${ownerJob.id}.png');
+    insert into pentulaskuri_features.image_payloads(job_id,png_base64,sha256) values('${ownerJob.id}','${'A'.repeat(40)}','${'a'.repeat(64)}');`);
+  check(denied(`select public.request_storybook_deletion('${d}','${ownerJob.id}');`,'service_role'),'another owner cannot delete an image');
+  check(denied(`select public.rate_storybook_image('${d}','${ownerJob.id}','keep');`,'service_role'),'another owner cannot rate an image');
+  sql(`select public.rate_storybook_image('${e}','${ownerJob.id}','keep');select public.rate_storybook_image('${e}','${ownerJob.id}','improve');`,'service_role');
+  check(sql(`select feedback from public.image_jobs where id='${ownerJob.id}';`)==='improve','feedback is one owner-controlled choice per image');
+  check(denied(`select public.rate_storybook_image('${e}','${ownerJob.id}','other');`,'service_role'),'feedback rejects unbounded or arbitrary content');
+  const beforeDeleteCount=sql(`select count(*) from public.image_jobs where owner_id='${e}';`);
+  const beforeDeleteBudget=sql('select to_jsonb(b) from pentulaskuri_features.image_budgets b;');
+  sql(`select public.request_storybook_deletion('${e}','${ownerJob.id}');select public.request_storybook_deletion('${e}','${ownerJob.id}');`,'service_role');
+  check(sql(`select count(*) from public.image_jobs where id='${ownerJob.id}';`,'authenticated',e)==='0','deleted image is hidden from its owner through the Data API');
+  check(sql(`select count(*) from storage.objects where bucket_id='generated-storybook' and name='${e}/${ownerJob.id}.png';`,'authenticated',e)==='0','deletion blocks direct image reads even before storage cleanup');
+  check(denied(`select public.attach_storybook_image('${e}','${ownerJob.id}','${bookA}');`,'service_role'),'deleted image cannot be attached to a book');
+  check(sql(`select length(spec->>'notes') from public.image_jobs where id='${ownerJob.id}';`)==='0' && sql(`select count(*) from pentulaskuri_features.image_payloads where job_id='${ownerJob.id}';`)==='0','deletion removes private notes and saved image payload');
+  check(denied(openReserve(e,inputE,ownerJob.request_id),'service_role'),'deleted requests cannot be replayed into new download URLs');
+  check(sql(`select count(*) from public.image_jobs where owner_id='${e}';`)===beforeDeleteCount && sql('select to_jsonb(b) from pentulaskuri_features.image_budgets b;')===beforeDeleteBudget,'repeated removal preserves daily request counts and the entire budget ledger');
+  const usageDeleted=JSON.parse(sql(`select public.storybook_usage('${e}');`,'service_role'));
+  check(usageDeleted.daily_remaining===0 && usageDeleted.deletions_pending===1,'usage exposes pending physical deletion without restoring free requests');
+  sql(`delete from storage.objects where bucket_id='generated-storybook' and name='${e}/${ownerJob.id}.png';select public.finish_storybook_deletion('${ownerJob.id}');select public.finish_storybook_deletion('${ownerJob.id}');`,'service_role');
+  check(JSON.parse(sql(`select public.storybook_usage('${e}');`,'service_role')).deletions_pending===0,'storage deletion acknowledgement is idempotent');
+  check(denied(`select public.request_storybook_deletion('${e}','${ownerJob.id}');`,'authenticated',e) && denied(`select public.storybook_usage('${e}');`,'anon'),'owner-control RPCs remain service-only');
+  const orphanBookId=randomUUID();const orphanCopyPath=`${e}/books/${orphanBookId}/satukuva-${ownerJob.id}.png`;const orphanMemoryId=randomUUID();
+  sql(`insert into public.puppy_books values('${orphanBookId}','${e}');insert into storage.objects(bucket_id,name) values('puppy-books','${orphanCopyPath}');`);
+  check(sql('select count(*) from public.orphaned_storybook_copies();','service_role')==='1','a delete-during-attach orphan is queued even after original purge');
+  sql(`insert into public.memories(id,book_id,created_by,content_type,content_url) values('${orphanMemoryId}','${orphanBookId}','${e}','image','${orphanCopyPath}');insert into pentulaskuri_features.image_book_copies values('${ownerJob.id}','${orphanBookId}','${orphanMemoryId}');`);
+  check(sql('select count(*) from public.orphaned_storybook_copies();','service_role')==='0','committed independent book copies are excluded from deletion cleanup');
   console.log(
     `${checks} isolated database and storage-policy checks passed. No cloud database changed.`,
   );

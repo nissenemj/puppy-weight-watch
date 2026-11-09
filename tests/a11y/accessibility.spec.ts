@@ -58,7 +58,7 @@ test.describe("Navigaation saavutettavuus", () => {
       await expect(page.locator("main a button")).toHaveCount(0);
       await expect(
         page.getByRole("link", {
-          name: "Luo pentukirja ilmaiseksi",
+          name: "Aloita oma pentukirja",
           exact: true,
         }),
       ).toHaveAttribute("href", "/puppy-book");

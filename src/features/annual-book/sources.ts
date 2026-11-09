@@ -1,6 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
-import { day, type AnnualBook } from "./model";
+import { day, firstYearEnd, type AnnualBook } from "./model";
+import { localDay } from "@/utils/localDay";
 
 type MemoryRow = Database["public"]["Tables"]["memories"]["Row"];
 export type SourceMemory = Pick<
@@ -19,6 +20,14 @@ export type DraftMemory = SourceMemory & {
   mishap: boolean;
 };
 
+/** Keep a puppy's first year, or suggest the calendar year of an older dog's memories. */
+export function suggestBookPeriod(birth: string, memories: DraftMemory[]) {
+  const first=memories.map(memory=>memory.date).filter(value=>day.safeParse(value).success).sort()[0];
+  if(day.safeParse(birth).success && (!first || first>=birth && first<=firstYearEnd(birth))) return {start:birth,end:firstYearEnd(birth)};
+  if(first) return {start:`${first.slice(0,4)}-01-01`,end:`${first.slice(0,4)}-12-31`};
+  return {start:"",end:""};
+}
+
 export function makeDraftMemories(
   memories: SourceMemory[],
   dates: ReadonlyMap<string, string>,
@@ -29,8 +38,8 @@ export function makeDraftMemories(
       : undefined;
     return {
       ...memory,
-      // created_at records an upload, not the day the remembered event happened.
-      date: linked && day.safeParse(linked).success ? linked : "",
+      // A known event day wins; otherwise the editable default is the day added.
+      date: linked && day.safeParse(linked).success ? linked : localDay(memory.created_at ?? ""),
       included: false,
       mishap: (memory.tags ?? []).some(
         (tag) => tag.toLocaleLowerCase("fi") === "kommellus",

@@ -5,7 +5,7 @@ import { Check, RefreshCw } from "lucide-react";
 import type { PuppyBook } from "@/types/dog";
 import { AnnualBookPreview } from "./AnnualBookPreview";
 import { PrintBookButton } from "./PrintBookButton";
-import { loadBookSources, type DraftMemory } from "./sources";
+import { loadBookSources, suggestBookPeriod, type DraftMemory } from "./sources";
 import { loadBookImage } from "./images";
 import { makeDraftData, restoreDraftMemories, type DraftSeed } from "./draft";
 import { loadAnnualDraft } from "./draftStorage";
@@ -39,6 +39,7 @@ export default function AnnualBookBuilder({
   const [refreshError, setRefreshError] = useState("");
   const [memoryNotice, setMemoryNotice] = useState("");
   const sourceRefresh = useRef<AbortController | null>(null);
+  const dateDefaults = useRef(new Map<string,string>());
   const [name, setName] = useState(book.title.slice(0, 40));
   const [start, setStart] = useState(
     book.birth_date && day.safeParse(book.birth_date).success
@@ -123,12 +124,13 @@ export default function AnnualBookBuilder({
         const restored = saved
           ? restoreDraftMemories(source.memories, saved.data)
           : { memories: source.memories, missing: 0 };
+        dateDefaults.current = new Map(source.memories.map(memory=>[memory.id,memory.date]));
         const initial =
           saved?.data ??
           makeDraftData(
             defaults.current.puppyName,
-            defaults.current.start,
-            firstYearEnd(defaults.current.start),
+            suggestBookPeriod(defaults.current.start,source.memories).start,
+            suggestBookPeriod(defaults.current.start,source.memories).end,
             true,
             source.memories,
           );
@@ -185,6 +187,7 @@ export default function AnnualBookBuilder({
     try {
       const source = await loadBookSources(book.id, userId, controller.signal);
       if (controller.signal.aborted) return;
+      dateDefaults.current = new Map(source.memories.map(memory=>[memory.id,memory.date]));
       setMemories((current) => {
         const choices = new Map(current.map((memory) => [memory.id, memory]));
         return source.memories.map((memory) => {
@@ -206,7 +209,7 @@ export default function AnnualBookBuilder({
       setMemoryNotice(
         source.truncated
           ? "Muisto tallennettiin Muistot-osioon. Tässä näkyvät 200 vanhinta muistoa."
-          : "Muisto lisätty. Valitse se alta kirjaan ja anna tapahtumapäivä. Aiemmat valintasi säilyivät.",
+          : "Muisto lisätty. Päivä on valmiina, ja voit muuttaa sitä. Valitse muisto alta kirjaan. Aiemmat valintasi säilyivät.",
       );
     } catch {
       if (!controller.signal.aborted)
@@ -317,8 +320,8 @@ export default function AnnualBookBuilder({
         <div>
           <h2 id="annual-builder-title">Teidän näköinen pentuvuosi.</h2>
           <p>
-            Valitse muistot ja kokoa pentuvuosi omaksi kirjaksi. Voit jatkaa
-            myöhemmin.
+            Valitse kansi ja lempihetket. Päivät ovat valmiina. Lopuksi
+            esikatsele ja tallenna PDF.
           </p>
         </div>
       </header>
@@ -337,6 +340,40 @@ export default function AnnualBookBuilder({
         </div>
       ) : (
         <>
+          {memories.length > 0 && (
+            <nav
+              className="annual-workflow"
+              aria-label="Kirjan kokoamisen vaiheet"
+            >
+              <button
+                type="button"
+                className="journal-text-link"
+                onClick={() => focusSection(designSection.current)}
+              >
+                1. Kansi ja ilme
+              </button>
+              <button
+                type="button"
+                className="journal-text-link"
+                onClick={() => focusSection(memorySection.current)}
+              >
+                2. Valitse lempihetket
+              </button>
+              <button
+                type="button"
+                className="journal-text-link"
+                onClick={() =>
+                  focusSection(
+                    preview && !dirty
+                      ? heading.current
+                      : assembleButton.current,
+                  )
+                }
+              >
+                3. Esikatsele ja tallenna PDF
+              </button>
+            </nav>
+          )}
           <div className="annual-save-status">
             <p role="status" aria-live="polite" aria-atomic="true">
               {autosave.phase === "saving"
@@ -379,40 +416,6 @@ export default function AnnualBookBuilder({
             )}
           </div>
           {restoreNotice && <p role="status">{restoreNotice}</p>}
-          {memories.length > 0 && (
-            <nav
-              className="annual-workflow"
-              aria-label="Kirjan kokoamisen vaiheet"
-            >
-              <button
-                type="button"
-                className="journal-text-link"
-                onClick={() => focusSection(designSection.current)}
-              >
-                Kansi ja ilme
-              </button>
-              <button
-                type="button"
-                className="journal-text-link"
-                onClick={() => focusSection(memorySection.current)}
-              >
-                Muistot ja päivät
-              </button>
-              <button
-                type="button"
-                className="journal-text-link"
-                onClick={() =>
-                  focusSection(
-                    preview && !dirty
-                      ? heading.current
-                      : assembleButton.current,
-                  )
-                }
-              >
-                Esikatselu
-              </button>
-            </nav>
-          )}
           <BookIdeas
             bookId={book.id}
             memories={chosen.length}
@@ -471,7 +474,7 @@ export default function AnnualBookBuilder({
                 className="annual-design-section"
                 disabled={working}
               >
-                <legend>1. Tee kirjasta oman näköinen</legend>
+                <legend>Tee kirjasta oman näköinen</legend>
                 <BookDesignFields
                   design={design}
                   puppyName={name}
@@ -485,7 +488,7 @@ export default function AnnualBookBuilder({
                 />
               </fieldset>
               <fieldset className="annual-period-section" disabled={working}>
-                <legend>2. Pennun nimi ja ajanjakso</legend>
+                <legend>Pennun nimi ja ajanjakso</legend>
                 <div className="annual-fields">
                   <label>
                     Pennun nimi
@@ -527,9 +530,10 @@ export default function AnnualBookBuilder({
                   </label>
                 </div>
                 <p>
-                  Voit aloittaa syntymäpäivästä tai kotiintulosta. Jakso saa
-                  olla enintään vuoden mittainen. Varmista myös kirjaan
-                  valmiiksi haettu syntymäpäivä.
+                  Ajanjakso on ehdotettu muistojen ja syntymäpäivän perusteella.
+                  Voit muuttaa sen: valitse pentuvuosi tai yksi kalenterivuosi.
+                  Jakso voi olla enintään vuoden mittainen. Aiemmin
+                  tallentamasi ajanjakso säilyy.
                 </p>
               </fieldset>
               <fieldset
@@ -538,12 +542,17 @@ export default function AnnualBookBuilder({
                 className="annual-memories-section"
                 disabled={working}
               >
-                <legend>3. Valitse hetket ja tarkista tapahtumapäivät</legend>
+                <legend>Valitse hetket ja tarkista tapahtumapäivät</legend>
                 <p id="annual-date-help">
-                  Tallennuspäivä kertoo, milloin lisäsit muiston palveluun. Anna
-                  päivä, jolloin tapahtuma oikeasti sattui. Aikajanaan
-                  liitetystä muistosta ehdotamme sen tapahtumapäivää.
+                  Päivä on valmiina: käytämme aikajanan tapahtumapäivää tai
+                  muiston lisäyspäivää. Muuta sitä, jos kuva kertoo toisesta
+                  päivästä. Aiemmin muokkaamasi tai tyhjentämäsi päivät säilyvät.
                 </p>
+                {memories.some(memory=>!memory.date && dateDefaults.current.get(memory.id)) &&
+                  <button type="button" className="journal-button journal-button-secondary" onClick={()=>{
+                    setMemories(items=>items.map(memory=>memory.date?memory:{...memory,date:dateDefaults.current.get(memory.id)||""}));
+                    setDirty(true);
+                  }}>Täytä puuttuvat päivät lisäyspäivillä</button>}
                 <p role="status">Valittu {chosen.length} / 24 muistoa</p>
                 <ul className="annual-memory-list">
                   {memories.map((memory, index) => (
@@ -623,7 +632,7 @@ export default function AnnualBookBuilder({
                 </ul>
               </fieldset>
               <fieldset className="annual-growth-section" disabled={working}>
-                <legend>4. Kasvukäyrä osaksi tarinaa</legend>
+                <legend>Kasvukäyrä osaksi tarinaa</legend>
                 <label className="annual-checkbox">
                   <input
                     type="checkbox"

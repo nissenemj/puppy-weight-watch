@@ -3,6 +3,9 @@ import {
   attachImageRequest,
   createImageRequest,
   createInputRequest,
+  imageRatingSchema,
+  type ImageRating,
+  type ImageUsage,
   type ImageJob,
   type StorybookSpec,
 } from "./storybook.ts";
@@ -14,6 +17,10 @@ export interface ImageApiRepository extends ImageRepository {
     token: string,
   ): Promise<{ id: string; verified: boolean } | null>;
   access(owner: string): Promise<boolean>;
+  usage(owner: string): Promise<ImageUsage>;
+  remove(owner: string, id: string): Promise<"deleted" | "pending">;
+  rate(owner: string, id: string, rating: ImageRating): Promise<void>;
+  cleanupDeleted(): Promise<void>;
   reserve(
     owner: string,
     request: string,
@@ -40,6 +47,8 @@ const PUBLIC_ERRORS = [
   "input_limit",
   "input_missing",
   "input_expired",
+  "not_found",
+  "image_busy",
 ];
 
 export function createImageHandler(
@@ -68,6 +77,12 @@ export function createImageHandler(
         )
           return jsonResponse({ error: "unauthorized" }, 401);
         await repository.cleanupInputs();
+        let deletionCleanupPending = false;
+        try {
+          await repository.cleanupDeleted();
+        } catch {
+          deletionCleanupPending = true;
+        }
         const pending = await repository.pending();
         // Only queued jobs can call the provider. Delivery retries only reuse saved bytes.
         await Promise.all(
@@ -83,7 +98,10 @@ export function createImageHandler(
               await repository.deliver(job.id).catch(() => undefined);
           }),
         );
-        return jsonResponse({ processed: pending.length });
+        return jsonResponse({
+          processed: pending.length,
+          deletion_cleanup_pending: deletionCleanupPending,
+        });
       }
       const token = request.headers
         .get("authorization")
@@ -107,25 +125,46 @@ export function createImageHandler(
           }
           return jsonResponse({ job: await present(job) });
         }
-        const [access, jobs] = await Promise.all([
+        const [access, jobs, usage] = await Promise.all([
           repository.access(user.id),
           repository.list(user.id),
+          repository.usage(user.id),
         ]);
         return jsonResponse({
-          available: !!options.apiKey && access && user.verified,
+          available:
+            !!options.apiKey && access && user.verified && !usage.reason,
           reason: !options.apiKey
             ? "not_configured"
             : !user.verified
               ? "email_not_verified"
               : !access
                 ? "pilot_closed"
-                : null,
+                : usage.reason,
+          usage,
           jobs: await Promise.all(jobs.map(present)),
         });
       }
       if (request.method !== "POST")
         return jsonResponse({ error: "method_not_allowed" }, 405);
       const body = await readSmallJson(request);
+      if (action === "remove") {
+        const parsed = z.object({ jobId: uuid }).strict().safeParse(body);
+        if (!parsed.success)
+          return jsonResponse({ error: "invalid_request" }, 400);
+        return jsonResponse({
+          status: await repository.remove(user.id, parsed.data.jobId),
+        });
+      }
+      if (action === "feedback") {
+        const parsed = z
+          .object({ jobId: uuid, rating: imageRatingSchema })
+          .strict()
+          .safeParse(body);
+        if (!parsed.success)
+          return jsonResponse({ error: "invalid_request" }, 400);
+        await repository.rate(user.id, parsed.data.jobId, parsed.data.rating);
+        return jsonResponse({ saved: true });
+      }
       if (action === "input") {
         const parsed = createInputRequest.safeParse(body);
         if (!parsed.success)
@@ -191,9 +230,13 @@ export function createImageHandler(
       const message = cause instanceof Error ? cause.message : "";
       const code = PUBLIC_ERRORS.find((code) => message.includes(code));
       const status =
-        code === "request_conflict" || code === "job_in_progress"
+        code === "request_conflict" ||
+        code === "job_in_progress" ||
+        code === "image_busy"
           ? 409
-          : code === "book_or_image_not_found" || code === "input_missing"
+          : code === "book_or_image_not_found" ||
+              code === "input_missing" ||
+              code === "not_found"
             ? 404
             : code === "input_expired"
               ? 410

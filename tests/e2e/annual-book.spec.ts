@@ -204,7 +204,7 @@ async function chooseMemories(page: Page) {
   ).toHaveValue("2026-06-03");
   await expect(
     page.getByLabel("Tapahtumapäivä, muisto 2", { exact: true }),
-  ).toHaveValue("");
+  ).toHaveValue("2026-10-27");
   await page
     .getByLabel("Tapahtumapäivä, muisto 2", { exact: true })
     .fill("2026-07-12");
@@ -221,6 +221,55 @@ async function chooseMemories(page: Page) {
 
 test.describe("automatic puppy book", () => {
   test.use({ userState: "signed-in" });
+  test("a deliberately cleared saved date stays empty until the owner fills defaults", async ({
+    page,
+  }) => {
+    await sources(page);
+    await page.goto("/puppy-book?osio=vuosikirja");
+    await page.getByRole("checkbox", { name: /^Muisto 1:/ }).check();
+    await page
+      .getByLabel("Tapahtumapäivä, muisto 1", { exact: true })
+      .fill("2026-06-04");
+    await page.getByRole("checkbox", { name: /^Muisto 2:/ }).check();
+    await page.getByLabel("Tapahtumapäivä, muisto 2", { exact: true }).fill("");
+    await expect(
+      page.getByText(
+        "Tallennettu. Voit palata jatkamaan tätä kirjaa myöhemmin.",
+        { exact: true },
+      ),
+    ).toBeVisible();
+    await page.reload();
+    await expect(
+      page.getByLabel("Tapahtumapäivä, muisto 2", { exact: true }),
+    ).toHaveValue("");
+    await page
+      .getByRole("button", { name: "Täytä puuttuvat päivät lisäyspäivillä" })
+      .click();
+    await expect(
+      page.getByLabel("Tapahtumapäivä, muisto 2", { exact: true }),
+    ).toHaveValue("2026-10-27");
+    await expect(
+      page.getByLabel("Tapahtumapäivä, muisto 1", { exact: true }),
+    ).toHaveValue("2026-06-04");
+  });
+
+  test("the illustrated guide moves from a memory directly into book assembly", async ({
+    page,
+  }) => {
+    await sources(page);
+    await page.goto("/puppy-book");
+    await page
+      .getByRole("button", { name: "Näytä kuvitettu ohje", exact: true })
+      .click();
+    await page
+      .getByRole("button", { name: "Avaa Oma kirja", exact: true })
+      .click();
+    await expect(page).toHaveURL(/osio=vuosikirja/);
+    await expect(page.locator("#puppy-book-content")).toBeFocused();
+    await expect(
+      page.getByRole("navigation", { name: "Kirjan kokoamisen vaiheet" }),
+    ).toBeVisible();
+  });
 
   for (const width of [320, 768, 1024, 1440]) {
     test(`UX: book shortcuts keep the draft, move focus and reach the preview at ${width}`, async ({
@@ -235,14 +284,14 @@ test.describe("automatic puppy book", () => {
       });
       await expect(steps).toBeInViewport({ ratio: 1 });
       await steps
-        .getByRole("button", { name: "Kansi ja ilme", exact: true })
+        .getByRole("button", { name: "1. Kansi ja ilme", exact: true })
         .click();
       await expect(page.locator(".annual-design-section")).toBeFocused();
       await page
         .getByLabel("Kirjan oma nimi (valinnainen)", { exact: true })
         .fill("Meidän yhteinen pentuvuosi");
       await steps
-        .getByRole("button", { name: "Muistot ja päivät", exact: true })
+        .getByRole("button", { name: "2. Valitse lempihetket", exact: true })
         .click();
       await expect(page.locator(".annual-memories-section")).toBeFocused();
       await expect(page.getByRole("dialog")).toHaveCount(0);
@@ -251,7 +300,10 @@ test.describe("automatic puppy book", () => {
       ).toHaveValue("Meidän yhteinen pentuvuosi");
       await chooseMemories(page);
       await steps
-        .getByRole("button", { name: "Esikatselu", exact: true })
+        .getByRole("button", {
+          name: "3. Esikatsele ja tallenna PDF",
+          exact: true,
+        })
         .click();
       await expect(
         page.getByRole("button", {
@@ -267,10 +319,13 @@ test.describe("automatic puppy book", () => {
         }),
       ).toBeFocused();
       await steps
-        .getByRole("button", { name: "Kansi ja ilme", exact: true })
+        .getByRole("button", { name: "1. Kansi ja ilme", exact: true })
         .click();
       await steps
-        .getByRole("button", { name: "Esikatselu", exact: true })
+        .getByRole("button", {
+          name: "3. Esikatsele ja tallenna PDF",
+          exact: true,
+        })
         .click();
       await expect(
         page.getByRole("heading", {

@@ -118,10 +118,10 @@ test.describe("Pentukirjan esittely", () => {
         )
         .toEqual([]);
       const startLink = hero.getByRole("link", {
-        name: "Lisää ensimmäinen kuva",
+        name: "Aloita oma kirja",
         exact: true,
       });
-      await expect(startLink).toHaveAttribute("href", "#kokeile-kantta");
+      await expect(startLink).toHaveAttribute("href", "/puppy-book");
       await expect(startLink.getByRole("button")).toHaveCount(0);
       await page.screenshot({ path: testInfo.outputPath("hero.png") });
       await startLink.press("Tab");

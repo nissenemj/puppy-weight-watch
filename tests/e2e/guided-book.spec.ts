@@ -359,7 +359,10 @@ for (const width of [320, 768, 1024, 1440]) {
       await saved(page);
       if (process.env.SCRAPBOOK_OUTPUT) {
         await page
-          .getByRole("link", { name: "Lisää ensimmäinen kuva", exact: true })
+          .getByRole("link", {
+            name: "Kokeile kirjasivua ilman kirjautumista",
+            exact: true,
+          })
           .click();
         await page.screenshot({
           path: process.env.SCRAPBOOK_OUTPUT + "/leikekirja-" + width + ".png",

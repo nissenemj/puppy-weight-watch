@@ -1,0 +1,171 @@
+.book-journey {
+  --journey-ink: #233f50;
+  --journey-paper: #fffaf2;
+  color: var(--journey-ink);
+  margin: 2rem 0;
+  border: 1px solid #e5ded2;
+  border-radius: 1.25rem;
+  background: var(--journey-paper);
+  padding: clamp(1rem, 3vw, 2rem);
+  min-width: 0;
+  scroll-margin-top: 6rem;
+}
+.book-journey-intro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.book-journey-intro > div {
+  max-width: 42rem;
+}
+.book-journey h2 {
+  font-family: var(--font-serif, Georgia, serif);
+  font-size: clamp(1.5rem, 3vw, 2.3rem);
+  line-height: 1.15;
+  margin: 0.4rem 0 0.8rem;
+}
+.book-journey p {
+  line-height: 1.65;
+  margin: 0.5rem 0;
+}
+.book-journey-kicker {
+  font-size: 0.78rem;
+  font-weight: 650;
+  letter-spacing: 0.035em;
+  color: #6e5140;
+}
+.book-journey-steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.book-journey-steps > li {
+  min-width: 0;
+  border: 1px solid #e6dfd5;
+  border-radius: 0.8rem;
+  overflow: hidden;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+.book-journey-picture {
+  aspect-ratio: 1;
+  background-size: 200% 200%;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+}
+.book-journey-picture-1 {
+  background-position: 100% 0;
+}
+.book-journey-picture-2 {
+  background-position: 0 100%;
+}
+.book-journey-picture-3 {
+  background-position: 100% 100%;
+}
+.book-journey-chapter {
+  padding: 1rem;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.book-journey h3 {
+  font-family: var(--font-serif, Georgia, serif);
+  font-size: 1.25rem;
+  line-height: 1.25;
+  margin: 0.4rem 0;
+}
+.book-journey-chapter > p:not(.book-journey-kicker) {
+  font-size: 0.9rem;
+  flex: 1;
+}
+.book-journey-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-align: left;
+  min-height: 44px;
+  max-width: 100%;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  border: 0;
+  background: none;
+  color: var(--journey-ink);
+  padding: 0.45rem 0;
+  white-space: normal;
+}
+.book-journey-action svg {
+  flex-shrink: 0;
+}
+.book-journey-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem 1.5rem;
+  border-top: 1px solid #e5ded2;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+}
+.book-journey-bottom > p {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+  max-width: 42rem;
+  font-size: 0.9rem;
+}
+.book-journey-bottom svg {
+  flex-shrink: 0;
+  margin-top: 0.2rem;
+}
+.book-journey-print {
+  border-top: 1px solid #e5ded2;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  max-width: 52rem;
+}
+.book-journey-print ol {
+  padding-left: 1.2rem;
+  line-height: 1.65;
+}
+.book-journey-print li {
+  margin: 0.75rem 0;
+}
+.book-journey :is(a, button):focus-visible {
+  outline: 3px solid #233f50;
+  outline-offset: 4px;
+}
+.book-journey-compact {
+  margin: 1.25rem 0;
+}
+.book-journey-compact .book-journey-intro {
+  margin-bottom: 0;
+}
+.book-journey-compact .book-journey-steps {
+  margin-top: 1.25rem;
+}
+@media (max-width: 1050px) {
+  .book-journey-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 520px) {
+  .book-journey-steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .book-journey {
+    border-radius: 0.8rem;
+  }
+  .book-journey-intro > button {
+    width: 100%;
+  }
+}
