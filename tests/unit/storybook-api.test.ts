@@ -285,6 +285,10 @@ function repositoryFixture(): ImageApiRepository {
             : null,
     ),
     access: vi.fn(async () => true),
+    usage: vi.fn(async () => ({ daily_limit: 2, daily_used: 0, daily_remaining: 2, deletions_pending:0, resets_at: "2026-11-10T00:00:00Z", reason: null })),
+    remove: vi.fn(async () => "deleted" as const),
+    rate: vi.fn(),
+    cleanupDeleted: vi.fn(),
     reserve: vi.fn(async () => job),
     list: vi.fn(async () => []),
     get: vi.fn(async (user) => (user === owner ? job : null)),
@@ -297,7 +301,7 @@ function repositoryFixture(): ImageApiRepository {
     claim: vi.fn(async () => null),
     saveResult: vi.fn(),
     fail: vi.fn(),
-    deliver: vi.fn(),
+    deliver: vi.fn(async () => undefined),
   };
 }
 function post(body: unknown, token?: string, suffix = "") {
@@ -312,6 +316,34 @@ function post(body: unknown, token?: string, suffix = "") {
 }
 
 describe("image HTTP authorization", () => {
+  it("does not let a failed file purge block unrelated image delivery",async()=>{
+    const repo=repositoryFixture();
+    vi.mocked(repo.cleanupDeleted).mockRejectedValue(new Error('storage offline'));
+    vi.mocked(repo.pending).mockResolvedValue([{...job,status:'delivery_failed'}]);
+    const handler=createImageHandler(repo,{workerSecret:'x'.repeat(32),background:()=>undefined});
+    const response=await handler(new Request('https://app.example/storybook-images/work',{method:'POST',headers:{'x-refresh-secret':'x'.repeat(32)}}));
+    expect(response.status).toBe(200);expect(await response.json()).toMatchObject({processed:1,deletion_cleanup_pending:true});expect(repo.deliver).toHaveBeenCalledWith(jobId);
+  });
+  it("reports server quotas before upload while retaining existing images", async () => {
+    const repo = repositoryFixture();
+    vi.mocked(repo.usage).mockResolvedValue({daily_limit:2,daily_used:2,daily_remaining:0,deletions_pending:0,resets_at:"2026-11-10T00:00:00Z",reason:"daily_limit"});
+    const handler = createImageHandler(repo, { apiKey: "test-key", background: () => undefined });
+    const response = await handler(new Request("https://app.example/storybook-images", {headers:{Authorization:"Bearer owner"}}));
+    expect(await response.json()).toMatchObject({available:false,reason:"daily_limit",usage:{daily_remaining:0,daily_used:2}});
+    expect(repo.usage).toHaveBeenCalledWith(owner);
+    expect(repo.reserveInput).not.toHaveBeenCalled();
+  });
+  it("binds deletion and feedback to the authenticated owner and validates the choice", async () => {
+    const repo = repositoryFixture();
+    const handler = createImageHandler(repo, { apiKey: "test-key", background: () => undefined });
+    expect((await handler(post({jobId},undefined,"/remove"))).status).toBe(401);
+    expect((await handler(post({jobId},"owner","/remove"))).status).toBe(200);
+    expect(repo.remove).toHaveBeenCalledWith(owner,jobId);
+    expect((await handler(post({jobId,rating:"keep"},"other","/feedback"))).status).toBe(200);
+    expect(repo.rate).toHaveBeenCalledWith(other,jobId,"keep");
+    expect((await handler(post({jobId,rating:"anything"},"owner","/feedback"))).status).toBe(400);
+    expect(repo.rate).toHaveBeenCalledTimes(1);
+  });
   it("admits another verified user without admitting unverified or unsigned requests", async () => {
     const repo = repositoryFixture();
     const handler = createImageHandler(repo, {

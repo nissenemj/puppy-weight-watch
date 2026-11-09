@@ -143,6 +143,17 @@ Scene: ${LEGACY_SCENES.find((scene) => scene.id === spec.scene)!.description}
 Warm Nordic watercolor with delicate pencil lines, subtle paper texture, ivory background, muted blue and terracotta palette. Gentle humour, clear composition and natural canine anatomy. Keep the dog as the focus. No text, lettering, logos, watermarks or people. Do not imitate a named artist.`;
 }
 
+export const imageRatingSchema = z.enum(["keep", "improve"]);
+export const imageUsageSchema = z.object({
+  daily_limit: z.number().int().min(1).max(2),
+  daily_used: z.number().int().nonnegative(),
+  daily_remaining: z.number().int().min(0).max(2),
+  deletions_pending: z.number().int().nonnegative().default(0),
+  resets_at: z.string().datetime({ offset: true }),
+  reason: z.enum(["pilot_closed", "daily_limit", "input_limit", "budget_limit", "pilot_limit", "job_in_progress"]).nullable(),
+});
+export type ImageUsage = z.infer<typeof imageUsageSchema>;
+export type ImageRating = z.infer<typeof imageRatingSchema>;
 export const imageJobSchema = z.object({
   id: z.string().uuid(),
   owner_id: z.string().uuid(),
@@ -161,6 +172,7 @@ export const imageJobSchema = z.object({
   started_at: z.string().nullable(),
   object_path: z.string().nullable(),
   error_code: z.string().nullable(),
+  feedback: imageRatingSchema.nullable().optional(),
 });
 export type ImageJob = z.infer<typeof imageJobSchema>;
 export interface ImageResult {

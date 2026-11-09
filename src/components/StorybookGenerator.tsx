@@ -3,6 +3,17 @@ import { Link } from "react-router-dom";
 import { Download, Sparkles, RefreshCw, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import {
   SCENES,
   PHOTO_STYLE,
   storybookSceneName,
@@ -15,6 +26,7 @@ import {
   downloadStorybookImage,
   type StorybookClient,
   type StorybookJob,
+  type ImageUsage,
 } from "@/services/storybookImages";
 import {
   prepareStorybookPhoto,
@@ -75,6 +87,7 @@ export default function StorybookGenerator({
   const [jobs, setJobs] = useState<StorybookJob[]>([]);
   const [available, setAvailable] = useState(false);
   const [reason, setReason] = useState<string | null>(null);
+  const [usage, setUsage] = useState<ImageUsage | null>(null);
   const [loading, setLoading] = useState(signedIn);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -114,6 +127,7 @@ export default function StorybookGenerator({
     setNotice("");
     setAvailable(false);
     setReason(null);
+    setUsage(null);
     setUncertain(false);
     setPhotoReady(false);
     setPreview(null);
@@ -141,6 +155,7 @@ export default function StorybookGenerator({
         setJobs(data.jobs.filter((job) => job.owner_id === ownerId));
         setAvailable(data.available);
         setReason(data.reason);
+        setUsage(data.usage);
         setError("");
       })
       .catch(() => {
@@ -155,7 +170,7 @@ export default function StorybookGenerator({
     return () => controller.abort();
   }, [signedIn, ownerId, client, revision]);
   useEffect(() => {
-    if (!signedIn || !ownerId || !jobs.length) return;
+    if (!signedIn || !ownerId) return;
     const controller = new AbortController();
     const timer = setInterval(
       async () => {
@@ -165,6 +180,7 @@ export default function StorybookGenerator({
             setJobs(data.jobs.filter((job) => job.owner_id === ownerId));
             setAvailable(data.available);
             setReason(data.reason);
+            setUsage(data.usage);
           }
         } catch {
           /* Keep the last known result; a network failure must not submit another generation. */
@@ -246,8 +262,30 @@ export default function StorybookGenerator({
       upsert(job);
       request.current = null;
       setUncertain(false);
+      try {
+        const refreshed = await client.list();
+        if (version === epoch.current) {
+          setUsage(refreshed.usage);
+          setAvailable(refreshed.available);
+          setReason(refreshed.reason);
+        }
+      } catch {
+        if (version === epoch.current) {
+          setAvailable(false);
+          setError(
+            "Kuvapyyntö vastaanotettiin. Käyttörajaa ei saatu päivitettyä. Päivitä omat kuvat ennen uutta pyyntöä.",
+          );
+        }
+      }
     } catch (cause) {
       if (version !== epoch.current) return;
+      if (
+        cause instanceof StorybookApiError &&
+        ["daily_limit", "budget_limit", "input_limit", "pilot_limit"].includes(
+          cause.code,
+        )
+      )
+        setRevision((value) => value + 1);
       if (
         !request.current ||
         (cause instanceof StorybookApiError &&
@@ -291,7 +329,7 @@ export default function StorybookGenerator({
       }
     }
   };
-  const action = async (task: () => Promise<void>) => {
+  const action = async (task: (version: number) => Promise<void>) => {
     if (submitLock.current) return;
     submitLock.current = true;
     setBusy(true);
@@ -299,7 +337,7 @@ export default function StorybookGenerator({
     setNotice("");
     const version = epoch.current;
     try {
-      await task();
+      await task(version);
     } catch (cause) {
       if (version === epoch.current)
         setError(
@@ -348,6 +386,27 @@ export default function StorybookGenerator({
         >
           {storybookMessage(reason)}
         </p>
+      )}
+      {signedIn && usage && (
+        <div
+          role="status"
+          className="rounded-md border bg-stone-50 p-4 text-sm leading-relaxed"
+        >
+          <p>
+            Tänään jäljellä {usage.daily_remaining} / {usage.daily_limit}{" "}
+            kuvapyyntöä.
+          </p>
+          <p>
+            Uusi päiväkohtainen kiintiö alkaa{" "}
+            {new Date(usage.resets_at).toLocaleString("fi-FI")}.
+          </p>
+          {usage.deletions_pending > 0 && (
+            <p>
+              {usage.deletions_pending} kuvan tiedostonpoisto on vielä kesken.
+              Palvelu yrittää poistoa automaattisesti uudelleen.
+            </p>
+          )}
+        </div>
       )}
       <form
         onSubmit={generate}
@@ -531,9 +590,9 @@ export default function StorybookGenerator({
                     disabled={busy}
                     className="min-h-12"
                     onClick={() =>
-                      void action(async () => {
+                      void action(async (version) => {
                         await client.attach(current.id, bookId);
-                        if (current.owner_id === ownerId)
+                        if (version === epoch.current)
                           setNotice(
                             "Satukuva lisättiin pentukirjan Muistot-osioon. Aiemmat sivut ja luonnoksesi säilyivät.",
                           );
@@ -558,9 +617,10 @@ export default function StorybookGenerator({
                 className="h-auto min-h-12 whitespace-normal"
                 disabled={busy}
                 onClick={() =>
-                  void action(async () =>
-                    upsert(await client.retryDelivery(current.id)),
-                  )
+                  void action(async (version) => {
+                    const job = await client.retryDelivery(current.id);
+                    if (version === epoch.current) upsert(job);
+                  })
                 }
               >
                 Yritä kuvan toimitusta uudelleen
@@ -576,6 +636,103 @@ export default function StorybookGenerator({
               </Button>
             )}
           </div>
+          {current.status === "ready" && (
+            <div className="space-y-4 border-t pt-4">
+              <fieldset disabled={busy}>
+                <legend className="mb-2 text-sm font-medium">
+                  Onko kuva säilyttämisen arvoinen?
+                </legend>
+                <div className="flex flex-wrap gap-2">
+                  {(
+                    [
+                      ["keep", "Kyllä"],
+                      ["improve", "Kaipaa parannusta"],
+                    ] as const
+                  ).map(([rating, label]) => (
+                    <Button
+                      key={rating}
+                      type="button"
+                      variant="outline"
+                      className="min-h-11"
+                      aria-pressed={current.feedback === rating}
+                      onClick={() =>
+                        void action(async (version) => {
+                          await client.rate(current.id, rating);
+                          if (version !== epoch.current) return;
+                          setJobs((items) =>
+                            items.map((item) =>
+                              item.id === current.id
+                                ? { ...item, feedback: rating }
+                                : item,
+                            ),
+                          );
+                          setNotice(
+                            "Kiitos palautteesta. Arviosi tallennettiin.",
+                          );
+                        })
+                      }
+                    >
+                      {label}
+                    </Button>
+                  ))}
+                </div>
+              </fieldset>
+              <AlertDialog
+                key={current.id}
+                onOpenChange={(open) => {
+                  if (open) setSelected(current.id);
+                }}
+              >
+                <AlertDialogTrigger asChild>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={busy}
+                    className="min-h-11"
+                  >
+                    Poista satukuva
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Poistetaanko tämä satukuva?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Kuva poistetaan omista satukuvistasi pysyvästi.
+                      Pentukirjaan erikseen tallennettu kopio ja laitteellesi
+                      lataamasi kuvat säilyvät. Poisto ei palauta käytettyä
+                      kuvapyyntöä. Lähtökuva poistuu erikseen automaattisessa
+                      siivouksessa vuorokauden kuluttua.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Peruuta</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={() =>
+                        void action(async (version) => {
+                          const result = await client.remove(current.id);
+                          if (version !== epoch.current) return;
+                          setJobs((items) =>
+                            items.filter((item) => item.id !== current.id),
+                          );
+                          setSelected(null);
+                          setNotice(
+                            result === "pending"
+                              ? "Kuva poistui omista satukuvista. Tiedostonpoisto on vielä kesken, ja palvelu yrittää sitä uudelleen."
+                              : "Satukuva poistettiin. Pentukirjaan tallennettu erillinen kopio säilyy.",
+                          );
+                          setRevision((value) => value + 1);
+                        })
+                      }
+                    >
+                      Poista pysyvästi
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
+          )}
         </div>
       )}
       {ownedJobs.length > 1 && (

@@ -31,6 +31,7 @@ import {
   type ScrapbookPage,
 } from "./scrapbook";
 import type { ScrapbookController } from "./useScrapbookDraft";
+import { localDay } from "@/utils/localDay";
 
 export function ScrapbookEditor({
   controller,
@@ -105,7 +106,9 @@ export function ScrapbookEditor({
       (draft) => ({
         ...draft,
         pages: draft.pages.map((item) =>
-          item.id === page.id ? { ...item, ...patch } : item,
+          item.id === page.id ? { ...item,
+            ...(!hasScrapbookContent(item) && !item.date && (patch.image || patch.caption?.trim()) ? {date:localDay()} : {}),
+            ...patch } : item,
         ),
       }),
       group ? `${page.id}-${group}` : undefined,
@@ -136,6 +139,7 @@ export function ScrapbookEditor({
             ? {
                 ...item,
                 image: encoded,
+                ...(!hasScrapbookContent(item) && !item.date ? {date:localDay()} : {}),
                 imageSource: example ? "example" : "own",
                 imageDescription: example
                   ? "Tekoälyllä luotu esimerkkikuva: pentu kirjan vieressä."
@@ -515,8 +519,8 @@ export function ScrapbookEditor({
                 onBlur={finishEdit}
               />
               <p>
-                Jätä tyhjäksi, jos et muista päivää. Tallennuspäivää ei käytetä
-                tapahtumapäivänä.
+                Uusi kuva tai teksti saa lisäyspäivän automaattisesti. Voit
+                muuttaa päivän tai jättää sen tyhjäksi.
               </p>
               <label htmlFor={`${id}-description`}>
                 Kuvan kuvaus ruudunlukijalle (valinnainen)

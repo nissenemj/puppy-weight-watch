@@ -45,7 +45,7 @@ const ready: StorybookJob = {
   signed_url: "https://storage.example/image.png",
 };
 const clientFixture = (): StorybookClient => ({
-  list: vi.fn(async () => ({ available: true, reason: null, jobs: [] })),
+  list: vi.fn(async () => ({ available: true, reason: null, jobs: [],usage:{daily_limit:2,daily_used:0,daily_remaining:2,deletions_pending:0,resets_at:"2026-11-10T00:00:00Z",reason:null} })),
   get: vi.fn(async () => ready),
   uploadPhoto: vi.fn(async () => `${owner}/${ready.id}.png`),
   create: vi.fn(async () => ({
@@ -55,6 +55,8 @@ const clientFixture = (): StorybookClient => ({
   })),
   retryDelivery: vi.fn(async () => ready),
   attach: vi.fn(async () => undefined),
+  remove: vi.fn(async () => "deleted" as const),
+  rate: vi.fn(async () => undefined),
 });
 const choosePhoto = async () => {
   await userEvent.upload(
@@ -69,6 +71,25 @@ const choosePhoto = async () => {
 };
 
 describe("storybook generator", () => {
+  it("shows the remaining quota before a photo is sent and leaves downloads available",async()=>{
+    const client=clientFixture();
+    vi.mocked(client.list).mockResolvedValue({available:false,reason:'daily_limit',jobs:[ready],usage:{daily_limit:2,daily_used:2,daily_remaining:0,deletions_pending:0,resets_at:'2026-11-10T00:00:00Z',reason:'daily_limit'}});
+    render(<MemoryRouter><StorybookGenerator signedIn ownerId={owner} client={client}/></MemoryRouter>);
+    expect(await screen.findByText('Tänään jäljellä 0 / 2 kuvapyyntöä.')).toBeVisible();
+    expect(screen.getByRole('button',{name:'Luo muokattu kuva'})).toBeDisabled();expect(screen.getByRole('button',{name:'Lataa PNG'})).toBeEnabled();expect(client.uploadPhoto).not.toHaveBeenCalled();
+  });
+  it("requires explicit deletion confirmation and keeps account changes separate",async()=>{
+    const client=clientFixture();vi.mocked(client.list).mockResolvedValue({...await client.list(),jobs:[ready]});
+    render(<MemoryRouter><StorybookGenerator signedIn ownerId={owner} client={client}/></MemoryRouter>);
+    await userEvent.click(await screen.findByRole('button',{name:'Poista satukuva'}));
+    expect(screen.getByRole('alertdialog')).toHaveTextContent('Pentukirjaan erikseen tallennettu kopio');
+    await userEvent.click(screen.getByRole('button',{name:'Peruuta'}));expect(client.remove).not.toHaveBeenCalled();
+    await userEvent.click(screen.getByRole('button',{name:'Poista satukuva'}));
+    vi.mocked(client.list).mockResolvedValue({...await client.list(),jobs:[]});
+    await userEvent.click(screen.getByRole('button',{name:'Poista pysyvästi'}));
+    await waitFor(()=>expect(client.remove).toHaveBeenCalledWith(ready.id));
+    expect(await screen.findByText(/Satukuva poistettiin/)).toBeVisible();expect(screen.queryByRole('img',{name:/Tekoälyllä luotu/})).not.toBeInTheDocument();
+  });
   it("requires sign-in and never calls the image service for a visitor", () => {
     const client = clientFixture();
     render(
@@ -88,6 +109,7 @@ describe("storybook generator", () => {
       available: false,
       reason: "not_configured",
       jobs: [],
+      usage:{daily_limit:2,daily_used:0,daily_remaining:2,deletions_pending:0,resets_at:"2026-11-10T00:00:00Z",reason:null},
     });
     render(
       <MemoryRouter>
@@ -204,6 +226,7 @@ describe("storybook generator", () => {
     vi.mocked(client.list).mockResolvedValue({
       available: true,
       reason: null,
+      usage:{daily_limit:2,daily_used:1,daily_remaining:1,deletions_pending:0,resets_at:"2026-11-10T00:00:00Z",reason:null},
       jobs: [ready],
     });
     const props = {

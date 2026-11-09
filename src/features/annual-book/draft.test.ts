@@ -29,10 +29,10 @@ const data = makeDraftData(
 describe("persistent annual book draft", () => {
   it("stores only choices and event dates, without copying private source data", () => {
     expect(data.memories).toEqual([
-      { id, date: "", included: false, mishap: false },
+      { id, date: "2026-10-27", included: false, mishap: false },
     ]);
     expect(JSON.stringify(data)).not.toMatch(
-      /secret|Yksityinen|2026-10-27|content_url|created_at/,
+      /secret|Yksityinen|T00:00:00|content_url|created_at/,
     );
     expect(draftDataSchema.safeParse(data).success).toBe(true);
   });
@@ -45,7 +45,8 @@ describe("persistent annual book draft", () => {
       saved.memories[0],
     );
     const linked = [{ ...memories[0], date: "2026-07-01" }];
-    expect(restoreDraftMemories(linked, data).memories[0].date).toBe("");
+    const cleared={...data,memories:[{...data.memories[0],date:""}]};
+    expect(restoreDraftMemories(linked, cleared).memories[0].date).toBe("");
   });
   it("allows incomplete fields without confusing them with a valid printable book", () => {
     expect(

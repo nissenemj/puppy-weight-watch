@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   loadBookSources,
   makeDraftMemories,
+  suggestBookPeriod,
   type SourceMemory,
 } from "./sources";
 
@@ -60,14 +61,21 @@ beforeEach(() => {
 });
 
 describe("book source ownership and event dates", () => {
-  it("never substitutes upload time for an unknown event date", () => {
+  it("suggests a useful year without overwriting a saved draft",()=>{
+    const rows=makeDraftMemories([memory],new Map());
+    expect(suggestBookPeriod('2023-09-19',rows)).toEqual({start:'2026-01-01',end:'2026-12-31'});
+    expect(suggestBookPeriod('2026-04-01',rows)).toEqual({start:'2026-04-01',end:'2027-03-31'});
+    expect(suggestBookPeriod('',rows)).toEqual({start:'2026-01-01',end:'2026-12-31'});
+  });
+  it("defaults to the day added when no valid event date exists", () => {
     const [draft] = makeDraftMemories([memory], new Map());
-    expect(draft.date).toBe("");
+    expect(draft.date).toBe("2026-10-27");
     expect(draft.included).toBe(false);
     expect(draft.mishap).toBe(true);
     expect(
       makeDraftMemories([memory], new Map([["event", "2026-02-30"]]))[0].date,
-    ).toBe("");
+    ).toBe("2026-10-27");
+    expect(makeDraftMemories([{...memory,created_at:null}],new Map())[0].date).toBe("");
   });
   it("scopes reads to the owner, selected book and its linked dog", async () => {
     const result = await loadBookSources(

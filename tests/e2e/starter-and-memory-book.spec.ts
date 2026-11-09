@@ -96,7 +96,10 @@ for (const width of [320, 768, 1024, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/puppy-book-landing");
     await page
-      .getByRole("link", { name: "Lisää ensimmäinen kuva", exact: true })
+      .getByRole("link", {
+        name: "Kokeile kirjasivua ilman kirjautumista",
+        exact: true,
+      })
       .click();
     const trial = page.getByRole("region", {
       name: "Aloita yhdestä kuvasta.",
@@ -227,7 +230,7 @@ test("the checklist works by keyboard and opens verified direct store links", as
   await expect(
     page.locator("#hankintalista").getByRole("status"),
   ).toContainText("0/8 valmiina");
-  const partners = page.locator('.starter-partner');
+  const partners = page.locator(".starter-partner");
   await expect(partners).toHaveCount(2);
   for (const link of await partners.all()) {
     await expect(link).toContainText("Kauppalinkki");
@@ -235,7 +238,9 @@ test("the checklist works by keyboard and opens verified direct store links", as
     await expect(link).toHaveAttribute("target", "_blank");
     await expect(link).toHaveAttribute("rel", /noopener/);
     const url = new URL((await link.getAttribute("href"))!);
-    expect(["www.petenkoiratarvike.com", "koiratarvikehaukkula.fi"]).toContain(url.hostname);
+    expect(["www.petenkoiratarvike.com", "koiratarvikehaukkula.fi"]).toContain(
+      url.hostname,
+    );
     expect(url.search).toBe("");
   }
   // External destinations are checked separately; this browser test stays on the site.

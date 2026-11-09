@@ -4,6 +4,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { supabase } from "@/integrations/supabase/client";
+import { rememberBookReturn } from "@/utils/authReturn";
 import { useAuthProviders } from "@/hooks/useAuthProviders";
 import {
   AUTH_PROVIDER_CHECK_FAILED,
@@ -64,10 +65,11 @@ export default function LoginPage() {
 
   useEffect(() => {
     let isMounted = true;
+    const destination = rememberBookReturn(window.location.search);
     supabase.auth.getSession().then(({ data }) => {
       if (!isMounted) return;
       if (data.session && typeof window !== "undefined") {
-        window.location.replace("/");
+        window.location.replace(destination);
       }
     });
     return () => {
@@ -121,7 +123,7 @@ export default function LoginPage() {
         track("login", { method: "password" });
         setInfo("Kirjaudutaan sisään...");
         if (typeof window !== "undefined") {
-          window.location.assign("/");
+          window.location.assign(rememberBookReturn(window.location.search));
         }
       }
       return;

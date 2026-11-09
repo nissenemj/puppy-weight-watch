@@ -98,6 +98,35 @@ async function replace(page: Page) {
   await expect(confirm(page)).toHaveCount(0);
   await saved(page);
 }
+test("a first photo gets today's editable date and keeps the owner's correction", async ({
+  page,
+}) => {
+  await start(page);
+  await addPhoto(page);
+  const today = await page.evaluate(() => {
+    const now = new Date();
+    return [
+      now.getFullYear(),
+      String(now.getMonth() + 1).padStart(2, "0"),
+      String(now.getDate()).padStart(2, "0"),
+    ].join("-");
+  });
+  await studio(page)
+    .getByText("Päivä ja kuvan kuvaus", { exact: true })
+    .click();
+  const date = studio(page).getByLabel("Tapahtumapäivä (valinnainen)", {
+    exact: true,
+  });
+  await expect(date).toHaveValue(today);
+  await date.fill("2026-01-03");
+  await saved(page);
+  await page.reload();
+  await saved(page);
+  await studio(page)
+    .getByText("Päivä ja kuvan kuvaus", { exact: true })
+    .click();
+  await expect(date).toHaveValue("2026-01-03");
+});
 for (const width of [320, 768, 1024, 1440]) {
   test(`editable backup preserves exact pages and recovers the previous book at ${width}`, async ({
     page,
