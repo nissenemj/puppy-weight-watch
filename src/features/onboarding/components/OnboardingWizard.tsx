@@ -197,7 +197,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ user, onComplete })
             </div>
             
             <div className="border rounded-lg p-4 bg-muted/50">
-              <AdvancedFoodCalculator user={null as any} />
+              <AdvancedFoodCalculator />
             </div>
           </motion.div>
         );

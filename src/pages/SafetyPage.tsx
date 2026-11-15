@@ -134,7 +134,7 @@ export default function SafetyPage() {
 
           {/* Navigation */}
           <div className="flex flex-col sm:flex-row justify-between gap-4">
-            <Link to="/info/feeding-data">
+            <Link to="/guides/feeding">
               <Button variant="outline" className="w-full sm:w-auto">
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Edellinen: Annostelutiedot

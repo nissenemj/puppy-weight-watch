@@ -11,7 +11,7 @@ export interface AdultDogFood {
   feeding: ReadonlyArray<{ weightKg: number; gramsPerDay: number }>;
 }
 
-// Product-specific manufacturer pages, checked 2026-11-04. Compare with the
+// Product-specific manufacturer pages, checked 2026-11-15. Compare with the
 // actual package: regional recipes can differ. These are not food rankings.
 export const ADULT_DOG_FOODS: readonly AdultDogFood[] = [
   {
@@ -23,7 +23,7 @@ export const ADULT_DOG_FOODS: readonly AdultDogFood[] = [
     sourceUrl:
       "https://hauhau.fi/products/kanaa-riisia-ja-kauraa-kotimainen-koiran-kuivaruoka",
     sourceLocale: "Suomi",
-    checkedAt: "2026-11-04",
+    checkedAt: "2026-11-15",
     feeding: [
       [5, 100],
       [10, 150],
@@ -47,7 +47,7 @@ export const ADULT_DOG_FOODS: readonly AdultDogFood[] = [
     sourceUrl:
       "https://hauhau.fi/products/kanaa-riisia-ja-kauraa-kotimainen-kuivaruoka-suurille-koirille",
     sourceLocale: "Suomi",
-    checkedAt: "2026-11-04",
+    checkedAt: "2026-11-15",
     feeding: [
       [30, 320],
       [40, 390],
@@ -68,7 +68,7 @@ export const ADULT_DOG_FOODS: readonly AdultDogFood[] = [
     sourceUrl:
       "https://brit.pet/en/products/brit-care-dog-hypoallergenic-adult-large-breed",
     sourceLocale: "Valmistajan englanninkielinen tuotesivu",
-    checkedAt: "2026-11-04",
+    checkedAt: "2026-11-15",
     feeding: [
       [25, 260],
       [30, 300],

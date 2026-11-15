@@ -47,7 +47,6 @@ export default function MemoryBookExample() {
         title="Pentukirja: pennun ensimmäinen vuosi"
         siteName="Pentulaskuri"
         description="Tee pentukirja pennun ensimmäisestä vuodesta. Selaa esimerkkiä: omat kuvat, Silloin ja nyt, kuukauden kommellus ja kasvun hetket yhdessä kirjassa."
-        canonicalUrl="https://pentulaskuri.com/muistokirja"
       />
       <Link className="journal-back" to="/puppy-book-landing">
         <ArrowLeft size={16} aria-hidden="true" /> Pentukirjan esittelyyn

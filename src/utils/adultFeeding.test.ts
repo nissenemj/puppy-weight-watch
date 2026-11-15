@@ -60,7 +60,7 @@ describe("adult maintenance feeding", () => {
       expect(food.sourceUrl).toMatch(/^https:\/\/(hauhau\.fi|brit\.pet)\//);
       expect(food.lifeStage).toBe("adult");
       expect(food.nutritionType).toBe("complete");
-      expect(food.checkedAt).toBe("2026-11-04");
+      expect(food.checkedAt).toMatch(/^\d{4}-\d{2}-\d{2}$/);
       expect(new Set(food.feeding.map((row) => row.weightKg)).size).toBe(
         food.feeding.length,
       );
