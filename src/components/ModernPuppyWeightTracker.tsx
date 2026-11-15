@@ -1,4 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
+import { useLocation } from "react-router-dom";
+import { trackGa4FirstWeight } from "@/utils/ga4";
 import { SkeletonMobileCard } from "@/components/ui/skeleton";
 import {
   Card,
@@ -76,6 +78,14 @@ export default function ModernPuppyWeightTracker({
     if (weightError) weightInput.current?.focus();
   }, [weightError]);
   const [entries, setEntries] = useState<WeightEntry[]>([]);
+  const loadedEntryCount = useRef<{ dogId: string; count: number } | null>(null);
+  const { hash } = useLocation();
+  const focusEntry = useCallback((section: HTMLDivElement | null) => {
+    if (section && hash === "#uusi-punnitus") {
+      section.focus({ preventScroll: true });
+      section.scrollIntoView?.({ block: "start" });
+    }
+  }, [hash]);
   const [isLogin, setIsLogin] = useState(true);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [checkingOnboarding, setCheckingOnboarding] = useState(false);
@@ -208,6 +218,7 @@ export default function ModernPuppyWeightTracker({
         variant: "destructive",
       });
     } else if (data) {
+      loadedEntryCount.current = { dogId: selectedDog.id, count: data.length };
       setEntries(dbToAppTypes.dogFood(data) as WeightEntry[]);
     }
   }, [user, selectedDog, toast]);
@@ -285,7 +296,8 @@ export default function ModernPuppyWeightTracker({
     setSavingWeight(true);
     try {
       if (isGuest) {
-        addGuestWeightEntry(weight);
+        const first = addGuestWeightEntry(weight);
+        if (first) trackGa4FirstWeight(isAdult ? "adult" : "puppy", "browser");
         if (!guestDogProfile) updateGuestDogProfile({ name: "Pentuni" });
         setWeightNotice(
           `${new Intl.NumberFormat("fi-FI").format(weight)} kg lisätty tämän selaimen muistiin.`,
@@ -313,6 +325,11 @@ export default function ModernPuppyWeightTracker({
             },
           ]);
       if (response.error) throw response.error;
+      if (!existingEntry && loadedEntryCount.current?.dogId === selectedDog.id &&
+        loadedEntryCount.current.count === 0) {
+        loadedEntryCount.current.count = 1;
+        trackGa4FirstWeight(isAdult ? "adult" : "puppy", "account");
+      }
       await fetchWeightEntries();
       setWeightNotice(
         `${new Intl.NumberFormat("fi-FI").format(weight)} kg ${existingEntry ? "päivitetty tämän päivän mittaukseen" : "tallennettu"}.`,
@@ -321,7 +338,9 @@ export default function ModernPuppyWeightTracker({
     } catch (error) {
       console.error("Error saving weight entry:", error);
       setWeightError(
-        "Painoa ei voitu tallentaa. Tarkista yhteys ja yritä uudelleen. Kirjoittamasi arvo säilyi.",
+        isGuest
+          ? "Selain ei voinut tallentaa painoa. Tarkista selaimen tallennusasetukset. Kirjoittamasi arvo säilyi."
+          : "Painoa ei voitu tallentaa. Tarkista yhteys ja yritä uudelleen. Kirjoittamasi arvo säilyi.",
       );
     } finally {
       savingWeight.current = false;
@@ -592,10 +611,10 @@ export default function ModernPuppyWeightTracker({
 
           {/* Weight Entry Section - Always Visible */}
           {(selectedDog || isGuest) && (
-            <div className="mb-6">
+            <div id="uusi-punnitus" ref={focusEntry} tabIndex={-1} className="mb-6">
               <Card className="backdrop-blur-sm bg-white/80 border-0 shadow-xl animate-scale-in">
                 <CardHeader className="pb-3">
-                  <h2 className="weight-entry-title flex items-center gap-2">
+                  <h2 className="weight-entry-title flex flex-wrap items-center gap-2">
                     <Scale className="h-6 w-6 text-primary" />
                     Lisää painomittaus{" "}
                     {isGuest && (
@@ -603,7 +622,7 @@ export default function ModernPuppyWeightTracker({
                         variant="outline"
                         className="bg-amber-100 text-amber-800 border-amber-300 ml-2"
                       >
-                        Väliaikainen
+                        Tällä selaimella
                       </Badge>
                     )}
                   </h2>
@@ -659,8 +678,10 @@ export default function ModernPuppyWeightTracker({
                       </div>
                     </div>
                     <p id="weight-help" className="site-field-hint mt-3">
-                      Voit käyttää pilkkua tai pistettä. Saman päivän aiempi
-                      mittaus päivittyy tilillesi tallennettaessa.
+                      Voit käyttää pilkkua tai pistettä.{" "}
+                      {isGuest
+                        ? "Paino tallentuu tähän selaimeen."
+                        : "Saman päivän aiempi mittaus päivittyy tilillesi."}
                     </p>
                     {weightError && (
                       <p

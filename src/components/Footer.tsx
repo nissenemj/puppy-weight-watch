@@ -1,8 +1,9 @@
 import { useId, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ArrowRight, CheckCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNewsletterSubscription } from "@/hooks/useNewsletterSubscription";
+import { AnalyticsPreferences } from "./AnalyticsPreferences";
 import {
   trackNewsletterSubscription,
   trackFooterLinkClicked,
@@ -23,6 +24,7 @@ const links = [
 
 export default function Footer({ compact = false }: { compact?: boolean }) {
   const { subscribe, isLoading, isSubscribed } = useNewsletterSubscription();
+  const { pathname } = useLocation();
   const [email, setEmail] = useState("");
   const id = useId();
   const handleNewsletterSubmit = async (event: React.FormEvent) => {
@@ -94,6 +96,7 @@ export default function Footer({ compact = false }: { compact?: boolean }) {
           </div>
         </section>
       )}
+      {pathname.replace(/\/$/, "") !== "/cookies" && <AnalyticsPreferences compact />}
       <div className="site-footer-links">
         <div>
           <strong>Pentulaskuri</strong>

@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect, useSyncExternalStore } from "react";
 import { Outlet, ScrollRestoration, useLocation } from "react-router-dom";
 import { PageLayout } from "./PageLayout";
 import Footer from "./Footer";
 import SEO from "./SEO";
+import { getAnalyticsChoice, subscribeToAnalyticsChoice, syncGa4Page } from "@/utils/ga4";
 
 const PAGE_OWNS_FOOTER = new Set([
   "/",
@@ -17,6 +18,10 @@ const PAGE_OWNS_FOOTER = new Set([
 
 export const RootLayout: React.FC = () => {
   const { pathname } = useLocation();
+  const analyticsChoice = useSyncExternalStore(subscribeToAnalyticsChoice, getAnalyticsChoice, () => null);
+  useEffect(() => {
+    syncGa4Page(pathname);
+  }, [pathname, analyticsChoice]);
   return (
     <>
       <SEO />

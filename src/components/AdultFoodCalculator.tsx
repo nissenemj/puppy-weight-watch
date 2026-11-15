@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ADULT_DOG_FOODS } from "@/data/adultDogFoods";
+import { trackGa4FoodResult } from "@/utils/ga4";
 import {
   ADULT_ACTIVITIES,
   ADULT_ENERGY_SOURCE,
@@ -43,7 +44,10 @@ export default function AdultFoodCalculator({
   ]);
   const stale = calculatedFor !== signature;
   useEffect(() => {
-    if (calculatedFor && !stale && !error) output.current?.focus();
+    if (calculatedFor && !stale && !error) {
+      output.current?.focus({ preventScroll: true });
+      output.current?.scrollIntoView?.({ block: "start" });
+    }
   }, [calculatedFor, stale, error, result]);
   return (
     <section className="adult-food-panel" aria-labelledby={`${id}-title`}>
@@ -91,8 +95,12 @@ export default function AdultFoodCalculator({
             return;
           }
           setError("");
-          setResult(adultFoodAmount(kg, food, method, activity, meals));
+          const portion = adultFoodAmount(kg, food, method, activity, meals);
+          setResult(portion);
           setCalculatedFor(signature);
+          if (portion) {
+            trackGa4FoodResult("adult", method === "manufacturer" ? "table" : "energy");
+          }
         }}
       >
         <div className="adult-food-fields">
@@ -282,6 +290,11 @@ export default function AdultFoodCalculator({
             koirittain. Muuta annosta havaintojen ja tarvittaessa eläinlääkärin
             ohjeen perusteella.
           </p>
+          {result && (
+            <Link to="/weight-tracker?vaihe=aikuinen#uusi-punnitus" className="site-link">
+              Seuraa aikuisen koiran painoa
+            </Link>
+          )}
         </div>
       )}
       {food && (
@@ -311,9 +324,6 @@ export default function AdultFoodCalculator({
           </table>
         </details>
       )}
-      <Link to="/weight-tracker?vaihe=aikuinen" className="journal-text-link">
-        Seuraa aikuisen koiran painoa
-      </Link>
     </section>
   );
 }

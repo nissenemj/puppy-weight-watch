@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { MobileOptimizedLayout } from '@/components/MobileOptimizedLayout'
 import { Navigation } from '@/components/Navigation'
 import Footer from '@/components/Footer'
+import { AnalyticsPreferences } from '@/components/AnalyticsPreferences'
 import { Section, Container } from '@/components/ui/Layout'
 import { trackPageViewed } from '@/utils/analytics'
 
@@ -125,35 +126,7 @@ const CookiePolicy = () => {
                   <div className="border-l-4 border-[var(--color-tertiary-500)] pl-4">
                     <h3 className="text-h3 mb-2">Analytiikkaevästeet</h3>
                     <p className="text-body mb-2">
-                      Nämä evästeet keräävät nimettömiä tilastotietoja siitä, miten käyttäjät käyttävät Palvelua.
-                      Tiedot auttavat meitä kehittämään Palvelua paremmaksi.
-                    </p>
-                    <div className="overflow-x-auto">
-                      <table className="min-w-full divide-y divide-[var(--color-border)] mt-4">
-                        <thead>
-                          <tr>
-                            <th className="px-4 py-2 text-left text-body-sm font-semibold">Evästeen nimi</th>
-                            <th className="px-4 py-2 text-left text-body-sm font-semibold">Tarkoitus</th>
-                            <th className="px-4 py-2 text-left text-body-sm font-semibold">Säilytysaika</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-[var(--color-border)]">
-                          <tr>
-                            <td className="px-4 py-2 text-body">_pww_analytics</td>
-                            <td className="px-4 py-2 text-body">Sivuston käytön seuranta</td>
-                            <td className="px-4 py-2 text-body">30 päivää</td>
-                          </tr>
-                          <tr>
-                            <td className="px-4 py-2 text-body">_pww_session_id</td>
-                            <td className="px-4 py-2 text-body">Istunnon tunnistus</td>
-                            <td className="px-4 py-2 text-body">Istunto</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                    <p className="text-body text-muted-foreground mt-2 text-sm italic">
-                      Huom: Analytiikkaevästeet ovat käytössä vain, jos olet hyväksynyt analytiikan käyttöehdoissa
-                      tai evästeasetuksissa.
+                      Jos sallit Google Analyticsin (GA4), mittaamme sivukäyntejä sekä sitä, kuinka usein annoslasku ja ensimmäinen punnituksen tallennus onnistuvat. GA4 voi asettaa analytiikkaevästeitä, kuten <code>_ga</code>. Mittaukseen ei lähetetä punnituksen painoa, annoksen kokoa tai koirasi tietoja.
                     </p>
                   </div>
                 </div>
@@ -233,15 +206,8 @@ const CookiePolicy = () => {
                   </li>
                 </ul>
 
-                <h3 className="text-h3 mb-2 mt-6">Analytiikkaevästeiden esto</h3>
-                <p className="text-body mb-4">
-                  Voit estää analytiikkaevästeiden käytön:
-                </p>
-                <ul className="list-disc list-inside space-y-2 text-body ml-4">
-                  <li>Muuttamalla käyttäjäasetuksiasi Palvelussa (tulossa)</li>
-                  <li>Käyttämällä selaimen "Do Not Track" -ominaisuutta</li>
-                  <li>Asentamalla mainosten ja seurannan estäviä selainlaajennuksia</li>
-                </ul>
+                <h3 className="text-h3 mb-2 mt-6">Analytiikan valinta</h3>
+                <AnalyticsPreferences />
               </section>
 
               <section>
