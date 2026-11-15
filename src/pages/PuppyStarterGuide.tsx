@@ -22,6 +22,9 @@ import {
 } from "@/features/preparation/PreparationSections";
 import "@/styles/puppy-journal.css";
 
+const kennelClubPuppyGuide =
+  "https://www.kennelliitto.fi/elamaa-koiran-kanssa/pentu-tulee-taloon/";
+
 const essentials = [
   {
     id: "walk",
@@ -272,20 +275,20 @@ export default function PuppyStarterGuide() {
       >
         <h2 id="guide-sources-title">Mihin opas perustuu?</h2>
         <p>
-          Perustarvikkeiden ja kodin järjestelyn taustana ovat Kennelliiton
-          Hankikoira-ohjeet. Tarkistuslistojen ryhmittely, työnjaon kentät ja
-          kirjasivun idea ovat Pentulaskurin toimituksellisia valintoja. Lähteet
-          tarkistettu 3.11.2026.
+          Perustarvikkeiden ja kodin järjestelyn lähteenä on Kennelliiton
+          Pentu tulee taloon -opas. Tarkistuslistojen ryhmittely, työnjaon kentät
+          ja kirjasivun idea ovat Pentulaskurin toimituksellisia valintoja.
+          Lähdelinkit tarkistettu 15.11.2026.
         </p>
         <ul>
           <li>
-            <a href="https://www.hankikoira.fi/koiratietoa/koira-kotona/koiratarvikkeet">
-              Hankikoira: Koiratarvikkeet
+            <a href={kennelClubPuppyGuide}>
+              Pennun tarvikkeet Kennelliiton oppaassa
             </a>
           </li>
           <li>
-            <a href="https://www.hankikoira.fi/koiratietoa/koira-kotona">
-              Hankikoira: Koira kotona
+            <a href={kennelClubPuppyGuide}>
+              Pennun kotiutuminen Kennelliiton oppaassa
             </a>
           </li>
         </ul>
