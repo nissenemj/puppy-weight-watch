@@ -106,7 +106,7 @@ export default function InfoHome() {
               </AnimatedCard>
             </Link>
 
-            <Link to="/info/feeding-data" className="group">
+            <Link to="/guides/feeding" className="group">
               <AnimatedCard delay={0.2} className="h-full">
                 <div className="bg-gradient-to-br from-blue-100 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-6 rounded-2xl border border-blue-200/50 dark:border-blue-800/50 group-hover:border-blue-300/70 dark:group-hover:border-blue-700/70 transition-all duration-300">
                   <div className="flex items-start justify-between mb-4">
@@ -124,7 +124,7 @@ export default function InfoHome() {
               </AnimatedCard>
             </Link>
 
-            <Link to="/info/safety" className="group">
+            <Link to="/guides/safety" className="group">
               <AnimatedCard delay={0.3} className="h-full">
                 <div className="bg-gradient-to-br from-red-100 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20 p-6 rounded-2xl border border-red-200/50 dark:border-red-800/50 group-hover:border-red-300/70 dark:group-hover:border-red-700/70 transition-all duration-300">
                   <div className="flex items-start justify-between mb-4">
@@ -142,7 +142,7 @@ export default function InfoHome() {
               </AnimatedCard>
             </Link>
 
-            <Link to="/info/puppy-guide" className="group">
+            <Link to="/guides/puppy-guide" className="group">
               <AnimatedCard delay={0.4} className="h-full">
                 <div className="bg-gradient-to-br from-green-100 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 p-6 rounded-2xl border border-green-200/50 dark:border-green-800/50 group-hover:border-green-300/70 dark:group-hover:border-green-700/70 transition-all duration-300">
                   <div className="flex items-start justify-between mb-4">
@@ -160,7 +160,7 @@ export default function InfoHome() {
               </AnimatedCard>
             </Link>
 
-            <Link to="/info/socialization-guide" className="group">
+            <Link to="/guides/socialization" className="group">
               <AnimatedCard delay={0.5} className="h-full">
                 <div className="bg-gradient-to-br from-purple-100 to-violet-50 dark:from-purple-900/20 dark:to-violet-900/20 p-6 rounded-2xl border border-purple-200/50 dark:border-purple-800/50 group-hover:border-purple-300/70 dark:group-hover:border-purple-700/70 transition-all duration-300">
                   <div className="flex items-start justify-between mb-4">
@@ -198,7 +198,7 @@ export default function InfoHome() {
                   Tutustu ruokatyyppeihin
                 </Button>
               </Link>
-              <Link to="/info/feeding-data">
+              <Link to="/guides/feeding">
                 <Button size="lg" variant="outline">
                   Selaa annostelutietoja
                 </Button>

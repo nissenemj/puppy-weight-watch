@@ -6,8 +6,8 @@ for (const width of [320, 390]) {
     page,
   }) => {
     await page.setViewportSize({ width, height: 844 });
-    await page.goto("/calculator");
-    const weight = page.getByRole("spinbutton", {
+    await page.goto("/calculator?vaihe=aikuinen");
+    const weight = page.getByRole("textbox", {
       name: "Nykyinen paino (kg) *",
       exact: true,
     });

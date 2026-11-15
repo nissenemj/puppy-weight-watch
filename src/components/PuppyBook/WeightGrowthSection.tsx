@@ -7,7 +7,6 @@ import { useToast } from '@/hooks/use-toast';
 import { useWeightEntries } from '@/hooks/useWeightEntries';
 import { WeightEntry } from '@/services/weightService';
 import GrowthChart from './GrowthChart';
-import WeightChart from '@/components/WeightChart';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -238,29 +237,21 @@ const WeightGrowthSection: React.FC<WeightGrowthSectionProps> = ({
       </motion.div>
 
       {/* Kasvukäyrä */}
-      {weightPoints.length > 0 && (
+      {!!weightEntries?.length && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <GrowthChart weightPoints={weightPoints} />
-        </motion.div>
-      )}
-
-      {/* Painokehityksen käyrä */}
-      {weightEntries && weightEntries.length > 1 && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-        >
-          <WeightChart weightData={weightEntries} />
+          <GrowthChart weightPoints={weightEntries.map(({ date, weight }) => ({
+            date,
+            weight_kg: weight,
+          }))} />
         </motion.div>
       )}
 
       {/* Jos ei painotietoja */}
-      {weightPoints.length === 0 && (
+      {!weightEntries?.length && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

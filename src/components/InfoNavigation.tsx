@@ -54,8 +54,8 @@ const InfoNavigation = () => {
   const infoSubItems = [
     { href: '/info', icon: Home, label: 'Tietopankki' },
     { href: '/info/food-types', icon: BookOpen, label: 'Ruokatyypit' },
-    { href: '/info/feeding-data', icon: Database, label: 'Annostelutiedot' },
-    { href: '/info/safety', icon: AlertTriangle, label: 'Turvallisuus' },
+    { href: '/guides/feeding', icon: Database, label: 'Annostelutiedot' },
+    { href: '/guides/safety', icon: AlertTriangle, label: 'Turvallisuus' },
   ]
 
   return (

@@ -11,6 +11,7 @@ import {
 
 const number = (value: number) =>
   new Intl.NumberFormat("fi-FI", { maximumFractionDigits: 0 }).format(value);
+const checkedDate = new Intl.DateTimeFormat("fi-FI", { timeZone: "UTC" });
 export default function AdultFoodCalculator({
   currentWeight,
 }: {
@@ -273,7 +274,7 @@ export default function AdultFoodCalculator({
             <a href={food.sourceUrl} target="_blank" rel="noopener noreferrer">
               Valmistajan tuote ja ruokintaohje (avautuu uuteen välilehteen)
             </a>
-            . {food.sourceLocale}, tarkistettu 4.11.2026. Tarkista ajantasainen
+            . {food.sourceLocale}, tarkistettu {checkedDate.format(new Date(food.checkedAt))}. Tarkista ajantasainen
             annos omasta pakkauksesta.
           </p>
           <p>

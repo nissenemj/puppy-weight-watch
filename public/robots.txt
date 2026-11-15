@@ -14,7 +14,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://pentulaskuri.com/sitemap.xml
+Sitemap: https://www.pentulaskuri.com/sitemap.xml
 
 # Special instructions for AI crawlers
 User-agent: GPTBot

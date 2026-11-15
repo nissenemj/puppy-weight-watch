@@ -83,7 +83,6 @@ export default function Guides() {
         title="Tietopankki: oppaita pennun arkeen"
         siteName="Pentulaskuri"
         description="Pennun hankinnat, ruokinta, sosiaalistaminen, turvallisuus ja yhteisten taitojen harjoittelu. Valitse aihe ja tutustu oppaaseen."
-        canonicalUrl="https://pentulaskuri.com/guides"
       />
       <PageIntro
         title="Pienet askeleet arkeen."

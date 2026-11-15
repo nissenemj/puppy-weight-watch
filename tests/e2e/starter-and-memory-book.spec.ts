@@ -58,7 +58,7 @@ for (const width of [320, 768, 1024, 1440]) {
       await expect(page.locator('link[rel="canonical"]')).toHaveCount(1);
       await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
         "href",
-        `https://pentulaskuri.com${path}`,
+        `https://www.pentulaskuri.com${path}`,
       );
       await expect(page.locator('meta[name="description"]')).toHaveCount(1);
       await expectLayout(page);

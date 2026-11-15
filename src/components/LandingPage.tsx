@@ -72,7 +72,6 @@ export default function LandingPage() {
         title="Pentulaskuri: pennun kasvu, ruokinta ja oma pentukirja"
         siteName="Pentulaskuri"
         description="Seuraa pennun painoa, arvioi ruokamäärää ja tallenna yhteiset hetket omaan pentukirjaan. Työkaluja ja oppaita pennun arkeen."
-        canonicalUrl="https://pentulaskuri.com/"
         structuredData={createWebApplicationSchema()}
       />
       <section className="site-home-hero" aria-labelledby="home-title">

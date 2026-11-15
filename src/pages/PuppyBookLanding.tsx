@@ -50,7 +50,6 @@ export default function PuppyBookLanding() {
         <SEO
           title="Pentukirja: pennun ensimmäinen vuosi omaksi kirjaksi"
           siteName="Pentulaskuri"
-          canonicalUrl="https://pentulaskuri.com/puppy-book-landing"
           description="Kuvat, kasvun hetket ja hassut tavat omaan pentukirjaan. Valitse kirjan ilme, selaa aukeamia ja tallenna PDF. Tutustu maksuttomaan esimerkkiin."
           keywords="pentukirja, pennun ensimmäinen vuosi, koiran oma kirja, kasvuseuranta"
         />

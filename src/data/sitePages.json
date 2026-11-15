@@ -1,0 +1,32 @@
+{
+  "origin": "https://www.pentulaskuri.com",
+  "pages": {
+    "/": { "heading": "Pentulaskuri", "description": "Seuraa koirasi painoa, tarkista valmistajan ruokintaohje ja kokoa pennun ensimmäisen vuoden muistot pentukirjaksi." },
+    "/calculator": { "heading": "Ruokalaskuri pennulle ja aikuiselle koiralle", "description": "Katso valmistajan taulukkoannos valituille pentu- ja aikuisruoille. Aikuiselle koiralle voit laskea myös arvion energiantarpeen perusteella." },
+    "/weight-tracker": { "heading": "Painonseuranta pennulle ja aikuiselle koiralle", "description": "Tallenna koirasi painomittaukset ja seuraa niiden muutosta ajan myötä. Kokeile painonseurantaa myös ilman kirjautumista." },
+    "/guides": { "heading": "Oppaat pennun arkeen", "description": "Lue pennun hankinnasta, kotiutumisesta, ruokinnasta, sosiaalistamisesta ja turvallisuudesta." },
+    "/guides/pennun-hankinnat": { "heading": "Pennun hankinnat", "description": "Käy läpi pennun ensimmäisten viikkojen tarvikkeet ja valmistelut ennen kotiintuloa." },
+    "/guides/puppy-guide": { "heading": "Pennun ensimmäiset viikot", "description": "Valmistaudu pennun kotiinpaluuseen ja rakenna arkeen ruokailun, ulkoilun ja levon rutiinit." },
+    "/guides/socialization": { "heading": "Pennun sosiaalistaminen", "description": "Tutustuta pentu uusiin asioihin rauhallisesti sen omassa tahdissa." },
+    "/guides/safety": { "heading": "Pennun turvallisuus", "description": "Katso pennun turvallisuusohjeet ja seuraa koiranomistajille tarkoitettuja turvallisuustiedotteita." },
+    "/guides/feeding": { "heading": "Pennun ruokinta ja annostelutiedot", "description": "Lue, miten ruoan valmistajan annosteluohjeita käytetään pennun ruokinnassa." },
+    "/guides/relaxation-protocol": { "heading": "Koiran rauhoittumisharjoitukset", "description": "Harjoittele koirasi kanssa rauhoittumista vaiheittain." },
+    "/info": { "heading": "Tietoa pennun omistajalle", "description": "Löydä ohjeet pennun ruokintaan, turvallisuuteen ja kotiutumiseen." },
+    "/info/food-types": { "heading": "Koiran ruokatyypit", "description": "Tutustu kuiva-, märkä- ja raakaruokien eroihin pennun ruokinnassa." },
+    "/puppy-book-landing": { "heading": "Pentukirja, pennun ensimmäinen vuosi", "description": "Kerää kuvat, muistot ja painomittaukset pitkin pennun ensimmäistä vuotta ja kokoa niistä oma pentukirja." },
+    "/muistokirja": { "heading": "Pentukirjan esimerkki", "description": "Katso esimerkkikirjasta, miltä pennun ensimmäisen vuoden kuvat ja muistot voivat näyttää kirjassa." },
+    "/satukuvat": { "heading": "Koiran satukuvat", "description": "Tutustu koiran kuvahaasteen valmiisiin tyyleihin. Kirjautunut käyttäjä voi kokeilla oman koirakuvan muokkaamista." },
+    "/contact": { "heading": "Ota yhteyttä", "description": "Lähetä Pentulaskurille palautetta tai kysy sivuston käytöstä." },
+    "/privacy": { "heading": "Tietosuojaseloste", "description": "Lue, miten Pentulaskuri käsittelee henkilötietoja." },
+    "/terms": { "heading": "Käyttöehdot", "description": "Lue Pentulaskurin käyttöehdot." },
+    "/cookies": { "heading": "Evästeet", "description": "Lue Pentulaskurin käyttämistä evästeistä." },
+    "/accessibility": { "heading": "Saavutettavuusseloste", "description": "Lue Pentulaskurin saavutettavuudesta ja anna palautetta." }
+  },
+  "aliases": {
+    "/info/feeding-data": "/guides/feeding",
+    "/info/puppy-guide": "/guides/puppy-guide",
+    "/info/socialization-guide": "/guides/socialization",
+    "/info/safety": "/guides/safety"
+  },
+  "appPaths": ["/puppy-book", "/login", "/auth/callback", "/onboarding", "/admin/messages", "/blog"]
+}

@@ -1,7 +1,8 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, Navigate, RouterProvider, useLocation } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import { RootLayout } from "./components/RootLayout";
 import RouteErrorPage from "./components/RouteErrorPage";
+import site from "./data/sitePages.json";
 
 // Critical pages - load immediately
 import Index from "./pages/Index";
@@ -62,6 +63,11 @@ const withSuspense = (Component: React.ComponentType) => (
     <Component />
   </Suspense>
 );
+
+function GuideRedirect({ pathname }: { pathname: string }) {
+  const { search, hash } = useLocation();
+  return <Navigate to={{ pathname, search, hash }} replace />;
+}
 
 const router = createBrowserRouter([
   {
@@ -142,31 +148,19 @@ const router = createBrowserRouter([
         element: withSuspense(FeedingData), // Repurpose as feeding guide
       },
 
-      // Legacy redirects - maintain backward compatibility
+      // Keep old guide links working for in-app navigation as well.
       {
         path: "/info",
         element: withSuspense(InfoHome),
       },
       {
-        path: "/info/feeding-data",
-        element: withSuspense(FeedingData),
-      },
-      {
         path: "/info/food-types",
         element: withSuspense(FoodTypes),
       },
-      {
-        path: "/info/puppy-guide",
-        element: withSuspense(PuppyGuide),
-      },
-      {
-        path: "/info/socialization-guide",
-        element: withSuspense(SocializationGuide),
-      },
-      {
-        path: "/info/safety",
-        element: withSuspense(SafetyPage),
-      },
+      ...Object.entries(site.aliases).map(([path, destination]) => ({
+        path,
+        element: <GuideRedirect pathname={destination} />,
+      })),
 
       // Contact page
       {

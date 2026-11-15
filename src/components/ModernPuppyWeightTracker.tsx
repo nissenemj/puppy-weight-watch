@@ -19,13 +19,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { dbToAppTypes } from "@/utils/typeUtils";
 import { User } from "@supabase/supabase-js";
 import { useGuestAuth } from "@/contexts/GuestAuthContext";
-import WeightChart from "./EnhancedWeightChart";
-import GrowthChart from "./PuppyBook/GrowthChart";
 import { BookGrowthChart } from "@/features/annual-book/BookGrowthChart";
-import type { SizeClass } from "@/types/veterinary";
 import AdvancedFoodCalculator from "./AdvancedFoodCalculator";
 import AdultFoodCalculator from "./AdultFoodCalculator";
-import PuppyFeeding from "./PuppyFeeding";
 import SafetyNewsFeed from "./SafetyNewsFeed";
 import OnboardingWizard from "@/features/onboarding/components/OnboardingWizard";
 import DogSelector from "@/components/DogSelector";
@@ -63,12 +59,6 @@ interface WeightEntry {
   date: string;
   weight: number;
   created_at: string;
-}
-
-interface WeightPoint {
-  age_weeks: number;
-  weight_kg: number;
-  date: string;
 }
 
 export default function ModernPuppyWeightTracker({
@@ -404,70 +394,6 @@ export default function ModernPuppyWeightTracker({
         variant: "destructive",
       });
     }
-  };
-
-  // Convert weight entries to GrowthChart format
-  const convertToWeightPoints = (
-    entries: WeightEntry[],
-    birthDate: string | null,
-  ): WeightPoint[] => {
-    if (!birthDate) return [];
-
-    const birthDateObj = new Date(birthDate);
-    return entries
-      .map((entry) => {
-        const entryDate = new Date(entry.date);
-        const ageInWeeks = Math.floor(
-          (entryDate.getTime() - birthDateObj.getTime()) /
-            (1000 * 60 * 60 * 24 * 7),
-        );
-
-        return {
-          age_weeks: Math.max(0, ageInWeeks),
-          weight_kg: entry.weight,
-          date: entry.date,
-        };
-      })
-      .sort((a, b) => a.age_weeks - b.age_weeks);
-  };
-
-  // Determine size class based on breed or current weight
-  const determineSizeClass = (): SizeClass => {
-    if (!selectedDog?.breed) {
-      // Default to medium if no breed specified
-      return "medium";
-    }
-
-    const breed = selectedDog.breed.toLowerCase();
-
-    // Toy/Small breeds (up to 10kg)
-    if (
-      breed.includes("chihuahua") ||
-      breed.includes("yorkshire") ||
-      breed.includes("pomeranian") ||
-      breed.includes("maltese") ||
-      breed.includes("toy") ||
-      breed.includes("mini")
-    ) {
-      return "toy_small";
-    }
-
-    // Large/Giant breeds (25kg+)
-    if (
-      breed.includes("labrador") ||
-      breed.includes("retriever") ||
-      breed.includes("saksanpaimenkoira") ||
-      breed.includes("rottweiler") ||
-      breed.includes("mastiff") ||
-      breed.includes("saint bernard") ||
-      breed.includes("great dane") ||
-      breed.includes("leonberger")
-    ) {
-      return "large_giant";
-    }
-
-    // Medium breeds (default)
-    return "medium";
   };
 
   if (!user && !isGuest) {
@@ -870,63 +796,43 @@ export default function ModernPuppyWeightTracker({
                   </div>
                 </dl>
 
-                {/* Growth Chart with Centiles */}
-                {!isAdult && selectedDogBirthDate && entries.length > 0 ? (
-                  <div className="space-y-4">
-                    {/* Share Button Header */}
-                    {selectedDog && (
-                      <div className="flex justify-end">
-                        <ShareGrowthChart
-                          dog={{
-                            id: selectedDog.id,
-                            name: selectedDog.name,
-                            breed: selectedDog.breed,
-                            user_id: user?.id || "",
-                            created_at: new Date().toISOString(),
-                          }}
-                          weightData={entries.map((e) => ({
-                            id: e.id,
-                            dog_id: selectedDog.id,
-                            date: e.date,
-                            weight: e.weight,
-                            user_id: e.user_id,
-                            created_at: e.created_at,
-                          }))}
-                          chartRef={chartRef}
-                        />
-                      </div>
-                    )}
-                    {/* Chart Container with Ref */}
-                    <div ref={chartRef}>
-                      <GrowthChart
-                        weightPoints={convertToWeightPoints(
-                          entries,
-                          selectedDogBirthDate,
-                        )}
-                        initialSizeClass={determineSizeClass()}
-                      />
-                    </div>
-                  </div>
-                ) : entries.length > 0 ? (
+                {entries.length > 0 ? (
                   <Card className="weight-history-chart">
                     <CardHeader>
                       <h2 className="food-panel-title">Omat painomittaukset</h2>
                     </CardHeader>
                     <CardContent>
-                      <BookGrowthChart
-                        title={
-                          isAdult ? "Painokäyrä omista mittauksista" : undefined
-                        }
-                        weights={entries.map((entry) => ({
-                          date: entry.date,
-                          kg: entry.weight,
-                        }))}
-                      />
+                      {!isAdult && user && selectedDog && (
+                        <div className="mb-4 flex justify-end">
+                          <ShareGrowthChart
+                            dog={{
+                              id: selectedDog.id,
+                              name: selectedDog.name,
+                              breed: selectedDog.breed,
+                              user_id: user?.id || "",
+                              created_at: new Date().toISOString(),
+                            }}
+                            weightData={entries.map((entry) => ({
+                              ...entry,
+                              dog_id: selectedDog.id,
+                            }))}
+                            chartRef={chartRef}
+                          />
+                        </div>
+                      )}
+                      <div ref={chartRef}>
+                        <BookGrowthChart
+                          title={isAdult ? "Painokäyrä omista mittauksista" : undefined}
+                          weights={entries.map((entry) => ({
+                            date: entry.date.slice(0, 10),
+                            kg: entry.weight,
+                          }))}
+                        />
+                      </div>
                       {!isAdult && birthDatePicker && (
                         <div className="mt-4">
                           <p className="site-field-hint mb-3">
-                            Syntymäpäivän lisääminen avaa myös kasvun vertailun.
-                            Omat mittauksesi näkyvät jo yllä.
+                            Lisää syntymäpäivä, jos haluat nähdä pennun iän Kasvu-välilehdellä.
                           </p>
                           {birthDatePicker}
                         </div>
@@ -994,10 +900,7 @@ export default function ModernPuppyWeightTracker({
                 currentWeight={getLatestWeight() || undefined}
               />
             ) : user ? (
-              <AdvancedFoodCalculator
-                currentWeight={getLatestWeight()}
-                user={user}
-              />
+              <AdvancedFoodCalculator />
             ) : (
               <div className="text-center p-8">
                 <p className="text-gray-600">

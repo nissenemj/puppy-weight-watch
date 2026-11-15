@@ -45,7 +45,6 @@ export default function Calculator() {
         title="Ruokalaskuri pennulle ja aikuiselle koiralle"
         siteName="Pentulaskuri"
         description="Arvioi pennun tai aikuisen koiran päiväannosta. Näe laskennan perusteet ja valmistajan ohje."
-        canonicalUrl="https://pentulaskuri.com/calculator"
       />
       <PageIntro
         title="Ruokamäärät arkeen."
@@ -69,7 +68,7 @@ export default function Calculator() {
           <option value="aikuinen">Aikuinen, täysikasvuinen koira</option>
         </select>
       </div>
-      {adult ? <AdultFoodCalculator /> : <AdvancedFoodCalculator user={null} />}
+      {adult ? <AdultFoodCalculator /> : <AdvancedFoodCalculator />}
       <section
         className="site-manufacturers"
         aria-labelledby="manufacturer-title"

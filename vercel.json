@@ -1,9 +1,25 @@
 {
-  "rewrites": [
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/info/feeding-data", "destination": "/guides/feeding", "permanent": true },
+    { "source": "/info/puppy-guide", "destination": "/guides/puppy-guide", "permanent": true },
+    { "source": "/info/socialization-guide", "destination": "/guides/socialization", "permanent": true },
+    { "source": "/info/safety", "destination": "/guides/safety", "permanent": true },
     {
-      "source": "/((?!assets/|videos/|icons/|fonts/|screenshots/|resources/).*)",
-      "destination": "/index.html"
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "pentulaskuri.com" }],
+      "destination": "https://www.pentulaskuri.com/:path*",
+      "permanent": true
     }
+  ],
+  "rewrites": [
+    { "source": "/puppy-book", "destination": "/_app" },
+    { "source": "/login", "destination": "/_app" },
+    { "source": "/auth/callback", "destination": "/_app" },
+    { "source": "/onboarding", "destination": "/_app" },
+    { "source": "/admin/messages", "destination": "/_app" },
+    { "source": "/blog", "destination": "/_app" }
   ],
   "headers": [
     {

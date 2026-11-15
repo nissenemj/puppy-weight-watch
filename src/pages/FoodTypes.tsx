@@ -333,7 +333,7 @@ export default function FoodTypes() {
               Takaisin etusivulle
             </Button>
           </Link>
-          <Link to="/info/feeding-data">
+          <Link to="/guides/feeding">
             <Button className="w-full sm:w-auto">
               Seuraava: Annostelutiedot
             </Button>

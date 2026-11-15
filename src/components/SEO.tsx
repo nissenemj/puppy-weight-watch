@@ -1,13 +1,13 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+import { useLocation } from 'react-router-dom';
+import site from '@/data/sitePages.json';
 
 interface SEOProps {
   title?: string;
   description?: string;
   keywords?: string;
   image?: string;
-  url?: string;
-  canonicalUrl?: string;
   type?: 'website' | 'article' | 'product';
   structuredData?: object;
   noindex?: boolean;
@@ -15,35 +15,37 @@ interface SEOProps {
 }
 
 const SEO: React.FC<SEOProps> = ({
-  title = 'Koiranpennun Painonseuranta',
-  description = 'Seuraa koiranpentusi kasvua ja kehitystä helposti. Laskuri ruokamäärille, painoseuranta ja annostelutaulukot.',
+  title,
+  description,
   keywords = 'koiranpentu, painonseuranta, ruokalaskuri, pentulaskuri, koiran kasvu, ruokinta, annostelu',
   image = '/icons/icon-512x512.png',
-  url = window.location.href,
-  canonicalUrl,
   type = 'website',
   structuredData,
   noindex = false,
-  siteName = 'Koiranpennun Painonseuranta'
+  siteName = 'Pentulaskuri'
 }) => {
-  const fullTitle = title === siteName ? title : `${title} | ${siteName}`;
-
-  // Generate canonical URL - always use https://pentulaskuri.com (without www)
-  const baseUrl = 'https://pentulaskuri.com';
-  const pathname = typeof window !== 'undefined' ? window.location.pathname : '/';
-  const canonical = canonicalUrl || `${baseUrl}${pathname}`;
+  const { pathname } = useLocation();
+  const route = pathname.replace(/\/+$/, '') || '/';
+  const pages: Record<string, { heading: string; description: string } | undefined> = site.pages;
+  const page = pages[route];
+  const canonical = page && !noindex ? site.origin + route : undefined;
+  const pageTitle = title ?? page?.heading ?? siteName;
+  const summary = description ?? page?.description ?? '';
+  const fullTitle = pageTitle === siteName || pageTitle.endsWith(` | ${siteName}`)
+    ? pageTitle : `${pageTitle} | ${siteName}`;
+  const imageUrl = new URL(image, site.origin).href;
 
   return (
     <Helmet>
       {/* Canonical URL - critical for SEO */}
-      <link rel="canonical" href={canonical} />
+      {canonical && <link rel="canonical" href={canonical} />}
 
       {/* Basic meta tags */}
       <title>{fullTitle}</title>
-      <meta name="description" content={description} />
+      <meta name="description" content={summary} />
       <meta name="keywords" content={keywords} />
       <meta name="author" content="Pentulaskuri.com" />
-      <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />
+      <meta name="robots" content={canonical ? 'index, follow, max-image-preview:large' : 'noindex, nofollow'} />
       <meta name="language" content="fi" />
       <meta name="revisit-after" content="7 days" />
       
@@ -52,20 +54,20 @@ const SEO: React.FC<SEOProps> = ({
       
       {/* Open Graph tags */}
       <meta property="og:title" content={fullTitle} />
-      <meta property="og:description" content={description} />
+      <meta property="og:description" content={summary} />
       <meta property="og:type" content={type} />
-      <meta property="og:url" content={url} />
-      <meta property="og:image" content={image} />
-      <meta property="og:image:alt" content={title} />
+      {canonical && <meta property="og:url" content={canonical} />}
+      <meta property="og:image" content={imageUrl} />
+      <meta property="og:image:alt" content={pageTitle} />
       <meta property="og:site_name" content={siteName} />
       <meta property="og:locale" content="fi_FI" />
       
       {/* Twitter Card tags */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={fullTitle} />
-      <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={image} />
-      <meta name="twitter:image:alt" content={title} />
+      <meta name="twitter:description" content={summary} />
+      <meta name="twitter:image" content={imageUrl} />
+      <meta name="twitter:image:alt" content={pageTitle} />
       
       {/* Additional meta tags for mobile */}
       <meta name="format-detection" content="telephone=no" />

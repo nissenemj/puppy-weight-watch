@@ -204,7 +204,6 @@ const WeightTrackerPage = () => {
         title="Painonseuranta pennulle ja aikuiselle koiralle"
         siteName="Pentulaskuri"
         description="Tallenna koiran painomittaukset ja seuraa muutosta ajan myötä."
-        canonicalUrl="https://pentulaskuri.com/weight-tracker"
       />
       <div className="space-y-6">
         {/* Guest Mode Bar */}

@@ -1,7 +1,41 @@
-import { defineConfig } from "vite";
+import { createReadStream } from "node:fs";
+import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
+import site from "./src/data/sitePages.json";
+
+function previewPages(): Plugin {
+  const aliases: Record<string, string | undefined> = site.aliases;
+  return {
+    name: "preview-pages",
+    configurePreviewServer(server) {
+      const dist = path.resolve(server.config.root, server.config.build.outDir);
+      server.middlewares.use((req, res, next) => {
+        if (req.method !== "GET" && req.method !== "HEAD") return next();
+        const url = new URL(req.url ?? "/", "http://localhost");
+        const route = url.pathname.replace(/\/+$/, "") || "/";
+        const alias = aliases[route];
+        if (alias || route !== url.pathname) {
+          res.writeHead(308, { Location: (alias ?? route) + url.search });
+          return res.end();
+        }
+        if (Object.hasOwn(site.pages, route)) {
+          req.url = (route === "/" ? "/index.html" : `${route}.html`) + url.search;
+          return next();
+        }
+        if (site.appPaths.includes(route)) {
+          req.url = "/_app.html" + url.search;
+          return next();
+        }
+        if (path.extname(route)) return next();
+        res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
+        if (req.method === "HEAD") return res.end();
+        createReadStream(path.join(dist, "404.html")).pipe(res);
+      });
+    },
+  };
+}
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -12,7 +46,7 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
     strictPort: false,
   },
-  plugins: [react(), mode === "development" && componentTagger()].filter(
+  plugins: [react(), previewPages(), mode === "development" && componentTagger()].filter(
     Boolean,
   ),
   resolve: {

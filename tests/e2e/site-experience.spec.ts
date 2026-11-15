@@ -6,15 +6,6 @@ test.use({ contextOptions: { reducedMotion: "reduce" } });
 
 const owner = "11111111-1111-4111-8111-111111111111";
 const dogId = "22222222-2222-4222-8222-222222222222";
-const food = {
-  id: "55555555-5555-4555-8555-555555555555",
-  manufacturer: "Esikatselu",
-  name: "Esimerkkiruoka (testitiedot)",
-  food_type: "Kuivaruoka",
-  nutrition_type: "Pentu",
-  dosage_method: "Nykyinen_Paino",
-  product_code: "local-demo",
-};
 const weights = [
   { id: "weight-1", date: "2026-06-03", weight: 4.2 },
   { id: "weight-2", date: "2026-07-03", weight: 6.5 },
@@ -27,12 +18,7 @@ const weights = [
 
 async function sourceFixtures(page: Page) {
   const state = {
-    failFoods: false,
-    emptyFoods: false,
     failDogs: false,
-    adultFood: false,
-    emptyGuidelines: false,
-    unsupportedFood: false,
   };
   const writes: string[] = [];
   page.on("request", (request) => {
@@ -43,44 +29,18 @@ async function sourceFixtures(page: Page) {
       writes.push(request.url());
   });
   await page.route(
-    /https:\/\/[^/]+\.supabase\.co\/rest\/v1\/(dog_foods|feeding_guidelines|dogs|weight_entries|puppy_books)/,
+    /https:\/\/[^/]+\.supabase\.co\/rest\/v1\/(dogs|weight_entries|puppy_books)/,
     async (route) => {
       if (route.request().method() !== "GET") return route.abort();
       const url = new URL(route.request().url());
       const table = url.pathname.split("/").pop();
-      if (
-        (state.failFoods && table === "dog_foods") ||
-        (state.failDogs && table === "dogs")
-      )
+      if (state.failDogs && table === "dogs")
         return route.fulfill({
           status: 503,
           contentType: "application/json",
           body: '{"message":"synthetic failure"}',
         });
       let data: unknown = [];
-      if (table === "dog_foods")
-        data = state.emptyFoods
-          ? []
-          : [
-              {
-                ...food,
-                dosage_method: state.unsupportedFood
-                  ? "Ei_Tietoa"
-                  : state.adultFood
-                    ? "Odotettu_Aikuispaino_Ja_Ikä"
-                    : food.dosage_method,
-              },
-            ];
-      if (table === "feeding_guidelines")
-        data = state.emptyGuidelines
-          ? []
-          : [4, 8].map((kg, i) => ({
-              id: `guideline-${i}`,
-              dog_food_id: food.id,
-              current_weight_kg: kg,
-              daily_amount_min: kg * 25,
-              daily_amount_max: kg * 25,
-            }));
       if (table === "dogs")
         data = [
           {
@@ -144,7 +104,13 @@ async function checkLayout(page: Page) {
 
 async function screenshot(page: Page, name: string, width: number) {
   if (process.env.SITE_DESIGN_SCREENSHOTS) {
-    await page.evaluate(() => window.scrollTo(0, 0));
+    if (name === "ruokalaskuri-tulos" && width < 768) {
+      await page.getByRole("region", { name: "Pennun ruoka-annoksen tulos" }).scrollIntoViewIfNeeded();
+    } else if (name === "kasvun-seuranta") {
+      await page.getByRole("tabpanel", { name: "Kasvu" }).scrollIntoViewIfNeeded();
+    } else {
+      await page.evaluate(() => window.scrollTo(0, 0));
+    }
     await page.screenshot({
       path: `${process.env.SITE_DESIGN_SCREENSHOTS}/${name}-${width}.png`,
     });
@@ -168,24 +134,12 @@ async function screenshot(page: Page, name: string, width: number) {
   }
 }
 
-async function calculateFood(page: Page) {
-  await page.getByLabel("Nykyinen paino (kg) *", { exact: true }).fill("6");
-  await page.getByLabel("Ikä kuukausina *", { exact: true }).fill("4");
-  await page
-    .getByLabel("Odotettu aikuispaino (kg)", { exact: true })
-    .fill("20");
-  await page
-    .getByRole("combobox", { name: "Valitse koiranruoka *", exact: true })
-    .click();
-  await page
-    .getByRole("option", {
-      name: "Esikatselu - Esimerkkiruoka (testitiedot)",
-      exact: true,
-    })
-    .click();
-  await page
-    .getByRole("button", { name: "Laske ruokamäärä", exact: true })
-    .click();
+async function calculateFood(page: Page, food = "hau-hau-puppy", weight = "20") {
+  await page.getByLabel("Käytössä oleva penturuoka").selectOption(food);
+  await page.getByLabel("Arvioitu aikuispaino taulukossa").selectOption(weight);
+  await page.getByLabel("Pennun ikä taulukossa").selectOption("3–4");
+  await page.getByLabel("Aterioita päivässä").selectOption("4");
+  await page.getByRole("button", { name: "Laske päiväannos" }).click();
 }
 
 for (const width of [320, 768, 1024, 1440]) {
@@ -209,23 +163,19 @@ for (const width of [320, 768, 1024, 1440]) {
     await page.goto("/calculator");
     await calculateFood(page);
     const result = page.getByRole("region", {
-      name: "Laskentatulokset",
+      name: "Pennun ruoka-annoksen tulos",
       exact: true,
     });
     await expect(result).toBeFocused();
     await expect(result.locator(".food-result-total strong")).toHaveText(
-      "150 g",
+      "200 g",
     );
-    await expect(result.locator(".food-result-facts")).toContainText(
-      "4 / päivä",
-    );
-    await expect(result.locator(".food-result-facts")).toContainText("38 g");
+    await expect(result).toContainText("50 g / ateria, 4 ateriaa päivässä");
     await screenshot(page, "ruokalaskuri-tulos", width);
-    const basis = result.locator("summary");
-    await basis.focus();
-    await basis.press("Enter");
-    await expect(result.getByRole("table")).toBeVisible();
-    await expect(result).toContainText("Perusannos:");
+    const source = result.getByRole("link", { name: "Valmistajan ruokintaohje" });
+    await result.press("Tab");
+    await expect(source).toBeFocused();
+    await expect(source).toHaveAttribute("href", /^https:\/\/hauhau\.fi\/products\//);
     await checkLayout(page);
     // Every form label resolves to its own control, including when reused by weight tracking.
     expect(
@@ -234,7 +184,6 @@ for (const width of [320, 768, 1024, 1440]) {
         return ids.length === new Set(ids).size;
       }),
     ).toBe(true);
-    await basis.press("Enter");
     await page.evaluate(() => window.scrollTo(0, 0));
     await screenshot(page, "ruokalaskuri", width);
     expect(calls.writes).toEqual([]);
@@ -273,77 +222,47 @@ test("UX: login validation identifies each field and explains password-free logi
   expect(calls.writes).toEqual([]);
 });
 
-test("a failed food-data load can be retried and an empty catalogue cannot produce a fake result", async ({
-  page,
-}) => {
-  const calls = await sourceFixtures(page);
-  calls.state.failFoods = true;
-  await page.goto("/calculator");
-  await expect(page.getByRole("alert")).toContainText(
-    "Ruokien annostelutietoja ei voitu ladata",
-  );
-  calls.state.failFoods = false;
-  await page
-    .getByRole("button", { name: "Yritä uudelleen", exact: true })
-    .click();
-  await calculateFood(page);
-  await expect(
-    page.getByRole("region", { name: "Laskentatulokset", exact: true }),
-  ).toBeVisible();
-  calls.state.emptyFoods = true;
-  await page.reload();
-  await expect(
-    page.getByRole("status").filter({ hasText: "Ruokia ei ole saatavilla" }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("button", { name: "Laske ruokamäärä", exact: true }),
-  ).toBeDisabled();
-  await expect(
-    page.getByRole("region", { name: "Laskentatulokset", exact: true }),
-  ).toHaveCount(0);
-  expect(calls.writes).toEqual([]);
-});
-
-for (const failure of ["emptyGuidelines", "unsupportedFood"] as const) {
-  test(`food calculation explains ${failure}, keeps the inputs and can recover`, async ({
-    page,
-  }) => {
-    const calls = await sourceFixtures(page);
-    calls.state[failure] = true;
-    await page.setViewportSize({ width: 320, height: 1000 });
-    await page.goto("/calculator");
-    await calculateFood(page);
-    const error = page.getByRole("alert");
-    await expect(error).toContainText(
-      failure === "emptyGuidelines"
-        ? "ei löytynyt annostelutietoa"
-        : "ei ole saatavilla laskentamenetelmää",
-    );
-    await expect(error).toContainText("tuotepakkauksesta tai valmistajalta");
-    await expect(
-      page.getByRole("region", { name: "Laskentatulokset", exact: true }),
-    ).toHaveCount(0);
-    await expect(
-      page.getByLabel("Nykyinen paino (kg) *", { exact: true }),
-    ).toHaveValue("6");
-    await expect(
-      page.getByLabel("Ikä kuukausina *", { exact: true }),
-    ).toHaveValue("4");
-    await checkLayout(page);
-    await page.getByLabel("Nykyinen paino (kg) *", { exact: true }).fill("7");
-    await expect(error).toHaveCount(0);
-    calls.state[failure] = false;
-    await page.reload();
-    await calculateFood(page);
-    await expect(
-      page.getByRole("region", { name: "Laskentatulokset", exact: true }),
-    ).toContainText("150 g");
-    expect(calls.writes).toEqual([]);
+test("puppy food tables work without an API and an incomplete row cannot produce a portion", async ({ page }) => {
+  const foodRequests: string[] = [];
+  await page.route(/\.supabase\.co\/rest\/v1\/(dog_foods|feeding_guidelines)/, (route) => {
+    foodRequests.push(route.request().url());
+    return route.abort();
   });
-}
+  await page.setViewportSize({ width: 320, height: 1000 });
+  await page.goto("/calculator");
+  await calculateFood(page, "brit-care-hypoallergenic-puppy", "25");
+  const result = page.getByRole("region", { name: "Pennun ruoka-annoksen tulos" });
+  await expect(result).toContainText("Valmistajan taulukossa ei ole annosta");
+  await expect(result.locator(".food-result-total")).toHaveCount(0);
+  await expect(result).toContainText("Tarkista annos pakkauksesta");
+  await page.getByLabel("Arvioitu aikuispaino taulukossa").selectOption("20");
+  await expect(result).toHaveCount(0);
+  await page.getByRole("button", { name: "Laske päiväannos" }).click();
+  await expect(result).toContainText("180 g");
+  await expect(result).toContainText("45 g / ateria");
+  expect(foodRequests).toEqual([]);
+});
 
 test.describe("the redesigned signed-in workspace", () => {
   test.use({ userState: "signed-in" });
+  test("a puppy with a known birth date shows its measurements without sample comparison data", async ({ page }) => {
+    await sourceFixtures(page);
+    const comparisonRequests: string[] = [];
+    page.on("request", (request) => {
+      if (request.url().includes("/rest/v1/growth_centiles")) comparisonRequests.push(request.url());
+    });
+    await page.setViewportSize({ width: 320, height: 900 });
+    await page.goto("/weight-tracker");
+    await expect(page.getByRole("img", { name: "Kasvukäyrä omista painomittauksista" })).toBeVisible();
+    await page.getByRole("tab", { name: "Kasvu", exact: true }).click();
+    await expect(page.getByText(/^Ikä: /)).toBeVisible();
+    await expect(page.getByText("6,5 kg", { exact: true })).toBeVisible();
+    await expect(page.getByText(/Aikuispainoarvio on tauolla/)).toBeVisible();
+    await expect(page.getByRole("link", { name: "Walthamin kasvukäyrät" })).toBeVisible();
+    expect(comparisonRequests).toEqual([]);
+    await checkLayout(page);
+    await screenshot(page, "kasvun-seuranta", 320);
+  });
   for (const width of [320, 768, 1024, 1440]) {
     for (const route of ["/", "/weight-tracker"]) {
       test(`${route} displays only real fixture measurements at ${width}`, async ({
@@ -366,7 +285,7 @@ test.describe("the redesigned signed-in workspace", () => {
         if (route === "/weight-tracker") {
           const measurements = page
             .locator("summary")
-            .filter({ hasText: "Näytä painomittaukset taulukkona" });
+            .filter({ hasText: "Näytä tarkat mittaukset" });
           await measurements.focus();
           await measurements.press("Enter");
           await expect(page.getByRole("table")).toContainText("6,5");
@@ -446,115 +365,39 @@ test.describe("local guest measurement", () => {
   }
 });
 
-test("food fields reject negative weights and identify a required adult weight before calculation", async ({
-  page,
-}) => {
-  const calls = await sourceFixtures(page);
+test("puppy food requires the product and the manufacturer's weight row", async ({ page }) => {
   await page.goto("/calculator");
-  await page.getByLabel("Nykyinen paino (kg) *", { exact: true }).fill("-1");
-  await page.getByLabel("Ikä kuukausina *", { exact: true }).fill("4");
-  await page
-    .getByRole("combobox", { name: "Valitse koiranruoka *", exact: true })
-    .click();
-  await page
-    .getByRole("option", {
-      name: "Esikatselu - Esimerkkiruoka (testitiedot)",
-      exact: true,
-    })
-    .click();
-  await page
-    .getByRole("button", { name: "Laske ruokamäärä", exact: true })
-    .click();
-  await expect(
-    page.getByLabel("Nykyinen paino (kg) *", { exact: true }),
-  ).toBeFocused();
-  await expect(
-    page.getByRole("region", { name: "Laskentatulokset", exact: true }),
-  ).toHaveCount(0);
-  calls.state.adultFood = true;
-  await page.reload();
-  await page.getByLabel("Nykyinen paino (kg) *", { exact: true }).fill("6");
-  await page.getByLabel("Ikä kuukausina *", { exact: true }).fill("4");
-  await page
-    .getByRole("combobox", { name: "Valitse koiranruoka *", exact: true })
-    .click();
-  await page
-    .getByRole("option", {
-      name: "Esikatselu - Esimerkkiruoka (testitiedot)",
-      exact: true,
-    })
-    .click();
-  const adult = page.getByLabel("Odotettu aikuispaino (kg) *", { exact: true });
-  await expect(adult).toHaveAttribute("required", "");
-  await page
-    .getByRole("button", { name: "Laske ruokamäärä", exact: true })
-    .click();
-  await expect(adult).toBeFocused();
-  expect(calls.writes).toEqual([]);
+  const calculate = page.getByRole("button", { name: "Laske päiväannos" });
+  await expect(calculate).toBeDisabled();
+  await page.getByLabel("Käytössä oleva penturuoka").selectOption("hau-hau-puppy");
+  const adultWeight = page.getByLabel("Arvioitu aikuispaino taulukossa");
+  await expect(adultWeight).toHaveAttribute("required", "");
+  await calculate.click();
+  await expect(adultWeight).toBeFocused();
+  await expect(page.getByRole("region", { name: "Pennun ruoka-annoksen tulos" })).toHaveCount(0);
 });
 
 for (const width of [320, 768, 1024, 1440]) {
-  test(`UX: changed food inputs cannot display an old portion as current at ${width}`, async ({
-    page,
-  }) => {
-    const calls = await sourceFixtures(page);
+  test(`UX: changing the age or meal count hides old food portions at ${width}`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/calculator");
     await calculateFood(page);
-    const result = page.getByRole("region", {
-      name: "Laskentatulokset",
-      exact: true,
-    });
-    await expect(result.locator(".food-result-total strong")).toHaveText(
-      "150 g",
-    );
-    await page.getByLabel("Nykyinen paino (kg) *", { exact: true }).fill("8");
-    await expect(result.locator(".food-result-total")).toHaveCount(0);
-    await expect(result.getByRole("status")).toContainText("uudelleen");
-    if (process.env.UX_SCREENSHOTS)
-      await page.screenshot({
-        path: `${process.env.UX_SCREENSHOTS}/ruoka-muuttuneet-tiedot-${width}.png`,
-      });
-    await page
-      .getByRole("button", { name: "Laske ruokamäärä", exact: true })
-      .click();
-    await expect(result.locator(".food-result-total strong")).toHaveText(
-      "200 g",
-    );
-    await page
-      .getByRole("combobox", { name: "Aktiivisuustaso", exact: true })
-      .click();
-    await page.getByRole("option", { name: /^Aktiivinen / }).click();
-    await expect(result.locator(".food-result-total")).toHaveCount(0);
-    await page
-      .getByRole("button", { name: "Laske ruokamäärä", exact: true })
-      .click();
-    await expect(result.locator(".food-result-total strong")).toHaveText(
-      "220 g",
-    );
+    const result = page.getByRole("region", { name: "Pennun ruoka-annoksen tulos" });
+    const calculate = page.getByRole("button", { name: "Laske päiväannos" });
+    await expect(result.locator(".food-result-total strong")).toHaveText("200 g");
+    await page.getByLabel("Pennun ikä taulukossa").selectOption("5–6");
+    await expect(result).toHaveCount(0);
+    await expect(page.getByRole("status").filter({ hasText: "Valinta muuttui" })).toBeVisible();
+    await calculate.click();
+    await expect(result.locator(".food-result-total strong")).toHaveText("230 g");
+    await page.getByLabel("Aterioita päivässä").selectOption("2");
+    await expect(result).toHaveCount(0);
+    await calculate.click();
+    await expect(result.locator(".food-result-total strong")).toHaveText("230 g");
+    await expect(result).toContainText("115 g / ateria");
     await checkLayout(page);
-    expect(calls.writes).toEqual([]);
   });
 }
-
-test("UX: missing food selection gives a nearby error and focuses the correct control", async ({
-  page,
-}) => {
-  await sourceFixtures(page);
-  await page.goto("/calculator");
-  await page.getByLabel("Nykyinen paino (kg) *", { exact: true }).fill("6");
-  await page.getByLabel("Ikä kuukausina *", { exact: true }).fill("4");
-  await page
-    .getByRole("button", { name: "Laske ruokamäärä", exact: true })
-    .click();
-  await expect(page.getByRole("alert")).toContainText("Valitse koiranruoka");
-  await expect(
-    page.getByRole("combobox", { name: "Valitse koiranruoka *", exact: true }),
-  ).toBeFocused();
-  await expect(
-    page.getByRole("region", { name: "Laskentatulokset", exact: true }),
-  ).toHaveCount(0);
-});
 
 test.describe("UX: the first measurement has a useful outcome", () => {
   test.use({ userState: "guest-with-data" });
@@ -573,7 +416,7 @@ test.describe("UX: the first measurement has a useful outcome", () => {
           .getByRole("form", { name: "Uusi painomittaus" })
           .getByRole("status"),
       ).toContainText("lisätty");
-      await expect(page.locator(".weight-history-chart svg")).toBeVisible();
+      await expect(page.getByRole("img", { name: "Kasvukäyrä omista painomittauksista" })).toBeVisible();
       await page.locator(".weight-history-chart summary").click();
       await expect(
         page.getByRole("table", { name: "Painomittaukset", exact: true }),

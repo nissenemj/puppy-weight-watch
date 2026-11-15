@@ -2,6 +2,7 @@ import React from "react";
 import { Outlet, ScrollRestoration, useLocation } from "react-router-dom";
 import { PageLayout } from "./PageLayout";
 import Footer from "./Footer";
+import SEO from "./SEO";
 
 const PAGE_OWNS_FOOTER = new Set([
   "/",
@@ -18,6 +19,7 @@ export const RootLayout: React.FC = () => {
   const { pathname } = useLocation();
   return (
     <>
+      <SEO />
       <PageLayout>
         <ScrollRestoration />
         <Outlet />
