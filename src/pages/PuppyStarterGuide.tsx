@@ -145,13 +145,6 @@ export default function PuppyStarterGuide() {
       </nav>
       <PreparationStatus controller={preparation} />
 
-      <aside className="journal-disclosure" aria-label="Tietoa mainoslinkeistä">
-        <strong>Sisältää mainoslinkkejä.</strong> Sivun lopussa on linkkejä
-        Peten Koiratarvikkeeseen ja Koiratarvike Haukkulaan. Voimme saada
-        ostoksesta palkkion. Lista ei ole tuotetesti eikä kauppojen
-        hintavertailu.
-      </aside>
-
       <PreparationHome controller={preparation} />
 
       <div className="starter-content">
@@ -237,8 +230,7 @@ export default function PuppyStarterGuide() {
         <h2 id="stores-title">Kun tiedät, mitä tarvitset</h2>
         <p>
           Vertaa sopivuutta, kokonaishintaa ja toimitusehtoja ennen tilausta.
-          Nämä linkit avaavat kaupan etusivun, eivät yksittäistä suositeltua
-          tuotetta.
+          Linkit avaavat kauppojen etusivut. Pentulaskuri ei saa niistä palkkiota.
         </p>
         <div className="starter-partners">
           {partners.map((partner) => (

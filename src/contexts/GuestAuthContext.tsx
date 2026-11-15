@@ -28,7 +28,7 @@ interface GuestAuthContextType {
   guestDogProfile: GuestDogProfile | null
 
   // Guest actions
-  addGuestWeightEntry: (weight: number) => void
+  addGuestWeightEntry: (weight: number) => boolean
   updateGuestDogProfile: (profile: GuestDogProfile) => void
   clearGuestData: () => void
 
@@ -63,6 +63,7 @@ export function GuestAuthProvider({ children }: GuestAuthProviderProps) {
 
   // Helper actions (defined before syncGuestDataToUser to avoid TDZ)
   const clearGuestData = useCallback(() => {
+    latestGuestEntriesRef.current = []
     setGuestWeightEntries([])
     setGuestDogProfile(null)
     localStorage.removeItem(GUEST_DATA_KEY)
@@ -77,7 +78,12 @@ export function GuestAuthProvider({ children }: GuestAuthProviderProps) {
       created_at: new Date().toISOString()
     }
 
-    setGuestWeightEntries(prev => [newEntry, ...prev].slice(0, 50)) // Keep max 50 entries
+    const previous = latestGuestEntriesRef.current
+    const next = [newEntry, ...previous].slice(0, 50)
+    localStorage.setItem(GUEST_DATA_KEY, JSON.stringify(next))
+    latestGuestEntriesRef.current = next
+    setGuestWeightEntries(next)
+    return previous.length === 0
   }, [])
 
   const updateGuestDogProfile = useCallback((profile: GuestDogProfile) => {
@@ -220,13 +226,6 @@ export function GuestAuthProvider({ children }: GuestAuthProviderProps) {
 
     return () => subscription.unsubscribe()
   }, []) // Empty dependency array using refs instead
-
-  // Save guest data to localStorage whenever it changes
-  useEffect(() => {
-    if (guestWeightEntries.length > 0) {
-      localStorage.setItem(GUEST_DATA_KEY, JSON.stringify(guestWeightEntries))
-    }
-  }, [guestWeightEntries])
 
   useEffect(() => {
     if (guestDogProfile) {

@@ -52,9 +52,19 @@ test("old paths keep query parameters, private pages stay out of search, and mis
 
 test("back navigation from safety restores the information page and its canonical address", async ({ page }) => {
   await page.goto("/info");
-  await page.locator('main a[href="/guides/safety"]').click();
+  await expect(page.getByRole("heading", { name: "Tietoa pennun arkeen" })).toBeVisible();
+  // Background tabs can defer animation frames. The canonical address must still follow navigation.
+  await page.evaluate(() => {
+    const requestFrame = window.requestAnimationFrame.bind(window);
+    window.addEventListener("restore-test-animation-frames", () => {
+      window.requestAnimationFrame = requestFrame;
+    }, { once: true });
+    window.requestAnimationFrame = () => -1;
+  });
+  await page.locator('main a[href="/guides/safety"]').press("Enter");
   await expect(page).toHaveURL(/\/guides\/safety$/);
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", `${site.origin}/guides/safety`);
+  await page.evaluate(() => window.dispatchEvent(new Event("restore-test-animation-frames")));
   await page.goBack();
   await expect(page.getByRole("heading", { name: "Tietoa pennun arkeen" })).toBeVisible();
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", `${site.origin}/info`);

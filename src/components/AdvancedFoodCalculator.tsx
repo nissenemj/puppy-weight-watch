@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
 import { PUPPY_DOG_FOODS } from "@/data/puppyDogFoods";
+import { trackGa4FoodResult } from "@/utils/ga4";
 
 const grams = new Intl.NumberFormat("fi-FI", { maximumFractionDigits: 1 });
 const checkedDate = new Intl.DateTimeFormat("fi-FI", { timeZone: "UTC" });
@@ -20,8 +21,13 @@ export default function AdvancedFoodCalculator() {
   const row = food?.rows.find((item) => item.weightKg === weightKg);
   const amount = row?.gramsPerDay[food?.ages.indexOf(age) ?? -1] ?? null;
 
+  function revealResult() {
+    resultRegion.current?.focus({ preventScroll: true });
+    resultRegion.current?.scrollIntoView?.({ block: "start" });
+  }
+
   useEffect(() => {
-    if (submitted) resultRegion.current?.focus();
+    if (submitted) revealResult();
   }, [submitted]);
 
   return (
@@ -44,7 +50,8 @@ export default function AdvancedFoodCalculator() {
               event.preventDefault();
               setStale(false);
               setSubmitted(true);
-              resultRegion.current?.focus();
+              if (submitted) revealResult();
+              if (amount !== null) trackGa4FoodResult("puppy", "table");
             }}
           >
             <label className="puppy-food-field">
@@ -108,14 +115,13 @@ export default function AdvancedFoodCalculator() {
               : "Valmistajan taulukkoannos"}</h2>
           </CardHeader>
           <CardContent className="space-y-4">
-            <p>{food.name}</p>
             {amount === null ? (
-              <p>Tarkista annos pakkauksesta tai kysy valmistajalta.</p>
+              <><p>{food.name}</p><p>Tarkista annos pakkauksesta tai kysy valmistajalta.</p></>
             ) : (
               <>
                 <p className="food-result-total"><strong>{amount} g</strong> päivässä</p>
                 <p>{grams.format(amount / Number(meals))} g / ateria, {meals} ateriaa päivässä.</p>
-                <p>Taulukon valinta: {weightKg} kg aikuisena, {age} kk.</p>
+                <p>{food.name}. Taulukon valinta: {weightKg} kg aikuisena, {age} kk.</p>
               </>
             )}
             <p>
@@ -124,6 +130,11 @@ export default function AdvancedFoodCalculator() {
               {" "}{food.sourceLocale}, tarkistettu {checkedDate.format(new Date(food.checkedAt))}.
               Tarkista ohje oman ruokapakkauksesi versiosta.
             </p>
+            {amount !== null && (
+              <Link to="/weight-tracker#uusi-punnitus" className="site-link">
+                Tallenna pennun paino
+              </Link>
+            )}
           </CardContent>
         </Card>
       )}
