@@ -36,7 +36,7 @@ const SEO: React.FC<SEOProps> = ({
   const imageUrl = new URL(image, site.origin).href;
 
   return (
-    <Helmet>
+    <Helmet defer={false}>
       {/* Canonical URL - critical for SEO */}
       {canonical && <link rel="canonical" href={canonical} />}
 
