@@ -283,6 +283,17 @@ test.describe("the redesigned signed-in workspace", () => {
             page.getByRole("button", { name: "Lisää paino", exact: true }),
           ).toBeVisible();
         if (route === "/weight-tracker") {
+          const share = page.getByRole("button", { name: "Jaa kasvukäyrä" });
+          const icon = share.locator("svg");
+          await expect(icon).toHaveCSS("width", "16px");
+          await expect(icon).toHaveCSS("height", "16px");
+          await share.press("Enter");
+          await expect(
+            page.getByRole("menuitem", { name: "WhatsApp" }),
+          ).toBeVisible();
+          await page.keyboard.press("Escape");
+          await expect(share).toBeFocused();
+
           const measurements = page
             .locator("summary")
             .filter({ hasText: "Näytä tarkat mittaukset" });
